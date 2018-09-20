@@ -1,0 +1,47 @@
+version: '3.3'
+
+services:
+
+    nginx:
+        build: docker/nginx
+        ports:
+            - 8111:80
+        volumes:
+            - .:/var/www
+            - ./storage/logs:/var/www/logs
+        depends_on:
+            - mysql
+        networks:
+          - local
+
+    php:
+        build: docker/php
+        expose:
+            - 9000
+        volumes:
+            - .:/var/www
+        working_dir: /var/www
+        depends_on:
+            - mysql
+        networks:
+            - local
+
+    mysql:
+        build: docker/mysql
+        environment:
+            - MYSQL_ALLOW_EMPTY_PASSWORD=1
+            - MYSQL_ROOT_HOST=%
+        volumes:
+            - ./db/mysql:/var/lib/mysql
+            - ./db/mmpi_phpprod_20180919020201.sql:/docker-entrypoint-initdb.d/mmpi_phpprod_20180919020201.sql
+        networks:
+            - local
+
+    #redis:
+    #    build: docker/redis
+    #    networks:
+    #        - local
+
+networks:
+    local:
+        driver: bridge
