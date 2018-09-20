@@ -73,13 +73,13 @@ class DependenciesController extends Controller
         //    'name' => 'required',
         //    'email' => 'required|email|unique:users'
         //]);
+        
+        $dependency = $this->model->findOrFail($id);
+        
+        $dependency->fill($request->json()->all());
 
-        $user = $this->model->findOrFail($id);
-
-        $user->fill($request->json()->all());
-
-        if ($user->saveOrFail()) {
-            return response()->json($user);
+        if ($dependency->saveOrFail()) {
+            return response()->json($dependency);
         }
     }
 

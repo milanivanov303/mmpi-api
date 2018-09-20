@@ -1,3 +1,5 @@
-/vendor
 .env
 ^nbproject$
+^vendor$
+^storage/logs$
+^db$

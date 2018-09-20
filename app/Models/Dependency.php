@@ -14,7 +14,16 @@ class Dependency extends Model
      * @var array
      */
     protected $fillable = [
-        'rev_id'      
+        'rev_id',
+        'rev_type_id',
+        'dep_id',
+        'dep_type_id',
+        'functional',
+        'comment',
+        'added_by',
+        'added_on',
+        'scope',
+        'deleted'
     ];
 
     /**
