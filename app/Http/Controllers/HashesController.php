@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use App\Models\Hash;
+use App\Models\Hashes\HashCommit;
+use App\Models\Hashes\HashCommitFile;
+//use App\Models\Hashes\HashCommitToChain;
 use App\Traits\Filterable;
 
 class HashesController extends Controller
@@ -19,10 +21,10 @@ class HashesController extends Controller
     /**
      * Create a new controller instance.
      *
-     * @param Dependency $model
+     * @param HashCommit $model
      * @return void
      */
-    public function __construct(Dependency $model)
+    public function __construct(HashCommit $model)
     {
         $this->model = $model;
     }
@@ -41,10 +43,7 @@ class HashesController extends Controller
     public function many(Request $request)
     {
         $filters = $this->getFilters($request);
-        
-        return $this->model->where($filters)->get();
-        
-        return $this->model->where($filters)->paginate(2);
+        return $this->model->with(['files', 'chains'])->where($filters)->get();
     }
 
     /**
@@ -54,10 +53,54 @@ class HashesController extends Controller
      */
     public function create(Request $request)
     {
-        $user = new Dependency($request->json()->all());
-        if ($user->saveOrFail()) {
-            return response()->json($user, 201);
+        /*
+            {  
+               "branch":"default",
+               "chains":[  
+                  "coface_coin_release",
+                  "bacolumbia_imx_release"
+               ],
+               "description":"IXDEV-1650 e_honor_param backend\n\nadd MOLO as mvn profile",
+               "files":[  
+                  "etc/configs/MOLOTCWALLET/imx_backend.properties",
+                  "etc/configs/MOLOTCWALLET/imx_backend.xml",
+                  "etc/configs/MOLOTCWALLET/wallet/cwallet.sso",
+                  "etc/configs/MOLOTCWALLET/wallet/tnsnames.ora",
+                  "pom.xml"
+               ],
+               "merge_branch":"_DEV_IXDEV-1763 e_honor_param backend",
+               "module":"imx_be",
+               "owner":"astamenov <astamenov@codix.bg>",
+               "repo_path":"/extranet/hg/v9_be",
+               "repo_url":"http://lemon.codixfr.private:6002/v9_be",
+               "rev":"5267baed17ce97750b2a9a489eaf1095678e6151"
+            }
+        */
+
+        $data = $request->json()->all();
+        
+        $hash = new HashCommit();
+        
+        $hash->repo_branch        = $data['branch'];
+        $hash->commit_description = $data['description'];
+        $hash->repo_merge_branch  = $data['merge_branch'];
+        $hash->repo_module        = $data['module'];
+        $hash->committed_by       = $data['owner'];
+        $hash->repo_path          = $data['repo_path'];
+        $hash->repo_url           = $data['repo_url'];
+        $hash->hash_rev           = $data['rev'];
+        //$hash->repo_timestamp     = $data['']; ??
+            
+        $hash->saveOrFail();
+        
+        foreach ($data['files'] as $file) {
+            $hashFile = new HashCommitFile();
+            $hashFile->hash_commit_id = $hash->id;
+            $hashFile->file_name      = $file;
+            $hashFile->saveOrFail();
         }
+           
+        return response()->json($hash, 201);
     }
 
     /**
@@ -103,6 +146,6 @@ class HashesController extends Controller
      */
     public function show($id)
     {
-        return $this->model->findOrFail($id);
+        return $this->model->with(['files', 'chains'])->findOrFail($id);
     }
 }

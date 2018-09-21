@@ -38,8 +38,8 @@ $router->group([
         $router->group(['prefix' => 'hashes'], function () use ($router) {
             $router->get('', 'HashesController@many');
             $router->get('/{id:[0-9]+}', 'HashesController@show');
-            $router->post('', ['as' => 'api/v1/users/create', 'uses' => 'HashesController@create']);
-            $router->put('/{id:[0-9]+}', ['as' => 'api/v1/users/update', 'uses' => 'HashesController@update']);
+            $router->post('', ['as' => 'api/v1/hashes/create', 'uses' => 'HashesController@create']);
+            $router->put('/{id:[0-9]+}', ['as' => 'api/v1/hashes/update', 'uses' => 'HashesController@update']);
             $router->delete('/{id:[0-9]+}', 'HashesController@delete');
         });
         
