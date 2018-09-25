@@ -3,9 +3,27 @@
 namespace App\Models\Hashes;
 
 use App\Models\Model;
+use App\Traits\Mappable;
 
 class HashCommit extends Model
-{    
+{
+    use Mappable;
+    
+    /**
+     * Array with mapped attributes for conversion
+     * @var array
+     */
+    protected $mapping = [
+        'repo_branch'        => 'branch',
+        'commit_description' => 'description',
+        'repo_merge_branch'  => 'merge_branch',
+        'repo_module'        => 'module',
+        'committed_by'       => 'owner',
+        'repo_path'          => 'repo_path',
+        'repo_url'           => 'repo_url',
+        'hash_rev'           => 'rev'
+    ];
+    
     /**
      * The attributes that are mass assignable.
      *
@@ -21,6 +39,16 @@ class HashCommit extends Model
         'repo_url',
         'hash_rev',
         'repo_timestamp'
+    ];
+    
+    /**
+     * The relations to eager load on every query.
+     *
+     * @var array
+     */
+    protected $with = [
+        'files',
+        'chains'
     ];
     
     /**
@@ -49,13 +77,17 @@ class HashCommit extends Model
         $array = parent::relationsToArray();
         
         // convert files relations to simple array with names
-        $array['files'] = array_column($array['files'], 'file_name');
+        if (array_key_exists('files', $array)) {
+            $array['files'] = array_column($array['files'], 'file_name');
+        }
         
         // convert chains relations to simple array with names
-        $array['chains'] = array_column(
-            array_column($array['chains'], 'chain'),
-            'chain_name'
-        );
+        if (array_key_exists('chains', $array)) {
+            $array['chains'] = array_column(
+                array_column($array['chains'], 'chain'),
+                'chain_name'
+            );
+        }
         
         return $array;
     }

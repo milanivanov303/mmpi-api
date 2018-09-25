@@ -5,8 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Models\Hashes\HashCommit;
-use App\Models\Hashes\HashCommitFile;
-//use App\Models\Hashes\HashCommitToChain;
+use App\Models\Hashes\HashChain;
 use App\Traits\Filterable;
 
 class HashesController extends Controller
@@ -47,64 +46,37 @@ class HashesController extends Controller
     }
 
     /**
+     * Create new hash
+     * 
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      * @throws \Throwable
      */
     public function create(Request $request)
     {
-        /*
-            {  
-               "branch":"default",
-               "chains":[  
-                  "coface_coin_release",
-                  "bacolumbia_imx_release"
-               ],
-               "description":"IXDEV-1650 e_honor_param backend\n\nadd MOLO as mvn profile",
-               "files":[  
-                  "etc/configs/MOLOTCWALLET/imx_backend.properties",
-                  "etc/configs/MOLOTCWALLET/imx_backend.xml",
-                  "etc/configs/MOLOTCWALLET/wallet/cwallet.sso",
-                  "etc/configs/MOLOTCWALLET/wallet/tnsnames.ora",
-                  "pom.xml"
-               ],
-               "merge_branch":"_DEV_IXDEV-1763 e_honor_param backend",
-               "module":"imx_be",
-               "owner":"astamenov <astamenov@codix.bg>",
-               "repo_path":"/extranet/hg/v9_be",
-               "repo_url":"http://lemon.codixfr.private:6002/v9_be",
-               "rev":"5267baed17ce97750b2a9a489eaf1095678e6151"
-            }
-        */
-
         $data = $request->json()->all();
         
-        $hash = new HashCommit();
-        
-        $hash->repo_branch        = $data['branch'];
-        $hash->commit_description = $data['description'];
-        $hash->repo_merge_branch  = $data['merge_branch'];
-        $hash->repo_module        = $data['module'];
-        $hash->committed_by       = $data['owner'];
-        $hash->repo_path          = $data['repo_path'];
-        $hash->repo_url           = $data['repo_url'];
-        $hash->hash_rev           = $data['rev'];
-        //$hash->repo_timestamp     = $data['']; ??
+        $hash = new HashCommit($data);
             
         $hash->saveOrFail();
         
-        foreach ($data['files'] as $file) {
-            $hashFile = new HashCommitFile();
-            $hashFile->hash_commit_id = $hash->id;
-            $hashFile->file_name      = $file;
-            $hashFile->saveOrFail();
+        // save hash files
+        if (isset($data['files'])) {
+            $this->saveFiles($hash, $data['files']);
         }
-           
+        
+        // save hash chains
+        if (isset($data['chains'])) {
+            $this->saveChains($hash, $data['chains']);
+        }
+        
+        $hash->load(['files', 'chains']);
+                
         return response()->json($hash, 201);
     }
 
     /**
-     * Update the specified user.
+     * Update the specified hash.
      *
      * @param  Request  $request
      * @param  string  $id
@@ -112,18 +84,26 @@ class HashesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //$this->validate($request, [
-        //    'name' => 'required',
-        //    'email' => 'required|email|unique:users'
-        //]);
-
-        $user = $this->model->findOrFail($id);
-
-        $user->fill($request->json()->all());
-
-        if ($user->saveOrFail()) {
-            return response()->json($user);
+        $data = $request->json()->all();
+        
+        $hash = $this->model->findOrFail($id);
+        $hash->fill($request->json()->all());
+        
+        $hash->saveOrFail();
+        
+        // save hash files
+        if (isset($data['files'])) {
+            $this->saveFiles($hash, $data['files']);
         }
+        
+        // save hash chains
+        if (isset($data['chains'])) {
+            $this->saveChains($hash, $data['chains']);
+        }
+        
+        $hash->load(['files', 'chains']);
+        
+        return response()->json($hash->toArray());
     }
 
     /**
@@ -146,6 +126,47 @@ class HashesController extends Controller
      */
     public function show($id)
     {
-        return $this->model->with(['files', 'chains'])->findOrFail($id);
+        return $this->model->findOrFail($id);
+    }
+    
+    /**
+     * Save hash files
+     * 
+     * @param HashCommit $hash
+     * @param array $files
+     * 
+     * @throws \Throwable
+     */
+    private function saveFiles($hash, $files)
+    {
+        // delete old files before setting new ones
+        $hash->files()->delete();
+         
+        $hash->files()->createMany(
+            array_map(function ($file_name) {
+                return ['file_name' => $file_name];
+            }, $files)
+        );
+    }
+    
+    /**
+     * Save hash chains
+     * 
+     * @param HashCommit $hash
+     * @param array $chains
+     * 
+     * @throws \Throwable
+     */
+    private function saveChains($hash, $chains)
+    {
+        // delete old chains before setting new ones
+        $hash->chains()->delete();
+
+        $hash->chains()->createMany(
+            array_map(function ($chain_name) {
+                $chain = HashChain::where('chain_name', $chain_name)->firstOrFail();
+                return ['hash_chain_id' => $chain->id];
+            }, $chains)
+        );
     }
 }

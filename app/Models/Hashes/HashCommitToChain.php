@@ -16,6 +16,15 @@ class HashCommitToChain extends Model
     ];
     
     /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'hash_chain_id'
+    ];
+    
+    /**
      * Get the chain.
      */
     public function chain()
