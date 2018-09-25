@@ -27,15 +27,23 @@ class HashesController extends Controller
     {
         $this->model = $model;
     }
+    
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array
+     */
+    protected function rules()
+    {
+        return [
+            'branch' => 'required',
+            'owner' => 'required|string|exists:users,username'
+        ];
+    }
 
     /**
      * Retrieve users list.
      *
-     * @param Request $request
-     * @return Response
-     */
-
-    /**
      * @param Request $request
      * @return User[]|\Illuminate\Database\Eloquent\Collection
      */
@@ -54,25 +62,10 @@ class HashesController extends Controller
      */
     public function create(Request $request)
     {
-        $data = $request->json()->all();
-        
-        $hash = new HashCommit($data);
-            
-        $hash->saveOrFail();
-        
-        // save hash files
-        if (isset($data['files'])) {
-            $this->saveFiles($hash, $data['files']);
-        }
-        
-        // save hash chains
-        if (isset($data['chains'])) {
-            $this->saveChains($hash, $data['chains']);
-        }
-        
-        $hash->load(['files', 'chains']);
-                
-        return response()->json($hash, 201);
+        $this->validate($request, $this->rules());
+
+        $hash = new HashCommit();
+        return $this->save($hash, $request->json()->all()); 
     }
 
     /**
@@ -81,14 +74,27 @@ class HashesController extends Controller
      * @param  Request  $request
      * @param  string  $id
      * @return Response
+     * @throws \Throwable
      */
     public function update(Request $request, $id)
+    {        
+        $this->validate($request, $this->rules());
+        
+        $hash = $this->model->findOrFail($id);   
+        return $this->save($hash, $request->json()->all()); 
+    }
+    
+    /**
+     * Save hash and it's relations 
+     * 
+     * @param HashCommit $hash
+     * @param array $data
+     * @return Response
+     * @throws \Throwable
+     */
+    protected function save($hash, $data)
     {
-        $data = $request->json()->all();
-        
-        $hash = $this->model->findOrFail($id);
-        $hash->fill($request->json()->all());
-        
+        $hash->fill($data);
         $hash->saveOrFail();
         
         // save hash files
@@ -101,7 +107,7 @@ class HashesController extends Controller
             $this->saveChains($hash, $data['chains']);
         }
         
-        $hash->load(['files', 'chains']);
+        $hash->load(['files', 'chains', 'user']);
         
         return response()->json($hash->toArray());
     }

@@ -4,6 +4,7 @@ namespace App\Models\Hashes;
 
 use App\Models\Model;
 use App\Traits\Mappable;
+use App\Models\User;
 
 class HashCommit extends Model
 {
@@ -40,7 +41,7 @@ class HashCommit extends Model
         'hash_rev',
         'repo_timestamp'
     ];
-    
+   
     /**
      * The relations to eager load on every query.
      *
@@ -48,7 +49,8 @@ class HashCommit extends Model
      */
     protected $with = [
         'files',
-        'chains'
+        'chains',
+        'user'
     ];
     
     /**
@@ -65,6 +67,25 @@ class HashCommit extends Model
     public function chains()
     {
         return $this->hasMany('App\Models\Hashes\HashCommitToChain', 'hash_commit_id');
+    }
+    
+    /**
+     * Get user for the hash.
+     */
+    public function user()
+    {
+        return $this->belongsTo('App\Models\User', 'committed_by');
+    }
+    
+    /**
+     * Set committed by attribute
+     * 
+     * @param string $value
+     */
+    public function setCommittedByAttribute($value)
+    {   
+        $user = User::where('username', $value)->firstOrFail();
+        $this->attributes['committed_by'] = $user->id;
     }
     
     /**
@@ -88,6 +109,11 @@ class HashCommit extends Model
                 'chain_name'
             );
         }
+        
+        $array['committed_by'] = $array['user']['username'];
+        
+        // For some reason hidden is not working for relations!
+        unset($array['user']);
         
         return $array;
     }
