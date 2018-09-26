@@ -22,8 +22,6 @@ class HashCommit extends Model
         'repo_merge_branch'  => 'merge_branch',
         'repo_module'        => 'module',
         'committed_by'       => 'owner',
-        'repo_path'          => 'repo_path',
-        'repo_url'           => 'repo_url',
         'hash_rev'           => 'rev'
     ];
     

@@ -36,11 +36,11 @@ $router->group([
         
         // Hashes
         $router->group(['prefix' => 'hashes'], function () use ($router) {
-            $router->get('', 'HashesController@many');
-            $router->get('/{id:[0-9]+}', 'HashesController@show');
+            $router->get('', 'HashesController@getMany');
+            $router->get('/{hash_rev:[0-9a-z]+}', 'HashesController@getOne');
             $router->post('', ['as' => 'api/v1/hashes/create', 'uses' => 'HashesController@create']);
-            $router->put('/{id:[0-9]+}', ['as' => 'api/v1/hashes/update', 'uses' => 'HashesController@update']);
-            $router->delete('/{id:[0-9]+}', 'HashesController@delete');
+            $router->put('/{hash_rev:[0-9a-z]+}', ['as' => 'api/v1/hashes/update', 'uses' => 'HashesController@update']);
+            $router->delete('/{hash_rev:[0-9a-z]+}', 'HashesController@delete');
         });
         
         // Dependencies

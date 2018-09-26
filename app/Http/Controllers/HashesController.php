@@ -43,54 +43,68 @@ class HashesController extends Controller
     }
 
     /**
-     * Retrieve users list.
-     *
-     * @param Request $request
-     * @return User[]|\Illuminate\Database\Eloquent\Collection
-     */
-    public function many(Request $request)
-    {
-        return $this->model->setFilters($request)->get();
-    }
-
-    /**
      * Create new hash
      * 
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      * @throws \Throwable
-     * 
-     * @OA\Post(
-     *     path="/hashes",
-     *     @OA\Response(response="200", description="An example resource")
-     * )
      */
     public function create(Request $request)
     {
         $this->validate($request, $this->rules());
 
         $hash = new HashCommit();
-        return $this->save($hash, $request->json()->all()); 
+        return $this->save($hash, $request->json()->all(), 201); 
     }
 
     /**
      * Update the specified hash.
      *
      * @param  Request  $request
-     * @param  string  $id
+     * @param  string  $hash_rev
      * @return Response
-     * @throws \Throwable
-     * @OA\Put(
-     *     path="/hashes",
-     *     @OA\Response(response="200", description="An example resource")
-     * )
+     * @throws \Throwable)
      */
-    public function update(Request $request, $id)
-    {        
+    public function update(Request $request, $hash_rev)
+    {
         $this->validate($request, $this->rules());
         
-        $hash = $this->model->findOrFail($id);   
+        $hash = $this->model->where('hash_rev', $hash_rev)->firstOrFail();   
         return $this->save($hash, $request->json()->all()); 
+    }
+    
+    /**
+     * Delete the specified user.
+     *
+     * @param  string  $hash_rev
+     * @return Response
+     */
+    public function delete($hash_rev)
+    {
+        $this->model->where('hash_rev', $hash_rev)->destroy($hash_rev);
+        return response('Deleted', 204);
+    }
+
+    /**
+     * Retrieve the hash for the given revision.
+     *
+     * @param  int  $hash_rev
+     * @return Response
+     */
+    public function getOne($hash_rev)
+    {
+        return $this->model->where('hash_rev', $hash_rev)->firstOrFail(); 
+    }
+    
+    /**
+     * Retrieve hashes list.
+     *
+     * @param Request $request
+     * @return User[]|\Illuminate\Database\Eloquent\Collection
+     */
+    public function getMany(Request $request)
+    {
+        return $this->model->setFilters($request)->get();
     }
     
     /**
@@ -101,7 +115,7 @@ class HashesController extends Controller
      * @return Response
      * @throws \Throwable
      */
-    protected function save($hash, $data)
+    protected function save($hash, $data, $status = 200)
     {
         $hash->fill($data);
         $hash->saveOrFail();
@@ -116,32 +130,9 @@ class HashesController extends Controller
             $this->saveChains($hash, $data['chains']);
         }
         
-        $hash->load(['files', 'chains', 'user']);
+        $hash->load(['files', 'chains', 'owner']);
         
-        return response()->json($hash->toArray());
-    }
-
-    /**
-     * Delete the specified user.
-     *
-     * @param  string  $id
-     * @return Response
-     */
-    public function delete($id)
-    {
-        $this->model->destroy($id);
-        return response('Deleted', 204);
-    }
-
-    /**
-     * Retrieve the user for the given ID.
-     *
-     * @param  int  $id
-     * @return Response
-     */
-    public function show($id)
-    {
-        return $this->model->findOrFail($id);
+        return response()->json($hash->toArray(), $status);
     }
     
     /**
