@@ -26,19 +26,26 @@ trait Filterable
      */
     protected function getColumns()
     {
-        return Schema::getColumnListing($this->model->getTable());
+        return Schema::getColumnListing($this->getTable());
     }
 
     /**
-     * Fet filterable params
+     * Get filterable parameters
      *
      * @param Request $request
      * @return array
      */
     protected function getFilterableParams(Request $request)
     {
+        $data = $request->all();
+                
+        // Get mapped attributes if model uses mappable trait
+        if (method_exists($this, 'getMappededAttributes')) {
+            $data = $this->getMappededAttributes($data, array_flip($this->mapping));
+        }
+ 
         return array_intersect_key(
-            $request->all(),
+            $data,
             array_flip(
                 $this->getColumns()
             )
@@ -53,6 +60,7 @@ trait Filterable
      */
     protected function getFilterOperator($value)
     {
+        $matches = [];
         preg_match('/' . implode('|', $this->operators) . '/', $value, $matches);
 
         if ($matches) {
@@ -97,5 +105,18 @@ trait Filterable
             );
         }
         return $filters;
+    }
+    
+    public function setFilters(Request $request)
+    {
+        $model = $this->where($this->getFilters($request));
+        
+        if ($request->input('order_by')) {
+            $model = $model->orderBy($request->input('order_by'));
+        }
+            
+        $model = $model->limit($request->input('limit'));
+        
+        return $model;
     }
 }

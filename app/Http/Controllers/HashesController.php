@@ -6,12 +6,13 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Models\Hashes\HashCommit;
 use App\Models\Hashes\HashChain;
-use App\Traits\Filterable;
 
+/**
+ * Manage hashes
+ *
+ */
 class HashesController extends Controller
 {
-    use Filterable;
-
     /**
      * The user model instance.
      */
@@ -49,8 +50,7 @@ class HashesController extends Controller
      */
     public function many(Request $request)
     {
-        $filters = $this->getFilters($request);
-        return $this->model->with(['files', 'chains'])->where($filters)->get();
+        return $this->model->setFilters($request)->get();
     }
 
     /**
@@ -59,6 +59,11 @@ class HashesController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      * @throws \Throwable
+     * 
+     * @OA\Post(
+     *     path="/hashes",
+     *     @OA\Response(response="200", description="An example resource")
+     * )
      */
     public function create(Request $request)
     {
@@ -75,6 +80,10 @@ class HashesController extends Controller
      * @param  string  $id
      * @return Response
      * @throws \Throwable
+     * @OA\Put(
+     *     path="/hashes",
+     *     @OA\Response(response="200", description="An example resource")
+     * )
      */
     public function update(Request $request, $id)
     {        

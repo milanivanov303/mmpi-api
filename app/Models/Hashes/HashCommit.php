@@ -3,12 +3,14 @@
 namespace App\Models\Hashes;
 
 use App\Models\Model;
-use App\Traits\Mappable;
 use App\Models\User;
+use App\Traits\Mappable;
+use App\Traits\Filterable;
 
 class HashCommit extends Model
 {
     use Mappable;
+    use Filterable;
     
     /**
      * Array with mapped attributes for conversion
@@ -50,7 +52,7 @@ class HashCommit extends Model
     protected $with = [
         'files',
         'chains',
-        'user'
+        'owner'
     ];
     
     /**
@@ -72,7 +74,7 @@ class HashCommit extends Model
     /**
      * Get user for the hash.
      */
-    public function user()
+    public function owner()
     {
         return $this->belongsTo('App\Models\User', 'committed_by');
     }
@@ -110,10 +112,10 @@ class HashCommit extends Model
             );
         }
         
-        $array['committed_by'] = $array['user']['username'];
+        $array['committed_by'] = $array['owner']['username'];
         
         // For some reason hidden is not working for relations!
-        unset($array['user']);
+        unset($array['owner']);
         
         return $array;
     }
