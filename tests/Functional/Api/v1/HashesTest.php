@@ -7,35 +7,33 @@ class HashesTest extends TestCase
 {
     //use DatabaseTransactions;
     
-    /**
-     * Request data
-     * 
-     * @var array
-     */
-    protected $data;
-    
     public function setUp() {
         parent::setUp();
-        
         $this->actingAs(User::first());
-        
-        $this->data = [
-            "branch"       => "default",
-            "chains"       => [],
-            "description"  => "IXDEV-1650 e_honor_param backend\n\nadd MOLO as mvn profile",
-            "files"        => [  
-                "etc/configs/MOLOTCWALLET/imx_backend.properties",
-                "etc/configs/MOLOTCWALLET/imx_backend.xml",
-                "etc/configs/MOLOTCWALLET/wallet/cwallet.sso",
-                "etc/configs/MOLOTCWALLET/wallet/tnsnames.ora",
-                "pom.xml"
+    }
+    
+    public function getData()
+    {
+        return [
+            'branch'       => 'default',
+            'chains'       => [
+                'bcol_imx_v9_rel',
+                'bcol_imx_v9_rel'
+            ],
+            'description'  => 'IXDEV-1650 e_honor_param backend\n\nadd MOLO as mvn profile',
+            'files'        => [  
+                'etc/configs/MOLOTCWALLET/imx_backend.properties',
+                'etc/configs/MOLOTCWALLET/imx_backend.xml',
+                'etc/configs/MOLOTCWALLET/wallet/cwallet.sso',
+                'etc/configs/MOLOTCWALLET/wallet/tnsnames.ora',
+                'pom.xml'
              ],
-            "merge_branch" => "_DEV_IXDEV-1763 e_honor_param backend",
-            "module"       => "imx_be",
-            "owner"        => "astamenov",
-            "repo_path"    => "/extranet/hg/v9_be",
-            "repo_url"     => "http://lemon.codixfr.private:6002/v9_be",
-            "rev"          => "revision"
+            'merge_branch' => '_DEV_IXDEV-1763 e_honor_param backend',
+            'module'       => 'imx_be',
+            'owner'        => 'astamenov',
+            'repo_path'    => '/extranet/hg/v9_be',
+            'repo_url'     => 'http://lemon.codixfr.private:6002/v9_be',
+            'rev'          => 'sfdvbe5675uhrtn678'
         ];
     }
     
@@ -46,8 +44,8 @@ class HashesTest extends TestCase
      */
     public function testCreateHash()
     {
-        $data = $this->data;
-        
+        $data = $this->getData();
+
         $this
             ->json('POST', '/api/v1/hashes', $data)
             ->seeJson($data)
@@ -63,7 +61,7 @@ class HashesTest extends TestCase
      */
     public function testGetHash()
     {
-        $data = $this->data;
+        $data = $this->getData();
         
         $this
             ->json('GET', '/api/v1/hashes/' . $data['rev'])
@@ -78,8 +76,8 @@ class HashesTest extends TestCase
      */
     public function testUpdateHash()
     {
-        $data = $this->data;
-        $data['description'] = "Updated description";
+        $data = $this->getData();
+        $data['description'] = 'Updated description';
 
         $this
             ->json('PUT', '/api/v1/hashes/' . $data['rev'], $data)

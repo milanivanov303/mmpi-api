@@ -31,14 +31,16 @@ class HashesController extends Controller
     
     /**
      * Get the validation rules that apply to the request.
-     *
+     * 
+     * @param int $hash_id
      * @return array
      */
-    protected function rules()
+    protected function rules($hash_id = null)
     {
         return [
             'branch' => 'required',
-            'owner' => 'required|string|exists:users,username'
+            'owner'  => 'required|string|exists:users,username',
+            'rev'    => 'required|string|unique:hash_commits,hash_rev,' . $hash_id 
         ];
     }
 
@@ -67,9 +69,12 @@ class HashesController extends Controller
      */
     public function update(Request $request, $hash_rev)
     {
-        $this->validate($request, $this->rules());
+        $hash = $this->model->where('hash_rev', $hash_rev)->firstOrFail();
         
-        $hash = $this->model->where('hash_rev', $hash_rev)->firstOrFail();   
+        $this->validate($request, $this->rules($hash->id));
+        
+        //$request->json()->remove('rev');
+                
         return $this->save($hash, $request->json()->all()); 
     }
     

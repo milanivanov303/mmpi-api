@@ -64,8 +64,9 @@ $app->singleton(
  ]);
 
 $app->routeMiddleware([
-    'auth' => App\Http\Middleware\Authenticate::class,
-    'json-validator' => App\Http\Middleware\JsonValidatorMiddleware::class
+    'auth'           => App\Http\Middleware\Authenticate::class,
+    'json-validator' => App\Http\Middleware\JsonValidatorMiddleware::class,
+    'http-logger'    => App\Http\Middleware\HttpLoggerMiddleware::class
 ]);
 
 /*
