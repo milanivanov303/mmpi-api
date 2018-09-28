@@ -7,7 +7,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Log;
 
 class HttpLoggerMiddleware
-{   
+{
+
     /**
      * Handle an incoming request.
      *
@@ -25,13 +26,13 @@ class HttpLoggerMiddleware
     
     /**
      * Log request
-     * 
+     *
      * @param Request $request
      * @param Response $response
      */
     protected function log(Request $request)
     {
-        // generate curl command here!
+        // generate curl command here, so it can be used directly!
         Log::channel('http')->info($request->__toString());
     }
 }

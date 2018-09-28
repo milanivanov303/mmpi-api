@@ -31,7 +31,7 @@ class HashesController extends Controller
     
     /**
      * Get the validation rules that apply to the request.
-     * 
+     *
      * @param int $hash_id
      * @return array
      */
@@ -40,13 +40,13 @@ class HashesController extends Controller
         return [
             'branch' => 'required',
             'owner'  => 'required|string|exists:users,username',
-            'rev'    => 'required|string|unique:hash_commits,hash_rev,' . $hash_id 
+            'rev'    => 'required|string|unique:hash_commits,hash_rev,' . $hash_id
         ];
     }
 
     /**
      * Create new hash
-     * 
+     *
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      * @throws \Throwable
@@ -56,7 +56,7 @@ class HashesController extends Controller
         $this->validate($request, $this->rules());
 
         $hash = new HashCommit();
-        return $this->save($hash, $request->json()->all(), 201); 
+        return $this->save($hash, $request->json()->all(), 201);
     }
 
     /**
@@ -75,7 +75,7 @@ class HashesController extends Controller
         
         //$request->json()->remove('rev');
                 
-        return $this->save($hash, $request->json()->all()); 
+        return $this->save($hash, $request->json()->all());
     }
     
     /**
@@ -98,7 +98,7 @@ class HashesController extends Controller
      */
     public function getOne($hash_rev)
     {
-        return $this->model->where('hash_rev', $hash_rev)->firstOrFail(); 
+        return $this->model->where('hash_rev', $hash_rev)->firstOrFail();
     }
     
     /**
@@ -113,8 +113,8 @@ class HashesController extends Controller
     }
     
     /**
-     * Save hash and it's relations 
-     * 
+     * Save hash and it's relations
+     *
      * @param HashCommit $hash
      * @param array $data
      * @return Response
@@ -142,10 +142,10 @@ class HashesController extends Controller
     
     /**
      * Save hash files
-     * 
+     *
      * @param HashCommit $hash
      * @param array $files
-     * 
+     *
      * @throws \Throwable
      */
     private function saveFiles($hash, $files)
@@ -162,10 +162,10 @@ class HashesController extends Controller
     
     /**
      * Save hash chains
-     * 
+     *
      * @param HashCommit $hash
      * @param array $chains
-     * 
+     *
      * @throws \Throwable
      */
     private function saveChains($hash, $chains)

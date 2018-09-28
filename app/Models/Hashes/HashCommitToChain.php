@@ -5,7 +5,9 @@ namespace App\Models\Hashes;
 use App\Models\Model;
 
 class HashCommitToChain extends Model
-{    
+{
+
+    
     /**
      * The relations to eager load on every query.
      *

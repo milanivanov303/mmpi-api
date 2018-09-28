@@ -79,11 +79,11 @@ class HashCommit extends Model
     
     /**
      * Set committed by attribute
-     * 
+     *
      * @param string $value
      */
     public function setCommittedByAttribute($value)
-    {   
+    {
         $user = User::where('username', $value)->firstOrFail();
         $this->attributes['committed_by'] = $user->id;
     }

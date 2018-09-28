@@ -3,7 +3,7 @@ namespace App\Traits;
 
 /**
  * Trait to help mapping remote attributes to local names
- * 
+ *
  * Define mapping with associative array.
  * ex. protected $mapping = ['name' => 'client_name'];
  *
@@ -12,14 +12,14 @@ trait Mappable
 {
     /**
      * Map attributes names
-     * 
+     *
      * @param array $attributes
      * @param array $mapping
      * @return array
      */
     protected function getMappededAttributes($attributes, $mapping)
     {
-        foreach($mapping as $from_key => $to_key) {
+        foreach ($mapping as $from_key => $to_key) {
             if (array_key_exists($from_key, $attributes)) {
                 $attributes[$to_key] = $attributes[$from_key];
                 unset($attributes[$from_key]);
