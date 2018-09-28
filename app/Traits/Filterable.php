@@ -106,16 +106,31 @@ trait Filterable
         }
         return $filters;
     }
-    
+
+    /**
+     * Set model filters
+     * 
+     * @param Request $request
+     * @return \Illuminate\Database\Eloquent\Model
+     */
     public function setFilters(Request $request)
     {
         $model = $this->where($this->getFilters($request));
         
         if ($request->input('order_by')) {
-            $model = $model->orderBy($request->input('order_by'));
+            $order_by = $request->input('order_by');
+
+            // Get mapped attribute if model uses mappable trait
+            if (method_exists($this, 'getMappededAttribute')) {
+                $order_by = $this->getMappededAttribute($order_by, array_flip($this->mapping));
+            }
+
+            $model = $model->orderBy($order_by, $request->input('order_dir', 'ASC'));
         }
-            
-        $model = $model->limit($request->input('limit'));
+
+        if ($request->input('limit')) {
+            $model = $model->limit($request->input('limit'));
+        }
         
         return $model;
     }

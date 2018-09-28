@@ -27,6 +27,21 @@ trait Mappable
         }
         return $attributes;
     }
+
+    /**
+     * Map attribute name
+     *
+     * @param string $attribute
+     * @param array $mapping
+     * @return string
+     */
+    protected function getMappededAttribute($attribute, $mapping)
+    {
+        if (array_key_exists($attribute, $mapping)) {
+            return $mapping[$attribute];
+        }
+        return $attribute;
+    }
     
     /**
      * Convert the model instance to an array.

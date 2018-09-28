@@ -41,6 +41,15 @@ class HashCommit extends Model
         'hash_rev',
         'repo_timestamp'
     ];
+
+    /**
+     * The attributes that will be hidden in output json
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'id'
+    ];
    
     /**
      * The relations to eager load on every query.

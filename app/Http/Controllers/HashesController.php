@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Models\Hashes\HashCommit;
 use App\Models\Hashes\HashChain;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Manage hashes
@@ -14,7 +15,7 @@ use App\Models\Hashes\HashChain;
 class HashesController extends Controller
 {
     /**
-     * The user model instance.
+     * The hash model instance.
      */
     protected $model;
 
@@ -72,8 +73,6 @@ class HashesController extends Controller
         $hash = $this->model->where('hash_rev', $hash_rev)->firstOrFail();
         
         $this->validate($request, $this->rules($hash->id));
-        
-        //$request->json()->remove('rev');
                 
         return $this->save($hash, $request->json()->all());
     }
@@ -86,8 +85,16 @@ class HashesController extends Controller
      */
     public function delete($hash_rev)
     {
-        $this->model->where('hash_rev', $hash_rev)->destroy($hash_rev);
-        return response('Deleted', 204);
+        DB::transaction(function() use ($hash_rev) {
+            $hash = $this->model->where('hash_rev', $hash_rev)->firstOrFail();
+
+            $hash->files()->delete();
+            $hash->chains()->delete();
+
+            $hash->delete();
+        });
+
+        return response('Hash deleted successfully', 204);
     }
 
     /**
@@ -98,7 +105,9 @@ class HashesController extends Controller
      */
     public function getOne($hash_rev)
     {
-        return $this->model->where('hash_rev', $hash_rev)->firstOrFail();
+        return $this->output(
+            $this->model->where('hash_rev', $hash_rev)->firstOrFail()
+        );
     }
     
     /**
@@ -109,7 +118,13 @@ class HashesController extends Controller
      */
     public function getMany(Request $request)
     {
-        return $this->model->setFilters($request)->get();
+        if ($request->input('page')) {
+            $data = $this->model->setFilters($request)->paginate($request->input('per_page'));
+        } else {
+            $data = $this->model->setFilters($request)->get();
+        }
+
+        return $this->output($data);
     }
     
     /**
@@ -123,21 +138,24 @@ class HashesController extends Controller
     protected function save($hash, $data, $status = 200)
     {
         $hash->fill($data);
-        $hash->saveOrFail();
         
-        // save hash files
-        if (isset($data['files'])) {
-            $this->saveFiles($hash, $data['files']);
-        }
-        
-        // save hash chains
-        if (isset($data['chains'])) {
-            $this->saveChains($hash, $data['chains']);
-        }
-        
+        DB::transaction(function() use ($hash, $data) {    
+            $hash->saveOrFail();
+
+            // save hash files
+            if (isset($data['files'])) {
+                $this->saveFiles($hash, $data['files']);
+            }
+
+            // save hash chains
+            if (isset($data['chains'])) {
+                $this->saveChains($hash, $data['chains']);
+            }    
+        });
+
         $hash->load(['files', 'chains', 'owner']);
         
-        return response()->json($hash->toArray(), $status);
+        return $this->output($hash, $status);
     }
     
     /**
