@@ -5,13 +5,17 @@ use Laravel\Lumen\Testing\DatabaseTransactions;
 
 class HashesTest extends TestCase
 {
-    //use DatabaseTransactions;
+    use DatabaseTransactions;
     
     public function setUp() {
         parent::setUp();
         $this->actingAs(User::first());
     }
-    
+    /**
+     * Get request data
+     * 
+     * @return array
+     */
     public function getData()
     {
         return [
@@ -33,13 +37,21 @@ class HashesTest extends TestCase
             'owner'        => 'astamenov',
             'repo_path'    => '/extranet/hg/v9_be',
             'repo_url'     => 'http://lemon.codixfr.private:6002/v9_be',
-            'rev'          => 'sfdvbe5675uhrtn678'
+            'rev'          => bin2hex(random_bytes(10))
         ];
     }
     
     /**
      * Test creation of hash
-     * 
+     *
+     * @OA\Info(title="My First API", version="0.1")
+     *
+     * @OA\Post(
+     *     path="/hashes/",
+     *     @OA\Parameter(name="body", in="path", @OA\Schema(type="json")),
+     *     @OA\Response(response="200", description="An example resource")
+     * )
+     *
      * @return void
      */
     public function testCreateHash()
@@ -53,6 +65,26 @@ class HashesTest extends TestCase
         
         $this->seeInDatabase('hash_commits', ['hash_rev' => $data['rev']]);
     }
+
+    /**
+     * Test creation of hash with wrong data
+     *
+     * @return void
+     */
+    public function testCreateHashWithInvalidData()
+    {
+        $data = $this->getData();
+
+        unset($data['branch']);
+        $data['owner'] = 'INVALID_OWNER';
+
+        $this
+            ->json('POST', '/api/v1/hashes', $data)
+            ->seeJsonStructure(['branch', 'owner'])
+            ->assertResponseStatus(422);
+
+        $this->missingFromDatabase('hash_commits', ['hash_rev' => $data['rev']]);
+    }
     
     /**
      * Test get single hash
@@ -62,13 +94,27 @@ class HashesTest extends TestCase
     public function testGetHash()
     {
         $data = $this->getData();
-        
+
+        $this->json('POST', '/api/v1/hashes', $data);
+
         $this
-            ->json('GET', '/api/v1/hashes/' . $data['rev'])
+            ->get('/api/v1/hashes/' . $data['rev'])
             ->seeJson($data)
             ->assertResponseOk();
     }
-    
+
+    /**
+     * Test get non existing hash
+     *
+     * @return void
+     */
+    public function testGetNonExistingHash()
+    {
+        $this
+            ->get('/api/v1/hashes/NON-EXISTING-HASH')
+            ->assertResponseStatus(404);
+    }
+
     /**
      * Test update of hash
      * 
@@ -77,6 +123,9 @@ class HashesTest extends TestCase
     public function testUpdateHash()
     {
         $data = $this->getData();
+
+        $this->json('POST', '/api/v1/hashes', $data);
+
         $data['description'] = 'Updated description';
 
         $this
@@ -85,6 +134,24 @@ class HashesTest extends TestCase
             ->assertResponseOk();
         
         $this->seeInDatabase('hash_commits', ['hash_rev' => $data['rev']]);
+    }
+
+    /**
+     * Test get single hash
+     *
+     * @return void
+     */
+    public function testDeleteHash()
+    {
+        $data = $this->getData();
+
+        $this->json('POST', '/api/v1/hashes', $data);
+
+        $this
+            ->json('DELETE', '/api/v1/hashes/' . $data['rev'])
+            ->assertResponseStatus(204);
+
+        $this->missingFromDatabase('hash_commits', ['hash_rev' => $data['rev']]);
     }
     
     /**
@@ -95,7 +162,22 @@ class HashesTest extends TestCase
     public function testGetHashesList()
     {
         $this
-            ->json('GET', '/api/v1/hashes')
+            ->json('GET', '/api/v1/hashes?limit=10')
+            ->shouldReturnJson()
+            ->assertResponseOk();
+    }
+
+
+    /**
+     * Test get paginated hash list
+     *
+     * @return void
+     */
+    public function testGetPaginatedHashesList()
+    {
+        $this
+            ->json('GET', '/api/v1/hashes?page=3')
+            ->seeJsonStructure(['total', 'current_page', 'data'])
             ->assertResponseOk();
     }
 }
