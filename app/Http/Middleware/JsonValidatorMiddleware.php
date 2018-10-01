@@ -2,10 +2,12 @@
 
 namespace App\Http\Middleware;
 
-use JsonSchema\Validator;
-use JsonSchema\Exception\ExceptionInterface;
 use Closure;
 use App\Exceptions\FileException;
+use Opis\JsonSchema\Validator;
+use Opis\JsonSchema\FilterContainer;
+use App\Helpers\JsonSchema\Filters\CheckInDbFilter;
+use App\Helpers\JsonSchema\Errors\ErrorFactory;
 
 class JsonValidatorMiddleware
 {
@@ -18,49 +20,79 @@ class JsonValidatorMiddleware
      */
     public function handle($request, Closure $next)
     {
-        try {
-            //$request->route()->getName() - this is correct way to access route name. but it is not working!
-
-            $routeName = $request->route()[1]['as'] ?? '';
-
-            $scheme = $this->getScheme(
-                __DIR__ . "/../../../schemes/{$routeName}.json"
-            );
-
-            $data = (object)$request->json()->all();
-
-            $validator = new Validator;
-            $validator->validate($data, $scheme);
-            //$validator->coerce($data, $scheme);
-
-            if (!$validator->isValid()) {
-                return response()->json($validator->getErrors(), 422);
-            }
-
-            return $next($request);
-        } catch (ExceptionInterface $e) {
-            return response($e->getMessage(), 400);
-        } catch (FileException $e) {
-            // if no scheme defined skip validation
+        // Skip json validation for GET requests
+        if ($request->isMethod('GET')) {
             return $next($request);
         }
+
+        try {
+            //$request->route()->getName() - this is correct way to access route name.
+            // But it is not working!
+            $routeName = $request->route()[1]['as'] ?? '';
+
+            $schema = $this->getSchema(
+                __DIR__ . "/../../../schemas/{$routeName}.json"
+            );
+
+            $validator = new Validator();
+            $validator->setFilters($this->getFilters());
+
+            $result = $validator->dataValidation(
+                (object)$request->json()->all(),
+                $schema,
+                PHP_INT_MAX
+            );
+
+            if ($result->isValid()) {
+                return $next($request);
+            }
+
+            $errors = [];
+            foreach($result->getErrors() as $error) {
+                $errors[] = ErrorFactory::create($error)->getMessage();
+                
+                //var_dump($error);
+                echo "keyword: ", $error->keyword(), PHP_EOL;
+                echo "keywordArgs: ", json_encode($error->keywordArgs(), JSON_PRETTY_PRINT), PHP_EOL;
+                //echo "Schema: ", print_r($error->schema()), PHP_EOL;
+                echo "data: ", print_r($error->data()), PHP_EOL;
+                echo "dataPointer: ", print_r($error->dataPointer()), PHP_EOL;
+                echo PHP_EOL;
+                
+            }
+
+            return response()->json($errors, 422);
+            
+        } catch (FileException $e) {
+            return response($e->getMessage(), 404);
+        }  
     }
 
     /**
-     * Get request JSON scheme
+     * Get request JSON schema
      *
      * @param string $filename
      * @return object
      * @throws FileException
      */
-    protected function getScheme($filename)
+    protected function getSchema($filename)
     {
         if (!file_exists($filename)) {
-            throw new FileException('JSON scheme not found');
+            throw new FileException('JSON schema for this request is not found');
         }
 
         return json_decode(
             file_get_contents($filename)
         );
+    }
+
+    /**
+     * Get custom JSON schema filters
+     * @return FormatContainer
+     */
+    protected function getFilters()
+    {
+        return (new FilterContainer())
+                    ->add("string", "checkInDb", new CheckInDbFilter());
     }
 }

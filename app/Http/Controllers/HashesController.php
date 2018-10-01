@@ -29,21 +29,6 @@ class HashesController extends Controller
     {
         $this->model = $model;
     }
-    
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @param int $hash_id
-     * @return array
-     */
-    protected function rules($hash_id = null)
-    {
-        return [
-            'branch' => 'required',
-            'owner'  => 'required|string|exists:users,username',
-            'rev'    => 'required|string|unique:hash_commits,hash_rev,' . $hash_id
-        ];
-    }
 
     /**
      * Create new hash
@@ -54,8 +39,6 @@ class HashesController extends Controller
      */
     public function create(Request $request)
     {
-        $this->validate($request, $this->rules());
-
         $hash = new HashCommit();
         return $this->save($hash, $request->json()->all(), 201);
     }
@@ -71,9 +54,6 @@ class HashesController extends Controller
     public function update(Request $request, $hash_rev)
     {
         $hash = $this->model->where('hash_rev', $hash_rev)->firstOrFail();
-        
-        $this->validate($request, $this->rules($hash->id));
-                
         return $this->save($hash, $request->json()->all());
     }
     
