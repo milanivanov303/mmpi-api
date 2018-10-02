@@ -48,7 +48,14 @@ class JsonValidatorMiddleware
             }
 
             $errors = array_map(function ($error) {
-                return Error::create($error)->getMessage();
+                $error = new Error($error);
+                /*
+                return [
+                    'property' => $error->getProperty(),
+                    'message'  => $error->getMessage()
+                ];
+                 */
+                return $error->getMessage();
             }, $result->getErrors());
 
             return response()->json($errors, 422);

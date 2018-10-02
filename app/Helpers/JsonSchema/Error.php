@@ -19,24 +19,23 @@ class Error
     }
 
     /**
-     * Create instance
-     *
-     * @param ValidationError $error
-     * @return \self
-     */
-    public static function create(ValidationError $error)
-    {
-        return new self($error);
-    }
-
-    /**
      * Get property name
      *
      * @return string
      */
-    protected function getProperty()
+    public function getProperty()
     {
         return $this->error->dataPointer()[0];
+    }
+
+    /**
+     * Get capitalized property name
+     *
+     * @return string
+     */
+    public function getCapitalizedProperty()
+    {
+        return ucfirst($this->getProperty());
     }
 
     /**
@@ -86,56 +85,56 @@ class Error
             return $this->{$methodName}();
         }
         var_dump($this->error);
-        return "{$this->getProperty()} is invalid";
+        return "{$this->getCapitalizedProperty()} is invalid";
     }
 
     protected function getMaxLengthError()
     {
-        return "{$this->getProperty()} can have a maximum length of {$this->error->keywordArgs()['max']}";
+        return "{$this->getCapitalizedProperty()} can have a maximum length of {$this->error->keywordArgs()['max']}";
     }
 
     protected function getMinLengthError()
     {
-        return "{$this->getProperty()} can have a minimum length of {$this->error->keywordArgs()['min']}";
+        return "{$this->getCapitalizedProperty()} can have a minimum length of {$this->error->keywordArgs()['min']}";
     }
 
     protected function getFiltersError()
     {
-        return "{$this->getProperty()} does not match filter {$this->error->keywordArgs()['filter']}";
+        return "{$this->getCapitalizedProperty()} does not match filter {$this->error->keywordArgs()['filter']}";
     }
 
     protected function getPatternError()
     {
-        return "{$this->getProperty()} should match pattern {$this->error->keywordArgs()['pattern']}";
+        return "{$this->getCapitalizedProperty()} should match pattern {$this->error->keywordArgs()['pattern']}";
     }
 
     protected function getTypeError()
     {
-        return "{$this->getProperty()} should be {$this->error->keywordArgs()['expected']}";
+        return "{$this->getCapitalizedProperty()} should be {$this->error->keywordArgs()['expected']}";
     }
 
     protected function getFormatError()
     {
-        return "{$this->getProperty()} should be valid {$this->error->keywordArgs()['format']}";
+        return "{$this->getCapitalizedProperty()} should be valid {$this->error->keywordArgs()['format']}";
     }
 
     protected function getMaximumError()
     {
-        return "{$this->getProperty()} should be greater or equal {$this->error->keywordArgs()['max']}";
+        return "{$this->getCapitalizedProperty()} should be greater or equal {$this->error->keywordArgs()['max']}";
     }
     
     protected function getMinimumError()
     {
-        return "{$this->getProperty()} should be lower or equal {$this->error->keywordArgs()['min']}";
+        return "{$this->getCapitalizedProperty()} should be lower or equal {$this->error->keywordArgs()['min']}";
     }
 
     protected function getExclusiveMinimumError()
     {
-        return "{$this->getProperty()} should be lower then {$this->error->keywordArgs()['min']}";
+        return "{$this->getCapitalizedProperty()} should be lower then {$this->error->keywordArgs()['min']}";
     }
 
     protected function getExclusiveMaximumError()
     {
-        return "{$this->getProperty()} should be greater then {$this->error->keywordArgs()['max']}";
+        return "{$this->getCapitalizedProperty()} should be greater then {$this->error->keywordArgs()['max']}";
     }
 }

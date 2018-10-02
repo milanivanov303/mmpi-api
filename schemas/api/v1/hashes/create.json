@@ -10,7 +10,9 @@
     ],
     "properties": {
         "branch": {
-            "type": "string"
+            "type": "string",
+            "maxLength": 2,
+            "format": "email"
         },
         "owner": {
             "type": "string",
