@@ -109,7 +109,7 @@ trait Filterable
 
     /**
      * Set model filters
-     * 
+     *
      * @param Request $request
      * @return \Illuminate\Database\Eloquent\Model
      */

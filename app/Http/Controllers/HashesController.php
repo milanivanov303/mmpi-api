@@ -65,7 +65,7 @@ class HashesController extends Controller
      */
     public function delete($hash_rev)
     {
-        DB::transaction(function() use ($hash_rev) {
+        DB::transaction(function () use ($hash_rev) {
             $hash = $this->model->where('hash_rev', $hash_rev)->firstOrFail();
 
             $hash->files()->delete();
@@ -119,7 +119,7 @@ class HashesController extends Controller
     {
         $hash->fill($data);
         
-        DB::transaction(function() use ($hash, $data) {    
+        DB::transaction(function () use ($hash, $data) {
             $hash->saveOrFail();
 
             // save hash files
@@ -130,7 +130,7 @@ class HashesController extends Controller
             // save hash chains
             if (isset($data['chains'])) {
                 $this->saveChains($hash, $data['chains']);
-            }    
+            }
         });
 
         $hash->load(['files', 'chains', 'owner']);

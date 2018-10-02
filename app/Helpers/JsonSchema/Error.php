@@ -13,8 +13,9 @@ class Error
      */
     protected $error;
 
-    public function __construct(ValidationError $error) {
-        $this->error = $error;  
+    public function __construct(ValidationError $error)
+    {
+        $this->error = $error;
     }
 
     /**
@@ -30,7 +31,7 @@ class Error
 
     /**
      * Get property name
-     * 
+     *
      * @return string
      */
     protected function getProperty()
@@ -40,7 +41,7 @@ class Error
 
     /**
      * Check if there is defined message for this error
-     * 
+     *
      * @return bool
      */
     protected function hasDefinedMessage()
@@ -51,7 +52,7 @@ class Error
 
     /**
      * Get error defined message
-     * 
+     *
      * @return string
      */
     protected function getDefinedMessage()
@@ -61,7 +62,7 @@ class Error
 
     /**
      * Get error message
-     * 
+     *
      * @return mixed
      */
     public function getMessage()
@@ -74,7 +75,7 @@ class Error
 
     /**
      * Convert error object to string
-     * 
+     *
      * @return string
      */
     protected function toString()

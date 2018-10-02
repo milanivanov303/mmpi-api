@@ -11,6 +11,6 @@ class CheckInDbFilter implements IFilter
     {
          return Validator::make(['field' => $value], [
             'field' => $args['rule'],
-        ])->passes();
+         ])->passes();
     }
 }

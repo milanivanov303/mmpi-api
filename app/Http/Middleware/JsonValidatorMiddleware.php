@@ -47,15 +47,14 @@ class JsonValidatorMiddleware
                 return $next($request);
             }
 
-            $errors = array_map(function($error) {
+            $errors = array_map(function ($error) {
                 return Error::create($error)->getMessage();
             }, $result->getErrors());
 
             return response()->json($errors, 422);
-            
         } catch (FileException $e) {
             return response($e->getMessage(), 404);
-        }  
+        }
     }
 
     /**
