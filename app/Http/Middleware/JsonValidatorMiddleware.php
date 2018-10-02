@@ -7,7 +7,7 @@ use App\Exceptions\FileException;
 use Opis\JsonSchema\Validator;
 use Opis\JsonSchema\FilterContainer;
 use App\Helpers\JsonSchema\Filters\CheckInDbFilter;
-use App\Helpers\JsonSchema\Errors\ErrorFactory;
+use App\Helpers\JsonSchema\Error;
 
 class JsonValidatorMiddleware
 {
@@ -47,19 +47,9 @@ class JsonValidatorMiddleware
                 return $next($request);
             }
 
-            $errors = [];
-            foreach($result->getErrors() as $error) {
-                $errors[] = ErrorFactory::create($error)->getMessage();
-                
-                //var_dump($error);
-                echo "keyword: ", $error->keyword(), PHP_EOL;
-                echo "keywordArgs: ", json_encode($error->keywordArgs(), JSON_PRETTY_PRINT), PHP_EOL;
-                //echo "Schema: ", print_r($error->schema()), PHP_EOL;
-                echo "data: ", print_r($error->data()), PHP_EOL;
-                echo "dataPointer: ", print_r($error->dataPointer()), PHP_EOL;
-                echo PHP_EOL;
-                
-            }
+            $errors = array_map(function($error) {
+                return Error::create($error)->getMessage();
+            }, $result->getErrors());
 
             return response()->json($errors, 422);
             
