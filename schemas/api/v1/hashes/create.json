@@ -1,5 +1,5 @@
 {
-    "$id": "hashes-create.json",
+    "$id": "/api/v1/hashes/create.json",
     "$schema": "http://json-schema.org/draft-07/schema#",
     "type": "object",
     "additionalProperties": false,
@@ -10,9 +10,7 @@
     ],
     "properties": {
         "branch": {
-            "type": "string",
-            "maxLength": 2,
-            "format": "email"
+            "type": "string"
         },
         "owner": {
             "type": "string",

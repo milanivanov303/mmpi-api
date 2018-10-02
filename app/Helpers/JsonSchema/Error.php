@@ -25,6 +25,14 @@ class Error
      */
     public function getProperty()
     {
+        if ($this->error->keyword() === 'required') {
+            return $this->error->keywordArgs()['missing'];
+        }
+
+        if ($this->error->keyword() === "additionalProperties") {
+            return $this->error->keyword();
+        }
+
         return $this->error->dataPointer()[0];
     }
 
@@ -84,8 +92,23 @@ class Error
         if (method_exists($this, $methodName)) {
             return $this->{$methodName}();
         }
-        var_dump($this->error);
         return "{$this->getCapitalizedProperty()} is invalid";
+    }
+    
+    protected function getRequiredError()
+    {
+        return "{$this->getCapitalizedProperty()} is required";
+    }
+
+    protected function getAdditionalPropertiesError()
+    {
+        $properties = implode(
+            ' and ',
+            array_map(function ($error) {
+                return $error->dataPointer()[0];
+            }, $this->error->subErrors())
+        );
+        return "Not allowed properties {$properties}";
     }
 
     protected function getMaxLengthError()

@@ -75,13 +75,19 @@ class HashesTest extends TestCase
     {
         $data = $this->getData();
 
-        unset($data['branch']);
+        // Set invalid parameters
         $data['owner'] = 'INVALID_OWNER';
+        $data['rev']   = 'INVALID_REV';
+
+        // remove required parameters
+        unset($data['branch']);
 
         $this
             ->json('POST', '/api/v1/hashes', $data)
-            ->seeJsonStructure(['branch', 'owner'])
+            ->seeJsonStructure(['branch', 'owner', 'rev'])
             ->assertResponseStatus(422);
+
+        //var_dump($this->response->status(), $this->response->getData());
 
         $this->missingFromDatabase('hash_commits', ['hash_rev' => $data['rev']]);
     }
@@ -123,17 +129,22 @@ class HashesTest extends TestCase
     public function testUpdateHash()
     {
         $data = $this->getData();
-
+        
         $this->json('POST', '/api/v1/hashes', $data);
 
-        $data['description'] = 'Updated description';
+        // Change parameters
+        $data['description'] = 'UPDATED_DESCRIPTION';
+
+        // Save rev and unset it from data as PUT does not allows rev
+        $rev = $data['rev'];
+        unset($data['rev']);
 
         $this
-            ->json('PUT', '/api/v1/hashes/' . $data['rev'], $data)
+            ->json('PUT', '/api/v1/hashes/' . $rev, $data)
             ->seeJson($data)
             ->assertResponseOk();
         
-        $this->seeInDatabase('hash_commits', ['hash_rev' => $data['rev']]);
+        $this->seeInDatabase('hash_commits', ['hash_rev' => $rev]);
     }
 
     /**
@@ -164,6 +175,7 @@ class HashesTest extends TestCase
         $this
             ->json('GET', '/api/v1/hashes?limit=10')
             ->shouldReturnJson()
+            ->seeJsonStructure(['data'])
             ->assertResponseOk();
     }
 

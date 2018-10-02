@@ -1,0 +1,39 @@
+{
+    "$id": "/api/v1/hashes/update.json",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+        "branch",
+        "owner"
+    ],
+    "properties": {
+        "branch": {
+            "$ref": "/api/v1/hashes/create.json#/properties/branch"
+        },
+        "owner": {
+            "$ref": "/api/v1/hashes/create.json#/properties/owner"
+        },
+        "chains": {  
+           "$ref": "/api/v1/hashes/create.json#/properties/chains"
+        },
+        "description": {
+            "$ref": "/api/v1/hashes/create.json#/properties/description"
+        },
+        "files": {
+            "$ref": "/api/v1/hashes/create.json#/properties/files"
+        },
+        "merge_branch": {
+            "$ref": "/api/v1/hashes/create.json#/properties/merge_branch"
+        },
+        "module": {
+            "$ref": "/api/v1/hashes/create.json#/properties/module"
+        },
+        "repo_path": {
+            "$ref": "/api/v1/hashes/create.json#/properties/repo_path"
+        },
+        "repo_url": {
+            "$ref": "/api/v1/hashes/create.json#/properties/repo_url"
+        }
+    }
+}

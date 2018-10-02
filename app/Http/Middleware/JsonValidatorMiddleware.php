@@ -21,13 +21,11 @@ class JsonValidatorMiddleware
     public function handle($request, Closure $next)
     {
         // Skip json validation for GET requests
-        if ($request->isMethod('GET')) {
+        if ($request->isMethod('GET') || $request->isMethod('DELETE')) {
             return $next($request);
         }
 
         try {
-            //$request->route()->getName() - this is correct way to access route name.
-            // But it is not working!
             $routeName = $request->route()[1]['as'] ?? '';
 
             $schema = $this->getSchema(
@@ -35,7 +33,15 @@ class JsonValidatorMiddleware
             );
 
             $validator = new Validator();
-            $validator->setFilters($this->getFilters());
+            $validator->setFilters(
+                (new FilterContainer())
+                    ->add("string", "checkInDb", new CheckInDbFilter())
+            );
+            $validator->setLoader(
+                new \Opis\JsonSchema\Loaders\File('/', [
+                    __DIR__ . "/../../../schemas/"
+                ])
+            );
 
             $result = $validator->dataValidation(
                 (object)$request->json()->all(),
@@ -47,16 +53,15 @@ class JsonValidatorMiddleware
                 return $next($request);
             }
 
-            $errors = array_map(function ($error) {
+            $errors = [];
+            foreach ($result->getErrors() as $error) {
                 $error = new Error($error);
-                /*
-                return [
-                    'property' => $error->getProperty(),
-                    'message'  => $error->getMessage()
-                ];
-                 */
-                return $error->getMessage();
-            }, $result->getErrors());
+                if (array_key_exists($error->getProperty(), $errors)) {
+                    array_push($errors[$error->getProperty()], $error->getMessage());
+                } else {
+                    $errors[$error->getProperty()] = [$error->getMessage()];
+                }
+            }
 
             return response()->json($errors, 422);
         } catch (FileException $e) {
@@ -80,15 +85,5 @@ class JsonValidatorMiddleware
         return json_decode(
             file_get_contents($filename)
         );
-    }
-
-    /**
-     * Get custom JSON schema filters
-     * @return FormatContainer
-     */
-    protected function getFilters()
-    {
-        return (new FilterContainer())
-                    ->add("string", "checkInDb", new CheckInDbFilter());
     }
 }
