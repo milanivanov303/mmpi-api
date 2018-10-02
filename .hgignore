@@ -3,3 +3,4 @@
 ^vendor$
 ^storage/logs$
 ^db$
+^\.idea$
