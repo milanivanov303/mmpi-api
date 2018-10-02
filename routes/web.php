@@ -19,7 +19,7 @@ $router->get('/', function () use ($router) {
 // API
 $router->group([
     'prefix'     => 'api',
-    'middleware' => ['auth', 'json-validator', 'http-logger']
+    'middleware' => ['auth', 'json-validator']
 ], function () use ($router) {
 
     // v1
