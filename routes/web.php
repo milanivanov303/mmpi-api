@@ -26,13 +26,13 @@ $router->group([
     $router->group(['prefix' => 'v1'], function () use ($router) {
 
         // Users
-        $router->group(['prefix' => 'users'], function () use ($router) {
-            $router->get('', 'UsersController@many');
-            $router->get('/{id:[0-9]+}', 'UsersController@show');
-            $router->post('', ['as' => 'api/v1/users/create', 'uses' => 'UsersController@create']);
-            $router->put('/{id:[0-9]+}', ['as' => 'api/v1/users/update', 'uses' => 'UsersController@update']);
-            $router->delete('/{id:[0-9]+}', 'UsersController@delete');
-        });
+        //$router->group(['prefix' => 'users'], function () use ($router) {
+        //   $router->get('', 'UsersController@many');
+        //    $router->get('/{id:[0-9]+}', 'UsersController@show');
+        //    $router->post('', ['as' => 'api/v1/users/create', 'uses' => 'UsersController@create', 'description' => 'Create new user']);
+        //    $router->put('/{id:[0-9]+}', ['as' => 'api/v1/users/update', 'uses' => 'UsersController@update']);
+        //    $router->delete('/{id:[0-9]+}', 'UsersController@delete');
+        //});
         
         // Hashes
         $router->group(['prefix' => 'hashes'], function () use ($router) {
@@ -44,13 +44,13 @@ $router->group([
         });
         
         // Dependencies
-        $router->group(['prefix' => 'dependencies'], function () use ($router) {
-            $router->get('', 'DependenciesController@many');
-            $router->get('/{id:[0-9]+}', 'DependenciesController@show');
-            $router->post('', ['as' => 'api/v1/dependencies/create', 'uses' => 'DependenciesController@create']);
-            $router->put('/{id:[0-9]+}', ['as' => 'api/v1/dependencies/update', 'uses' => 'DependenciesController@update']);
-            $router->delete('/{id:[0-9]+}', 'DependenciesController@delete');
-        });
+        //$router->group(['prefix' => 'dependencies'], function () use ($router) {
+        //    $router->get('', 'DependenciesController@many');
+        //    $router->get('/{id:[0-9]+}', 'DependenciesController@show');
+        //    $router->post('', ['as' => 'api/v1/dependencies/create', 'uses' => 'DependenciesController@create']);
+        //    $router->put('/{id:[0-9]+}', ['as' => 'api/v1/dependencies/update', 'uses' => 'DependenciesController@update']);
+        //    $router->delete('/{id:[0-9]+}', 'DependenciesController@delete');
+        //});
         
     });
 });

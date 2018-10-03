@@ -10,7 +10,8 @@
     ],
     "properties": {
         "branch": {
-            "type": "string"
+            "type": "string",
+            "example": "default"
         },
         "owner": {
             "type": "string",
