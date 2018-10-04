@@ -1,5 +1,5 @@
 {
-  "$id": "users-create.json",
+  "$id": "/api/v1/users/create.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
   "type": "object",
   "additionalProperties": false,
