@@ -26,6 +26,7 @@ $router->group([
     $router->group(['prefix' => 'v1'], function () use ($router) {
 
         // Users
+        /*
         $router->group(['prefix' => 'users'], function () use ($router) {
             $router->get('', [
                 'as'          => 'users.list',
@@ -55,21 +56,37 @@ $router->group([
                 'uses'        => 'UsersController@delete'
             ]);
         });
+        */
         
         // Hashes
         $router->group(['prefix' => 'hashes'], function () use ($router) {
-            $router->get('', 'HashesController@getMany');
-            $router->get('/{hash_rev:[0-9a-z]+}', 'HashesController@getOne');
+            $router->get('', [
+                'as'          => 'hashes.list',
+                'description' => 'Get hashes list',
+                'uses'        => 'HashesController@getMany'
+            ]);
+            $router->get('/{hash_rev:[0-9a-z]+}', [
+                'as'          => 'hashes.one',
+                'description' => 'Get single hash',
+                'uses'        => 'HashesController@getOne'
+            ]);
             $router->post('', [
-                'schema' => '/api/v1/hashes/create.json',
-                'description' => 'Register new hash',
-                'uses'   => 'HashesController@create']
+                'as'          => 'hashes.create',
+                'schema'      => '/api/v1/hashes/create.json',
+                'description' => 'Create new hash',
+                'uses'        => 'HashesController@create']
             );
             $router->put('/{hash_rev:[0-9a-z]+}', [
-                'schema' => '/api/v1/hashes/update.json',
-                'uses' => 'HashesController@update']
+                'as'          => 'hashes.update',
+                'description' => 'Update hash',
+                'schema'      => '/api/v1/hashes/update.json',
+                'uses'        => 'HashesController@update']
             );
-            $router->delete('/{hash_rev:[0-9a-z]+}', 'HashesController@delete');
+            $router->delete('/{hash_rev:[0-9a-z]+}', [
+                'as'          => 'hash.delete',
+                'description' => 'Delete hash',
+                'uses'        => 'HashesController@delete'
+            ]);
         });
         
         // Dependencies

@@ -95,18 +95,53 @@ class OAPathItem implements Arrayable
         return false;
     }
 
+    protected function isMethod($method)
+    {
+        return $this->getMethod() === $method;
+    }
+
     public function setSchema($schema)
     {
         $this->route['action']['schema'] = $schema;
     }
 
+    protected function isSingleResorceUri()
+    {
+        return preg_match('/{(.*)}$/', $this->getUri());
+    }
+
+    protected function getUniqueParameter()
+    {
+        $matches = [];
+        if (preg_match('/{(.*)}$/', $this->getUri(), $matches)) {
+            return $matches[1];
+        }
+        return false;
+    }
+
+    protected function isListResorceUri()
+    {
+
+        return $this->isMethod('get') && !$this->isSingleResorceUri();
+    }
+
     public function getParameters()
     {
         $parameters = [];
-
-        if (preg_match('/{(.*)}$/', $this->getUri(), $matches)) {
+        /*
+        if ($this->isListResorceUri()) {
             $parameters[] = [
-                'name' => $matches[1],
+                'name' => 'limit',
+                'in' => 'query',
+                'schema' => [
+                    'type' => 'integer'
+                ]
+            ];
+        }
+        */
+        if ($this->isSingleResorceUri()) {
+            $parameters[] = [
+                'name' => $this->getUniqueParameter(),
                 'in' => 'path',
                 'schema' => [
                     'type' => 'string'
@@ -115,7 +150,7 @@ class OAPathItem implements Arrayable
             ];
         }
 
-        if (($this->getMethod() == 'post' || $this->getMethod() == 'put') && $this->hasSchema()) {
+        if (($this->isMethod('post') || $this->isMethod('put')) && $this->hasSchema()) {
             $parameters[] = [
                 'name' => 'body',
                 'in' => 'query',
@@ -165,7 +200,28 @@ class OAPathItem implements Arrayable
             'tags' => $this->getTags(),
             'parameters' => $this->getParameters(),
             'responses' => [
-                '200' => ['description' => 'OK']
+                '200' => [
+                    'description' => 'Users media entries.',
+                    'content' => [
+                        'application/json' => [
+                            'schema' => [
+                                'type' => 'array',
+                                'items' => [
+                                    'type' => 'object',
+                                ]
+                            ]
+                        ]
+                    ]
+                ],
+                '201' => [
+                    'description' => 'Created'
+                ],
+                '404' => [
+                    'description' => 'Not found'
+                ],
+                '422' => [
+                    'description' => 'Unprocessable Entity'
+                ]
             ],
             'security' => [
                 ['api_key' => []]

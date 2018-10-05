@@ -1,0 +1,14 @@
+{
+    "$id": "/api/v1/hashes/responses/success.json",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "data": {
+        "description": "List of media entries",
+        "items": {
+          "$ref": "/api/v1/hashes/create.json"
+        },
+        "type": "array"
+      }
+    }
+}

@@ -63,6 +63,20 @@ class GenerateCommand extends Command
                         'type' => 'http',
                         'scheme' => 'basic'
                     ]
+                ],
+                'schemas' => [
+                    'responses-success' => [
+                        'type' => 'object',
+                        'properties' => [
+                            'data' => [
+                                'description' => 'List of media entries',
+                                'items' => [
+                                    '$ref' => '#/components/schemas/api-v1-hashes-create.json'
+                                ],
+                                'type' => 'array'
+                            ]
+                        ]
+                    ]
                 ]
             ]
         ];
