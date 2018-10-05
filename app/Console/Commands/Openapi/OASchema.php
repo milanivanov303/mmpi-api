@@ -15,6 +15,13 @@ class OASchema implements Arrayable
 
     protected $data;
 
+    const NOT_VALID_PROPERTIES = [
+        '$id',
+        '$schema',
+        '$filters',
+        'messages'
+    ];
+
     /**
      * @param array $data
      */
@@ -34,19 +41,33 @@ class OASchema implements Arrayable
         return $this->id;
     }
 
+    protected function removeNotValidProperties($data)
+    {
+        $validData = array_filter($data, function ($key) {
+            return !in_array($key, self::NOT_VALID_PROPERTIES, true);
+        }, ARRAY_FILTER_USE_KEY);
+
+        foreach ($validData as &$value) {
+            if (is_array($value)) {
+                $value = $this->{__FUNCTION__}($value);
+            }
+        }
+
+        return $validData;
+    }
+
     protected function convertSchema($data)
     {
-        array_walk_recursive($data, function(&$value, &$key) {
+
+        $data = $this->removeNotValidProperties($data);
+
+        array_walk_recursive($data, function(&$value, $key) {
             if ($key === '$ref' && strpos($value, '#') !== -1) {
                 list($id, $ref) = explode("#", $value);
                 $value = '#/components/schemas/' .$this->convertId($id). $ref;
             }
-            if($key === '$filters') {
-                unset($key);
-            }
         });
         
-        unset($data['$id'], $data['$schema']);
         return $data;
     }
 

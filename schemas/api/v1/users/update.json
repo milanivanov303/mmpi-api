@@ -1,0 +1,22 @@
+{
+  "$id": "/api/v1/users/update.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "name",
+    "email",
+    "password"
+  ],
+  "properties": {
+    "name": {
+        "$ref": "/api/v1/users/create.json#/properties/name"
+    },
+    "email": {
+      "$ref": "/api/v1/users/create.json#/properties/email"
+    },
+    "password": {
+      "$ref": "/api/v1/users/create.json#/properties/password"
+    }
+  }
+}

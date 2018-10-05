@@ -27,18 +27,33 @@ $router->group([
 
         // Users
         $router->group(['prefix' => 'users'], function () use ($router) {
-           $router->get('', 'UsersController@many');
-            $router->get('/{id:[0-9]+}', 'UsersController@show');
+            $router->get('', [
+                'as'          => 'users.list',
+                'description' => 'Get users list',
+                'uses'        => 'UsersController@many'
+            ]);
+            $router->get('/{id:[0-9]+}', [
+                'as'          => 'users.one',
+                'description' => 'Get single user',
+                'uses'        => 'UsersController@show'
+            ]);
             $router->post('', [
-                'as' => 'users.create',
+                'as'          => 'users.create',
                 'description' => 'Create new user',
-                'schema' => '/api/v1/users/create.json',
-                'uses' => 'UsersController@create'
+                'schema'      => '/api/v1/users/create.json',
+                'uses'        => 'UsersController@create'
             ]);
             $router->put('/{id:[0-9]+}', [
-                'uses' => 'UsersController@update']
-            );
-            $router->delete('/{id:[0-9]+}', 'UsersController@delete');
+                'as'          => 'users.update',
+                'description' => 'Update user',
+                'schema'      => '/api/v1/users/update.json',
+                'uses'        => 'UsersController@update'
+            ]);
+            $router->delete('/{id:[0-9]+}', [
+                'as'          => 'users.delete',
+                'description' => 'Delete user',
+                'uses'        => 'UsersController@delete'
+            ]);
         });
         
         // Hashes

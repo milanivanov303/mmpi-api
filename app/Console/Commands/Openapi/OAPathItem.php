@@ -13,21 +13,48 @@ class OAPathItem implements Arrayable
      */
     protected $route;
 
-    public function __construct(array $route) {
-        $this->route = $route;
+    /**
+     * Base URI will be removed from route URI
+     *
+     * @var string
+     */
+    protected $base_uri;
+
+    /**
+     * @param array $route
+     * @param string $base_uri
+     */
+    public function __construct(array $route, string $base_uri) {
+        $this->route    = $route;
+        $this->base_uri = $base_uri;
     }
 
+    /**
+     * Get route URI
+     *
+     * @return string
+     */
     public function getUri()
     {
-        //$uri = str_replace("/api/{$this->argument('version')}", '', $this->route['uri']);
-        return preg_replace('/{(.*):.*}$/', '{$1}', $this->route['uri']);
+        $uri = str_replace($this->base_uri, '', $this->route['uri']);
+        return preg_replace('/{(.*):.*}$/', '{$1}', $uri);
     }
 
+    /**
+     * Get route method
+     *
+     * @return string
+     */
     public function getMethod()
     {
         return strtolower($this->route['method']);
     }
 
+    /**
+     * Get description
+     * 
+     * @return string
+     */
     protected function getDescription()
     {
         if (array_key_exists('description', $this->route['action'])) {
@@ -37,13 +64,22 @@ class OAPathItem implements Arrayable
         return '';
     }
 
+    /**
+     * Get tags
+     * 
+     * @return array
+     */
     protected function getTags()
     {
         if (array_key_exists('tags', $this->route['action'])) {
             return $this->route['action']['tags'];
         }
 
-        return [];
+        $uri = $this->getUri();
+
+        $tag = trim(preg_replace('/\/{(.*)}/', '', $uri), '/');
+
+        return [$tag];
     }
 
     public function hasSchema()
@@ -113,15 +149,26 @@ class OAPathItem implements Arrayable
         return false;
     }
 
+    public function getOperationId()
+    {
+        if (array_key_exists('as', $this->route['action'])) {
+            return $this->route['action']['as'];
+        }
+        return '';
+    }
+
     public function toArray()
     {
         return [
             'description' => $this->getDescription(),
-            //'operationId' => $uri,
+            'operationId' => $this->getOperationId(),
             'tags' => $this->getTags(),
             'parameters' => $this->getParameters(),
             'responses' => [
                 '200' => ['description' => 'OK']
+            ],
+            'security' => [
+                ['api_key' => []]
             ]
         ];
     }

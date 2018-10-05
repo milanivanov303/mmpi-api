@@ -7,10 +7,12 @@ use Illuminate\Contracts\Support\Jsonable;
 
 class OADocument implements Arrayable, Jsonable
 {
-
-    protected $info;
-    protected $servers;
-    
+    /**
+     * Openapi document
+     * 
+     * @var array
+     */
+    protected $document;
     /**
      * All available path items
      * 
@@ -24,17 +26,9 @@ class OADocument implements Arrayable, Jsonable
      * @var array
      */
     protected $schemas;
-
-    /**
-     * Openapi document version
-     *
-     * @var type
-     */
-    protected $oa_version = '3.0.1';
-
-    public function __construct($info, $servers) {
-        $this->info = $info;
-        $this->servers = $servers;
+    
+    public function __construct(array $document) {
+        $this->document = $document;
     }
 
     public function addPathItem(OAPathItem $pathItem)
@@ -81,15 +75,15 @@ class OADocument implements Arrayable, Jsonable
     public function toArray()
     {
 
-        return [
-            'openapi' => $this->oa_version,
-            'info' => $this->info,
-            'servers' => $this->servers,
-            'paths' => $this->getPathItems(),
-            'components' => [
-                'schemas' => $this->getSchemas()
+        return array_merge_recursive(
+            $this->document,
+            [
+                'paths' => $this->getPathItems(),
+                'components' => [
+                    'schemas' => $this->getSchemas()
+                ]
             ]
-        ];
+        );
 
     }
 

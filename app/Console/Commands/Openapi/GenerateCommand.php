@@ -3,7 +3,7 @@
 namespace App\Console\Commands\Openapi;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Route;
+use Laravel\Lumen\Routing\Router;
 
 /**
  * Generate API documentation
@@ -32,24 +32,47 @@ class GenerateCommand extends Command
      *
      * @return mixed
      */
-    public function handle()
+    public function handle(Router $router)
     {
-        $info = [
-            "description" => "MMPI API",
-            "version" => "1",
-            "title" => "MMPI API"
-        ];
 
-        $servers = [
-            [
-                "url" => "http://yarnaudov.codixfr.private:8111/api/{$this->argument('version')}/"
+        $base_uri = "/api/{$this->argument('version')}";
+
+        $openapi = [
+            'openapi' => '3.0.1',
+            'info' => [
+                'description' => 'MMPI API',
+                'version'     => '1',
+                'title'       => 'MMPI API'
+            ],
+            'servers' => [
+                [
+                    'url' => "http://yarnaudov.codixfr.private:8111{$base_uri}/"
+                ]
+            ],
+            'security' => [
+                ['api_key' => []]
+            ],
+            'components' => [
+                'securitySchemes' => [
+                    'api_key' => [
+                        'in' => 'header',
+                        'name' => 'X-AUTH-TOKEN',
+                        'type' => 'apiKey'
+                    ],
+                    'basic_auth' => [
+                        'type' => 'http',
+                        'scheme' => 'basic'
+                    ]
+                ]
             ]
         ];
 
-        $document = new OADocument($info, $servers);
+        $document = new OADocument($openapi);
 
-        foreach(Route::getRoutes() as $route) {
-            $document->addPathItem(new OAPathItem($route));
+        foreach($router->getRoutes() as $route) {
+            if (strlen($route['uri']) > 1) {
+                $document->addPathItem(new OAPathItem($route, $base_uri));
+            }
         }
 
         echo $document->toJson();
