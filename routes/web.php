@@ -26,18 +26,18 @@ $router->group([
     $router->group(['prefix' => 'v1'], function () use ($router) {
 
         // Users
-        /*
         $router->group(['prefix' => 'users'], function () use ($router) {
             $router->get('', [
                 'as'          => 'users.list',
                 'description' => 'Get users list',
-                'uses'        => 'UsersController@many'
+                'uses'        => 'UsersController@getMany'
             ]);
-            $router->get('/{id:[0-9]+}', [
+            $router->get('/{username}', [
                 'as'          => 'users.one',
                 'description' => 'Get single user',
-                'uses'        => 'UsersController@show'
+                'uses'        => 'UsersController@getOne'
             ]);
+            /*
             $router->post('', [
                 'as'          => 'users.create',
                 'description' => 'Create new user',
@@ -55,8 +55,8 @@ $router->group([
                 'description' => 'Delete user',
                 'uses'        => 'UsersController@delete'
             ]);
+            */
         });
-        */
         
         // Hashes
         $router->group(['prefix' => 'hashes'], function () use ($router) {

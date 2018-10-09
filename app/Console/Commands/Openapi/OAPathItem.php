@@ -21,12 +21,21 @@ class OAPathItem implements Arrayable
     protected $base_uri;
 
     /**
+     * Route filters
+     * 
+     * @var array
+     */
+    protected $filters;
+
+    /**
      * @param array $route
      * @param string $base_uri
+     * @param array $filters
      */
-    public function __construct(array $route, string $base_uri) {
+    public function __construct(array $route, string $base_uri, array $filters = []) {
         $this->route    = $route;
         $this->base_uri = $base_uri;
+        $this->filters  = $filters;
     }
 
     /**
@@ -128,17 +137,19 @@ class OAPathItem implements Arrayable
     public function getParameters()
     {
         $parameters = [];
-        /*
+        
         if ($this->isListResorceUri()) {
-            $parameters[] = [
-                'name' => 'limit',
-                'in' => 'query',
-                'schema' => [
-                    'type' => 'integer'
-                ]
-            ];
+            foreach($this->filters as $filter) {
+                $parameters[] = [
+                    'name' => $filter['name'],
+                    'in' => 'query',
+                    'schema' => [
+                        'type' => $filter['type']
+                    ]
+                ];
+            }
         }
-        */
+
         if ($this->isSingleResorceUri()) {
             $parameters[] = [
                 'name' => $this->getUniqueParameter(),
@@ -192,39 +203,82 @@ class OAPathItem implements Arrayable
         return '';
     }
 
+    protected function getResponses()
+    {
+        $responses = [];
+        
+        if ($this->isMethod('get')) {
+
+            if ($this->isSingleResorceUri()) {
+                $responses['200'] = [
+                    'description' => '',
+                    'content' => [
+                        'application/json' => [
+                            'schema' => [
+                                '$ref' => "#/components/schemas/{$this->getSchema()}"
+                            ]
+                        ]
+                    ]
+                ];
+            }
+
+            if ($this->isListResorceUri()) {
+                $responses['200'] = [
+                    'description' => '',
+                    'content' => [
+                        'application/json' => [
+                            'schema' => [
+                                'type' => 'object',
+                                'properties' => [
+                                    'data' => [
+                                        'description' => 'List of media entries',
+                                        'items' => [
+                                            '$ref' => "#/components/schemas/{$this->getSchema()}"
+                                        ],
+                                        'type' => 'array'
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ]
+                ];
+            }
+        }
+
+        if ($this->isMethod('post')) {
+            $responses['201'] = [
+                'description' => 'Created',
+                'content' => [
+                    'application/json' => [
+                        'schema' => [
+                            '$ref' => "#/components/schemas/{$this->getSchema()}"
+                        ]
+                    ]
+                ]
+            ];
+        }
+
+        $responses['404'] = [
+            'description' => 'Not found'
+        ];
+        $responses['422'] = [
+            'description' => 'Unprocessable Entity'
+        ];
+
+        return $responses;
+    }
+
     public function toArray()
     {
         return [
             'description' => $this->getDescription(),
             'operationId' => $this->getOperationId(),
-            'tags' => $this->getTags(),
-            'parameters' => $this->getParameters(),
-            'responses' => [
-                '200' => [
-                    'description' => 'Users media entries.',
-                    'content' => [
-                        'application/json' => [
-                            'schema' => [
-                                'type' => 'array',
-                                'items' => [
-                                    'type' => 'object',
-                                ]
-                            ]
-                        ]
-                    ]
-                ],
-                '201' => [
-                    'description' => 'Created'
-                ],
-                '404' => [
-                    'description' => 'Not found'
-                ],
-                '422' => [
-                    'description' => 'Unprocessable Entity'
-                ]
-            ],
-            'security' => [
-                ['api_key' => []]
+            'tags'        => $this->getTags(),
+            'parameters'  => $this->getParameters(),
+            'responses'   => $this->getResponses(),
+            'security'    => [
+                ['api_key' => []],
+                ['basic_auth' => []]
             ]
         ];
     }

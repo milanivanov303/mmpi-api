@@ -6,6 +6,11 @@ use Laravel\Lumen\Routing\Controller as BaseController;
 
 class Controller extends BaseController
 {
+    /**
+     * The user model instance.
+     */
+    protected $model;
+    
     public function output($data, $status = 200)
     {
         $output = [];

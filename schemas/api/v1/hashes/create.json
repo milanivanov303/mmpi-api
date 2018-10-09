@@ -43,7 +43,7 @@
         },
         "chains": {  
            "type": "array",
-            "description": "List with delivery chanis",
+            "description": "List with delivery chanis 21121",
             "items": {
                 "type": "string"
             }

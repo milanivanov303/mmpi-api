@@ -11,9 +11,10 @@ class HashCommit extends Model
 {
     use Mappable;
     use Filterable;
-    
+
     /**
      * Array with mapped attributes for conversion
+     * 
      * @var array
      */
     protected $mapping = [
@@ -42,15 +43,6 @@ class HashCommit extends Model
         'repo_timestamp'
     ];
 
-    /**
-     * The attributes that will be hidden in output json
-     *
-     * @var array
-     */
-    protected $hidden = [
-        'id'
-    ];
-   
     /**
      * The relations to eager load on every query.
      *

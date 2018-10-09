@@ -1,22 +1,53 @@
 {
-  "$id": "/api/v1/users/update.json",
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "type": "object",
-  "additionalProperties": false,
-  "required": [
-    "name",
-    "email",
-    "password"
-  ],
-  "properties": {
-    "name": {
-        "$ref": "/api/v1/users/create.json#/properties/name"
-    },
-    "email": {
-      "$ref": "/api/v1/users/create.json#/properties/email"
-    },
-    "password": {
-      "$ref": "/api/v1/users/create.json#/properties/password"
+    "$id": "/api/v1/users/update.json",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+        "name",
+        "username",
+        "email",
+        "password",
+        "department",
+        "access_group"
+    ],
+    "properties": {
+        "name": {
+            "$ref": "/api/v1/users/create.json#/properties/name"
+        },
+        "username": {
+            "type": "string",
+            "maxLength": 50
+        },
+        "email": {
+            "$ref": "/api/v1/users/create.json#/properties/email"
+        },
+        "password": {
+            "$ref": "/api/v1/users/create.json#/properties/password"
+        },
+        "sid": {
+            "$ref": "/api/v1/users/create.json#/properties/sid"
+        },
+        "sidfr": {
+            "$ref": "/api/v1/users/create.json#/properties/sidfr"
+        },
+        "uidnumber": {
+            "$ref": "/api/v1/users/create.json#/properties/uidnumber"
+        },
+        "status": {
+            "$ref": "/api/v1/users/create.json#/properties/status"
+        },
+        "department": {
+            "$ref": "/api/v1/users/create.json#/properties/department"
+        },
+        "access_group": {
+            "$ref": "/api/v1/users/create.json#/properties/access_group"
+        },
+        "manager": {
+            "$ref": "/api/v1/users/create.json#/properties/manager"
+        },
+        "deputy": {
+            "$ref": "/api/v1/users/create.json#/properties/deputy"
+        }
     }
-  }
 }

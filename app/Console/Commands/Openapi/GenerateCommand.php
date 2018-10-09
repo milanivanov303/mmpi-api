@@ -4,6 +4,7 @@ namespace App\Console\Commands\Openapi;
 
 use Illuminate\Console\Command;
 use Laravel\Lumen\Routing\Router;
+use Illuminate\Support\Facades\Schema;
 
 /**
  * Generate API documentation
@@ -47,6 +48,9 @@ class GenerateCommand extends Command
             'servers' => [
                 [
                     'url' => "http://yarnaudov.codixfr.private:8111{$base_uri}/"
+                ],
+                [
+                    'url' => "http://localhost:8111{$base_uri}/"
                 ]
             ],
             'security' => [
@@ -85,7 +89,8 @@ class GenerateCommand extends Command
 
         foreach($router->getRoutes() as $route) {
             if (strlen($route['uri']) > 1) {
-                $document->addPathItem(new OAPathItem($route, $base_uri));
+                $filters = $this->getRouteFilters($route);
+                $document->addPathItem(new OAPathItem($route, $base_uri, $filters));
             }
         }
 
@@ -93,7 +98,39 @@ class GenerateCommand extends Command
 
         file_put_contents(storage_path('openapi.json'), $document->toJson());
 
-        //echo json_encode($docs);
+    }
 
+    /**
+     * Get route filters
+     * 
+     * @param array $route
+     * @return array
+     */
+    protected function getRouteFilters($route)
+    {
+        $controller = current(explode('@', $route['action']['uses']));
+        $filters    = [];
+
+        try {
+            $model = (new \ReflectionParameter([$controller, '__construct'], 'model'))
+                        ->getClass()
+                        ->newInstance();
+            
+            foreach ($model->getFilterAttributes() as $column) {
+                $name = $column;
+                // Get mapped attributes if model uses mappable trait
+                if (method_exists($model, 'getMappededAttribute')) {
+                    $name = $model->getMappededAttribute($column, $model::$MAP_RESPONSE_VALUES);
+                }
+                array_push($filters, [
+                    'name' => $name,
+                    'type' => 'string'//Schema::getColumnType($model->getTable(), $column)
+                ]);
+
+            }
+
+        } catch (\Exception $e) { }
+
+         return $filters;
     }
 }

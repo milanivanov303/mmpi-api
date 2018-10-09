@@ -15,11 +15,6 @@ use Illuminate\Support\Facades\DB;
 class HashesController extends Controller
 {
     /**
-     * The hash model instance.
-     */
-    protected $model;
-
-    /**
      * Create a new controller instance.
      *
      * @param HashCommit $model
@@ -94,7 +89,7 @@ class HashesController extends Controller
      * Retrieve hashes list.
      *
      * @param Request $request
-     * @return User[]|\Illuminate\Database\Eloquent\Collection
+     * @return HashCommit[]|\Illuminate\Database\Eloquent\Collection
      */
     public function getMany(Request $request)
     {
