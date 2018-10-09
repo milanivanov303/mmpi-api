@@ -57,7 +57,7 @@ class JsonValidatorMiddleware
      */
     protected function getRouteSchema($route)
     {
-       return $route[1]['schema'] ?? '';
+        return $route[1]['schema'] ?? '';
     }
 
     /**

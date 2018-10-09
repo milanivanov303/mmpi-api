@@ -7,7 +7,7 @@ use Illuminate\Contracts\Support\Arrayable;
 class OAPathItem implements Arrayable
 {
     /**
-     * Route 
+     * Route
      *
      * @var array
      */
@@ -22,7 +22,7 @@ class OAPathItem implements Arrayable
 
     /**
      * Route filters
-     * 
+     *
      * @var array
      */
     protected $filters;
@@ -32,7 +32,8 @@ class OAPathItem implements Arrayable
      * @param string $base_uri
      * @param array $filters
      */
-    public function __construct(array $route, string $base_uri, array $filters = []) {
+    public function __construct(array $route, string $base_uri, array $filters = [])
+    {
         $this->route    = $route;
         $this->base_uri = $base_uri;
         $this->filters  = $filters;
@@ -61,7 +62,7 @@ class OAPathItem implements Arrayable
 
     /**
      * Get description
-     * 
+     *
      * @return string
      */
     protected function getDescription()
@@ -75,7 +76,7 @@ class OAPathItem implements Arrayable
 
     /**
      * Get tags
-     * 
+     *
      * @return array
      */
     protected function getTags()
@@ -137,7 +138,7 @@ class OAPathItem implements Arrayable
         $parameters = [];
         
         if ($this->isListResorceUri()) {
-            foreach($this->filters as $filter) {
+            foreach ($this->filters as $filter) {
                 $parameters[] = [
                     'name' => $filter['name'],
                     'in' => 'query',
@@ -178,7 +179,6 @@ class OAPathItem implements Arrayable
         $filename = base_path('schemas/' . $this->getSchema());
 
         if (file_exists($filename)) {
-            
             $schema = new OASchema(json_decode(
                 file_get_contents($filename),
                 JSON_OBJECT_AS_ARRAY

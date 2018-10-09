@@ -9,13 +9,13 @@ class OADocument implements Arrayable, Jsonable
 {
     /**
      * Openapi document
-     * 
+     *
      * @var array
      */
     protected $document;
     /**
      * All available path items
-     * 
+     *
      * @var [PathItem]
      */
     protected $pathItems;
@@ -27,7 +27,8 @@ class OADocument implements Arrayable, Jsonable
      */
     protected $schemas;
     
-    public function __construct(array $document) {
+    public function __construct(array $document)
+    {
         $this->document = $document;
     }
 
@@ -39,8 +40,7 @@ class OADocument implements Arrayable, Jsonable
     protected function getPathItems()
     {
         $pathItems = [];
-        foreach($this->pathItems as $pathItem) {
-
+        foreach ($this->pathItems as $pathItem) {
             if ($pathItem->hasSchema()) {
                 $schema = $pathItem->loadSchema();
                 if ($schema) {
@@ -61,7 +61,7 @@ class OADocument implements Arrayable, Jsonable
     protected function getSchemas()
     {
         $schemas = [];
-        foreach($this->schemas as $schema) {
+        foreach ($this->schemas as $schema) {
             $schemas[$schema->getId()] = $schema->toArray();
         }
         return $schemas;
@@ -84,7 +84,6 @@ class OADocument implements Arrayable, Jsonable
                 ]
             ]
         );
-
     }
 
     /**

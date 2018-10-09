@@ -14,7 +14,7 @@ class HashCommit extends Model
 
     /**
      * Array with mapped attributes for conversion
-     * 
+     *
      * @var array
      */
     protected $mapping = [

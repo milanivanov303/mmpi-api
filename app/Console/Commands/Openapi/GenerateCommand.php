@@ -73,7 +73,7 @@ class GenerateCommand extends Command
 
         $document = new OADocument($openapi);
 
-        foreach($router->getRoutes() as $route) {
+        foreach ($router->getRoutes() as $route) {
             if (strlen($route['uri']) > 1) {
                 $filters = $this->getRouteFilters($route);
                 $document->addPathItem(new OAPathItem($route, $base_uri, $filters));
@@ -83,12 +83,11 @@ class GenerateCommand extends Command
         echo $document->toJson();
 
         file_put_contents(storage_path('openapi.json'), $document->toJson());
-
     }
 
     /**
      * Get route filters
-     * 
+     *
      * @param array $route
      * @return array
      */
@@ -112,9 +111,7 @@ class GenerateCommand extends Command
                     'name' => $name,
                     'type' => 'string'//Schema::getColumnType($model->getTable(), $column)
                 ]);
-
             }
-
         } catch (\Exception $e) {
             var_dump($e->getMessage());
         }

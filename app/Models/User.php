@@ -82,7 +82,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     /**
      * Get user access group.
      */
-    public function access_group()
+    public function accessGroup()
     {
         return $this->belongsTo('App\Models\AccessGroup');
     }
@@ -113,11 +113,10 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         $array = parent::relationsToArray();
         
         $array['department']   = $this->department['name'];
-        $array['access_group'] = $this->access_group['name'];
+        $array['access_group'] = $this->accessGroup['name'];
         $array['manager'] = $this->manager['username'];
         $array['deputy'] = $this->deputy['username'];
 
         return $array;
     }
-
 }

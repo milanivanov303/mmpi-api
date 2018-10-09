@@ -8,7 +8,7 @@ class OASchema implements Arrayable
 {
     /**
      * Schema id
-     * 
+     *
      * @var string
      */
     protected $id;
@@ -61,7 +61,7 @@ class OASchema implements Arrayable
 
         $data = $this->removeNotValidProperties($data);
 
-        array_walk_recursive($data, function(&$value, $key) {
+        array_walk_recursive($data, function (&$value, $key) {
             if ($key === '$ref' && strpos($value, '#') !== -1) {
                 list($id, $ref) = explode("#", $value);
                 $value = '#/components/schemas/' .$this->convertId($id). $ref;
@@ -81,4 +81,3 @@ class OASchema implements Arrayable
         return $this->data;
     }
 }
-

@@ -57,5 +57,4 @@ class CheckInDbFilter implements IFilter
 
         return $args['rule'];
     }
-
 }
