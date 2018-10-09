@@ -44,14 +44,6 @@ class HashesTest extends TestCase
     /**
      * Test creation of hash
      *
-     * @OA\Info(title="My First API", version="0.1")
-     *
-     * @OA\Post(
-     *     path="/hashes/",
-     *     @OA\Parameter(name="body", in="path", @OA\Schema(type="json")),
-     *     @OA\Response(response="200", description="An example resource")
-     * )
-     *
      * @return void
      */
     public function testCreateHash()
@@ -135,16 +127,12 @@ class HashesTest extends TestCase
         // Change parameters
         $data['description'] = 'UPDATED_DESCRIPTION';
 
-        // Save rev and unset it from data as PUT does not allows rev
-        $rev = $data['rev'];
-        unset($data['rev']);
-
         $this
-            ->json('PUT', '/api/v1/hashes/' . $rev, $data)
+            ->json('PUT', '/api/v1/hashes/' . $data['rev'], $data)
             ->seeJson($data)
             ->assertResponseOk();
         
-        $this->seeInDatabase('hash_commits', ['hash_rev' => $rev]);
+        $this->seeInDatabase('hash_commits', ['hash_rev' => $data['rev']]);
     }
 
     /**
