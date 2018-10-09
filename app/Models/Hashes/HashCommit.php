@@ -44,14 +44,23 @@ class HashCommit extends Model
     ];
 
     /**
+     * The attributes that will be hidden in output json
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'id',
+        'repo_timestamp'
+    ];
+
+    /**
      * The relations to eager load on every query.
      *
      * @var array
      */
     protected $with = [
-        'files',
-        'chains',
-        'owner'
+        //'files',
+        //'chains'
     ];
     
     /**
@@ -97,24 +106,18 @@ class HashCommit extends Model
     public function relationsToArray()
     {
         $array = parent::relationsToArray();
-        
+
         // convert files relations to simple array with names
-        if (array_key_exists('files', $array)) {
-            $array['files'] = array_column($array['files'], 'file_name');
-        }
+        $array['files'] = array_column($this->files->toArray(), 'file_name');
         
         // convert chains relations to simple array with names
-        if (array_key_exists('chains', $array)) {
-            $array['chains'] = array_column(
-                array_column($array['chains'], 'chain'),
-                'chain_name'
-            );
-        }
-        
-        $array['committed_by'] = $array['owner']['username'];
-        
-        // For some reason hidden is not working for relations!
-        unset($array['owner']);
+        $array['chains'] = array_column(
+            array_column($this->chains->toArray(), 'chain'),
+            'chain_name'
+        );
+
+        // set commited by to owner username
+        $array['committed_by'] = $this->owner['username'];
         
         return $array;
     }

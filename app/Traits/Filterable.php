@@ -35,7 +35,7 @@ trait Filterable
             return $this->filterable;
         }
 
-        return $this->getColumns();
+        return array_diff($this->getColumns(), $this->getHidden());
     }
 
     /**

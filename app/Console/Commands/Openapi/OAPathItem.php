@@ -83,10 +83,8 @@ class OAPathItem implements Arrayable
         if (array_key_exists('tags', $this->route['action'])) {
             return $this->route['action']['tags'];
         }
-
-        $uri = $this->getUri();
-
-        $tag = trim(preg_replace('/\/{(.*)}/', '', $uri), '/');
+        
+        $tag = trim(preg_replace('/\/{(.*)}/', '', $this->getUri()), '/');
 
         return [$tag];
     }
@@ -206,44 +204,6 @@ class OAPathItem implements Arrayable
     protected function getResponses()
     {
         $responses = [];
-        
-        if ($this->isMethod('get')) {
-
-            if ($this->isSingleResorceUri()) {
-                $responses['200'] = [
-                    'description' => '',
-                    'content' => [
-                        'application/json' => [
-                            'schema' => [
-                                '$ref' => "#/components/schemas/{$this->getSchema()}"
-                            ]
-                        ]
-                    ]
-                ];
-            }
-
-            if ($this->isListResorceUri()) {
-                $responses['200'] = [
-                    'description' => '',
-                    'content' => [
-                        'application/json' => [
-                            'schema' => [
-                                'type' => 'object',
-                                'properties' => [
-                                    'data' => [
-                                        'description' => 'List of media entries',
-                                        'items' => [
-                                            '$ref' => "#/components/schemas/{$this->getSchema()}"
-                                        ],
-                                        'type' => 'array'
-                                    ]
-                                ]
-                            ]
-                        ]
-                    ]
-                ];
-            }
-        }
 
         if ($this->isMethod('post')) {
             $responses['201'] = [
@@ -256,13 +216,78 @@ class OAPathItem implements Arrayable
                     ]
                 ]
             ];
+        } else if ($this->isMethod('delete')) {
+            $responses['204'] = [
+                'description' => 'Deleted',
+                'content' => [
+                    'text/html' => [
+                        'schema' => [
+                            'type' => 'string'
+                        ]
+                    ]
+                ]
+            ];
+        } else {
+            $responses['200'] = [
+                'description' => '',
+                'content' => [
+                    'application/json' => [
+                        'schema' => [
+                            'type' => 'object',
+                            'properties' => [
+                                'data' => [
+                                    'type' => 'array',
+                                    'description' => 'List of media entries',
+                                    'items' => [
+                                        'type' => 'object'
+                                        //'$ref' => "#/components/schemas/{$this->getSchema()}"
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ];
         }
 
-        $responses['404'] = [
-            'description' => 'Not found'
-        ];
-        $responses['422'] = [
-            'description' => 'Unprocessable Entity'
+        if ($this->isSingleResorceUri()) {
+            $responses['404'] = [
+                'description' => 'Not found',
+                'content' => [
+                    'text/html' => [
+                        'schema' => [
+                            'type' => 'string'
+                        ]
+                    ]
+                ]
+            ];
+        }
+
+        if ($this->isMethod('post') || $this->isMethod('put')) {
+            $responses['422'] = [
+                'description' => 'Unprocessable Entity',
+                'content' => [
+                    'application/json' => [
+                        'schema' => [
+                            'type' => 'array',
+                            'items' => [
+                                'type' => 'object'
+                            ]
+                        ]
+                    ]
+                ]
+            ];
+        }
+
+        $responses['500'] = [
+            'description' => 'Internal Server Error',
+            'content' => [
+                'text/html' => [
+                    'schema' => [
+                        'type' => 'string'
+                    ]
+                ]
+            ]
         ];
 
         return $responses;
@@ -277,8 +302,7 @@ class OAPathItem implements Arrayable
             'parameters'  => $this->getParameters(),
             'responses'   => $this->getResponses(),
             'security'    => [
-                ['api_key' => []],
-                ['basic_auth' => []]
+                ['api_key' => []]
             ]
         ];
     }

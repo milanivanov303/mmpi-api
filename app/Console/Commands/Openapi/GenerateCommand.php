@@ -63,10 +63,10 @@ class GenerateCommand extends Command
                         'name' => 'X-AUTH-TOKEN',
                         'type' => 'apiKey'
                     ],
-                    'basic_auth' => [
-                        'type' => 'http',
-                        'scheme' => 'basic'
-                    ]
+                    //'basic_auth' => [
+                    //    'type' => 'http',
+                    //    'scheme' => 'basic'
+                    //]
                 ],
                 'schemas' => [
                     'responses-success' => [
@@ -115,7 +115,7 @@ class GenerateCommand extends Command
             $model = (new \ReflectionParameter([$controller, '__construct'], 'model'))
                         ->getClass()
                         ->newInstance();
-            
+
             foreach ($model->getFilterAttributes() as $column) {
                 $name = $column;
                 // Get mapped attributes if model uses mappable trait
@@ -129,7 +129,9 @@ class GenerateCommand extends Command
 
             }
 
-        } catch (\Exception $e) { }
+        } catch (\Exception $e) {
+            var_dump($e->getMessage());
+        }
 
          return $filters;
     }

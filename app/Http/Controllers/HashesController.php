@@ -127,8 +127,6 @@ class HashesController extends Controller
                 $this->saveChains($hash, $data['chains']);
             }
         });
-
-        $hash->load(['files', 'chains', 'owner']);
         
         return $this->output($hash, $status);
     }

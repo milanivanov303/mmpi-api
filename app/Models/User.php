@@ -44,16 +44,6 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     ];
 
     /**
-     * The relations to eager load on every query.
-     *
-     * @var array
-     */
-    protected $with = [
-        'department',
-        'access_group',
-    ];
-
-    /**
      * Hash user password
      *
      * @param $value
@@ -102,7 +92,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      */
     public function manager()
     {
-        return $this->belongsTo('App\Models\User', 'manager_id');
+        return $this->belongsTo('App\Models\User', 'id', 'manager_id');
     }
 
     /**
@@ -110,7 +100,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      */
     public function deputy()
     {
-        return $this->belongsTo('App\Models\User', 'deputy_id');
+        return $this->belongsTo('App\Models\User', 'id', 'deputy_id');
     }
 
     /**
@@ -122,15 +112,15 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     {
         $array = parent::relationsToArray();
         
-        $array['department']   = $array['department']['name'];
-        $array['access_group'] = $array['access_group']['name'];
+        $array['department']   = $this->department['name'];
+        $array['access_group'] = $this->access_group['name'];
 
         if (!is_null($this->manager_id)) {
             $array['manager'] = $this->manager['username'];
         }
 
         if (!is_null($this->deputy_id)) {
-            $array['manager'] = $this->deputy['username'];
+            $array['deputy'] = $this->deputy['username'];
         }
 
         return $array;
