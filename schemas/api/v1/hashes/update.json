@@ -3,38 +3,38 @@
     "$schema": "http://json-schema.org/draft-07/schema#",
     "type": "object",
     "additionalProperties": false,
-    "description": "",
+    "description": "Update Hash",
     "required": [
         "branch",
         "owner"
     ],
     "properties": {
         "branch": {
-            "$ref": "/api/v1/hashes/create.json#/properties/branch"
+            "$ref": "/api/v1/hashes/hash.json#/properties/branch"
         },
         "owner": {
-            "$ref": "/api/v1/hashes/create.json#/properties/owner"
+            "$ref": "/api/v1/hashes/hash.json#/properties/owner"
         },
         "chains": {  
-           "$ref": "/api/v1/hashes/create.json#/properties/chains"
+           "$ref": "/api/v1/hashes/hash.json#/properties/chains"
         },
         "description": {
-            "$ref": "/api/v1/hashes/create.json#/properties/description"
+            "$ref": "/api/v1/hashes/hash.json#/properties/description"
         },
         "files": {
-            "$ref": "/api/v1/hashes/create.json#/properties/files"
+            "$ref": "/api/v1/hashes/hash.json#/properties/files"
         },
         "merge_branch": {
-            "$ref": "/api/v1/hashes/create.json#/properties/merge_branch"
+            "$ref": "/api/v1/hashes/hash.json#/properties/merge_branch"
         },
         "module": {
-            "$ref": "/api/v1/hashes/create.json#/properties/module"
+            "$ref": "/api/v1/hashes/hash.json#/properties/module"
         },
         "repo_path": {
-            "$ref": "/api/v1/hashes/create.json#/properties/repo_path"
+            "$ref": "/api/v1/hashes/hash.json#/properties/repo_path"
         },
         "repo_url": {
-            "$ref": "/api/v1/hashes/create.json#/properties/repo_url"
+            "$ref": "/api/v1/hashes/hash.json#/properties/repo_url"
         }
     }
 }

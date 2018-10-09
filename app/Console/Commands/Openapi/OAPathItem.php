@@ -211,12 +211,19 @@ class OAPathItem implements Arrayable
                 'content' => [
                     'application/json' => [
                         'schema' => [
-                            '$ref' => "#/components/schemas/{$this->getSchema()}"
+                            'type' => 'object',
+                            'properties' => [
+                                'data' => [
+                                    '$ref' => "#/components/schemas/{$this->getSchema()}"
+                                ]
+                            ]
                         ]
                     ]
                 ]
             ];
-        } else if ($this->isMethod('delete')) {
+        }
+
+        if ($this->isMethod('delete')) {
             $responses['204'] = [
                 'description' => 'Deleted',
                 'content' => [
@@ -227,7 +234,9 @@ class OAPathItem implements Arrayable
                     ]
                 ]
             ];
-        } else {
+        }
+
+        if ($this->isMethod('get') && $this->isListResorceUri()) {
             $responses['200'] = [
                 'description' => '',
                 'content' => [
@@ -237,11 +246,28 @@ class OAPathItem implements Arrayable
                             'properties' => [
                                 'data' => [
                                     'type' => 'array',
-                                    'description' => 'List of media entries',
+                                    'description' => 'List of resource entries',
                                     'items' => [
-                                        'type' => 'object'
-                                        //'$ref' => "#/components/schemas/{$this->getSchema()}"
+                                        '$ref' => "#/components/schemas/{$this->getSchema()}"
                                     ]
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ];
+        }
+
+        if ($this->isMethod('put') || ($this->isMethod('get') && $this->isSingleResorceUri())) {
+            $responses['200'] = [
+                'description' => '',
+                'content' => [
+                    'application/json' => [
+                        'schema' => [
+                            'type' => 'object',
+                            'properties' => [
+                                'data' => [
+                                    '$ref' => "#/components/schemas/{$this->getSchema()}"
                                 ]
                             ]
                         ]

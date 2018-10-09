@@ -29,44 +29,29 @@ $router->group([
         $router->group(['prefix' => 'users'], function () use ($router) {
             $router->get('', [
                 'as'          => 'users.list',
+                'schema'      => '/api/v1/users/user.json',
                 'description' => 'Get users list',
                 'uses'        => 'UsersController@getMany'
             ]);
             $router->get('/{username}', [
                 'as'          => 'users.one',
+                'schema'      => '/api/v1/users/user.json',
                 'description' => 'Get single user',
                 'uses'        => 'UsersController@getOne'
             ]);
-            /*
-            $router->post('', [
-                'as'          => 'users.create',
-                'description' => 'Create new user',
-                'schema'      => '/api/v1/users/create.json',
-                'uses'        => 'UsersController@create'
-            ]);
-            $router->put('/{id:[0-9]+}', [
-                'as'          => 'users.update',
-                'description' => 'Update user',
-                'schema'      => '/api/v1/users/update.json',
-                'uses'        => 'UsersController@update'
-            ]);
-            $router->delete('/{id:[0-9]+}', [
-                'as'          => 'users.delete',
-                'description' => 'Delete user',
-                'uses'        => 'UsersController@delete'
-            ]);
-            */
         });
         
         // Hashes
         $router->group(['prefix' => 'hashes'], function () use ($router) {
             $router->get('', [
                 'as'          => 'hashes.list',
+                'schema'      => '/api/v1/hashes/hash.json',
                 'description' => 'Get hashes list',
                 'uses'        => 'HashesController@getMany'
             ]);
             $router->get('/{hash_rev:[0-9a-z]+}', [
                 'as'          => 'hashes.one',
+                'schema'      => '/api/v1/hashes/hash.json',
                 'description' => 'Get single hash',
                 'uses'        => 'HashesController@getOne'
             ]);

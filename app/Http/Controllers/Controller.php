@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Laravel\Lumen\Routing\Controller as BaseController;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 
 class Controller extends BaseController
 {
@@ -15,7 +17,7 @@ class Controller extends BaseController
     {
         $output = [];
 
-        if ($data instanceof \Illuminate\Database\Eloquent\Collection) {
+        if ($data instanceof Collection || $data instanceof Model) {
             $output['data'] = $data;
         } else {
             $output = $data;

@@ -1,0 +1,74 @@
+{
+    "$id": "/api/v1/hashes/hash.json",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "description": "Hash object",
+    "required": [
+        "branch",
+        "owner",
+        "rev"
+    ],
+    "properties": {
+        "branch": {
+            "type": "string",
+            "example": "default"
+        },
+        "owner": {
+            "type": "string",
+            "description": "Should be valid username",
+            "$filters": { 
+                "$func": "checkInDb",
+                "$vars": {
+                    "rule": "exists:users,username"
+                }
+            },
+            "messages": {
+                "$filters": "Owner should be valid username"
+            }
+        },
+        "rev": {
+            "type": "string",
+            "pattern": "^[0-9a-z]*$",
+            "$filters": {
+                "$func": "checkInDb",
+                "$vars": {
+                    "rule": "unique:hash_commits,hash_rev"
+                }
+            },
+            "messages": {
+                "pattern": "Revision can content only numbers and lowercase letters",
+                "$filters": "Revision is already reqistred"
+            }
+        },
+        "chains": {  
+           "type": "array",
+            "description": "List with delivery chanis",
+            "items": {
+                "type": "string"
+            }
+        },
+        "description": {
+            "type": "string"
+        },
+        "files": {
+            "type": "array",
+            "description": "List with changed files in this revision",
+            "items": {
+                "type": "string"
+            }
+        },
+        "merge_branch": {
+            "type": "string"
+        },
+        "module": {
+            "type": "string"
+        },
+        "repo_path": {
+            "type": "string"
+        },
+        "repo_url": {
+            "type": "string",
+            "format": "url"
+        }
+    }
+}

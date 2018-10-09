@@ -114,14 +114,8 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         
         $array['department']   = $this->department['name'];
         $array['access_group'] = $this->access_group['name'];
-
-        if (!is_null($this->manager_id)) {
-            $array['manager'] = $this->manager['username'];
-        }
-
-        if (!is_null($this->deputy_id)) {
-            $array['deputy'] = $this->deputy['username'];
-        }
+        $array['manager'] = $this->manager['username'];
+        $array['deputy'] = $this->deputy['username'];
 
         return $array;
     }

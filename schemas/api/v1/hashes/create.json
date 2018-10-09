@@ -3,7 +3,7 @@
     "$schema": "http://json-schema.org/draft-07/schema#",
     "type": "object",
     "additionalProperties": false,
-    "description": "",
+    "description": "Create Hash",
     "required": [
         "branch",
         "owner",
@@ -11,65 +11,34 @@
     ],
     "properties": {
         "branch": {
-            "type": "string",
-            "example": "default"
+            "$ref": "/api/v1/hashes/hash.json#/properties/branch"
         },
         "owner": {
-            "type": "string",
-            "description": "Should be valid username",
-            "$filters": { 
-                "$func": "checkInDb",
-                "$vars": {
-                    "rule": "exists:users,username"
-                }
-            },
-            "messages": {
-                "$filters": "Owner should be valid username"
-            }
-        },
-        "rev": {
-            "type": "string",
-            "pattern": "^[0-9a-z]*$",
-            "$filters": {
-                "$func": "checkInDb",
-                "$vars": {
-                    "rule": "unique:hash_commits,hash_rev"
-                }
-            },
-            "messages": {
-                "pattern": "Revision can content only numbers and lowercase letters",
-                "$filters": "Revision is already reqistred"
-            }
+            "$ref": "/api/v1/hashes/hash.json#/properties/owner"
         },
         "chains": {  
-           "type": "array",
-            "description": "List with delivery chanis 21121",
-            "items": {
-                "type": "string"
-            }
+           "$ref": "/api/v1/hashes/hash.json#/properties/chains"
         },
         "description": {
-            "type": "string"
+            "$ref": "/api/v1/hashes/hash.json#/properties/description"
         },
         "files": {
-            "type": "array",
-            "description": "List with changed files in this revision",
-            "items": {
-                "type": "string"
-            }
+            "$ref": "/api/v1/hashes/hash.json#/properties/files"
         },
         "merge_branch": {
-            "type": "string"
+            "$ref": "/api/v1/hashes/hash.json#/properties/merge_branch"
         },
         "module": {
-            "type": "string"
+            "$ref": "/api/v1/hashes/hash.json#/properties/module"
         },
         "repo_path": {
-            "type": "string"
+            "$ref": "/api/v1/hashes/hash.json#/properties/repo_path"
         },
         "repo_url": {
-            "type": "string",
-            "format": "url"
+            "$ref": "/api/v1/hashes/hash.json#/properties/repo_url"
+        },
+        "rev": {
+            "$ref": "/api/v1/hashes/hash.json#/properties/rev"
         }
     }
 }
