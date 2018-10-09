@@ -19,7 +19,7 @@ class OASchema implements Arrayable
         '$id',
         '$schema',
         '$filters',
-        'messages'
+        '$messages'
     ];
 
     /**

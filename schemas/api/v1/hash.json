@@ -22,7 +22,7 @@
                     "rule": "exists:users,username"
                 }
             },
-            "messages": {
+            "$messages": {
                 "$filters": "Owner should be valid username"
             }
         },
@@ -35,7 +35,7 @@
                     "rule": "unique:hash_commits,hash_rev"
                 }
             },
-            "messages": {
+            "$messages": {
                 "pattern": "Revision can content only numbers and lowercase letters",
                 "$filters": "Revision is already reqistred"
             }
