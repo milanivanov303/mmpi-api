@@ -13,6 +13,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->app->bind('App\Repositories\HashRepository', function($app) {
+            return new \App\Repositories\EloquentHashRepository( new \App\Models\Hashes\HashCommit );
+        });
     }
 }

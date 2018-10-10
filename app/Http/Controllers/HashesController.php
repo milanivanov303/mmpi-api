@@ -4,9 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use App\Models\Hashes\HashCommit;
-use App\Models\Hashes\HashChain;
-use Illuminate\Support\Facades\DB;
+use App\Repositories\HashRepository;
 
 /**
  * Manage hashes
@@ -17,10 +15,10 @@ class HashesController extends Controller
     /**
      * Create a new controller instance.
      *
-     * @param HashCommit $model
+     * @param HashRepository $model
      * @return void
      */
-    public function __construct(HashCommit $model)
+    public function __construct(HashRepository $model)
     {
         $this->model = $model;
     }
@@ -33,8 +31,10 @@ class HashesController extends Controller
      */
     public function create(Request $request)
     {
-        $hash = new HashCommit();
-        return $this->save(new HashCommit, $request->json()->all(), 201);
+        return $this->output(
+            $this->model->create($request->json()->all()),
+            201
+        );
     }
 
     /**
@@ -46,8 +46,9 @@ class HashesController extends Controller
      */
     public function update(Request $request, $hash_rev)
     {
-        $hash = $this->model->where('hash_rev', $hash_rev)->firstOrFail();
-        return $this->save($hash, $request->json()->all());
+        return $this->output(
+            $this->model->update($request->json()->all(), $hash_rev)
+        );
     }
     
     /**
@@ -58,15 +59,7 @@ class HashesController extends Controller
      */
     public function delete($hash_rev)
     {
-        DB::transaction(function () use ($hash_rev) {
-            $hash = $this->model->where('hash_rev', $hash_rev)->firstOrFail();
-
-            $hash->files()->delete();
-            $hash->chains()->delete();
-
-            $hash->delete();
-        });
-
+        $this->model->delete($hash_rev);
         return response('Hash deleted successfully', 204);
     }
 
@@ -76,10 +69,10 @@ class HashesController extends Controller
      * @param  int  $hash_rev
      * @return Response
      */
-    public function getOne($hash_rev)
+    public function getOne(Request $request, $hash_rev)
     {
         return $this->output(
-            $this->model->where('hash_rev', $hash_rev)->firstOrFail()
+            $this->model->find($hash_rev)
         );
     }
     
@@ -87,81 +80,18 @@ class HashesController extends Controller
      * Retrieve hashes list.
      *
      * @param Request $request
-     * @return HashCommit[]|\Illuminate\Database\Eloquent\Collection
+     * @return Response
      */
     public function getMany(Request $request)
     {
         if ($request->input('page')) {
-            $data = $this->model->setFilters($request)->paginate($request->input('per_page'));
+            $data = $this->model->paginate($request->input('per_page'));
         } else {
-            $data = $this->model->setFilters($request)->get();
+            $data = $this->model->all();
         }
 
         return $this->output($data);
     }
     
-    /**
-     * Save hash and it's relations
-     *
-     * @param HashCommit $hash
-     * @param array $data
-     * @return Response
-     */
-    protected function save($hash, $data, $status = 200)
-    {
-        $hash->fill($data);
-        
-        DB::transaction(function () use ($hash, $data) {
-            $hash->saveOrFail();
-
-            // save hash files
-            if (isset($data['files'])) {
-                $this->saveFiles($hash, $data['files']);
-            }
-
-            // save hash chains
-            if (isset($data['chains'])) {
-                $this->saveChains($hash, $data['chains']);
-            }
-        });
-        
-        return $this->output($hash, $status);
-    }
     
-    /**
-     * Save hash files
-     *
-     * @param HashCommit $hash
-     * @param array $files
-     */
-    private function saveFiles($hash, $files)
-    {
-        // delete old files before setting new ones
-        $hash->files()->delete();
-         
-        $hash->files()->createMany(
-            array_map(function ($file_name) {
-                return ['file_name' => $file_name];
-            }, $files)
-        );
-    }
-    
-    /**
-     * Save hash chains
-     *
-     * @param HashCommit $hash
-     * @param array $chains
-     */
-    private function saveChains($hash, $chains)
-    {
-        // delete old chains before setting new ones
-        $hash->chains()->delete();
-
-        $hash->chains()->createMany(
-            array_map(function ($chain_name) {
-                $chain = HashChain::where('chain_name', $chain_name)->firstOrFail();
-                return ['hash_chain_id' => $chain->id];
-            }, $chains)
-        );
-    }
 }
