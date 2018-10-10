@@ -1,6 +1,6 @@
 .env
 ^nbproject$
 ^vendor$
-^storage/logs$
 ^db$
 ^\.idea$
+^storage$
