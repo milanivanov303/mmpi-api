@@ -29,25 +29,34 @@ trait Filterable
         return Schema::getColumnListing($this->getTable());
     }
 
+    public function getFilterAttributes()
+    {
+        if ($this->filterable) {
+            return $this->filterable;
+        }
+
+        return array_diff($this->getColumns(), $this->getHidden());
+    }
+
     /**
      * Get filterable parameters
      *
      * @param Request $request
      * @return array
      */
-    protected function getFilterableParams(Request $request)
+    protected function getFilterableAttributes(Request $request)
     {
         $data = $request->all();
-                
+            
         // Get mapped attributes if model uses mappable trait
         if (method_exists($this, 'getMappededAttributes')) {
-            $data = $this->getMappededAttributes($data, array_flip($this->mapping));
+            $data = $this->getMappededAttributes($data);
         }
  
         return array_intersect_key(
             $data,
             array_flip(
-                $this->getColumns()
+                $this->getFilterAttributes()
             )
         );
     }
@@ -92,7 +101,7 @@ trait Filterable
     protected function getFilters(Request $request)
     {
         $filters = [];
-        $params = $this->getFilterableParams($request);
+        $params = $this->getFilterableAttributes($request);
 
         foreach ($params as $name => $value) {
             array_push(
@@ -122,7 +131,7 @@ trait Filterable
 
             // Get mapped attribute if model uses mappable trait
             if (method_exists($this, 'getMappededAttribute')) {
-                $order_by = $this->getMappededAttribute($order_by, array_flip($this->mapping));
+                $order_by = $this->getMappededAttribute($order_by);
             }
 
             $model = $model->orderBy($order_by, $request->input('order_dir', 'ASC'));

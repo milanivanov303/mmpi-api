@@ -3,9 +3,8 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use App\Exceptions\FileException;
-use Opis\JsonSchema\Validator;
-use Opis\JsonSchema\FilterContainer;
+use Opis\JsonSchema\Validator as OpisValidator;
+use Opis\JsonSchema\Exception\AbstractSchemaException as OpisSchemaException;
 use App\Helpers\JsonSchema\Filters\CheckInDbFilter;
 use App\Helpers\JsonSchema\Error;
 
@@ -26,24 +25,15 @@ class JsonValidatorMiddleware
         }
 
         try {
-            $routeName = $request->route()[1]['as'] ?? '';
+            $validator = new OpisValidator();
+            $validator->setLoader($this->getLoader());
+            $validator->setFilters($this->getFilters());
 
-            $schema = $this->getSchema(
-                __DIR__ . "/../../../schemas/{$routeName}.json"
+            $schema = $validator->getLoader()->loadSchema(
+                $this->getRouteSchema($request->route())
             );
 
-            $validator = new Validator();
-            $validator->setFilters(
-                (new FilterContainer())
-                    ->add("string", "checkInDb", new CheckInDbFilter())
-            );
-            $validator->setLoader(
-                new \Opis\JsonSchema\Loaders\File('/', [
-                    __DIR__ . "/../../../schemas/"
-                ])
-            );
-
-            $result = $validator->dataValidation(
+            $result = $validator->schemaValidation(
                 (object)$request->json()->all(),
                 $schema,
                 PHP_INT_MAX
@@ -53,37 +43,64 @@ class JsonValidatorMiddleware
                 return $next($request);
             }
 
-            $errors = [];
-            foreach ($result->getErrors() as $error) {
-                $error = new Error($error);
-                if (array_key_exists($error->getProperty(), $errors)) {
-                    array_push($errors[$error->getProperty()], $error->getMessage());
-                } else {
-                    $errors[$error->getProperty()] = [$error->getMessage()];
-                }
-            }
-
-            return response()->json($errors, 422);
-        } catch (FileException $e) {
+            return response()->json($this->getConvertedErrors($result), 422);
+        } catch (OpisSchemaException $e) {
             return response($e->getMessage(), 404);
         }
     }
 
     /**
-     * Get request JSON schema
+     * Get request route JSON schema name
      *
-     * @param string $filename
-     * @return object
-     * @throws FileException
+     * @param array $route
+     * @return string
      */
-    protected function getSchema($filename)
+    protected function getRouteSchema($route)
     {
-        if (!file_exists($filename)) {
-            throw new FileException('JSON schema for this request is not found');
-        }
+        return $route[1]['schema'] ?? '';
+    }
 
-        return json_decode(
-            file_get_contents($filename)
-        );
+    /**
+     * Create JSON schema loader
+     *
+     * @return \Opis\JsonSchema\ISchemaLoader
+     */
+    protected function getLoader()
+    {
+        return new \Opis\JsonSchema\Loaders\File('/api', [
+            base_path("schemas"),
+            base_path("schemas/api")
+        ]);
+    }
+
+    /**
+     * Ger JSON schema filters
+     *
+     * @return \Opis\JsonSchema\IFilterContainer
+     */
+    protected function getFilters()
+    {
+        $filterContainer = new \Opis\JsonSchema\FilterContainer();
+        return $filterContainer->add("string", "checkInDb", new CheckInDbFilter());
+    }
+
+    /**
+     * Get human readable errors
+     *
+     * @param \Opis\JsonSchema\ValidationResult $result
+     * @return array
+     */
+    protected function getConvertedErrors($result)
+    {
+        $errors = [];
+        foreach ($result->getErrors() as $error) {
+            $error = new Error($error);
+            if (array_key_exists($error->getProperty(), $errors)) {
+                array_push($errors[$error->getProperty()], $error->getMessage());
+            } else {
+                $errors[$error->getProperty()] = [$error->getMessage()];
+            }
+        }
+        return $errors;
     }
 }

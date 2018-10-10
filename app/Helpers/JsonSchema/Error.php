@@ -53,8 +53,8 @@ class Error
      */
     protected function hasDefinedMessage()
     {
-        return property_exists($this->error->schema(), 'messages') &&
-                property_exists($this->error->schema()->messages, $this->error->keyword());
+        return property_exists($this->error->schema(), '$messages') &&
+                property_exists($this->error->schema()->{'$messages'}, $this->error->keyword());
     }
 
     /**
@@ -64,7 +64,7 @@ class Error
      */
     protected function getDefinedMessage()
     {
-        return $this->error->schema()->messages->{$this->error->keyword()};
+        return $this->error->schema()->{'$messages'}->{$this->error->keyword()};
     }
 
     /**

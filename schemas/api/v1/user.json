@@ -1,0 +1,54 @@
+{
+    "$id": "User",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "description": "User object",
+    "properties": {
+        "name": {
+            "type": "string",
+            "maxLength": 256
+        },
+        "username": {
+            "type": "string",
+            "maxLength": 50
+        },
+        "email": {
+            "type": "string",
+            "format": "email",
+            "maxLength": 50
+        },
+        "password": {
+          "type": "string"
+        },
+        "sid": {
+            "type": "string",
+            "maxLength": 60
+        },
+        "sidfr": {
+            "type": "string",
+            "maxLength": 60
+        },
+        "uidnumber": {
+            "type": "integer"
+        },
+        "status": {
+            "type": "integer"
+        },
+        "department": {
+            "type": "string",
+            "description": "Should be valid department"
+        },
+        "access_group": {
+            "type": "string",
+            "description": "Should be valid access group"
+        },
+        "manager": {
+            "type": "string",
+            "description": "Should be valid username"
+        },
+        "deputy": {
+            "type": "string",
+            "description": "Should be valid username"
+        }
+    }
+}
