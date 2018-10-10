@@ -1,5 +1,5 @@
 {
-    "$id": "/api/v1/users/user.json",
+    "$id": "User",
     "$schema": "http://json-schema.org/draft-07/schema#",
     "type": "object",
     "description": "User object",

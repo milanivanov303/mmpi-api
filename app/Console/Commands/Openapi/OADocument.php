@@ -41,11 +41,9 @@ class OADocument implements Arrayable, Jsonable
     {
         $pathItems = [];
         foreach ($this->pathItems as $pathItem) {
-            if ($pathItem->hasSchema()) {
-                $schema = $pathItem->loadSchema();
-                if ($schema) {
-                    $this->addSchema($schema);
-                }
+            $schema = $pathItem->loadSchema();
+            if ($schema) {
+                $this->addSchema($schema);
             }
 
             $pathItems[$pathItem->getUri()][$pathItem->getMethod()] = $pathItem->toArray();
@@ -53,11 +51,21 @@ class OADocument implements Arrayable, Jsonable
         return $pathItems;
     }
 
+    /**
+     * Add schema to document
+     * 
+     * @param OASchema $schema
+     */
     protected function addSchema($schema)
     {
         $this->schemas[] = $schema;
     }
 
+    /**
+     * Get document schemas
+     * 
+     * @return array
+     */
     protected function getSchemas()
     {
         $schemas = [];

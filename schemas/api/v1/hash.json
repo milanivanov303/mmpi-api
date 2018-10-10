@@ -1,5 +1,5 @@
 {
-    "$id": "/api/v1/hashes/hash.json",
+    "$id": "Hash",
     "$schema": "http://json-schema.org/draft-07/schema#",
     "type": "object",
     "description": "Hash object",
@@ -12,11 +12,13 @@
     "properties": {
         "branch": {
             "type": "string",
+            "description": "Branch name",
             "example": "default"
         },
         "owner": {
             "type": "string",
             "description": "Should be valid username",
+            "example": "mmpi_auto",
             "$filters": { 
                 "$func": "checkInDb",
                 "$vars": {
@@ -29,6 +31,8 @@
         },
         "rev": {
             "type": "string",
+            "description": "Version control system revision hash",
+            "example": "891b688fe1a49c5383de94c26717c8c3b7c47ab48",
             "pattern": "^[0-9a-z]*$",
             "$filters": {
                 "$func": "checkInDb",
@@ -44,31 +48,50 @@
         "chains": {  
            "type": "array",
             "description": "List with delivery chanis",
+            "example": [
+                "bcol_imx_v9_rel",
+                "bcol_imx_v9_rel"
+            ],
             "items": {
                 "type": "string"
             }
         },
         "description": {
-            "type": "string"
+            "type": "string",
+             "description": "Description of changes"
         },
         "files": {
             "type": "array",
             "description": "List with changed files in this revision",
+            "example": [
+                "src/test/java/codix/api/be/dossierComponents/bundles/BundlesResourceTest.java",
+                "src/main/java/codix/api/be/dossierComponents/payment/directTransfer/ITitleDao.java",
+                "src/main/java/codix/api/be/dossierComponents/payment/directTransfer/TitleDao.java",
+                "src/main/java/codix/api/be/dossierComponents/payment/directTransfer/TitleResource.java"
+            ],
             "items": {
                 "type": "string"
             }
         },
         "merge_branch": {
-            "type": "string"
+            "type": "string",
+            "description": "Branch name changes are merged to",
+            "example": "_DEV_IXDEV-4271_e_funding_in_bundles"
         },
         "module": {
-            "type": "string"
+            "type": "string",
+            "description": "Repository name",
+            "example": "imx_be"
         },
         "repo_path": {
-            "type": "string"
+            "type": "string",
+            "description": "Repository path",
+            "example": "extranet/hg/v9_be"
         },
         "repo_url": {
             "type": "string",
+            "description": "Repository URL",
+            "example": "http://lemon.codixfr.private:6002/v9_be",
             "format": "url"
         }
     }
