@@ -53,7 +53,7 @@ class OADocument implements Arrayable, Jsonable
 
     /**
      * Add schema to document
-     * 
+     *
      * @param OASchema $schema
      */
     protected function addSchema($schema)
@@ -63,7 +63,7 @@ class OADocument implements Arrayable, Jsonable
 
     /**
      * Get document schemas
-     * 
+     *
      * @return array
      */
     protected function getSchemas()

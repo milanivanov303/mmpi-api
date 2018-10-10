@@ -94,7 +94,7 @@ class OAPathItem implements Arrayable
 
     /**
      * Check if there is schema defined for this route
-     * 
+     *
      * @return boolean
      */
     public function hasSchema()
@@ -104,7 +104,7 @@ class OAPathItem implements Arrayable
 
     /**
      * Get route schema if there is one defined
-     * 
+     *
      * @return mixed
      */
     public function getSchema()
@@ -128,7 +128,7 @@ class OAPathItem implements Arrayable
 
     /**
      * Set route schema
-     * 
+     *
      * @param array $schema
      */
     public function setSchema($schema)
@@ -158,7 +158,7 @@ class OAPathItem implements Arrayable
 
     /**
      * Get request unique parameter if there is one
-     * 
+     *
      * @return boolean|string
      */
     protected function getUniqueParameter()
@@ -172,7 +172,7 @@ class OAPathItem implements Arrayable
 
     /**
      * Get request parameters
-     * 
+     *
      * @return array
      */
     public function getParameters()
@@ -207,7 +207,7 @@ class OAPathItem implements Arrayable
 
     /**
      * Load route schema
-     * 
+     *
      * @return false|OASchema
      */
     public function loadSchema()
@@ -235,7 +235,7 @@ class OAPathItem implements Arrayable
 
     /**
      * Get operation id from route name
-     * 
+     *
      * @return string
      */
     public function getOperationId()
@@ -248,7 +248,7 @@ class OAPathItem implements Arrayable
 
     /**
      * Get request body
-     * 
+     *
      * @return array
      */
     protected function getRequestBody()
