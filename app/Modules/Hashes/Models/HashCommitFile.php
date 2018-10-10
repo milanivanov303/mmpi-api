@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Hashes;
+namespace App\Modules\Hashes\Models;
 
 use App\Models\Model;
 

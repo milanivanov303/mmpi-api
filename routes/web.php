@@ -42,7 +42,10 @@ $router->group([
         });
         
         // Hashes
-        $router->group(['prefix' => 'hashes'], function () use ($router) {
+        $router->group([
+            'prefix' => 'hashes',
+            'namespace' => '\App\Modules\Hashes\Controllers'
+        ], function () use ($router) {
             $router->get('', [
                 'as'          => 'hashes.list',
                 'schema'      => '/api/v1/hash.json',

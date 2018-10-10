@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Hashes;
+namespace App\Modules\Hashes\Models;
 
 use App\Models\Model;
 use App\Models\User;
@@ -68,7 +68,7 @@ class HashCommit extends Model
      */
     public function files()
     {
-        return $this->hasMany('App\Models\Hashes\HashCommitFile', 'hash_commit_id');
+        return $this->hasMany(HashCommitFile::class, 'hash_commit_id');
     }
     
     /**
@@ -76,7 +76,7 @@ class HashCommit extends Model
      */
     public function chains()
     {
-        return $this->hasMany('App\Models\Hashes\HashCommitToChain', 'hash_commit_id');
+        return $this->hasMany(HashCommitToChain::class, 'hash_commit_id');
     }
     
     /**
@@ -84,7 +84,7 @@ class HashCommit extends Model
      */
     public function owner()
     {
-        return $this->belongsTo('App\Models\User', 'committed_by');
+        return $this->belongsTo(User::class, 'committed_by');
     }
     
     /**

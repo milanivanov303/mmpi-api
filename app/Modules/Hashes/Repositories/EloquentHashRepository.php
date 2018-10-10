@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Repositories;
+namespace App\Modules\Hashes\Repositories;
 
-use App\Models\Hashes\HashChain;
+use App\Repositories\AbstractEloquentRepository;
+use App\Modules\Hashes\Models\HashChain;
 use Illuminate\Support\Facades\DB;
 
 class EloquentHashRepository extends AbstractEloquentRepository implements HashRepository 

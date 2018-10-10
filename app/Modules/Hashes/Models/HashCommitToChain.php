@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Hashes;
+namespace App\Modules\Hashes\Models;
 
 use App\Models\Model;
 
@@ -31,6 +31,6 @@ class HashCommitToChain extends Model
      */
     public function chain()
     {
-        return $this->hasOne('App\Models\Hashes\HashChain', 'id', 'hash_chain_id');
+        return $this->hasOne(HashChain::class, 'id', 'hash_chain_id');
     }
 }

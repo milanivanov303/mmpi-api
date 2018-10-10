@@ -4,6 +4,12 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 
+use App\Modules\Hashes\{
+    Repositories\HashRepository,
+    Repositories\EloquentHashRepository,
+    Models\HashCommit
+};
+
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -13,8 +19,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind('App\Repositories\HashRepository', function($app) {
-            return new \App\Repositories\EloquentHashRepository( new \App\Models\Hashes\HashCommit );
+        $this->app->bind(HashRepository::class, function() {
+            return new EloquentHashRepository( new HashCommit );
         });
     }
 }
