@@ -273,6 +273,8 @@ class OAPathItem implements Arrayable
      * Get responses
      *
      * @return array
+     *
+     * @todo !!!Refactor this code so it has less hardcoded data
      */
     protected function getResponses()
     {
@@ -288,6 +290,10 @@ class OAPathItem implements Arrayable
                             'properties' => [
                                 'data' => [
                                     '$ref' => "#/components/schemas/{$this->getSchema()}"
+                                ],
+                                'meta' => [
+                                    'type' => 'object',
+                                    'description' => 'Meta data for this request'
                                 ]
                             ]
                         ]
@@ -323,6 +329,10 @@ class OAPathItem implements Arrayable
                                     'items' => [
                                         '$ref' => "#/components/schemas/{$this->getSchema()}"
                                     ]
+                                ],
+                                'meta' => [
+                                    'type' => 'object',
+                                    'description' => 'Meta data for this request'
                                 ]
                             ]
                         ]
@@ -341,6 +351,10 @@ class OAPathItem implements Arrayable
                             'properties' => [
                                 'data' => [
                                     '$ref' => "#/components/schemas/{$this->getSchema()}"
+                                ],
+                                'meta' => [
+                                    'type' => 'object',
+                                    'description' => 'Meta data for this request'
                                 ]
                             ]
                         ]

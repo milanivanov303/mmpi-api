@@ -177,7 +177,7 @@ class HashesTest extends TestCase
     {
         $this
             ->json('GET', '/api/v1/hashes?page=3')
-            ->seeJsonStructure(['total', 'current_page', 'data'])
+            ->seeJsonStructure(['meta' => ['pagination' => ['total', 'current_page']], 'data'])
             ->assertResponseOk();
     }
 }
