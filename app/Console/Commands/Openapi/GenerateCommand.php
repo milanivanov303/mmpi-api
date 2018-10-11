@@ -5,6 +5,7 @@ namespace App\Console\Commands\Openapi;
 use Illuminate\Console\Command;
 use Laravel\Lumen\Routing\Router;
 use Illuminate\Support\Facades\Schema;
+use App\Repositories\RepositoryInterface;
 
 /**
  * Generate API documentation
@@ -97,11 +98,47 @@ class GenerateCommand extends Command
         $filters    = [];
 
         try {
-            $model = (new \ReflectionParameter([$controller, '__construct'], 'model'))
-                        ->getClass()
-                        ->newInstance();
+            $model = $this->getModelInstance($controller);
+            return $this->getModelFilters($model);
+            
+        } catch (\Exception $e) {
+            var_dump($e->getMessage());
+        }
 
-            foreach ($model->getFilterAttributes() as $column) {
+         return $filters;
+    }
+
+    /**
+     * Get Model instance
+     * 
+     * @param string $controller
+     * @return 
+     */
+    protected function getModelInstance($controller)
+    {
+        $class = (new \ReflectionParameter([$controller, '__construct'], 'model'))
+                    ->getClass();
+
+        $instance = app($class->getName());
+        if ($instance instanceof RepositoryInterface) {
+            return $instance->getModel();
+        }
+
+        return $class->newInstance();
+    }
+
+    /**
+     * Get model filters
+     * 
+     * @param type $model
+     * @return array
+     */
+    protected function getModelFilters($model)
+    {
+        $filters = [];
+        
+        if (method_exists($model, 'getFilterableAttributes')) {
+            foreach ($model->getFilterableAttributes() as $column) {
                 $name = $column;
                 // Get mapped attributes if model uses mappable trait
                 if (method_exists($model, 'getMappededAttribute')) {
@@ -112,10 +149,8 @@ class GenerateCommand extends Command
                     'type' => 'string'//Schema::getColumnType($model->getTable(), $column)
                 ]);
             }
-        } catch (\Exception $e) {
-            var_dump($e->getMessage());
         }
 
-         return $filters;
+        return $filters;
     }
 }

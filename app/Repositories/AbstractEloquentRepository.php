@@ -2,6 +2,8 @@
 
 namespace App\Repositories;
 
+use Illuminate\Database\Eloquent\Model;
+
 abstract class AbstractEloquentRepository
 {
     /**
@@ -25,10 +27,20 @@ abstract class AbstractEloquentRepository
     protected $primaryKey = 'id';
 
     /**
-     * @param \Illuminate\Database\Eloquent\Model $model
+     * @param Model $model
      */
-    public function __construct($model) {
+    public function __construct(Model $model) {
         $this->model = $model;
+    }
+
+    /**
+     * Get repository model
+     *
+     * @return Model
+     */
+    public function getModel()
+    {
+        return $this->model;
     }
 
     /**
