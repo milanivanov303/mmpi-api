@@ -109,7 +109,7 @@ class OADocument implements Arrayable, Jsonable
      * @param  int  $options
      * @return string
      */
-    public function toJson(int $options = 0):string
+    public function toJson($options = 0)
     {
         return json_encode($this->toArray());
     }
