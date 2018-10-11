@@ -6,7 +6,13 @@ use Illuminate\Support\Facades\Schema;
 
 trait Filterable
 {
+    /**
+     * Supported operators
+     *
+     * @var array
+     */
     protected $operators = [
+        '=',
         '>',
         '<',
         '>=',
@@ -17,6 +23,11 @@ trait Filterable
         'like'
     ];
 
+    /**
+     * Default operator if non was set
+     *
+     * @var string
+     */
     protected $defaultOperator = '=';
 
     /**
@@ -29,12 +40,17 @@ trait Filterable
         return Schema::getColumnListing($this->getTable());
     }
 
-    public function getFilterAttributes()
+    /**
+     * Get defined filters
+     *
+     * @return array
+     */
+    public function getFilterableAttributes()
     {
-        if ($this->filterable) {
-            return $this->filterable;
+        if (method_exists($this, 'filters')) {
+            return array_keys($this->filters());
         }
-
+ 
         return array_diff($this->getColumns(), $this->getHidden());
     }
 
@@ -44,19 +60,17 @@ trait Filterable
      * @param Request $request
      * @return array
      */
-    protected function getFilterableAttributes(Request $request)
-    {
-        $data = $request->all();
-            
+    protected function getOnlyValidParameters ($parameters)
+    {    
         // Get mapped attributes if model uses mappable trait
         if (method_exists($this, 'getMappededAttributes')) {
-            $data = $this->getMappededAttributes($data);
+            $parameters = $this->getMappededAttributes($parameters);
         }
- 
+
         return array_intersect_key(
-            $data,
+            $parameters,
             array_flip(
-                $this->getFilterAttributes()
+                $this->getFilterableAttributes()
             )
         );
     }
@@ -67,13 +81,27 @@ trait Filterable
      * @param $value
      * @return string
      */
-    protected function getFilterOperator($value)
+    protected function getFilterOperator($name, $value)
     {
+        // Get operator from parameter value if exists
         $matches = [];
         preg_match('/' . implode('|', $this->operators) . '/', $value, $matches);
 
         if ($matches) {
             return $matches[0];
+        }
+
+        // Get operator from model filters if there is one defined
+        if (method_exists($this, 'filters')) {
+            if (
+                array_key_exists($name, $this->filters()) &&
+                array_key_exists('operator', $this->filters()[$name])
+            ) {
+                $operator = $this->filters()[$name]['operator'];
+                if (in_array($operator, $this->operators)) {
+                    return $operator;
+                }
+            }
         }
 
         return $this->defaultOperator;
@@ -85,11 +113,38 @@ trait Filterable
      * @param $value
      * @return string
      */
-    protected function getFilterValue($value)
+    protected function getFilterValue($value, $operator)
     {
-        return trim(
+        $value = trim(
             str_replace($this->operators, '', $value)
         );
+
+        if ($operator === 'like') {
+            $value = "%{$value}%";
+        }
+
+        return $value;
+    }
+
+    /**
+     * Get filter callback
+     *
+     * @param string $name
+     * @return null|callable
+     */
+    protected function getFilterCallback($name)
+    {
+        // Get calback from model filters if there is one defined
+        if (method_exists($this, 'filters')) {
+            if (
+                array_key_exists($name, $this->filters()) &&
+                array_key_exists('callback', $this->filters()[$name])
+            ) {
+                return $this->filters()[$name]['callback'];
+            }
+        }
+        
+        return null;
     }
 
     /**
@@ -98,20 +153,25 @@ trait Filterable
      * @param Request $request
      * @return array
      */
-    protected function getFilters(Request $request)
+    protected function getFilters($parameters)
     {
-        $filters = [];
-        $params = $this->getFilterableAttributes($request);
+        $filters    = [];
+        $parameters = $this->getOnlyValidParameters($parameters);
 
-        foreach ($params as $name => $value) {
-            array_push(
-                $filters,
-                [
-                    $name,
-                    $this->getFilterOperator($value),
-                    $this->getFilterValue($value)
-                ]
-            );
+        foreach ($parameters as $name => $value) {
+            $array = is_array($value) ? $value : [$value];
+            foreach ($array as $value) {
+                $operator = $this->getFilterOperator($name, $value);
+                array_push(
+                    $filters,
+                    [
+                        'column'   => $name,
+                        'operator' => $this->getFilterOperator($name, $value),
+                        'value'    => $this->getFilterValue($value, $operator),
+                        'callback' => $this->getFilterCallback($name)
+                    ]
+                );
+            }
         }
         return $filters;
     }
@@ -119,26 +179,34 @@ trait Filterable
     /**
      * Set model filters
      *
-     * @param Request $request
      * @return \Illuminate\Database\Eloquent\Model
      */
-    public function setFilters(Request $request)
+    public function setFilters($parameters)
     {
-        $model = $this->where($this->getFilters($request));
+        $filters = $this->getFilters($parameters);
+
+        $model = $this;
+        foreach ($filters as $filter) {
+            if (is_callable($filter['callback'])) {
+                $model = call_user_func($filter['callback'], $model, $filter['value']);
+            } else {
+                $model = $model->where($filter['column'], $filter['operator'], $filter['value']);
+            }
+        }
         
-        if ($request->input('order_by')) {
-            $order_by = $request->input('order_by');
+        if (array_key_exists('order_by', $parameters)) {
+            $order_by = $parameters['order_by'];
 
             // Get mapped attribute if model uses mappable trait
             if (method_exists($this, 'getMappededAttribute')) {
                 $order_by = $this->getMappededAttribute($order_by);
             }
 
-            $model = $model->orderBy($order_by, $request->input('order_dir', 'ASC'));
+            $model = $model->orderBy($order_by, $parameters['order_dir'] ?? 'ASC');
         }
 
-        if ($request->input('limit')) {
-            $model = $model->limit($request->input('limit'));
+        if (array_key_exists('limit', $parameters)) {
+            $model = $model->limit($parameters['limit']);
         }
         
         return $model;

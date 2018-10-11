@@ -44,6 +44,44 @@ class HashCommit extends Model
     ];
 
     /**
+     * Define filters for this model
+     * 
+     * @return array
+     */
+    protected function filters(): array
+    {
+        return [
+            'hash_rev' => [
+                'operator' => 'like'
+            ],
+            'commit_description' => [],
+            'committed_by' => [
+                'callback' => function ($model, $value) {
+                    return $model->whereHas('owner', function ($query) use ($value) {
+                        $query->where('username', '=', $value);
+                    });
+                }
+            ],
+            'files' => [
+                'callback' => function ($model, $value) {
+                    return $model->whereHas('files', function ($query) use ($value) {
+                        $query->where('file_name', 'like', "%{$value}%");
+                    });
+                }
+            ],
+            'chains' => [
+                'callback' => function ($model, $value) {
+                    return $model->whereHas('chains', function ($query) use ($value) {
+                        $query->whereHas('chain', function ($query) use ($value) {
+                            $query->where('chain_name', 'like', "%{$value}%");
+                        });
+                    });
+                }
+            ]
+        ];
+    }
+
+    /**
      * The attributes that will be hidden in output json
      *
      * @var array
@@ -51,16 +89,6 @@ class HashCommit extends Model
     protected $hidden = [
         'id',
         'repo_timestamp'
-    ];
-
-    /**
-     * The relations to eager load on every query.
-     *
-     * @var array
-     */
-    protected $with = [
-        //'files',
-        //'chains'
     ];
     
     /**

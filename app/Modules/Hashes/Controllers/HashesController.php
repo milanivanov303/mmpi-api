@@ -85,6 +85,9 @@ class HashesController extends Controller
      */
     public function getMany(Request $request)
     {
+
+        $this->model->setFilters($request->all());
+
         if ($request->input('page')) {
             $data = $this->model->paginate($request->input('per_page'));
         } else {

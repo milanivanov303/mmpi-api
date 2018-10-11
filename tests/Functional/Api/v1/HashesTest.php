@@ -161,7 +161,7 @@ class HashesTest extends TestCase
     public function testGetHashesList()
     {
         $this
-            ->json('GET', '/api/v1/hashes?limit=10')
+            ->json('GET', '/api/v1/hashes')
             ->shouldReturnJson()
             ->seeJsonStructure(['data'])
             ->assertResponseOk();
