@@ -6,7 +6,7 @@ use App\Repositories\AbstractEloquentRepository;
 use App\Modules\Hashes\Models\HashChain;
 use Illuminate\Support\Facades\DB;
 
-class EloquentHashRepository extends AbstractEloquentRepository implements HashRepository 
+class EloquentHashRepository extends AbstractEloquentRepository implements HashRepository
 {
     protected $primaryKey = 'hash_rev';
 
@@ -91,5 +91,4 @@ class EloquentHashRepository extends AbstractEloquentRepository implements HashR
             }, $chains)
         );
     }
-
 }

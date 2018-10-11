@@ -96,6 +96,4 @@ class HashesController extends Controller
 
         return $this->output($data);
     }
-    
-    
 }

@@ -52,7 +52,7 @@ $router->group([
                 'description' => 'Get hashes list',
                 'uses'        => 'HashesController@getMany'
             ]);
-            $router->get('/{hash_rev:[0-9a-z]+}', [
+            $router->get('/{rev:[0-9a-z]+}', [
                 'as'          => 'hashes.one',
                 'schema'      => '/api/v1/hash.json',
                 'description' => 'Get single hash',
@@ -64,13 +64,13 @@ $router->group([
                 'description' => 'Create new hash',
                 'uses'        => 'HashesController@create']
             );
-            $router->put('/{hash_rev:[0-9a-z]+}', [
+            $router->put('/{rev:[0-9a-z]+}', [
                 'as'          => 'hashes.update',
                 'description' => 'Update hash',
                 'schema'      => '/api/v1/hash.json',
                 'uses'        => 'HashesController@update']
             );
-            $router->delete('/{hash_rev:[0-9a-z]+}', [
+            $router->delete('/{rev:[0-9a-z]+}', [
                 'as'          => 'hash.delete',
                 'description' => 'Delete hash',
                 'uses'        => 'HashesController@delete'

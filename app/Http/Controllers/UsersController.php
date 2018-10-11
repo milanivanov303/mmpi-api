@@ -40,9 +40,9 @@ class UsersController extends Controller
     public function getMany(Request $request)
     {
         if ($request->input('page')) {
-            $data = $this->model->setFilters($request)->paginate($request->input('per_page'));
+            $data = $this->model->setFilters($request->all())->paginate($request->input('per_page'));
         } else {
-            $data = $this->model->setFilters($request)->get();
+            $data = $this->model->setFilters($request->all())->get();
         }
 
         return $this->output($data);

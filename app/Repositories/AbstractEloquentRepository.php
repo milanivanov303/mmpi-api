@@ -8,7 +8,7 @@ abstract class AbstractEloquentRepository
 {
     /**
      * Eloquent model
-     * 
+     *
      * @var \Illuminate\Database\Eloquent\Model
      */
     protected $model;
@@ -29,7 +29,8 @@ abstract class AbstractEloquentRepository
     /**
      * @param Model $model
      */
-    public function __construct(Model $model) {
+    public function __construct(Model $model)
+    {
         $this->model = $model;
     }
 
@@ -45,7 +46,7 @@ abstract class AbstractEloquentRepository
 
     /**
      * Get all records
-     * 
+     *
      * @param array $columns
      * @return \Illuminate\Database\Eloquent\Collection
      */
@@ -68,7 +69,7 @@ abstract class AbstractEloquentRepository
 
     /**
      * Create new record
-     * 
+     *
      * @param array $data
      * @return \Illuminate\Database\Eloquent\Model
      */
@@ -79,7 +80,7 @@ abstract class AbstractEloquentRepository
 
     /**
      * Update existing record
-     * 
+     *
      * @param array $data
      * @param mixed $id
      * @return \Illuminate\Database\Eloquent\Model
@@ -91,7 +92,7 @@ abstract class AbstractEloquentRepository
 
     /**
      * Delete record
-     * 
+     *
      * @param type $id
      * @return boolean
      */
@@ -102,7 +103,7 @@ abstract class AbstractEloquentRepository
 
     /**
      * Get single record
-     * 
+     *
      * @param mixed $id
      * @param array $columns
      * @return \Illuminate\Database\Eloquent\Model
@@ -114,7 +115,7 @@ abstract class AbstractEloquentRepository
 
     /**
      * Set model filters
-     * 
+     *
      * @param array $filters
      */
     public function setFilters($filters)

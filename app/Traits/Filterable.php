@@ -57,11 +57,11 @@ trait Filterable
     /**
      * Get filterable parameters
      *
-     * @param Request $request
+     * @param array $parameters
      * @return array
      */
-    protected function getOnlyValidParameters ($parameters)
-    {    
+    protected function getOnlyValidParameters($parameters)
+    {
         // Get mapped attributes if model uses mappable trait
         if (method_exists($this, 'getMappededAttributes')) {
             $parameters = $this->getMappededAttributes($parameters);
@@ -78,6 +78,7 @@ trait Filterable
     /**
      * Get filter operator
      *
+     * @param $name
      * @param $value
      * @return string
      */
@@ -93,8 +94,7 @@ trait Filterable
 
         // Get operator from model filters if there is one defined
         if (method_exists($this, 'filters')) {
-            if (
-                array_key_exists($name, $this->filters()) &&
+            if (array_key_exists($name, $this->filters()) &&
                 array_key_exists('operator', $this->filters()[$name])
             ) {
                 $operator = $this->filters()[$name]['operator'];
@@ -111,6 +111,7 @@ trait Filterable
      * Get filter value
      *
      * @param $value
+     * @param $operator
      * @return string
      */
     protected function getFilterValue($value, $operator)
@@ -136,8 +137,7 @@ trait Filterable
     {
         // Get calback from model filters if there is one defined
         if (method_exists($this, 'filters')) {
-            if (
-                array_key_exists($name, $this->filters()) &&
+            if (array_key_exists($name, $this->filters()) &&
                 array_key_exists('callback', $this->filters()[$name])
             ) {
                 return $this->filters()[$name]['callback'];
@@ -188,7 +188,7 @@ trait Filterable
         $model = $this;
         foreach ($filters as $filter) {
             if (is_callable($filter['callback'])) {
-                $model = call_user_func($filter['callback'], $model, $filter['value']);
+                $model = call_user_func($filter['callback'], $model, $filter['value'], $filter['operator']);
             } else {
                 $model = $model->where($filter['column'], $filter['operator'], $filter['value']);
             }

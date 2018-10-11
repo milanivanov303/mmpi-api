@@ -45,7 +45,7 @@ class HashCommit extends Model
 
     /**
      * Define filters for this model
-     * 
+     *
      * @return array
      */
     protected function filters(): array

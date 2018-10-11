@@ -44,6 +44,50 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     ];
 
     /**
+     * Define filters for this model
+     *
+     * @return array
+     */
+    protected function filters(): array
+    {
+        return [
+            'name' => [
+                'operator' => 'like'
+            ],
+            'username' => [],
+            'status' => [],
+            'department_id' => [
+                'callback' => function ($model, $value) {
+                    return $model->whereHas('department', function ($query) use ($value) {
+                        $query->where('name', 'like', "%{$value}%");
+                    });
+                }
+            ],
+            'manager_id' => [
+                'callback' => function ($model, $value) {
+                    return $model->whereHas('manager', function ($query) use ($value, $operator) {
+                        $query->where('username', $operator, $value);
+                    });
+                }
+            ],
+            'deputy_id' => [
+                'callback' => function ($model, $value) {
+                    return $model->whereHas('deputy', function ($query) use ($value, $operator) {
+                        $query->where('username', $operator, $value);
+                    });
+                }
+            ],
+            'access_group_id' => [
+                'callback' => function ($model, $value, $operator) {
+                    return $model->whereHas('accessGroup', function ($query) use ($value, $operator) {
+                        $query->where('name', $operator, $value);
+                    });
+                }
+            ]
+        ];
+    }
+
+    /**
      * Hash user password
      *
      * @param $value
@@ -92,7 +136,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      */
     public function manager()
     {
-        return $this->belongsTo('App\Models\User', 'id', 'manager_id');
+        return $this->belongsTo('App\Models\User', 'manager_id', 'id');
     }
 
     /**
@@ -100,7 +144,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      */
     public function deputy()
     {
-        return $this->belongsTo('App\Models\User', 'id', 'deputy_id');
+        return $this->belongsTo('App\Models\User', 'deputy_id', 'id');
     }
 
     /**
@@ -114,8 +158,8 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         
         $array['department']   = $this->department['name'];
         $array['access_group'] = $this->accessGroup['name'];
-        $array['manager'] = $this->manager['username'];
-        $array['deputy'] = $this->deputy['username'];
+        $array['manager']      = $this->manager['username'];
+        $array['deputy']       = $this->deputy['username'];
 
         return $array;
     }

@@ -100,7 +100,6 @@ class GenerateCommand extends Command
         try {
             $model = $this->getModelInstance($controller);
             return $this->getModelFilters($model);
-            
         } catch (\Exception $e) {
             var_dump($e->getMessage());
         }
@@ -110,9 +109,9 @@ class GenerateCommand extends Command
 
     /**
      * Get Model instance
-     * 
+     *
      * @param string $controller
-     * @return 
+     * @return
      */
     protected function getModelInstance($controller)
     {
@@ -129,7 +128,7 @@ class GenerateCommand extends Command
 
     /**
      * Get model filters
-     * 
+     *
      * @param type $model
      * @return array
      */
