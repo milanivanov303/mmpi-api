@@ -230,7 +230,7 @@ trait Filterable
      */
     public function setFilters(array $parameters): EloquentBuilder
     {
-        $builder = $this->newQuery();
+        $builder = $this->newModelQuery();
 
         foreach ($this->getFilters($parameters) as $filter) {
             $builder = $this->setFilter($builder, $filter);
