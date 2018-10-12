@@ -19,29 +19,40 @@ class OAPathItem implements Arrayable
      *
      * @var string
      */
-    protected $base_uri;
+    protected $baseUri;
 
     /**
      * Route filters
      *
      * @var array
      */
-    protected $filters;
+    protected $filters = [];
+
+    protected $schemasBaseUri = '#/components/schemas/';
 
     /**
      * @param array $route
-     * @param string $base_uri
+     * @param string $baseUri
      * @param array $filters
      */
-    public function __construct(array $route, string $base_uri, array $filters = [])
+    public function __construct(array $route, string $baseUri)
     {
-        $this->route    = $route;
-        $this->base_uri = $base_uri;
-        $this->filters  = $filters;
+        $this->route   = $route;
+        $this->baseUri = $baseUri;
 
         if ($this->hasSchema()) {
             $this->loadSchema();
         }
+    }
+
+    /**
+     * Set route filters
+     *
+     * @param array $filters
+     */
+    public function setFilters(array $filters)
+    {
+        $this->filters = $filters;
     }
 
     /**
@@ -51,7 +62,7 @@ class OAPathItem implements Arrayable
      */
     public function getUri():string
     {
-        $uri = str_replace($this->base_uri, '', $this->route['uri']);
+        $uri = str_replace($this->baseUri, '', $this->route['uri']);
         return preg_replace('/{(.*):.*}$/', '{$1}', $uri);
     }
 
@@ -113,6 +124,20 @@ class OAPathItem implements Arrayable
         }
 
         return false;
+    }
+
+    /**
+     * Get link to schema resource
+     * 
+     * @param string $resource
+     * @return string
+     */
+    protected function getLinkToSchema(string $resource = ''):string
+    {
+        return trim(
+            "{$this->schemasBaseUri}{$this->getSchema()->getId()}/{$resource}",
+            '/'
+        );
     }
 
     /**
@@ -201,7 +226,7 @@ class OAPathItem implements Arrayable
     {
         if ($this->hasSchema() && $this->getSchema()->hasProperty($parameter)) {
             return [
-                '$ref' => "#/components/schemas/{$this->getSchema()->getId()}/properties/{$parameter}"
+                '$ref' => $this->getLinkToSchema("properties/{$parameter}")
             ];
         }
         
@@ -235,8 +260,57 @@ class OAPathItem implements Arrayable
                     'schema' => $this->getParameterSchema($filter['name']),
                 ];
             }
+
+            $parameters[] = [
+                'name' => 'limit',
+                'in' => 'query',
+                'schema' => [
+                    'type' => 'integer',
+                    'description' => 'Limit results. It is ignored when pagination is used',
+                    'example' => 50
+                ],
+            ];
+
+            $parameters[] = [
+                'name' => 'order_by',
+                'in' => 'query',
+                'schema' => [
+                    'type' => 'string',
+                    'description' => 'Order results by given property',
+                    'enum' => array_keys($this->getSchema()->toArray()['properties'])
+                ],
+            ];
+
+            $parameters[] = [
+                'name' => 'order_dir',
+                'in' => 'query',
+                'schema' => [
+                    'type' => 'string',
+                    'description' => 'Direction to use when ordering results',
+                    'enum' => ['asc', 'desc']
+                ],
+            ];
+
+            $parameters[] = [
+                'name' => 'page',
+                'in' => 'query',
+                'schema' => [
+                    'type' => 'integer',
+                    'description' => 'Return given page from paginated results'
+                ],
+            ];
+
+             $parameters[] = [
+                'name' => 'per_page',
+                'in' => 'query',
+                'schema' => [
+                    'type' => 'integer',
+                    'description' => 'Set results per page',
+                    'example' => 15
+                ],
+            ];
         }
-        
+
         return $parameters;
     }
 
@@ -266,7 +340,7 @@ class OAPathItem implements Arrayable
                 'content' => [
                     'application/json' => [
                         'schema' => [
-                            '$ref' => "#/components/schemas/{$this->getSchema()->getId()}"
+                            '$ref' => $this->getLinkToSchema()
                         ]
                     ]
                 ]
@@ -296,7 +370,7 @@ class OAPathItem implements Arrayable
                             'type' => 'object',
                             'properties' => [
                                 'data' => [
-                                    '$ref' => "#/components/schemas/{$this->getSchema()->getId()}"
+                                    '$ref' => $this->getLinkToSchema()
                                 ],
                                 'meta' => [
                                     'type' => 'object',
@@ -334,7 +408,7 @@ class OAPathItem implements Arrayable
                                     'type' => 'array',
                                     'description' => 'List of resource entries',
                                     'items' => [
-                                        '$ref' => "#/components/schemas/{$this->getSchema()->getId()}"
+                                        '$ref' => $this->getLinkToSchema()
                                     ]
                                 ],
                                 'meta' => [
@@ -357,7 +431,7 @@ class OAPathItem implements Arrayable
                             'type' => 'object',
                             'properties' => [
                                 'data' => [
-                                    '$ref' => "#/components/schemas/{$this->getSchema()->getId()}"
+                                    '$ref' => $this->getLinkToSchema()
                                 ],
                                 'meta' => [
                                     'type' => 'object',
@@ -369,6 +443,17 @@ class OAPathItem implements Arrayable
                 ]
             ];
         }
+
+        $responses['401'] = [
+            'description' => 'Unauthorized',
+            'content' => [
+                'text/html' => [
+                    'schema' => [
+                        'type' => 'string'
+                    ]
+                ]
+            ]
+        ];
 
         if ($this->isSingleResorceUri()) {
             $responses['404'] = [

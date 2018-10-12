@@ -3,6 +3,8 @@ namespace App\Traits;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Eloquent\Model as EloquentModel;
+use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 
 trait Filterable
 {
@@ -35,7 +37,7 @@ trait Filterable
      *
      * @return array
      */
-    protected function getColumns()
+    protected function getColumns(): array
     {
         return Schema::getColumnListing($this->getTable());
     }
@@ -45,13 +47,14 @@ trait Filterable
      *
      * @return array
      */
-    public function getFilterableAttributes()
+    public function getFilterableAttributes(): array
     {
-        if (method_exists($this, 'filters')) {
-            return array_keys($this->filters());
-        }
+        $filters = method_exists($this, 'filters') ? array_keys($this->filters()) : [];
  
-        return array_diff($this->getColumns(), $this->getHidden());
+        return array_merge(
+            array_diff($this->getColumns(), $this->getHidden()),
+            $filters
+        );
     }
 
     /**
@@ -60,7 +63,7 @@ trait Filterable
      * @param array $parameters
      * @return array
      */
-    protected function getOnlyValidParameters($parameters)
+    protected function getOnlyValidParameters($parameters): array
     {
         // Get mapped attributes if model uses mappable trait
         if (method_exists($this, 'getMappededAttributes')) {
@@ -82,7 +85,7 @@ trait Filterable
      * @param $value
      * @return string
      */
-    protected function getFilterOperator($name, $value)
+    protected function getFilterOperator($name, $value): string
     {
         // Get operator from parameter value if exists
         $matches = [];
@@ -92,29 +95,17 @@ trait Filterable
             return $matches[0];
         }
 
-        // Get operator from model filters if there is one defined
-        if (method_exists($this, 'filters')) {
-            if (array_key_exists($name, $this->filters()) &&
-                array_key_exists('operator', $this->filters()[$name])
-            ) {
-                $operator = $this->filters()[$name]['operator'];
-                if (in_array($operator, $this->operators)) {
-                    return $operator;
-                }
-            }
-        }
-
         return $this->defaultOperator;
     }
 
     /**
      * Get filter value
      *
-     * @param $value
-     * @param $operator
+     * @param string $value
+     * @param string $operator
      * @return string
      */
-    protected function getFilterValue($value, $operator)
+    protected function getFilterValue(string $value, string $operator): string
     {
         $value = trim(
             str_replace($this->operators, '', $value)
@@ -131,29 +122,27 @@ trait Filterable
      * Get filter callback
      *
      * @param string $name
-     * @return null|callable
+     * @return false|callable
      */
-    protected function getFilterCallback($name)
+    protected function getFilterCallback(string $name)
     {
         // Get calback from model filters if there is one defined
         if (method_exists($this, 'filters')) {
-            if (array_key_exists($name, $this->filters()) &&
-                array_key_exists('callback', $this->filters()[$name])
-            ) {
-                return $this->filters()[$name]['callback'];
+            if (array_key_exists($name, $this->filters())) {
+                return $this->filters()[$name];
             }
         }
         
-        return null;
+        return false;
     }
 
     /**
      * Get filters
      *
-     * @param Request $request
+     * @param array $parameters
      * @return array
      */
-    protected function getFilters($parameters)
+    protected function getFilters(array $parameters): array
     {
         $filters    = [];
         $parameters = $this->getOnlyValidParameters($parameters);
@@ -177,38 +166,86 @@ trait Filterable
     }
 
     /**
+     * Get order by callback
+     *
+     * @param string $name
+     * @return false|callable
+     */
+    protected function getOrderByCallback($name)
+    {
+        // Get calback from model filters if there is one defined
+        if (method_exists($this, 'orderBy')) {
+            if (array_key_exists($name, $this->orderBy())) {
+                return $this->orderBy()[$name];
+            }
+        }
+        
+        return false;
+    }
+
+    /**
+     * Set model order
+     *
+     * @param EloquentBuilder $builder
+     * @param string $order_by
+     * @param string $order_dir
+     * @return EloquentBuilder
+     */
+    protected function setOrder(EloquentBuilder $builder, string $order_by, string $order_dir): EloquentBuilder
+    {
+        // Get mapped attribute if model uses mappable trait
+        if (method_exists($this, 'getMappededAttribute')) {
+            $order_by = $this->getMappededAttribute($order_by);
+        }
+
+        $callback = $this->getOrderByCallback($order_by);
+
+        if (is_callable($callback)) {
+            return call_user_func($callback, $builder, $order_dir);
+        }
+
+        return $builder->orderBy($order_by, $order_dir);
+    }
+
+    /**
+     * Set model filter
+     * 
+     * @param EloquentBuilder $builder
+     * @param array $filter
+     * @return EloquentBuilder
+     */
+    protected function setFilter(EloquentBuilder $builder, array $filter): EloquentBuilder
+    {
+        if (is_callable($filter['callback'])) {
+            return call_user_func($filter['callback'], $builder, $filter['value'], $filter['operator']);
+        }
+
+        return $builder->where($filter['column'], $filter['operator'], $filter['value']);
+    }
+
+    /**
      * Set model filters
      *
-     * @return \Illuminate\Database\Eloquent\Model
+     * @return EloquentBuilder
      */
-    public function setFilters($parameters)
+    public function setFilters(array $parameters): EloquentBuilder
     {
-        $filters = $this->getFilters($parameters);
+        $builder = $this->newQuery();
 
-        $model = $this;
-        foreach ($filters as $filter) {
-            if (is_callable($filter['callback'])) {
-                $model = call_user_func($filter['callback'], $model, $filter['value'], $filter['operator']);
-            } else {
-                $model = $model->where($filter['column'], $filter['operator'], $filter['value']);
-            }
+        foreach ($this->getFilters($parameters) as $filter) {
+            $builder = $this->setFilter($builder, $filter);
         }
-        
+
+        // set order
         if (array_key_exists('order_by', $parameters)) {
-            $order_by = $parameters['order_by'];
-
-            // Get mapped attribute if model uses mappable trait
-            if (method_exists($this, 'getMappededAttribute')) {
-                $order_by = $this->getMappededAttribute($order_by);
-            }
-
-            $model = $model->orderBy($order_by, $parameters['order_dir'] ?? 'ASC');
+            $builder = $this->setOrder($builder, $parameters['order_by'], $parameters['order_dir'] ?? 'asc');
         }
 
+        // set limit
         if (array_key_exists('limit', $parameters)) {
-            $model = $model->limit($parameters['limit']);
+            $builder = $builder->limit($parameters['limit']);
         }
         
-        return $model;
+        return $builder;
     }
 }

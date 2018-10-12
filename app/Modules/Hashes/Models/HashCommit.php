@@ -51,33 +51,35 @@ class HashCommit extends Model
     protected function filters(): array
     {
         return [
-            'hash_rev' => [
-                'operator' => 'like'
-            ],
-            'commit_description' => [],
-            'committed_by' => [
-                'callback' => function ($model, $value) {
-                    return $model->whereHas('owner', function ($query) use ($value) {
-                        $query->where('username', '=', $value);
+            'committed_by' => function ($model, $value) {
+                return $model->whereHas('owner', function ($query) use ($value) {
+                    $query->where('username', '=', $value);
+                });
+            },
+            'files' => function ($model, $value) {
+                return $model->whereHas('files', function ($query) use ($value) {
+                    $query->where('file_name', 'like', "%{$value}%");
+                });
+            },
+            'chains' => function ($model, $value) {
+                return $model->whereHas('chains', function ($query) use ($value) {
+                    $query->whereHas('chain', function ($query) use ($value) {
+                        $query->where('chain_name', 'like', "%{$value}%");
                     });
-                }
-            ],
-            'files' => [
-                'callback' => function ($model, $value) {
-                    return $model->whereHas('files', function ($query) use ($value) {
-                        $query->where('file_name', 'like', "%{$value}%");
-                    });
-                }
-            ],
-            'chains' => [
-                'callback' => function ($model, $value) {
-                    return $model->whereHas('chains', function ($query) use ($value) {
-                        $query->whereHas('chain', function ($query) use ($value) {
-                            $query->where('chain_name', 'like', "%{$value}%");
-                        });
-                    });
-                }
-            ]
+                });
+            }
+        ];
+    }
+
+    /**
+     * Define order by for this model
+     *
+     * @return array
+     */
+    protected function orderBy(): array
+    {
+        return [
+
         ];
     }
 

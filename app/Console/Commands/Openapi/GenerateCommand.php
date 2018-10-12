@@ -37,7 +37,7 @@ class GenerateCommand extends Command
     public function handle(Router $router)
     {
 
-        $base_uri = "/api/{$this->argument('version')}";
+        $baseUri = "/api/{$this->argument('version')}";
 
         $openapi = [
             'openapi' => '3.0.1',
@@ -48,10 +48,10 @@ class GenerateCommand extends Command
             ],
             'servers' => [
                 [
-                    'url' => "http://yarnaudov.codixfr.private:8111{$base_uri}/"
+                    'url' => "http://yarnaudov.codixfr.private:8111{$baseUri}/"
                 ],
                 [
-                    'url' => "http://localhost:8111{$base_uri}/"
+                    'url' => "http://localhost:8111{$baseUri}/"
                 ]
             ],
             'security' => [
@@ -75,10 +75,14 @@ class GenerateCommand extends Command
         $document = new OADocument($openapi);
 
         foreach ($router->getRoutes() as $route) {
-            if (strlen($route['uri']) > 1) {
-                $filters = $this->getRouteFilters($route);
-                $document->addPathItem(new OAPathItem($route, $base_uri, $filters));
+            $pathItem = new OAPathItem($route, $baseUri);
+            
+            $filters = $this->getRouteFilters($route);
+            if ($filters) {
+                $pathItem->setFilters($filters);
             }
+
+            $document->addPathItem($pathItem);
         }
 
         echo $document->toJson();
