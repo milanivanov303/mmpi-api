@@ -21,7 +21,10 @@ $router->group([
     $router->group(['prefix' => 'v1'], function () use ($router) {
 
         // Users
-        $router->group(['prefix' => 'users'], function () use ($router) {
+        $router->group([
+            'prefix' => 'users',
+            'namespace' => '\App\Modules\Users\Controllers'
+        ], function () use ($router) {
             $router->get('', [
                 'as'          => 'users.list',
                 'schema'      => '/api/v1/user.json',
