@@ -137,8 +137,6 @@ class HashCommit extends Model
     {
         $array = parent::relationsToArray();
 
-        $visible = $this->getVisible();
-
         // convert files relations to simple array with names
         if ($this->isVisible('files')) {
             $array['files'] = array_column($this->files->toArray(), 'file_name');

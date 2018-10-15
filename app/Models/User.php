@@ -36,11 +36,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      */
     protected $hidden = [
         'id',
-        'password',
-        'department_id',
-        'access_group_id',
-        'manager_id',
-        'deputy_id'
+        'password'
     ];
 
     /**
@@ -157,22 +153,20 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     {
         $array = parent::relationsToArray();
 
-        $visible = $this->getVisible();
-
-        if ($this->isVisible('department')) {
-            $array['department'] = $this->department['name'];
+        if ($this->isVisible('department_id')) {
+            $array['department_id'] = $this->department['name'];
         }
 
-        if ($this->isVisible('access_group')) {
-            $array['access_group'] = $this->accessGroup['name'];
+        if ($this->isVisible('access_group_id')) {
+            $array['access_group_id'] = $this->accessGroup['name'];
         }
 
-        if ($this->isVisible('manager')) {
-            $array['manager'] = $this->manager['username'];
+        if ($this->isVisible('manager_id')) {
+            $array['manager_id'] = $this->manager['username'];
         }
 
-        if ($this->isVisible('deputy')) {
-            $array['deputy'] = $this->deputy['username'];
+        if ($this->isVisible('deputy_id')) {
+            $array['deputy_id'] = $this->deputy['username'];
         }
 
         return $array;
