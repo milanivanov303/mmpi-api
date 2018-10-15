@@ -156,11 +156,24 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     public function relationsToArray()
     {
         $array = parent::relationsToArray();
-        
-        $array['department']   = $this->department['name'];
-        $array['access_group'] = $this->accessGroup['name'];
-        $array['manager']      = $this->manager['username'];
-        $array['deputy']       = $this->deputy['username'];
+
+        $visible = $this->getVisible();
+
+        if ($this->isVisible('department')) {
+            $array['department'] = $this->department['name'];
+        }
+
+        if ($this->isVisible('access_group')) {
+            $array['access_group'] = $this->accessGroup['name'];
+        }
+
+        if ($this->isVisible('manager')) {
+            $array['manager'] = $this->manager['username'];
+        }
+
+        if ($this->isVisible('deputy')) {
+            $array['deputy'] = $this->deputy['username'];
+        }
 
         return $array;
     }

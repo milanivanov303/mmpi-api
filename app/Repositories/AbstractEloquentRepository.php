@@ -52,7 +52,7 @@ abstract class AbstractEloquentRepository
      */
     public function all($columns = array('*'))
     {
-        return $this->model->get($columns);
+        return $this->model->get();
     }
 
     /**
@@ -64,7 +64,7 @@ abstract class AbstractEloquentRepository
      */
     public function paginate($perPage = 15, $columns = array('*'))
     {
-        return $this->model->paginate($perPage, $columns);
+        return $this->model->paginate($perPage);
     }
 
     /**
@@ -120,8 +120,31 @@ abstract class AbstractEloquentRepository
      */
     public function setFilters($filters)
     {
+        if (array_key_exists('fields', $filters)) {
+            $this->setVisible($filters['fields']);
+        }
+
         if (method_exists($this->model, 'setFilters')) {
             $this->model = $this->model->setFilters($filters);
         }
+    }
+
+    /**
+     * Set model visible columns
+     * 
+     * @param string|array $fields
+     */
+    protected function setVisible($fields)
+    {
+        if (is_string($fields)) {
+            $fields = array_map('trim', explode(',', $fields));
+        }
+        
+        if (method_exists($this->model, 'getMappededAttribute')) {
+            foreach($fields as &$field) {
+                $field = $this->model->getMappededAttribute($field);
+            }
+        }
+        $this->model->setVisible($fields);
     }
 }

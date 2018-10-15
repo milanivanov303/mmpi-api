@@ -137,17 +137,24 @@ class HashCommit extends Model
     {
         $array = parent::relationsToArray();
 
-        // convert files relations to simple array with names
-        $array['files'] = array_column($this->files->toArray(), 'file_name');
-        
-        // convert chains relations to simple array with names
-        $array['chains'] = array_column(
-            array_column($this->chains->toArray(), 'chain'),
-            'chain_name'
-        );
+        $visible = $this->getVisible();
 
-        // set commited by to owner username
-        $array['committed_by'] = $this->owner['username'];
+        // convert files relations to simple array with names
+        if ($this->isVisible('files')) {
+            $array['files'] = array_column($this->files->toArray(), 'file_name');
+        }
+
+        // convert chains relations to simple array with names
+        if ($this->isVisible('chains')) {
+            $array['chains'] = array_column(
+                array_column($this->chains->toArray(), 'chain'),
+                'chain_name'
+            );
+        }
+
+        if ($this->isVisible('committed_by')) {
+            $array['committed_by'] = $this->owner['username'];
+        }
         
         return $array;
     }
