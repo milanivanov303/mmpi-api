@@ -58,6 +58,68 @@ class GenerateCommand extends Command
                 ['api_key' => []]
             ],
             'components' => [
+                'parameters' => [
+                    'limit' => [
+                        'name' => 'limit',
+                        'in' => 'query',
+                        'schema' => [
+                            'type' => 'integer',
+                            'description' => 'Limit results. It is ignored when pagination is used',
+                            'example' => 50
+                        ]
+                    ],
+                    'order_by' => [
+                        'name' => 'order_by',
+                        'in' => 'query',
+                        'schema' => [
+                            'type' => 'string',
+                            'description' => 'Order results by given property'
+                        ]
+                    ],
+                    'order_dir' => [
+                        'name' => 'order_dir',
+                        'in' => 'query',
+                        'schema' => [
+                            'type' => 'string',
+                            'description' => 'Direction to use when ordering results',
+                            'enum' => ['asc', 'desc']
+                        ]
+                    ],
+                    'page' => [
+                        'name' => 'page',
+                        'in' => 'query',
+                        'schema' => [
+                            'type' => 'integer',
+                            'description' => 'Return given page from paginated results'
+                        ]
+                    ],
+                    'per_page' => [
+                        'name' => 'per_page',
+                        'in' => 'query',
+                        'schema' => [
+                            'type' => 'integer',
+                            'description' => 'Set results per page',
+                            'example' => 15
+                        ],
+                    ],
+                    'fields' => [
+                        'name' => 'fields',
+                        'in' => 'query',
+                        'schema' => [
+                            'oneOf' => [
+                                ['type' => 'string'],
+                                [
+                                    'type' => 'array',
+                                    'items' => [
+                                        'type' => 'string'
+                                    ]
+                                ]
+                            ],
+                            'description' => 'Return only listed fields in results',
+                            'example' => 'field1, field2'
+                        ],
+                    ]
+                ],
                 'securitySchemes' => [
                     'api_key' => [
                         'in' => 'header',

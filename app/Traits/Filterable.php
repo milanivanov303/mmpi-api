@@ -51,9 +51,11 @@ trait Filterable
     {
         $filters = method_exists($this, 'filters') ? array_keys($this->filters()) : [];
  
-        return array_merge(
-            array_diff($this->getColumns(), $this->getHidden()),
-            $filters
+        return array_unique(
+            array_merge(
+                array_diff($this->getColumns(), $this->getHidden()),
+                $filters
+            )
         );
     }
 

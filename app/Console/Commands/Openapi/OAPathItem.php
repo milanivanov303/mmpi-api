@@ -254,61 +254,31 @@ class OAPathItem implements Arrayable
 
         if ($this->isListResorceUri()) {
             foreach ($this->filters as $filter) {
-                $parameters[] = [
-                    'name' => $filter['name'],
-                    'in' => 'query',
+                array_push($parameters, [
+                    'name'   => $filter['name'],
+                    'in'     => 'query',
                     'schema' => $this->getParameterSchema($filter['name']),
-                ];
+                ]);
             }
 
+            /*
             $parameters[] = [
-                'name' => 'limit',
-                'in' => 'query',
+                '$ref' => '#/components/parameters/order_by',
                 'schema' => [
-                    'type' => 'integer',
-                    'description' => 'Limit results. It is ignored when pagination is used',
-                    'example' => 50
-                ],
-            ];
-
-            $parameters[] = [
-                'name' => 'order_by',
-                'in' => 'query',
-                'schema' => [
-                    'type' => 'string',
-                    'description' => 'Order results by given property',
                     'enum' => array_keys($this->getSchema()->toArray()['properties'])
-                ],
+                ]
             ];
+            */
 
-            $parameters[] = [
-                'name' => 'order_dir',
-                'in' => 'query',
-                'schema' => [
-                    'type' => 'string',
-                    'description' => 'Direction to use when ordering results',
-                    'enum' => ['asc', 'desc']
-                ],
-            ];
+            $parameters = array_merge($parameters, [
+                ['$ref' => '#/components/parameters/limit'],
+                ['$ref' => '#/components/parameters/order_by'],
+                ['$ref' => '#/components/parameters/order_dir'],
+                ['$ref' => '#/components/parameters/page'],
+                ['$ref' => '#/components/parameters/per_page'],
+                ['$ref' => '#/components/parameters/fields']
+            ]);
 
-            $parameters[] = [
-                'name' => 'page',
-                'in' => 'query',
-                'schema' => [
-                    'type' => 'integer',
-                    'description' => 'Return given page from paginated results'
-                ],
-            ];
-
-             $parameters[] = [
-                'name' => 'per_page',
-                'in' => 'query',
-                'schema' => [
-                    'type' => 'integer',
-                    'description' => 'Set results per page',
-                    'example' => 15
-                ],
-            ];
         }
 
         return $parameters;
