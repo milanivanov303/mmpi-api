@@ -153,20 +153,20 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     {
         $array = parent::relationsToArray();
 
-        if ($this->isVisible('department_id')) {
-            $array['department_id'] = $this->department['name'];
+        if ($this->isVisible('department_id') && array_key_exists('department', $array)) {
+            $array['department_id'] = $array['department']['name'];
         }
 
-        if ($this->isVisible('access_group_id')) {
-            $array['access_group_id'] = $this->accessGroup['name'];
+        if ($this->isVisible('access_group_id') && array_key_exists('accessGroup', $array)) {
+            $array['access_group_id'] = $array['accessGroup']['name'];
         }
 
-        if ($this->isVisible('manager_id')) {
-            $array['manager_id'] = $this->manager['username'];
+        if ($this->isVisible('manager_id') && array_key_exists('manager', $array)) {
+            $array['manager_id'] = $array['manager']['username'];
         }
 
-        if ($this->isVisible('deputy_id')) {
-            $array['deputy_id'] = $this->deputy['username'];
+        if ($this->isVisible('deputy_id') && array_key_exists('deputy', $array)) {
+            $array['deputy_id'] = $array['deputy']['username'];
         }
 
         return $array;

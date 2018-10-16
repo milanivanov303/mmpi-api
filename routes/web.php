@@ -1,6 +1,15 @@
 <?php
 
 /*
+\Illuminate\Support\Facades\Event::listen(
+    \Illuminate\Database\Events\QueryExecuted::class,
+    function ($query) {
+        var_dump($query->sql);
+    }
+);
+*/
+
+/*
 |--------------------------------------------------------------------------
 | Application Routes
 |--------------------------------------------------------------------------

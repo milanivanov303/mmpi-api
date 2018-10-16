@@ -5,22 +5,57 @@ namespace App\Modules\Hashes\Repositories;
 use App\Repositories\AbstractEloquentRepository;
 use App\Modules\Hashes\Models\HashChain;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Model;
 
 class EloquentHashRepository extends AbstractEloquentRepository implements HashRepository
 {
+    /**
+     * Column to use on get/update/delete
+     *
+     * @var string
+     */
     protected $primaryKey = 'hash_rev';
 
+    /**
+     * The relations to eager load on every query.
+     *
+     * @var array
+     */
+    protected $with = [
+        'files',
+        'chains',
+        'owner'
+    ];
+
+    /**
+     * Create new record
+     *
+     * @param array $data
+     * @return \Illuminate\Database\Eloquent\Model
+     */
     public function create(array $data)
     {
         return $this->save($data);
     }
 
+    /**
+     * Update existing record
+     *
+     * @param array $data
+     * @param mixed $id
+     * @return \Illuminate\Database\Eloquent\Model
+     */
     public function update(array $data, $id)
     {
         $this->model = $this->model->where($this->primaryKey, $id)->firstOrFail();
         return $this->save($data);
     }
 
+    /**
+     * Delete record
+     *
+     * @param type $id
+     */
     public function delete($id)
     {
         DB::transaction(function () use ($id) {
@@ -35,6 +70,7 @@ class EloquentHashRepository extends AbstractEloquentRepository implements HashR
      * Save hash and it's relations
      *
      * @param array $data
+     * @return model
      */
     protected function save($data)
     {

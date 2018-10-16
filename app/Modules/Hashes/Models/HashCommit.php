@@ -44,6 +44,17 @@ class HashCommit extends Model
     ];
 
     /**
+     * The relations to eager load on every query.
+     *
+     * @var array
+     */
+    protected $with = [
+        'files',
+        'chains',
+        'owner'
+    ];
+
+    /**
      * Define filters for this model
      *
      * @return array
@@ -92,7 +103,7 @@ class HashCommit extends Model
         'id',
         'repo_timestamp'
     ];
-    
+
     /**
      * Get the files for the hash.
      */
@@ -138,20 +149,20 @@ class HashCommit extends Model
         $array = parent::relationsToArray();
 
         // convert files relations to simple array with names
-        if ($this->isVisible('files')) {
-            $array['files'] = array_column($this->files->toArray(), 'file_name');
+        if ($this->isVisible('files') && array_key_exists('files', $array)) {
+            $array['files'] = array_column($array['files'], 'file_name');
         }
 
         // convert chains relations to simple array with names
-        if ($this->isVisible('chains')) {
+        if ($this->isVisible('chains') && array_key_exists('chains', $array)) {
             $array['chains'] = array_column(
-                array_column($this->chains->toArray(), 'chain'),
+                array_column($array['chains'], 'chain'),
                 'chain_name'
             );
         }
 
-        if ($this->isVisible('committed_by')) {
-            $array['committed_by'] = $this->owner['username'];
+        if ($this->isVisible('committed_by') && array_key_exists('owner', $array)) {
+            $array['committed_by'] = $array['owner']['username'];
         }
         
         return $array;

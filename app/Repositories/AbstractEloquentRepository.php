@@ -27,6 +27,13 @@ abstract class AbstractEloquentRepository
     protected $primaryKey = 'id';
 
     /**
+     * The relations to eager load on every query.
+     *
+     * @var array
+     */
+    protected $with = [];
+
+    /**
      * @param Model $model
      */
     public function __construct(Model $model)
@@ -52,7 +59,7 @@ abstract class AbstractEloquentRepository
      */
     public function all($columns = array('*'))
     {
-        return $this->model->get();
+        return $this->model->with($this->with)->get();
     }
 
     /**
@@ -131,7 +138,7 @@ abstract class AbstractEloquentRepository
 
     /**
      * Set model visible columns
-     * 
+     *
      * @param string|array $fields
      */
     protected function setVisible($fields)
@@ -139,7 +146,7 @@ abstract class AbstractEloquentRepository
         if (is_string($fields)) {
             $fields = array_map('trim', explode(',', $fields));
         }
-        
+
         if (method_exists($this->model, 'getMappededAttribute')) {
             foreach($fields as &$field) {
                 $field = $this->model->getMappededAttribute($field);
