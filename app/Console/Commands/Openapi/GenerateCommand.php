@@ -39,102 +39,7 @@ class GenerateCommand extends Command
 
         $baseUri = "/api/{$this->argument('version')}";
 
-        $openapi = [
-            'openapi' => '3.0.1',
-            'info' => [
-                'description' => 'MMPI API',
-                'version'     => '1',
-                'title'       => 'MMPI API'
-            ],
-            'servers' => [
-                [
-                    'url' => "http://yarnaudov.codixfr.private:8111{$baseUri}/"
-                ],
-                [
-                    'url' => "http://localhost:8111{$baseUri}/"
-                ]
-            ],
-            'security' => [
-                ['api_key' => []]
-            ],
-            'components' => [
-                'parameters' => [
-                    'limit' => [
-                        'name' => 'limit',
-                        'in' => 'query',
-                        'schema' => [
-                            'type' => 'integer',
-                            'description' => 'Limit results. It is ignored when pagination is used',
-                            'example' => 50
-                        ]
-                    ],
-                    'order_by' => [
-                        'name' => 'order_by',
-                        'in' => 'query',
-                        'schema' => [
-                            'type' => 'string',
-                            'description' => 'Order results by given property'
-                        ]
-                    ],
-                    'order_dir' => [
-                        'name' => 'order_dir',
-                        'in' => 'query',
-                        'schema' => [
-                            'type' => 'string',
-                            'description' => 'Direction to use when ordering results',
-                            'enum' => ['asc', 'desc']
-                        ]
-                    ],
-                    'page' => [
-                        'name' => 'page',
-                        'in' => 'query',
-                        'schema' => [
-                            'type' => 'integer',
-                            'description' => 'Return given page from paginated results'
-                        ]
-                    ],
-                    'per_page' => [
-                        'name' => 'per_page',
-                        'in' => 'query',
-                        'schema' => [
-                            'type' => 'integer',
-                            'description' => 'Set results per page',
-                            'example' => 15
-                        ],
-                    ],
-                    'fields' => [
-                        'name' => 'fields',
-                        'in' => 'query',
-                        'schema' => [
-                            'oneOf' => [
-                                ['type' => 'string'],
-                                [
-                                    'type' => 'array',
-                                    'items' => [
-                                        'type' => 'string'
-                                    ]
-                                ]
-                            ],
-                            'description' => 'Return only listed fields in results',
-                            'example' => 'field1, field2'
-                        ],
-                    ]
-                ],
-                'securitySchemes' => [
-                    'api_key' => [
-                        'in' => 'header',
-                        'name' => 'X-AUTH-TOKEN',
-                        'type' => 'apiKey'
-                    ],
-                    //'basic_auth' => [
-                    //    'type' => 'http',
-                    //    'scheme' => 'basic'
-                    //]
-                ]
-            ]
-        ];
-
-        $document = new OADocument($openapi);
+        $document = new OADocument($this->loadDefaultDocument());
 
         foreach ($router->getRoutes() as $route) {
             $pathItem = new OAPathItem($route, $baseUri);
@@ -153,6 +58,26 @@ class GenerateCommand extends Command
     }
 
     /**
+     * Load default document
+     *
+     * @return array
+     */
+    protected function loadDefaultDocument()
+    {
+        // file location can be added to config if needed!
+        $filename = base_path('openapi.json');
+
+        if (!file_exists($filename)) {
+            return [];
+        }
+
+        return json_decode(
+            file_get_contents($filename),
+            JSON_OBJECT_AS_ARRAY
+        );
+    }
+
+    /**
      * Get route filters
      *
      * @param array $route
@@ -166,7 +91,7 @@ class GenerateCommand extends Command
         try {
             $model = $this->getModelInstance($controller);
             return $this->getModelFilters($model);
-        } catch (\Exception $e) {
+        } catch (\ReflectionException $e) {
             var_dump($e->getMessage());
         }
 
@@ -178,6 +103,8 @@ class GenerateCommand extends Command
      *
      * @param string $controller
      * @return
+     *
+     * @throws \ReflectionException
      */
     protected function getModelInstance($controller)
     {
