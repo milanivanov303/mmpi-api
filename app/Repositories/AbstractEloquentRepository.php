@@ -148,7 +148,7 @@ abstract class AbstractEloquentRepository
         }
 
         if (method_exists($this->model, 'getMappededAttribute')) {
-            foreach($fields as &$field) {
+            foreach ($fields as &$field) {
                 $field = $this->model->getMappededAttribute($field);
             }
         }

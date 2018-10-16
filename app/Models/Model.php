@@ -34,7 +34,7 @@ class Model extends \Illuminate\Database\Eloquent\Model
 
     /**
      * Check if attribute is set as visible
-     * 
+     *
      * @param string $attribute
      * @return bool
      */
@@ -42,5 +42,4 @@ class Model extends \Illuminate\Database\Eloquent\Model
     {
         return empty($this->getVisible()) || in_array($attribute, $this->getVisible());
     }
-
 }

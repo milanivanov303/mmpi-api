@@ -211,7 +211,7 @@ trait Filterable
 
     /**
      * Set model filter
-     * 
+     *
      * @param EloquentBuilder $builder
      * @param array $filter
      * @return EloquentBuilder

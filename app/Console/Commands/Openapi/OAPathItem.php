@@ -128,7 +128,7 @@ class OAPathItem implements Arrayable
 
     /**
      * Get link to schema resource
-     * 
+     *
      * @param string $resource
      * @return string
      */
@@ -278,7 +278,6 @@ class OAPathItem implements Arrayable
                 ['$ref' => '#/components/parameters/per_page'],
                 ['$ref' => '#/components/parameters/fields']
             ]);
-
         }
 
         return $parameters;

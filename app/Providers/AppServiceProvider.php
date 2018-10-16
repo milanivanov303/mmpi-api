@@ -4,16 +4,12 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 
-use App\Modules\Hashes\ {
-    Repositories\HashRepository,
-    Repositories\EloquentHashRepository,
-    Models\HashCommit
-};
+use App\Modules\Hashes\Repositories\HashRepository;
+use App\Modules\Hashes\Repositories\EloquentHashRepository;
+use App\Modules\Hashes\Models\HashCommit;
 
-use App\Modules\Users\ {
-    Repositories\UserRepository,
-    Repositories\EloquentUserRepository
-};
+use App\Modules\Users\Repositories\UserRepository;
+use App\Modules\Users\Repositories\EloquentUserRepository;
 use App\Models\User;
 
 class AppServiceProvider extends ServiceProvider
@@ -31,6 +27,6 @@ class AppServiceProvider extends ServiceProvider
 
          $this->app->bind(HashRepository::class, function () {
             return new EloquentHashRepository(new HashCommit);
-        });
+         });
     }
 }

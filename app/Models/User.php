@@ -79,7 +79,8 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     {
         return [
             'department_id' => function ($model, $order_dir) {
-                return $model->join('departments', 'departments.id', '=', 'users.department_id')->orderBy('departments.name', $order_dir);
+                return $model->join('departments', 'departments.id', '=', 'users.department_id')
+                             ->orderBy('departments.name', $order_dir);
             }
         ];
     }
