@@ -29,7 +29,7 @@ class UsersController extends Controller
     public function getOne($username)
     {
         return $this->output(
-            $this->model->where('username', $username)->firstOrFail()
+            $this->model->find($username)
         );
     }
 

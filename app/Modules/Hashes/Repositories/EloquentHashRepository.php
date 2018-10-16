@@ -90,6 +90,8 @@ class EloquentHashRepository extends AbstractEloquentRepository implements HashR
             }
         });
 
+        $this->model->load(['files', 'chains', 'owner']);
+
         return $this->model;
     }
 
