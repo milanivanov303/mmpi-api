@@ -50,7 +50,7 @@
             "description": "List with delivery chanis",
             "example": [
                 "bcol_imx_v9_rel",
-                "bcol_imx_v9_rel"
+                "bpi_imx_v9_rel"
             ],
             "items": {
                 "type": "string"
@@ -64,10 +64,8 @@
             "type": "array",
             "description": "List with changed files in this revision",
             "example": [
-                "src/test/java/codix/api/be/dossierComponents/bundles/BundlesResourceTest.java",
-                "src/main/java/codix/api/be/dossierComponents/payment/directTransfer/ITitleDao.java",
-                "src/main/java/codix/api/be/dossierComponents/payment/directTransfer/TitleDao.java",
-                "src/main/java/codix/api/be/dossierComponents/payment/directTransfer/TitleResource.java"
+                "BundlesResourceTest.java",
+                "ITitleDao.java"
             ],
             "items": {
                 "type": "string"

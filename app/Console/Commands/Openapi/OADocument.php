@@ -8,7 +8,7 @@ use Illuminate\Contracts\Support\Jsonable;
 class OADocument implements Arrayable, Jsonable
 {
     /**
-     * Openapi document
+     * OpenApi document
      *
      * @var array
      */
@@ -32,20 +32,29 @@ class OADocument implements Arrayable, Jsonable
         $this->document = $document;
     }
 
+    /**
+     * Add path item to document
+     *
+     * @param OAPathItem $pathItem
+     */
     public function addPathItem(OAPathItem $pathItem)
     {
         $this->pathItems[] = $pathItem;
     }
 
-    protected function getPathItems()
+    /**
+     * Get document path items
+     *
+     * @return array
+     */
+    protected function getPathItems():array
     {
         $pathItems = [];
         foreach ($this->pathItems as $pathItem) {
-            $schema = $pathItem->loadSchema();
+            $schema = $pathItem->getSchema();
             if ($schema) {
                 $this->addSchema($schema);
             }
-
             $pathItems[$pathItem->getUri()][$pathItem->getMethod()] = $pathItem->toArray();
         }
         return $pathItems;
@@ -56,7 +65,7 @@ class OADocument implements Arrayable, Jsonable
      *
      * @param OASchema $schema
      */
-    protected function addSchema($schema)
+    protected function addSchema(OASchema $schema)
     {
         $this->schemas[] = $schema;
     }
@@ -66,7 +75,7 @@ class OADocument implements Arrayable, Jsonable
      *
      * @return array
      */
-    protected function getSchemas()
+    protected function getSchemas():array
     {
         $schemas = [];
         foreach ($this->schemas as $schema) {
@@ -80,7 +89,7 @@ class OADocument implements Arrayable, Jsonable
      *
      * @return array
      */
-    public function toArray()
+    public function toArray():array
     {
 
         return array_merge_recursive(

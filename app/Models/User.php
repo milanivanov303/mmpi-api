@@ -36,12 +36,53 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      */
     protected $hidden = [
         'id',
-        'password',
-        'department_id',
-        'access_group_id',
-        'manager_id',
-        'deputy_id'
+        'password'
     ];
+
+    /**
+     * Define filters for this model
+     *
+     * @return array
+     */
+    protected function filters(): array
+    {
+        return [
+            'department_id' => function ($model, $value) {
+                return $model->whereHas('department', function ($query) use ($value) {
+                    $query->where('name', 'like', "%{$value}%");
+                });
+            },
+            'manager_id' => function ($model, $value, $operator) {
+                return $model->whereHas('manager', function ($query) use ($value, $operator) {
+                    $query->where('username', $operator, $value);
+                });
+            },
+            'deputy_id' => function ($model, $value, $operator) {
+                return $model->whereHas('deputy', function ($query) use ($value, $operator) {
+                    $query->where('username', $operator, $value);
+                });
+            },
+            'access_group_id' => function ($model, $value, $operator) {
+                return $model->whereHas('accessGroup', function ($query) use ($value, $operator) {
+                    $query->where('name', $operator, $value);
+                });
+            }
+        ];
+    }
+
+    /**
+     * Define order by for this model
+     *
+     * @return array
+     */
+    protected function orderBy(): array
+    {
+        return [
+            'department_id' => function ($model, $order_dir) {
+                return $model->join('departments', 'departments.id', '=', 'users.department_id')->orderBy('departments.name', $order_dir);
+            }
+        ];
+    }
 
     /**
      * Hash user password
@@ -92,7 +133,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      */
     public function manager()
     {
-        return $this->belongsTo('App\Models\User', 'id', 'manager_id');
+        return $this->belongsTo('App\Models\User', 'manager_id', 'id');
     }
 
     /**
@@ -100,7 +141,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      */
     public function deputy()
     {
-        return $this->belongsTo('App\Models\User', 'id', 'deputy_id');
+        return $this->belongsTo('App\Models\User', 'deputy_id', 'id');
     }
 
     /**
@@ -111,11 +152,22 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     public function relationsToArray()
     {
         $array = parent::relationsToArray();
-        
-        $array['department']   = $this->department['name'];
-        $array['access_group'] = $this->accessGroup['name'];
-        $array['manager'] = $this->manager['username'];
-        $array['deputy'] = $this->deputy['username'];
+
+        if ($this->isVisible('department_id')) {
+            $array['department_id'] = $this->department['name'];
+        }
+
+        if ($this->isVisible('access_group_id')) {
+            $array['access_group_id'] = $this->accessGroup['name'];
+        }
+
+        if ($this->isVisible('manager_id')) {
+            $array['manager_id'] = $this->manager['username'];
+        }
+
+        if ($this->isVisible('deputy_id')) {
+            $array['deputy_id'] = $this->deputy['username'];
+        }
 
         return $array;
     }

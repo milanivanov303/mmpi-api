@@ -10,7 +10,9 @@
         "vlucas/phpdotenv": "~2.2",
         "predis/predis": "^1.1",
         "illuminate/redis": "^5.6",
-        "opis/json-schema": "^1.0"
+        "opis/json-schema": "^1.0",
+        "symfony/psr-http-message-bridge": "^1.1",
+        "zendframework/zend-diactoros": "^2.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

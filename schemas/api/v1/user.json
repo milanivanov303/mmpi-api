@@ -6,14 +6,20 @@
     "properties": {
         "name": {
             "type": "string",
+            "description": "User full name",
+            "example": "John Doe",
             "maxLength": 256
         },
         "username": {
             "type": "string",
+            "description": "User username",
+            "example": "jdoe",
             "maxLength": 50
         },
         "email": {
             "type": "string",
+            "description": "User email",
+            "example": "jdoe@codix.fr",
             "format": "email",
             "maxLength": 50
         },
@@ -36,19 +42,23 @@
         },
         "department": {
             "type": "string",
-            "description": "Should be valid department"
+            "description": "User department",
+            "example": "Enterprise Applications"
         },
         "access_group": {
             "type": "string",
-            "description": "Should be valid access group"
+            "description": "User access group",
+            "example": "developers"
         },
         "manager": {
             "type": "string",
-            "description": "Should be valid username"
+            "description": "Manager username",
+            "example": "ivasilev"
         },
         "deputy": {
             "type": "string",
-            "description": "Should be valid username"
+            "description": "Deputy username",
+            "example": "ivasilev"
         }
     }
 }

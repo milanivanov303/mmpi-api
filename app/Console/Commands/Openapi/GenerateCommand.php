@@ -5,6 +5,7 @@ namespace App\Console\Commands\Openapi;
 use Illuminate\Console\Command;
 use Laravel\Lumen\Routing\Router;
 use Illuminate\Support\Facades\Schema;
+use App\Repositories\RepositoryInterface;
 
 /**
  * Generate API documentation
@@ -36,7 +37,7 @@ class GenerateCommand extends Command
     public function handle(Router $router)
     {
 
-        $base_uri = "/api/{$this->argument('version')}";
+        $baseUri = "/api/{$this->argument('version')}";
 
         $openapi = [
             'openapi' => '3.0.1',
@@ -47,16 +48,78 @@ class GenerateCommand extends Command
             ],
             'servers' => [
                 [
-                    'url' => "http://yarnaudov.codixfr.private:8111{$base_uri}/"
+                    'url' => "http://yarnaudov.codixfr.private:8111{$baseUri}/"
                 ],
                 [
-                    'url' => "http://localhost:8111{$base_uri}/"
+                    'url' => "http://localhost:8111{$baseUri}/"
                 ]
             ],
             'security' => [
                 ['api_key' => []]
             ],
             'components' => [
+                'parameters' => [
+                    'limit' => [
+                        'name' => 'limit',
+                        'in' => 'query',
+                        'schema' => [
+                            'type' => 'integer',
+                            'description' => 'Limit results. It is ignored when pagination is used',
+                            'example' => 50
+                        ]
+                    ],
+                    'order_by' => [
+                        'name' => 'order_by',
+                        'in' => 'query',
+                        'schema' => [
+                            'type' => 'string',
+                            'description' => 'Order results by given property'
+                        ]
+                    ],
+                    'order_dir' => [
+                        'name' => 'order_dir',
+                        'in' => 'query',
+                        'schema' => [
+                            'type' => 'string',
+                            'description' => 'Direction to use when ordering results',
+                            'enum' => ['asc', 'desc']
+                        ]
+                    ],
+                    'page' => [
+                        'name' => 'page',
+                        'in' => 'query',
+                        'schema' => [
+                            'type' => 'integer',
+                            'description' => 'Return given page from paginated results'
+                        ]
+                    ],
+                    'per_page' => [
+                        'name' => 'per_page',
+                        'in' => 'query',
+                        'schema' => [
+                            'type' => 'integer',
+                            'description' => 'Set results per page',
+                            'example' => 15
+                        ],
+                    ],
+                    'fields' => [
+                        'name' => 'fields',
+                        'in' => 'query',
+                        'schema' => [
+                            'oneOf' => [
+                                ['type' => 'string'],
+                                [
+                                    'type' => 'array',
+                                    'items' => [
+                                        'type' => 'string'
+                                    ]
+                                ]
+                            ],
+                            'description' => 'Return only listed fields in results',
+                            'example' => 'field1, field2'
+                        ],
+                    ]
+                ],
                 'securitySchemes' => [
                     'api_key' => [
                         'in' => 'header',
@@ -74,10 +137,14 @@ class GenerateCommand extends Command
         $document = new OADocument($openapi);
 
         foreach ($router->getRoutes() as $route) {
-            if (strlen($route['uri']) > 1) {
-                $filters = $this->getRouteFilters($route);
-                $document->addPathItem(new OAPathItem($route, $base_uri, $filters));
+            $pathItem = new OAPathItem($route, $baseUri);
+            
+            $filters = $this->getRouteFilters($route);
+            if ($filters) {
+                $pathItem->setFilters($filters);
             }
+
+            $document->addPathItem($pathItem);
         }
 
         echo $document->toJson();
@@ -97,11 +164,46 @@ class GenerateCommand extends Command
         $filters    = [];
 
         try {
-            $model = (new \ReflectionParameter([$controller, '__construct'], 'model'))
-                        ->getClass()
-                        ->newInstance();
+            $model = $this->getModelInstance($controller);
+            return $this->getModelFilters($model);
+        } catch (\Exception $e) {
+            var_dump($e->getMessage());
+        }
 
-            foreach ($model->getFilterAttributes() as $column) {
+         return $filters;
+    }
+
+    /**
+     * Get Model instance
+     *
+     * @param string $controller
+     * @return
+     */
+    protected function getModelInstance($controller)
+    {
+        $class = (new \ReflectionParameter([$controller, '__construct'], 'model'))
+                    ->getClass();
+
+        $instance = app($class->getName());
+        if ($instance instanceof RepositoryInterface) {
+            return $instance->getModel();
+        }
+
+        return $class->newInstance();
+    }
+
+    /**
+     * Get model filters
+     *
+     * @param type $model
+     * @return array
+     */
+    protected function getModelFilters($model)
+    {
+        $filters = [];
+        
+        if (method_exists($model, 'getFilterableAttributes')) {
+            foreach ($model->getFilterableAttributes() as $column) {
                 $name = $column;
                 // Get mapped attributes if model uses mappable trait
                 if (method_exists($model, 'getMappededAttribute')) {
@@ -112,10 +214,8 @@ class GenerateCommand extends Command
                     'type' => 'string'//Schema::getColumnType($model->getTable(), $column)
                 ]);
             }
-        } catch (\Exception $e) {
-            var_dump($e->getMessage());
         }
 
-         return $filters;
+        return $filters;
     }
 }
