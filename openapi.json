@@ -21,6 +21,13 @@
     }
   ],
   "components": {
+    "securitySchemes": {
+      "api_key": {
+        "in": "header",
+        "name": "X-AUTH-TOKEN",
+        "type": "apiKey"
+      }
+    },
     "parameters": {
       "limit": {
         "name": "limit",
@@ -86,13 +93,6 @@
           "description": "Return only listed fields in results",
           "example": "field1, field2"
         }
-      }
-    },
-    "securitySchemes": {
-      "api_key": {
-        "in": "header",
-        "name": "X-AUTH-TOKEN",
-        "type": "apiKey"
       }
     }
   }

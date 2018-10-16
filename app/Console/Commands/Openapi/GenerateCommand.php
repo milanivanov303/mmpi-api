@@ -54,7 +54,9 @@ class GenerateCommand extends Command
 
         echo $document->toJson();
 
-        file_put_contents(storage_path('openapi.json'), $document->toJson());
+        file_put_contents(
+            base_path('public/openapi.json'), $document->toJson()
+        );
     }
 
     /**
