@@ -261,19 +261,19 @@ class OAPathItem implements Arrayable
                 ]);
             }
 
-            /*
-            $parameters[] = [
-                '$ref' => '#/components/parameters/order_by',
-                'schema' => [
-                    'enum' => array_keys($this->getSchema()->toArray()['properties'])
-                ]
-            ];
-            */
-
             $parameters = array_merge($parameters, [
-                ['$ref' => '#/components/parameters/limit'],
-                ['$ref' => '#/components/parameters/order_by'],
+                [
+                    'name'   => 'order_by',
+                    'in'     => 'query',
+                    'schema' => [
+                        'allOf' => [
+                            ['$ref' => '#/components/parameters/order_by/schema'],
+                            ['enum' => array_keys($this->getSchema()->toArray()['properties'])]
+                        ]
+                    ]
+                ],
                 ['$ref' => '#/components/parameters/order_dir'],
+                ['$ref' => '#/components/parameters/limit'],
                 ['$ref' => '#/components/parameters/page'],
                 ['$ref' => '#/components/parameters/per_page'],
                 ['$ref' => '#/components/parameters/fields']
