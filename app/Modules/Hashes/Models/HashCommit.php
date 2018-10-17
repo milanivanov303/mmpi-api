@@ -84,16 +84,6 @@ class HashCommit extends Model
     }
 
     /**
-     * The attributes that will be hidden in output json
-     *
-     * @var array
-     */
-    protected $hidden = [
-        'id',
-        'repo_timestamp'
-    ];
-
-    /**
      * Get the files for the hash.
      */
     public function files()

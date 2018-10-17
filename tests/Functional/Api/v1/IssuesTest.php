@@ -6,6 +6,10 @@ use Laravel\Lumen\Testing\DatabaseTransactions;
 class IssuesTest extends TestCase
 {
     use DatabaseTransactions;
+
+    protected $uri        = 'api/v1/issues';
+    protected $table      = 'issues';
+    protected $primaryKey = 'tts_id';
     
     public function setUp() {
         parent::setUp();
@@ -46,11 +50,13 @@ class IssuesTest extends TestCase
         $data = $this->getData();
 
         $this
-            ->json('POST', '/api/v1/issues', $data)
+            ->json('POST', $this->uri, $data)
             ->seeJson($data)
             ->assertResponseStatus(201);
         
-        $this->seeInDatabase('issues', ['tts_id' => $data['tts_id']]);
+        $this->seeInDatabase($this->table, [
+            $this->primaryKey => $data[$this->primaryKey]
+        ]);
     }
 
     /**
@@ -70,11 +76,13 @@ class IssuesTest extends TestCase
         unset($data['jiraissue_id']);
 
         $this
-            ->json('POST', '/api/v1/issues', $data)
+            ->json('POST', $this->uri, $data)
             ->seeJsonStructure(['project', 'dev_instance', 'jiraissue_id'])
             ->assertResponseStatus(422);
 
-        $this->missingFromDatabase('issues', ['tts_id' => $data['tts_id']]);
+        $this->missingFromDatabase($this->table, [
+            $this->primaryKey => $data[$this->primaryKey]
+        ]);
     }
     
     /**
@@ -86,10 +94,10 @@ class IssuesTest extends TestCase
     {
         $data = $this->getData();
 
-        $this->json('POST', '/api/v1/issues', $data);
+        $this->json('POST', $this->uri, $data);
 
         $this
-            ->get('/api/v1/issues/' . $data['tts_id'])
+            ->get( $this->uri . '/' . $data[$this->primaryKey])
             ->seeJson($data)
             ->assertResponseOk();
     }
@@ -102,7 +110,7 @@ class IssuesTest extends TestCase
     public function testGetNonExistingHash()
     {
         $this
-            ->get('/api/v1/issue/NON-EXISTING-ISSUE')
+            ->get($this->uri . '/NON-EXISTING-ISSUE')
             ->assertResponseStatus(404);
     }
 
@@ -115,17 +123,19 @@ class IssuesTest extends TestCase
     {
         $data = $this->getData();
         
-        $this->json('POST', '/api/v1/issues', $data);
+        $this->json('POST', $this->uri, $data);
 
         // Change parameters
         $data['subject'] = 'UPDATED_SUBJECT';
 
         $this
-            ->json('PUT', '/api/v1/issues/' . $data['tts_id'], $data)
+            ->json('PUT', $this->uri . '/' . $data[$this->primaryKey], $data)
             ->seeJson($data)
             ->assertResponseOk();
         
-        $this->seeInDatabase('issues', ['tts_id' => $data['tts_id']]);
+        $this->seeInDatabase($this->table, [
+            $this->primaryKey => $data[$this->primaryKey]]
+        );
     }
 
     /**
@@ -137,13 +147,15 @@ class IssuesTest extends TestCase
     {
         $data = $this->getData();
 
-        $this->json('POST', '/api/v1/issues', $data);
+        $this->json('POST', $this->uri, $data);
 
         $this
-            ->json('DELETE', '/api/v1/issues/' . $data['tts_id'])
+            ->json('DELETE', $this->uri . '/' . $data['tts_id'])
             ->assertResponseStatus(204);
 
-        $this->missingFromDatabase('issues', ['tts_id' => $data['tts_id']]);
+        $this->missingFromDatabase($this->table, [
+            $this->primaryKey => $data[$this->primaryKey]]
+        );
     }
     
     /**
@@ -154,7 +166,7 @@ class IssuesTest extends TestCase
     public function testGetIssuesList()
     {
         $this
-            ->json('GET', '/api/v1/issues')
+            ->json('GET', $this->uri . '?limit=100')
             ->shouldReturnJson()
             ->seeJsonStructure(['data'])
             ->assertResponseOk();
@@ -169,7 +181,7 @@ class IssuesTest extends TestCase
     public function testGetPaginatedIssuesList()
     {
         $this
-            ->json('GET', '/api/v1/issues?page=3')
+            ->json('GET', $this->uri . '?page=3')
             ->seeJsonStructure(['meta' => ['pagination' => ['total', 'current_page']], 'data'])
             ->assertResponseOk();
     }

@@ -6,6 +6,10 @@ use Laravel\Lumen\Testing\DatabaseTransactions;
 class UsersTest extends TestCase
 {
     use DatabaseTransactions;
+
+    protected $uri        = 'api/v1/users';
+    protected $table      = 'users';
+    protected $primaryKey = 'username';
     
     public function setUp() {
         parent::setUp();
@@ -22,7 +26,7 @@ class UsersTest extends TestCase
         $user = User::with(['department', 'manager', 'deputy', 'accessGroup'])->first();
 
         $this
-            ->get('/api/v1/users/' . $user->username)
+            ->get($this->uri . '/' . $user->{$this->primaryKey})
             ->shouldReturnJson()
             ->seeJson($user->toArray())
             ->assertResponseOk();
@@ -36,7 +40,7 @@ class UsersTest extends TestCase
     public function testGetNonExistingUser()
     {
         $this
-            ->get('/api/v1/users/NON-EXISTING-HASH')
+            ->get($this->uri . '/NON-EXISTING-HASH')
             ->assertResponseStatus(404);
     }
     
@@ -48,7 +52,7 @@ class UsersTest extends TestCase
     public function testGetUsersList()
     {
         $this
-            ->json('GET', '/api/v1/users?limit=10')
+            ->json('GET', $this->uri . '?limit=100')
             ->shouldReturnJson()
             ->seeJsonStructure(['data'])
             ->assertResponseOk();
@@ -63,7 +67,7 @@ class UsersTest extends TestCase
     public function testGetPaginatedUsersList()
     {
         $this
-            ->json('GET', '/api/v1/users?page=3')
+            ->json('GET', $this->uri . '?page=3')
             ->shouldReturnJson()
             ->seeJsonStructure(['meta' => ['pagination' => ['total', 'current_page']], 'data'])
             ->assertResponseOk();

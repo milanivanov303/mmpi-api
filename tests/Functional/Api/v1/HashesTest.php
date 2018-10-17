@@ -6,6 +6,10 @@ use Laravel\Lumen\Testing\DatabaseTransactions;
 class HashesTest extends TestCase
 {
     use DatabaseTransactions;
+
+    protected $uri        = 'api/v1/hashes';
+    protected $table      = 'hash_commits';
+    protected $primaryKey = 'hash_rev';
     
     public function setUp() {
         parent::setUp();
@@ -55,11 +59,14 @@ class HashesTest extends TestCase
         $data = $this->getData();
 
         $this
-            ->json('POST', '/api/v1/hashes', $data)
+            ->json('POST', $this->uri, $data)
             ->seeJson($data)
             ->assertResponseStatus(201);
-        
-        $this->seeInDatabase('hash_commits', ['hash_rev' => $data['rev']]);
+
+        $this->seeInDatabase($this->table, [
+            $this->primaryKey => $data['rev']
+        ]);
+
     }
 
     /**
@@ -79,13 +86,13 @@ class HashesTest extends TestCase
         unset($data['branch']);
 
         $this
-            ->json('POST', '/api/v1/hashes', $data)
+            ->json('POST', $this->uri, $data)
             ->seeJsonStructure(['branch', 'owner', 'rev'])
             ->assertResponseStatus(422);
 
-        //var_dump($this->response->status(), $this->response->getData());
-
-        $this->missingFromDatabase('hash_commits', ['hash_rev' => $data['rev']]);
+        $this->missingFromDatabase($this->table, [
+            $this->primaryKey => $data['rev']
+        ]);
     }
     
     /**
@@ -97,10 +104,10 @@ class HashesTest extends TestCase
     {
         $data = $this->getData();
 
-        $this->json('POST', '/api/v1/hashes', $data);
+        $this->json('POST', $this->uri, $data);
 
         $this
-            ->get('/api/v1/hashes/' . $data['rev'])
+            ->get($this->uri . '/' . $data['rev'])
             ->seeJson($data)
             ->assertResponseOk();
     }
@@ -113,7 +120,7 @@ class HashesTest extends TestCase
     public function testGetNonExistingHash()
     {
         $this
-            ->get('/api/v1/hashes/NON-EXISTING-HASH')
+            ->get($this->uri . '/NON-EXISTING-HASH')
             ->assertResponseStatus(404);
     }
 
@@ -126,17 +133,19 @@ class HashesTest extends TestCase
     {
         $data = $this->getData();
         
-        $this->json('POST', '/api/v1/hashes', $data);
+        $this->json('POST', $this->uri, $data);
 
         // Change parameters
         $data['description'] = 'UPDATED_DESCRIPTION';
 
         $this
-            ->json('PUT', '/api/v1/hashes/' . $data['rev'], $data)
+            ->json('PUT', $this->uri . '/' . $data['rev'], $data)
             ->seeJson($data)
             ->assertResponseOk();
         
-        $this->seeInDatabase('hash_commits', ['hash_rev' => $data['rev']]);
+        $this->seeInDatabase($this->table, [
+            $this->primaryKey => $data['rev']
+        ]);
     }
 
     /**
@@ -148,13 +157,15 @@ class HashesTest extends TestCase
     {
         $data = $this->getData();
 
-        $this->json('POST', '/api/v1/hashes', $data);
+        $this->json('POST', $this->uri, $data);
 
         $this
-            ->json('DELETE', '/api/v1/hashes/' . $data['rev'])
+            ->json('DELETE', $this->uri . '/' . $data['rev'])
             ->assertResponseStatus(204);
 
-        $this->missingFromDatabase('hash_commits', ['hash_rev' => $data['rev']]);
+        $this->missingFromDatabase($this->table, [
+            $this->primaryKey => $data['rev']
+        ]);
     }
     
     /**
@@ -165,7 +176,7 @@ class HashesTest extends TestCase
     public function testGetHashesList()
     {
         $this
-            ->json('GET', '/api/v1/hashes?limit=10')
+            ->json('GET', $this->uri . '?limit=100')
             ->shouldReturnJson()
             ->seeJsonStructure(['data'])
             ->assertResponseOk();
@@ -180,7 +191,7 @@ class HashesTest extends TestCase
     public function testGetPaginatedHashesList()
     {
         $this
-            ->json('GET', '/api/v1/hashes?page=3')
+            ->json('GET', $this->uri . '?page=3')
             ->seeJsonStructure(['meta' => ['pagination' => ['total', 'current_page']], 'data'])
             ->assertResponseOk();
     }
