@@ -30,12 +30,12 @@ $router->group([
     $router->group(['prefix' => 'v1'], function () use ($router) {
 
         // Users
-        require_once 'api/v1/users.php';
+        require 'api/v1/users.php';
         
         // Hashes
-        require_once 'api/v1/hashes.php';
+        require 'api/v1/hashes.php';
 
         // Issues
-        require_once 'api/v1/issues.php';
+        require 'api/v1/issues.php';
     });
 });

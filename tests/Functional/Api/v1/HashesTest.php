@@ -18,6 +18,10 @@ class HashesTest extends TestCase
      */
     public function getData()
     {
+        try {
+            $rev = bin2hex(random_bytes(10));
+        } catch (\Exception $exception) {}
+
         return [
             'branch'       => 'default',
             'chains'       => [
@@ -37,7 +41,7 @@ class HashesTest extends TestCase
             'owner'        => 'astamenov',
             'repo_path'    => '/extranet/hg/v9_be',
             'repo_url'     => 'http://lemon.codixfr.private:6002/v9_be',
-            'rev'          => bin2hex(random_bytes(10))
+            'rev'          => $rev
         ];
     }
     
@@ -161,7 +165,7 @@ class HashesTest extends TestCase
     public function testGetHashesList()
     {
         $this
-            ->json('GET', '/api/v1/hashes')
+            ->json('GET', '/api/v1/hashes?limit=10')
             ->shouldReturnJson()
             ->seeJsonStructure(['data'])
             ->assertResponseOk();

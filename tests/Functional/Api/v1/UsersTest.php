@@ -19,7 +19,7 @@ class UsersTest extends TestCase
      */
     public function testGetUser()
     {
-        $user = User::first();
+        $user = User::with(['department', 'manager', 'deputy', 'accessGroup'])->first();
 
         $this
             ->get('/api/v1/users/' . $user->username)

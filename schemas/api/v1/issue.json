@@ -63,7 +63,16 @@
             "type": ["string", "null"],
             "description": "Development instance name",
             "maxLength": 128,
-            "example": "wasp4"
+            "example": "wasp4",
+            "$filters": {
+                "$func": "checkInDb",
+                "$vars": {
+                    "rule": "exists:instances,name"
+                }
+            },
+            "$messages": {
+                "$filters": "Dev instance with this name does not exist"
+            }
         },
         "priority": {
             "type": "string",

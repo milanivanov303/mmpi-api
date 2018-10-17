@@ -52,7 +52,7 @@ class GenerateCommand extends Command
             $document->addPathItem($pathItem);
         }
 
-        echo $document->toJson();
+        //echo $document->toJson();
 
         file_put_contents(
             base_path('public/openapi.json'),
