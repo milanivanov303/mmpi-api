@@ -26,6 +26,8 @@ class HashesTest extends TestCase
             $rev = bin2hex(random_bytes(10));
         } catch (\Exception $exception) {}
 
+        $user = User::inRandomOrder()->first();
+
         return [
             'branch'       => 'default',
             'chains'       => [
@@ -33,7 +35,7 @@ class HashesTest extends TestCase
                 'bcol_imx_v9_rel'
             ],
             'description'  => 'IXDEV-1650 e_honor_param backend\n\nadd MOLO as mvn profile',
-            'files'        => [  
+            'files'        => [
                 'etc/configs/MOLOTCWALLET/imx_backend.properties',
                 'etc/configs/MOLOTCWALLET/imx_backend.xml',
                 'etc/configs/MOLOTCWALLET/wallet/cwallet.sso',
@@ -42,7 +44,7 @@ class HashesTest extends TestCase
              ],
             'merge_branch' => '_DEV_IXDEV-1763 e_honor_param backend',
             'module'       => 'imx_be',
-            'owner'        => 'astamenov',
+            'owner'        => $user->username,
             'repo_path'    => '/extranet/hg/v9_be',
             'repo_url'     => 'http://lemon.codixfr.private:6002/v9_be',
             'rev'          => $rev

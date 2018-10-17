@@ -18,6 +18,11 @@ class CheckInDbFilter implements IFilter
 
     public function validate($value, array $args): bool
     {
+        // skip validation for null values
+        if (is_null($value)) {
+            return true;
+        }
+
         if ($this->isUniqueCheckOnUpdate($args['rule'])) {
             $args['rule'] = $this->getUniqueRuleOnUpdate($args, $value);
         }

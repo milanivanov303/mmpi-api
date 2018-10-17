@@ -81,7 +81,11 @@ class JsonValidatorMiddleware
     protected function getFilters()
     {
         $filterContainer = new \Opis\JsonSchema\FilterContainer();
-        return $filterContainer->add("string", "checkInDb", new CheckInDbFilter());
+
+        $filterContainer->add("string", "checkInDb", new CheckInDbFilter);
+        $filterContainer->add("null", "checkInDb", new CheckInDbFilter);
+
+        return $filterContainer;
     }
 
     /**

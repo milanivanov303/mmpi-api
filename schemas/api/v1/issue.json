@@ -34,6 +34,7 @@
             "type": "string",
             "description": "TTS key",
             "maxLength": 16,
+            "pattern": "[A-Z]*-[0-9]*",
             "example": "ABSAFUP-1189",
             "$filters": {
                 "$func": "checkInDb",
@@ -42,6 +43,7 @@
                 }
             },
             "$messages": {
+                "pattern": "TTS key is not valid format",
                 "$filters": "TTS key is already registered"
             }
         },
@@ -55,7 +57,7 @@
             "maxLength": 16
         },
         "revision": {
-            "type": "string",
+            "type": ["string", "null"],
             "description": "",
             "maxLength": 16
         },
