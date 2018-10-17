@@ -71,7 +71,7 @@ abstract class AbstractEloquentRepository
      */
     public function paginate($perPage = 15, $columns = array('*'))
     {
-        return $this->model->paginate($perPage);
+        return $this->model->with($this->with)->paginate($perPage);
     }
 
     /**
@@ -82,7 +82,9 @@ abstract class AbstractEloquentRepository
      */
     public function create(array $data)
     {
-        return $this->model->create($data);
+        $model = $this->model->create($data);
+        $model->load($this->with);
+        return $model;
     }
 
     /**
@@ -94,7 +96,10 @@ abstract class AbstractEloquentRepository
      */
     public function update(array $data, $id)
     {
-        return $this->model->where($this->primaryKey, $id)->update($data);
+        $model = $this->find($id);
+        $model->fill($data)->save();
+        $model->load($this->with);
+        return $model;
     }
 
     /**
@@ -102,10 +107,13 @@ abstract class AbstractEloquentRepository
      *
      * @param type $id
      * @return boolean
+     *
+     * @throws \Exception
      */
     public function delete($id)
     {
-        return $this->model->where($this->primaryKey, $id)->destroy();
+        $model = $this->find($id);
+        return $model->delete();
     }
 
     /**
@@ -117,7 +125,7 @@ abstract class AbstractEloquentRepository
      */
     public function find($id, $columns = array('*'))
     {
-        return $this->model->where($this->primaryKey, $id)->firstOrFail($columns);
+        return $this->model->with($this->with)->where($this->primaryKey, $id)->firstOrFail($columns);
     }
 
     /**

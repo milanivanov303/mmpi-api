@@ -42,7 +42,7 @@
             },
             "$messages": {
                 "pattern": "Revision can content only numbers and lowercase letters",
-                "$filters": "Revision is already reqistred"
+                "$filters": "Revision is already registered"
             }
         },
         "chains": {  

@@ -1,25 +1,21 @@
 <?php
 
-namespace App\Modules\Hashes\Controllers;
+namespace App\Modules\Issues\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
-use App\Modules\Hashes\Repositories\HashRepository;
+use App\Modules\Issues\Repositories\IssueRepository;
 
-/**
- * Manage hashes
- *
- */
-class HashesController extends Controller
+class IssuesController extends Controller
 {
     /**
      * Create a new controller instance.
      *
-     * @param HashRepository $model
+     * @param IssueRepository $model
      * @return void
      */
-    public function __construct(HashRepository $model)
+    public function __construct(IssueRepository $model)
     {
         $this->model = $model;
     }
@@ -39,46 +35,45 @@ class HashesController extends Controller
     }
 
     /**
-     * Update the specified hash.
+     * Update the specified issue.
      *
      * @param  Request  $request
-     * @param  string  $hash_rev
+     * @param  string  $tts_id
      * @return Response
      */
-    public function update(Request $request, $hash_rev)
+    public function update(Request $request, $tts_id)
     {
         return $this->output(
-            $this->model->update($request->json()->all(), $hash_rev)
+            $this->model->update($request->json()->all(), $tts_id)
         );
-    }
-    
-    /**
-     * Delete the specified user.
-     *
-     * @param  string  $hash_rev
-     * @return Response
-     */
-    public function delete($hash_rev)
-    {
-        $this->model->delete($hash_rev);
-        return response('Hash deleted successfully', 204);
     }
 
     /**
-     * Retrieve the hash for the given revision.
+     * Delete the specified issue.
      *
-     * @param  int  $hash_rev
+     * @param  string  $tts_id
      * @return Response
      */
-    public function getOne(Request $request, $hash_rev)
+    public function delete($tts_id)
+    {
+        $this->model->delete($tts_id);
+        return response('Issue deleted successfully', 204);
+    }
+
+    /**
+     * Retrieve the issue for the given id.
+     *
+     * @param  string  $username
+     * @return Response
+     */
+    public function getOne($username)
     {
         return $this->output(
-            $this->model->find($hash_rev)
+            $this->model->find($username)
         );
     }
-    
+
     /**
-     * Retrieve hashes list.
      *
      * @param Request $request
      * @return Response

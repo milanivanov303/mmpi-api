@@ -34,5 +34,8 @@ $router->group([
         
         // Hashes
         require_once 'api/v1/hashes.php';
+
+        // Issues
+        require_once 'api/v1/issues.php';
     });
 });

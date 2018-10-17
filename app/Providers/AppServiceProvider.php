@@ -12,6 +12,10 @@ use App\Modules\Users\Repositories\UserRepository;
 use App\Modules\Users\Repositories\EloquentUserRepository;
 use App\Models\User;
 
+use App\Modules\Issues\Repositories\IssueRepository;
+use App\Modules\Issues\Repositories\EloquentIssueRepository;
+use App\Modules\Issues\Models\Issue;
+
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -28,5 +32,9 @@ class AppServiceProvider extends ServiceProvider
          $this->app->bind(HashRepository::class, function () {
             return new EloquentHashRepository(new HashCommit);
          });
+
+        $this->app->bind(IssueRepository::class, function () {
+            return new EloquentIssueRepository(new Issue);
+        });
     }
 }

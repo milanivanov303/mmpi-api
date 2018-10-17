@@ -20,12 +20,14 @@ $router->group([
             'as'          => 'hashes.create',
             'schema'      => '/api/v1/hash.json',
             'description' => 'Create new hash',
-            'uses'        => 'HashesController@create']);
+            'uses'        => 'HashesController@create'
+    ]);
     $router->put('/{rev:[0-9a-z]+}', [
             'as'          => 'hashes.update',
             'description' => 'Update hash',
             'schema'      => '/api/v1/hash.json',
-            'uses'        => 'HashesController@update']);
+            'uses'        => 'HashesController@update'
+    ]);
     $router->delete('/{rev:[0-9a-z]+}', [
         'as'          => 'hash.delete',
         'description' => 'Delete hash',

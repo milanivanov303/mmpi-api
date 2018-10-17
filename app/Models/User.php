@@ -79,7 +79,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     {
         return [
             'department_id' => function ($model, $order_dir) {
-                return $model->join('departments', 'departments.id', '=', 'users.department_id')
+                return $model->select('users.*')->join('departments', 'departments.id', '=', 'users.department_id')
                              ->orderBy('departments.name', $order_dir);
             }
         ];
@@ -158,8 +158,8 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
             $array['department_id'] = $array['department']['name'];
         }
 
-        if ($this->isVisible('access_group_id') && array_key_exists('accessGroup', $array)) {
-            $array['access_group_id'] = $array['accessGroup']['name'];
+        if ($this->isVisible('access_group_id') && array_key_exists('access_group', $array)) {
+            $array['access_group_id'] = $array['access_group']['name'];
         }
 
         if ($this->isVisible('manager_id') && array_key_exists('manager', $array)) {

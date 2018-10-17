@@ -44,17 +44,6 @@ class HashCommit extends Model
     ];
 
     /**
-     * The relations to eager load on every query.
-     *
-     * @var array
-     */
-    protected $with = [
-        'files',
-        'chains',
-        'owner'
-    ];
-
-    /**
      * Define filters for this model
      *
      * @return array
@@ -135,7 +124,7 @@ class HashCommit extends Model
      */
     public function setCommittedByAttribute($value)
     {
-        $user = User::where('username', $value)->firstOrFail();
+        $user = User::where('username', $value)->first();
         $this->attributes['committed_by'] = $user->id;
     }
     
