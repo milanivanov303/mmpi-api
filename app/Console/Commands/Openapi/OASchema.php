@@ -83,12 +83,14 @@ class OASchema implements Arrayable
             return !in_array($key, self::NOT_VALID_PROPERTIES, true);
         }, ARRAY_FILTER_USE_KEY);
 
+        /*
         foreach ($validData as &$value) {
             if (is_array($value)) {
                 $value = $this->{__FUNCTION__}($value);
             }
         }
 
+        */
         return $validData;
     }
 
@@ -100,17 +102,74 @@ class OASchema implements Arrayable
      */
     protected function convertSchema(array $data):array
     {
+        $function = __FUNCTION__;
+
         $data = $this->removeNotValidProperties($data);
 
-        array_walk_recursive($data, function (&$value, $key) {
-            if ($key === '$ref' && strpos($value, '#') !== -1) {
-                list($id, $ref) = explode("#", $value);
-                $value = '#/components/schemas/' . $this->convertId($id) . $ref;
+        array_walk($data, function (&$value, $key) use ($function) {
+
+            if (is_array($value)) {
+
+                if (array_key_exists('type', $value)) {
+                    $value = $this->fixNotValidTypeProperty($value);
+                }
+
+                $value = $this->{$function}($value);
+
+                return;
             }
+
+            if ($key === '$ref') {
+                $value = $this->fixRefs($value);
+            }
+
         });
-        
+
         return $data;
     }
+
+    /**
+     * Fix references to schemas
+     *
+     * @param string $value
+     * @return string
+     */
+    protected function fixRefs($value)
+    {
+        if (strpos($value, '#') === -1) {
+            return $value;
+        }
+
+        list($id, $ref) = explode("#", $value);
+        return '#/components/schemas/' . $this->convertId($id) . $ref;
+    }
+
+    /**
+     * Convert type property to valid openapi
+     *
+     * @param $value
+     * @return mixed
+     */
+    protected function fixNotValidTypeProperty($value)
+    {
+        // Don't do anything if type is not array
+        if (!is_array($value['type'])) {
+            return $value;
+        }
+
+        // check if there is null type and set nullable property
+        $nullKey = array_search('null',  $value['type']);
+        if ($nullKey !== false) {
+            $value['nullable'] = true;
+        }
+        unset($value['type'][$nullKey]);
+
+        // use only one type as openapi do not support multiple types
+        $value['type'] = current( $value['type']);
+
+        return $value;
+    }
+
 
     /**
      * Get the instance as an array.
