@@ -133,7 +133,11 @@ class Error
 
     protected function getTypeError()
     {
-        return "{$this->getCapitalizedProperty()} should be {$this->error->keywordArgs()['expected']}";
+        $expected = $this->error->keywordArgs()['expected'];
+        if (is_array($expected)) {
+            $expected = implode(' or ', $expected);
+        }
+        return "{$this->getCapitalizedProperty()} should be {$expected}";
     }
 
     protected function getFormatError()

@@ -151,6 +151,10 @@ class Issue extends Model
     {
         $array = parent::relationsToArray();
 
+        if ($this->isVisible('jiraissue_id') && array_key_exists('jiraissue_id', $array)) {
+            $array['jiraissue_id'] = (int) $array['jiraissue_id'];
+        }
+
         if ($this->isVisible('project') && array_key_exists('project', $array)) {
             $array['project_id'] = $array['project']['name'];
         }

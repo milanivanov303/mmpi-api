@@ -48,7 +48,7 @@
             }
         },
         "jiraissue_id": {
-            "type": "integer",
+            "type": ["integer", "null"],
             "description": "The id of the issue selected from Jira DB - column jiraissue.ID"
         },
         "parent_issue": {
