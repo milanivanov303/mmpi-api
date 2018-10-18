@@ -109,7 +109,6 @@ class OASchema implements Arrayable
         array_walk($data, function (&$value, $key) use ($function) {
 
             if (is_array($value)) {
-
                 if (array_key_exists('type', $value)) {
                     $value = $this->fixNotValidTypeProperty($value);
                 }
@@ -122,7 +121,6 @@ class OASchema implements Arrayable
             if ($key === '$ref') {
                 $value = $this->fixRefs($value);
             }
-
         });
 
         return $data;
@@ -158,14 +156,14 @@ class OASchema implements Arrayable
         }
 
         // check if there is null type and set nullable property
-        $nullKey = array_search('null',  $value['type']);
+        $nullKey = array_search('null', $value['type']);
         if ($nullKey !== false) {
             $value['nullable'] = true;
         }
         unset($value['type'][$nullKey]);
 
         // use only one type as openapi do not support multiple types
-        $value['type'] = current( $value['type']);
+        $value['type'] = current($value['type']);
 
         return $value;
     }
