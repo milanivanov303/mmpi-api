@@ -1,7 +1,0 @@
-.env
-^nbproject$
-^vendor$
-^db$
-^\.idea$
-^storage$
-^public/openapi.json$
