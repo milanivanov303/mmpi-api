@@ -53,7 +53,16 @@
                 "bpi_imx_v9_rel"
             ],
             "items": {
-                "type": "string"
+                "type": "string",
+                "$filters": {
+                    "$func": "checkInDb",
+                    "$vars": {
+                        "rule": "exists:hash_chains,chain_name"
+                    }
+                },
+                "$messages": {
+                    "$filters": "Chain %s does not exists"
+                }
             }
         },
         "description": {

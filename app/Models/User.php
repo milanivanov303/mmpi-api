@@ -2,19 +2,17 @@
 
 namespace App\Models;
 
-use App\Models\Model;
 use Illuminate\Auth\Authenticatable;
 use Laravel\Lumen\Auth\Authorizable;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
-use App\Traits\Mappable;
 use App\Traits\Filterable;
 
 class User extends Model implements AuthenticatableContract, AuthorizableContract
 {
     use Authenticatable, Authorizable;
 
-    use Mappable;
+    //use Mappable;
     use Filterable;
 
     /**

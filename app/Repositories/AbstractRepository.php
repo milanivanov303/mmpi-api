@@ -3,8 +3,9 @@
 namespace App\Repositories;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Helpers\Mapper;
 
-abstract class AbstractEloquentRepository
+abstract class AbstractRepository
 {
     /**
      * Eloquent model
@@ -32,14 +33,6 @@ abstract class AbstractEloquentRepository
      * @var array
      */
     protected $with = [];
-
-    /**
-     * @param Model $model
-     */
-    public function __construct(Model $model)
-    {
-        $this->model = $model;
-    }
 
     /**
      * Get repository model
@@ -82,9 +75,10 @@ abstract class AbstractEloquentRepository
      */
     public function create(array $data)
     {
-        $model = $this->model->create($data);
-        $model->load($this->with);
-        return $model;
+        $this->model->fill($data)->save();
+        $this->model->load($this->with);
+
+        return $this->model;
     }
 
     /**
@@ -97,8 +91,10 @@ abstract class AbstractEloquentRepository
     public function update(array $data, $id)
     {
         $model = $this->find($id);
+
         $model->fill($data)->save();
         $model->load($this->with);
+
         return $model;
     }
 

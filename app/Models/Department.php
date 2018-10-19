@@ -2,8 +2,4 @@
 
 namespace App\Models;
 
-use App\Models\Model;
-
-class Department extends Model
-{
-}
+class Department extends Model {}

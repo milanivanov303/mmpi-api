@@ -6,8 +6,6 @@ use App\Models\Model;
 
 class HashCommitToChain extends Model
 {
-
-    
     /**
      * The relations to eager load on every query.
      *
@@ -31,6 +29,6 @@ class HashCommitToChain extends Model
      */
     public function chain()
     {
-        return $this->hasOne(HashChain::class, 'id', 'hash_chain_id');
+        return $this->belongsTo(HashChain::class, 'hash_chain_id');
     }
 }

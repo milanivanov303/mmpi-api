@@ -4,12 +4,10 @@ namespace App\Modules\Hashes\Models;
 
 use App\Models\Model;
 use App\Models\User;
-use App\Traits\Mappable;
 use App\Traits\Filterable;
 
 class HashCommit extends Model
 {
-    use Mappable;
     use Filterable;
 
     /**
@@ -117,7 +115,7 @@ class HashCommit extends Model
         $user = User::where('username', $value)->first();
         $this->attributes['committed_by'] = $user->id;
     }
-    
+
     /**
      * Get the model's relationships in array form.
      *
@@ -140,6 +138,7 @@ class HashCommit extends Model
             );
         }
 
+        // set committed_by to owner username
         if ($this->isVisible('committed_by') && array_key_exists('owner', $array)) {
             $array['committed_by'] = $array['owner']['username'];
         }

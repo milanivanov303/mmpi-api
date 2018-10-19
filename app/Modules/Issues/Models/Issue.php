@@ -5,12 +5,10 @@ namespace App\Modules\Issues\Models;
 use App\Models\Model;
 use App\Models\Project;
 use App\Models\Instance;
-use App\Traits\Mappable;
 use App\Traits\Filterable;
 
 class Issue extends Model
 {
-    use Mappable;
     use Filterable;
 
     /**

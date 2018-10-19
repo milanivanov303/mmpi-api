@@ -64,7 +64,10 @@ class Error
      */
     protected function getDefinedMessage()
     {
-        return $this->error->schema()->{'$messages'}->{$this->error->keyword()};
+        return sprintf(
+            $this->error->schema()->{'$messages'}->{$this->error->keyword()},
+            $this->error->data()
+        );
     }
 
     /**
