@@ -28,18 +28,6 @@ class DataMapper
     }
 
     /**
-     * Set mapping
-     *
-     * @param array $mapping
-     * @return $this
-     */
-    public function setMapping(array $mapping)
-    {
-        $this->mapping = $mapping;
-        return $this;
-    }
-
-    /**
      * Get mapped data for response
      *
      * @param array $data
