@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 
-class QueryFilter
+class ModelFilter
 {
     /**
      * @var Model
@@ -77,7 +77,7 @@ class QueryFilter
     public function getFilterableAttributes(): array
     {
         $filters = method_exists($this->model, 'filters') ? array_keys($this->model->filters()) : [];
- 
+
         return array_unique(
             array_merge(
                 array_diff($this->getColumns(), $this->model->getHidden()),
@@ -89,15 +89,15 @@ class QueryFilter
     /**
      * Get filterable parameters
      *
-     * @param array $parameters
+     * @param array $filters
      * @return array
      */
-    protected function getOnlyValidParameters($parameters): array
+    protected function getOnlyValidFilters($filters): array
     {
-        $parameters = $this->model->mapper->mapRequestData($parameters);
+        $filters = $this->model->mapper->mapRequestData($filters);
 
         return array_intersect_key(
-            $parameters,
+            $filters,
             array_flip(
                 $this->getFilterableAttributes()
             )
@@ -164,20 +164,19 @@ class QueryFilter
     /**
      * Get filters
      *
-     * @param array $parameters
+     * @param array $filters
      * @return array
      */
-    protected function getFilters(array $parameters): array
+    protected function getFilters(array $filters): array
     {
-        $filters    = [];
-        $parameters = $this->getOnlyValidParameters($parameters);
+        $validFilters = [];
 
-        foreach ($parameters as $name => $value) {
+        foreach ($this->getOnlyValidFilters($filters) as $name => $value) {
             $array = is_array($value) ? $value : [$value];
             foreach ($array as $value) {
                 $operator = $this->getFilterOperator($value);
                 array_push(
-                    $filters,
+                    $validFilters,
                     [
                         'column'   => $name,
                         'operator' => $this->getFilterOperator($value),
@@ -187,7 +186,7 @@ class QueryFilter
                 );
             }
         }
-        return $filters;
+        return $validFilters;
     }
 
     /**
@@ -218,7 +217,9 @@ class QueryFilter
      */
     protected function setOrder(Builder $builder, string $order_by, string $order_dir): Builder
     {
-        $order_by = $this->model->mapper->getMappedAttribute($order_by);
+        $order_by = current(
+            array_keys($this->model->mapper->mapRequestData([$order_by => 0]))
+        );
 
         $callback = $this->getOrderByCallback($order_by);
 
@@ -251,7 +252,7 @@ class QueryFilter
      * @param array $filters
      * @return Builder
      */
-    protected function getBuilder(array $filters): Builder
+    public function getBuilder(array $filters): Builder
     {
         $builder = $this->model->newModelQuery();
 

@@ -1,7 +1,5 @@
 <?php
 
-use PHPUnit\Framework\TestCase;
-
 use App\Helpers\DataMapper;
 
 class DataMapperTest extends TestCase
@@ -10,6 +8,8 @@ class DataMapperTest extends TestCase
 
     public function setUp()
     {
+        parent::setUp();
+
         $this->mapper = new DataMapper([
             'user_id'    => 'owner',
             'manager_id' => 'manager'
@@ -25,6 +25,9 @@ class DataMapperTest extends TestCase
 
         $this->assertArrayHasKey('user_id', $data);
         $this->assertArrayHasKey('manager_id', $data);
+
+        $this->assertEquals('yarnaudov', $data['user_id']);
+        $this->assertEquals('ivasilev', $data['manager_id']);
     }
 
     public function test_map_response_data()
@@ -36,5 +39,8 @@ class DataMapperTest extends TestCase
 
         $this->assertArrayHasKey('owner', $data);
         $this->assertArrayHasKey('manager', $data);
+
+        $this->assertEquals('yarnaudov', $data['owner']);
+        $this->assertEquals('ivasilev', $data['manager']);
     }
 }

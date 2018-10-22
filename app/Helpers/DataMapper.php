@@ -42,11 +42,11 @@ class DataMapper
     }
 
     /**
-     * Map received request data
-     *
-     * @param array $data
-     * @return array
-     */
+ * Map received request data
+ *
+ * @param array $data
+ * @return array
+ */
     public function mapRequestData(array $data) : array
     {
         return $this->getMappedAttributes(

@@ -3,29 +3,28 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use Opis\JsonSchema\Validator as OpisValidator;
-use Opis\JsonSchema\Exception\AbstractSchemaException as OpisSchemaException;
+use Illuminate\Http\Request;
 use App\Helpers\JsonSchema\Filters\CheckInDbFilter;
 use App\Helpers\JsonSchema\Error;
 
-class JsonValidatorMiddleware
+class JsonValidator
 {
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  Request  $request
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle($request, Closure $next)
+    public function handle(Request $request, Closure $next)
     {
-        // Skip json validation for GET requests
+        // Skip json validation for GET and DELETE requests
         if ($request->isMethod('GET') || $request->isMethod('DELETE')) {
             return $next($request);
         }
 
         try {
-            $validator = new OpisValidator();
+            $validator = new \Opis\JsonSchema\Validator;
             $validator->setLoader($this->getLoader());
             $validator->setFilters($this->getFilters());
 
@@ -44,7 +43,7 @@ class JsonValidatorMiddleware
             }
 
             return response()->json($this->getConvertedErrors($result), 422);
-        } catch (OpisSchemaException $e) {
+        } catch (\Opis\JsonSchema\Exception\AbstractSchemaException $e) {
             return response($e->getMessage(), 404);
         }
     }
@@ -94,7 +93,7 @@ class JsonValidatorMiddleware
      * @param \Opis\JsonSchema\ValidationResult $result
      * @return array
      */
-    protected function getConvertedErrors($result)
+    protected function getConvertedErrors(\Opis\JsonSchema\ValidationResult $result)
     {
         $errors = [];
         foreach ($result->getErrors() as $error) {

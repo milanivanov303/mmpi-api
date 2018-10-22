@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Helpers\DataFilter;
 use Illuminate\Database\Eloquent\Model;
 use App\Helpers\Mapper;
+use App\Helpers\ModelFilter;
 
 abstract class AbstractRepository
 {
@@ -136,7 +137,7 @@ abstract class AbstractRepository
             $this->model->setVisible($filters['fields']);
         }
 
-        $this->model = \App\Helpers\QueryFilter::for($this->model, $filters);
+        $this->model = (new ModelFilter($this->model))->getBuilder($filters);
     }
 
     /**
