@@ -54,6 +54,12 @@ class ModelFilterTest extends TestCase
 
         $this->assertArraySubset(['column' => 'name'], $builder->getQuery()->wheres[0]);
         $this->assertArraySubset(['column' => 'email'], $builder->getQuery()->wheres[1]);
+
+        $this->assertEquals('John Doe', $builder->getQuery()->wheres[0]['value']);
+        $this->assertEquals('john.doe@example.com', $builder->getQuery()->wheres[1]['value']);
+
+        $this->assertEquals('=', $builder->getQuery()->wheres[0]['operator']);
+        $this->assertEquals('=', $builder->getQuery()->wheres[1]['operator']);
     }
 
     public function test_does_not_add_incorrect_wheres()

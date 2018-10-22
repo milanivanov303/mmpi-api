@@ -18,12 +18,15 @@ class ModelFilter
      * @var array
      */
     protected $operators = [
-        '=', '<', '>', '<=', '>=', '<>', '!=', '<=>',
-        'like', 'like binary', 'not like', 'ilike',
-        '&', '|', '^', '<<', '>>',
-        'rlike', 'regexp', 'not regexp',
-        '~', '~*', '!~', '!~*', 'similar to',
-        'not similar to', 'not ilike', '~~*', '!~~*',
+        '=',
+        '>',
+        '<',
+        '>=',
+        '<=',
+        '!=',
+        '<>',
+        '<=>',
+        'like'
     ];
 
     /**
@@ -116,7 +119,7 @@ class ModelFilter
         $matches = [];
         preg_match('/' . implode('|', $this->operators) . '/', $value, $matches);
 
-        if ($matches) {
+        if ($matches && $matches[0]) {
             return $matches[0];
         }
 

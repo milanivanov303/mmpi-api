@@ -70,7 +70,7 @@ class HashesController extends Controller
      * @param  int  $hash_rev
      * @return Response
      */
-    public function getOne(Request $request, $hash_rev)
+    public function getOne($hash_rev)
     {
         return $this->output(
             $this->model->find($hash_rev)

@@ -12,7 +12,7 @@ class UsersController extends Controller
     /**
      * Create a new controller instance.
      *
-     * @param User $model
+     * @param UserRepository $model
      * @return void
      */
     public function __construct(UserRepository $model)
