@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\DB;
 
 class CheckInDbFilter implements IFilter
 {
-
     /**
      * Primary key column
      *

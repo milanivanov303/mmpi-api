@@ -2,13 +2,13 @@
 namespace App\Helpers;
 
 use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Eloquent\Model as EloquentModel;
-use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 
 class QueryFilter
 {
     /**
-     * @var EloquentModel
+     * @var Model
      */
     protected $model;
 
@@ -18,15 +18,12 @@ class QueryFilter
      * @var array
      */
     protected $operators = [
-        '=',
-        '>',
-        '<',
-        '>=',
-        '<=',
-        '!=',
-        '<>',
-        '<=>',
-        'like'
+        '=', '<', '>', '<=', '>=', '<>', '!=', '<=>',
+        'like', 'like binary', 'not like', 'ilike',
+        '&', '|', '^', '<<', '>>',
+        'rlike', 'regexp', 'not regexp',
+        '~', '~*', '!~', '!~*', 'similar to',
+        'not similar to', 'not ilike', '~~*', '!~~*',
     ];
 
     /**
@@ -39,23 +36,23 @@ class QueryFilter
     /**
      * DataFilter constructor
      *
-     * @param EloquentModel $model
+     * @param Model $model
      */
-    public function __construct(EloquentModel $model)
+    public function __construct(Model $model)
     {
         $this->model = $model;
     }
 
     /**
-     * Get builder query for model
+     * Get query builder for model
      *
-     * @param EloquentModel $model
+     * @param Model $model
      * @param array $filters
-     * @return EloquentBuilder
+     * @return Builder
      */
-    public static function for(EloquentModel $model, array $filters = [])
+    public static function for(Model $model, array $filters = [])
     {
-        $instance = new self($model);
+        $instance = new static($model);
 
         $builder = $instance->getBuilder($filters);
 
@@ -214,12 +211,12 @@ class QueryFilter
     /**
      * Set model order
      *
-     * @param EloquentBuilder $builder
+     * @param Builder $builder
      * @param string $order_by
      * @param string $order_dir
-     * @return EloquentBuilder
+     * @return Builder
      */
-    protected function setOrder(EloquentBuilder $builder, string $order_by, string $order_dir): EloquentBuilder
+    protected function setOrder(Builder $builder, string $order_by, string $order_dir): Builder
     {
         $order_by = $this->model->mapper->getMappedAttribute($order_by);
 
@@ -235,11 +232,11 @@ class QueryFilter
     /**
      * Set model filter
      *
-     * @param EloquentBuilder $builder
+     * @param Builder $builder
      * @param array $filter
-     * @return EloquentBuilder
+     * @return Builder
      */
-    protected function setFilter(EloquentBuilder $builder, array $filter): EloquentBuilder
+    protected function setFilter(Builder $builder, array $filter): Builder
     {
         if (is_callable($filter['callback'])) {
             return call_user_func($filter['callback'], $builder, $filter['value'], $filter['operator']);
@@ -252,9 +249,9 @@ class QueryFilter
      * Get query builder with applied filters
      *
      * @param array $filters
-     * @return EloquentBuilder
+     * @return Builder
      */
-    protected function getBuilder(array $filters): EloquentBuilder
+    protected function getBuilder(array $filters): Builder
     {
         $builder = $this->model->newModelQuery();
 
