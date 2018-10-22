@@ -9,6 +9,11 @@ class Model extends \Illuminate\Database\Eloquent\Model
     public $timestamps = false;
 
     /**
+     * @var DataMapper
+     */
+    public $mapper;
+
+    /**
      * The attributes that will be hidden in output json
      *
      * @var array
@@ -16,8 +21,6 @@ class Model extends \Illuminate\Database\Eloquent\Model
     protected $hidden = [
         'id'
     ];
-
-    protected $mapper;
 
     /**
      * Array with mapped attributes for conversion
@@ -90,4 +93,26 @@ class Model extends \Illuminate\Database\Eloquent\Model
     {
         return empty($this->getVisible()) || in_array($attribute, $this->getVisible());
     }
+
+    /**
+     * Set the visible attributes for the model.
+     *
+     * @param  array  $visible
+     * @return $this
+     */
+    public function setVisible(array $visible)
+    {
+        // We need to map items to local names and keep both, because relations will stop working
+        $visible = array_unique(
+            array_merge(
+                $visible,
+                array_flip(
+                    $this->mapper->mapRequestData(array_flip($visible))
+                )
+            )
+        );
+
+        return parent::setVisible($visible);
+    }
+
 }

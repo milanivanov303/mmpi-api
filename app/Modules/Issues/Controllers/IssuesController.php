@@ -56,8 +56,12 @@ class IssuesController extends Controller
      */
     public function delete($tts_id)
     {
-        $this->model->delete($tts_id);
-        return response('Issue deleted successfully', 204);
+        try {
+            $this->model->delete($tts_id);
+            return response('Issue deleted successfully', 204);
+        } catch (\Exception $exception) {
+            return response('Issue could not be deleted', 400);
+        }
     }
 
     /**

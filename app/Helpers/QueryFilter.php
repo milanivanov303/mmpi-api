@@ -1,13 +1,17 @@
 <?php
-namespace App\Traits;
+namespace App\Helpers;
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Eloquent\Model as EloquentModel;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 
-trait Filterable
+class QueryFilter
 {
+    /**
+     * @var EloquentModel
+     */
+    protected $model;
+
     /**
      * Supported operators
      *
@@ -33,13 +37,39 @@ trait Filterable
     protected $defaultOperator = '=';
 
     /**
+     * DataFilter constructor
+     *
+     * @param EloquentModel $model
+     */
+    public function __construct(EloquentModel $model)
+    {
+        $this->model = $model;
+    }
+
+    /**
+     * Get builder query for model
+     *
+     * @param EloquentModel $model
+     * @param array $filters
+     * @return EloquentBuilder
+     */
+    public static function for(EloquentModel $model, array $filters = [])
+    {
+        $instance = new self($model);
+
+        $builder = $instance->getBuilder($filters);
+
+        return $builder;
+    }
+
+    /**
      * Get model table columns
      *
      * @return array
      */
     protected function getColumns(): array
     {
-        return Schema::getColumnListing($this->getTable());
+        return Schema::getColumnListing($this->model->getTable());
     }
 
     /**
@@ -49,11 +79,11 @@ trait Filterable
      */
     public function getFilterableAttributes(): array
     {
-        $filters = method_exists($this, 'filters') ? array_keys($this->filters()) : [];
+        $filters = method_exists($this->model, 'filters') ? array_keys($this->model->filters()) : [];
  
         return array_unique(
             array_merge(
-                array_diff($this->getColumns(), $this->getHidden()),
+                array_diff($this->getColumns(), $this->model->getHidden()),
                 $filters
             )
         );
@@ -67,10 +97,7 @@ trait Filterable
      */
     protected function getOnlyValidParameters($parameters): array
     {
-        // Get mapped attributes if model uses mappable trait
-        if (method_exists($this, 'getMappededAttributes')) {
-            $parameters = $this->getMappededAttributes($parameters);
-        }
+        $parameters = $this->model->mapper->mapRequestData($parameters);
 
         return array_intersect_key(
             $parameters,
@@ -83,11 +110,10 @@ trait Filterable
     /**
      * Get filter operator
      *
-     * @param $name
      * @param $value
      * @return string
      */
-    protected function getFilterOperator($name, $value): string
+    protected function getFilterOperator($value): string
     {
         // Get operator from parameter value if exists
         $matches = [];
@@ -128,10 +154,10 @@ trait Filterable
      */
     protected function getFilterCallback(string $name)
     {
-        // Get calback from model filters if there is one defined
-        if (method_exists($this, 'filters')) {
-            if (array_key_exists($name, $this->filters())) {
-                return $this->filters()[$name];
+        // Get callback from model filters if there is one defined
+        if (method_exists($this->model, 'filters')) {
+            if (array_key_exists($name, $this->model->filters())) {
+                return $this->model->filters()[$name];
             }
         }
         
@@ -152,12 +178,12 @@ trait Filterable
         foreach ($parameters as $name => $value) {
             $array = is_array($value) ? $value : [$value];
             foreach ($array as $value) {
-                $operator = $this->getFilterOperator($name, $value);
+                $operator = $this->getFilterOperator($value);
                 array_push(
                     $filters,
                     [
                         'column'   => $name,
-                        'operator' => $this->getFilterOperator($name, $value),
+                        'operator' => $this->getFilterOperator($value),
                         'value'    => $this->getFilterValue($value, $operator),
                         'callback' => $this->getFilterCallback($name)
                     ]
@@ -175,10 +201,10 @@ trait Filterable
      */
     protected function getOrderByCallback($name)
     {
-        // Get calback from model filters if there is one defined
-        if (method_exists($this, 'orderBy')) {
-            if (array_key_exists($name, $this->orderBy())) {
-                return $this->orderBy()[$name];
+        // Get callback from model filters if there is one defined
+        if (method_exists($this->model, 'orderBy')) {
+            if (array_key_exists($name, $this->model->orderBy())) {
+                return $this->model->orderBy()[$name];
             }
         }
         
@@ -195,10 +221,7 @@ trait Filterable
      */
     protected function setOrder(EloquentBuilder $builder, string $order_by, string $order_dir): EloquentBuilder
     {
-        // Get mapped attribute if model uses mappable trait
-        if (method_exists($this, 'getMappededAttribute')) {
-            $order_by = $this->getMappededAttribute($order_by);
-        }
+        $order_by = $this->model->mapper->getMappedAttribute($order_by);
 
         $callback = $this->getOrderByCallback($order_by);
 
@@ -226,28 +249,30 @@ trait Filterable
     }
 
     /**
-     * Set model filters
+     * Get query builder with applied filters
      *
+     * @param array $filters
      * @return EloquentBuilder
      */
-    public function setFilters(array $parameters): EloquentBuilder
+    protected function getBuilder(array $filters): EloquentBuilder
     {
-        $builder = $this->newModelQuery();
+        $builder = $this->model->newModelQuery();
 
-        foreach ($this->getFilters($parameters) as $filter) {
-            $builder = $this->setFilter($builder, $filter);
+        foreach ($this->getFilters($filters) as $filter) {
+            $builder= $this->setFilter($builder, $filter);
         }
 
         // set order
-        if (array_key_exists('order_by', $parameters)) {
-            $builder = $this->setOrder($builder, $parameters['order_by'], $parameters['order_dir'] ?? 'asc');
+        if (array_key_exists('order_by', $filters)) {
+            $builder = $this->setOrder($builder, $filters['order_by'], $filters['order_dir'] ?? 'asc');
         }
 
         // set limit
-        if (array_key_exists('limit', $parameters)) {
-            $builder = $builder->limit($parameters['limit']);
+        if (array_key_exists('limit', $filters)) {
+            $builder = $builder->limit($filters['limit']);
         }
-        
+
         return $builder;
+
     }
 }

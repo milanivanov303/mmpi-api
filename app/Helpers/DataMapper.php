@@ -76,6 +76,7 @@ class DataMapper
      */
     protected function getMappedAttributes(array $attributes, array $mapping) : array
     {
+        // TODO: refactor this to keep array order
         foreach ($mapping as $from_key => $to_key) {
             if (array_key_exists($from_key, $attributes)) {
                 $attributes[$to_key] = $attributes[$from_key];

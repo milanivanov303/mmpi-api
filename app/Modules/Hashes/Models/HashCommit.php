@@ -4,12 +4,9 @@ namespace App\Modules\Hashes\Models;
 
 use App\Models\Model;
 use App\Models\User;
-use App\Traits\Filterable;
 
 class HashCommit extends Model
 {
-    use Filterable;
-
     /**
      * Array with mapped attributes for conversion
      *
@@ -46,7 +43,7 @@ class HashCommit extends Model
      *
      * @return array
      */
-    protected function filters(): array
+    public function filters(): array
     {
         return [
             'committed_by' => function ($model, $value) {
@@ -74,7 +71,7 @@ class HashCommit extends Model
      *
      * @return array
      */
-    protected function orderBy(): array
+    public function orderBy(): array
     {
         return [
 

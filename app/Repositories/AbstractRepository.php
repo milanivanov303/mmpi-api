@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Helpers\DataFilter;
 use Illuminate\Database\Eloquent\Model;
 use App\Helpers\Mapper;
 
@@ -132,12 +133,10 @@ abstract class AbstractRepository
     public function setFilters($filters)
     {
         if (array_key_exists('fields', $filters)) {
-            $this->setVisible($filters['fields']);
+            $this->model->setVisible($filters['fields']);
         }
 
-        if (method_exists($this->model, 'setFilters')) {
-            $this->model = $this->model->setFilters($filters);
-        }
+        $this->model = \App\Helpers\QueryFilter::for($this->model, $filters);
     }
 
     /**
@@ -151,11 +150,6 @@ abstract class AbstractRepository
             $fields = array_map('trim', explode(',', $fields));
         }
 
-        if (method_exists($this->model, 'getMappededAttribute')) {
-            foreach ($fields as &$field) {
-                $field = $this->model->getMappededAttribute($field);
-            }
-        }
         $this->model->setVisible($fields);
     }
 }

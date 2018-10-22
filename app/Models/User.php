@@ -6,14 +6,10 @@ use Illuminate\Auth\Authenticatable;
 use Laravel\Lumen\Auth\Authorizable;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
-use App\Traits\Filterable;
 
 class User extends Model implements AuthenticatableContract, AuthorizableContract
 {
     use Authenticatable, Authorizable;
-
-    //use Mappable;
-    use Filterable;
 
     /**
      * Array with mapped attributes for conversion
@@ -42,7 +38,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      *
      * @return array
      */
-    protected function filters(): array
+    public function filters(): array
     {
         return [
             'department_id' => function ($model, $value) {
@@ -73,7 +69,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      *
      * @return array
      */
-    protected function orderBy(): array
+    public function orderBy(): array
     {
         return [
             'department_id' => function ($model, $order_dir) {

@@ -5,12 +5,9 @@ namespace App\Modules\Issues\Models;
 use App\Models\Model;
 use App\Models\Project;
 use App\Models\Instance;
-use App\Traits\Filterable;
 
 class Issue extends Model
 {
-    use Filterable;
-
     /**
      * Array with mapped attributes for conversion
      *
@@ -45,7 +42,7 @@ class Issue extends Model
      *
      * @return array
      */
-    protected function filters(): array
+    public function filters(): array
     {
         return [
             'subject' => function ($model, $value) {
@@ -69,7 +66,7 @@ class Issue extends Model
      *
      * @return array
      */
-    protected function orderBy(): array
+    public function orderBy(): array
     {
         return [
             'project_id' => function ($model, $order_dir) {
