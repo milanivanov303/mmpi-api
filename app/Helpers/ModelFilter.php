@@ -116,11 +116,9 @@ class ModelFilter
     protected function getFilterOperator($value): string
     {
         // Get operator from parameter value if exists
-        $matches = [];
-        preg_match('/' . implode('|', $this->operators) . '/', $value, $matches);
-
-        if ($matches && $matches[0]) {
-            return $matches[0];
+        $operator = current(explode(' ', $value));
+        if (preg_match('/$' . implode('|', $this->operators) . '/', $operator)) {
+            return $operator;
         }
 
         return $this->defaultOperator;
@@ -136,11 +134,11 @@ class ModelFilter
     protected function getFilterValue(string $value, string $operator): string
     {
         $value = trim(
-            str_replace($this->operators, '', $value)
+            str_replace($operator, '', $value)
         );
 
         if ($operator === 'like') {
-            $value = "%{$value}%";
+            $value = "{$value}%";
         }
 
         return $value;

@@ -42,7 +42,7 @@ class CheckInDbFilterTest extends TestCase
             $mock->shouldReceive('method')->once()->andReturn('PUT');
             return $mock;
         });
-        
+
         // Mock DB
         DB::shouldReceive('table')
             ->once()
