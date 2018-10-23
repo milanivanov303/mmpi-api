@@ -15,6 +15,13 @@ class CheckInDbFilter implements IFilter
      */
     protected $primaryKey = 'id';
 
+    /**
+     * Validate
+     *
+     * @param $value
+     * @param array $args
+     * @return bool
+     */
     public function validate($value, array $args): bool
     {
         // skip validation for null values
@@ -37,7 +44,7 @@ class CheckInDbFilter implements IFilter
      * @param string $rule
      * @return boolean
      */
-    protected function isUniqueCheckOnUpdate($rule)
+    protected function isUniqueCheckOnUpdate(string $rule): bool
     {
         return app('request')->method() === 'PUT' && strpos($rule, 'unique:') !== false;
     }
@@ -49,7 +56,7 @@ class CheckInDbFilter implements IFilter
      * @param mixed $value
      * @return string
      */
-    protected function getUniqueRuleOnUpdate($args, $value)
+    protected function getUniqueRuleOnUpdate(array $args, $value): string
     {
         list($table, $column) = explode(',', last(explode(':', $args['rule'])));
 
