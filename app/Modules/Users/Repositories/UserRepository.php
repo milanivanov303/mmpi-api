@@ -36,5 +36,4 @@ class UserRepository extends AbstractRepository implements RepositoryInterface
     {
         $this->model = $model;
     }
-
 }

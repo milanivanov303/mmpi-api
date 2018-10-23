@@ -35,5 +35,4 @@ class IssueRepository extends AbstractRepository implements RepositoryInterface
     {
         $this->model = $model;
     }
-
 }

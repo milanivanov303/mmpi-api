@@ -272,6 +272,5 @@ class ModelFilter
         }
 
         return $builder;
-
     }
 }

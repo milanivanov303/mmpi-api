@@ -114,5 +114,4 @@ class Model extends \Illuminate\Database\Eloquent\Model
 
         return parent::setVisible($visible);
     }
-
 }
