@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Helpers\DataMapper;
+use Illuminate\Support\Facades\Schema;
 
 class Model extends \Illuminate\Database\Eloquent\Model
 {
@@ -113,5 +114,15 @@ class Model extends \Illuminate\Database\Eloquent\Model
         );
 
         return parent::setVisible($visible);
+    }
+
+    /**
+     * Get model table columns
+     *
+     * @return array
+     */
+    public function getColumns(): array
+    {
+        return Schema::getColumnListing($this->getTable());
     }
 }

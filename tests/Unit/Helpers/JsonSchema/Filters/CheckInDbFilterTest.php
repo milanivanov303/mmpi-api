@@ -3,7 +3,7 @@
 use App\Helpers\JsonSchema\Filters\CheckInDbFilter;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
-use App\Models\User;
+use App\Models\Model;
 
 class CheckInDbFilterTest extends TestCase
 {
@@ -34,7 +34,10 @@ class CheckInDbFilterTest extends TestCase
     {
         $name = 'jdoe';
         $rule = 'unique:users,username';
-        $user = \App\Models\User::inRandomOrder()->first();
+
+        // create new model and manually set its id
+        $model = new Model();
+        $model->id = 12;
 
         // Mock Request
         app()->bind(\Illuminate\Http\Request::class, function () {
@@ -46,12 +49,12 @@ class CheckInDbFilterTest extends TestCase
         // Mock DB
         DB::shouldReceive('table')
             ->once()
-            ->andReturn(Mockery::mock(['where' => Mockery::mock(['first' => $user])]));
+            ->andReturn(Mockery::mock(['where' => Mockery::mock(['first' => $model])]));
 
         // Mock Validator
         Validator::shouldReceive('make')
             ->once()
-            ->with(['field' => $name], ['field' =>$rule . ',' . $user->id])
+            ->with(['field' => $name], ['field' =>$rule . ',' . $model->id])
             ->andReturn(Mockery::mock(['passes' => true]));
 
         $this->filter->validate($name, ['rule' => $rule]);

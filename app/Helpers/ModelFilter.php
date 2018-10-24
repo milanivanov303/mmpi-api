@@ -1,7 +1,6 @@
 <?php
 namespace App\Helpers;
 
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -63,16 +62,6 @@ class ModelFilter
     }
 
     /**
-     * Get model table columns
-     *
-     * @return array
-     */
-    protected function getColumns(): array
-    {
-        return Schema::getColumnListing($this->model->getTable());
-    }
-
-    /**
      * Get defined filters
      *
      * @return array
@@ -83,7 +72,7 @@ class ModelFilter
 
         return array_unique(
             array_merge(
-                array_diff($this->getColumns(), $this->model->getHidden()),
+                array_diff($this->model->getColumns(), $this->model->getHidden()),
                 $filters
             )
         );

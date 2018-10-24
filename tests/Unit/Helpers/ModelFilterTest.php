@@ -1,7 +1,8 @@
 <?php
 
 use App\Helpers\ModelFilter;
-use App\Models\User;
+use App\Models\Model;
+use App\Helpers\DataMapper;
 
 class ModelFilterTest extends TestCase
 {
@@ -12,7 +13,14 @@ class ModelFilterTest extends TestCase
     {
         parent::setUp();
 
-        $this->model = new User;
+        $this->model = Mockery::mock(Model::class)->makePartial();
+
+        // Model constructor is not called by mockery! This is why I set mapper here
+        $this->model->mapper = new DataMapper([]);
+
+        $this->model->shouldReceive('getColumns')
+            ->once()
+            ->andReturn(['name', 'email']);
 
         $this->modelFilter = new ModelFilter($this->model);
 
