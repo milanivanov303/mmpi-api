@@ -6,8 +6,8 @@
 
 before_script:
   - echo "Before script section"
-  - echo "For example you might run an update here or install a build dependency"
-  - echo "Or perhaps you might print out some debugging details"
+  - composer install
+  - cp .env.sample .env
    
 after_script:
   - echo "After script section"
@@ -16,8 +16,7 @@ after_script:
 build:
   stage: build
   script:
-    - composer install
-    - cp .env.sample .env
+    - echo "Build your project here"
    
 code_sniffer:
   stage: test
