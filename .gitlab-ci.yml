@@ -16,17 +16,11 @@ build:
   stage: build
   script:
     - echo "Build your project here"
-    - cp .env.sample .env
    
 code_sniffer:
   stage: test
   script: 
     - ./vendor/bin/phpcs $(git diff-index --name-only --cached HEAD)
-   
-mess_detector:
-  stage: test
-  script: 
-    - ./vendor/bin/phpmd ./app
     
 test:
   stage: test
