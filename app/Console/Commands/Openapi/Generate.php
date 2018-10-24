@@ -4,15 +4,16 @@ namespace App\Console\Commands\Openapi;
 
 use Illuminate\Console\Command;
 use Laravel\Lumen\Routing\Router;
-use Illuminate\Support\Facades\Schema;
 use App\Repositories\RepositoryInterface;
+use App\Helpers\ModelFilter;
+use App\Models\Model;
 
 /**
  * Generate API documentation
  *
  * @category Console_Command
  */
-class GenerateCommand extends Command
+class Generate extends Command
 {
     /**
      * The console command name.
@@ -32,11 +33,11 @@ class GenerateCommand extends Command
     /**
      * Execute the console command.
      *
+     * @param Router $router
      * @return mixed
      */
     public function handle(Router $router)
     {
-
         $baseUri = "/api/{$this->argument('version')}";
 
         $document = new OADocument($this->loadDefaultDocument());
@@ -105,7 +106,7 @@ class GenerateCommand extends Command
      * Get Model instance
      *
      * @param string $controller
-     * @return
+     * @return Model
      *
      * @throws \ReflectionException
      */
@@ -125,26 +126,25 @@ class GenerateCommand extends Command
     /**
      * Get model filters
      *
-     * @param type $model
+     * @param Model $model
      * @return array
      */
-    protected function getModelFilters($model)
+    protected function getModelFilters(Model $model)
     {
-        $filters = [];
-        
-        if (method_exists($model, 'getFilterableAttributes')) {
-            foreach ($model->getFilterableAttributes() as $column) {
-                $name = $column;
-                // Get mapped attributes if model uses mappable trait
-                if (method_exists($model, 'getMappededAttribute')) {
-                    $name = $model->getMappededAttribute($column, $model::$MAP_RESPONSE_VALUES);
-                }
-                array_push($filters, [
-                    'name' => $name,
-                    'type' => 'string'//Schema::getColumnType($model->getTable(), $column)
-                ]);
-            }
-        }
+        // Get model filters
+        $filters = (new ModelFilter($model))->getFilterableAttributes();
+
+        // Map model filters names
+        $filters = array_flip(
+            $model->mapper->mapResponseData(array_flip($filters))
+        );
+
+        array_walk($filters, function (&$filter){
+            $filter = [
+                'name' => $filter,
+                'type' => 'string'
+            ];
+        });
 
         return $filters;
     }
