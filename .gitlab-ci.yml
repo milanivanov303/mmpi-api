@@ -5,7 +5,9 @@
 #image: composer:latest
 
 before_script:
-  - composer install
+  - echo "Before script section"
+  - echo "For example you might run an update here or install a build dependency"
+  - echo "Or perhaps you might print out some debugging details"
    
 after_script:
   - echo "After script section"
@@ -14,13 +16,19 @@ after_script:
 build:
   stage: build
   script:
-    - echo "Do your build here"
+    - composer install
+    - cp .env.sample .env
    
 code_sniffer:
   stage: test
   script: 
     - ./vendor/bin/phpcs ./app
    
+mess_detector:
+  stage: test
+  script: 
+    - ./vendor/bin/phpmd ./app
+    
 test:
   stage: test
   script: 
