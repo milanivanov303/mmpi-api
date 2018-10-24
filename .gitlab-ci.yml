@@ -7,7 +7,6 @@
 before_script:
   - echo "Before script section"
   - composer install
-  - cp .env.sample .env
    
 after_script:
   - echo "After script section"
