@@ -17,16 +17,11 @@ build:
   stage: build
   script:
     - echo "Build your project here"
-   
-pwd:
-  stage: test
-  script: 
-    - echo pwd
 
 code_sniffer:
   stage: test
   script: 
-    - files=$(git ls-files -om --exclude-standard); echo $files; ./vendor/bin/phpcs $files
+    - pwd; files=$(git ls-files -om --exclude-standard) && ./vendor/bin/phpcs $files
     
 test:
   stage: test
