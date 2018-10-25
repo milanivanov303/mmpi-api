@@ -8,7 +8,8 @@ namespace App\Helpers;
  * ex. protected $mapping = ['name' => 'client_name'];
  *
  */
-class DataMapper {
+class DataMapper
+{
     /**
      * Array with mapped attributes for conversion
      *
