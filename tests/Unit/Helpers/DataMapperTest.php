@@ -53,4 +53,16 @@ class DataMapperTest extends TestCase
         $this->assertEquals($owner, $data['owner']);
         $this->assertEquals($manager, $data['manager']);
     }
+
+    public function test_map_request_attribute()
+    {
+        $this->assertEquals('user_id', $this->mapper->mapRequestAttribute('owner'));
+        $this->assertEquals('NOT-MAPPED-ATTRIBUTE', $this->mapper->mapRequestAttribute('NOT-MAPPED-ATTRIBUTE'));
+    }
+
+    public function test_map_response_attribute()
+    {
+        $this->assertEquals('owner', $this->mapper->mapResponseAttribute('user_id'));
+        $this->assertEquals('NOT-MAPPED-ATTRIBUTE', $this->mapper->mapResponseAttribute('NOT-MAPPED-ATTRIBUTE'));
+    }
 }

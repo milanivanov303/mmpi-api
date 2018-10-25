@@ -56,6 +56,38 @@ class DataMapper
     }
 
     /**
+     * Get mapped response attribute
+     *
+     * @param string $attribute
+     * @return string
+     */
+    public function mapResponseAttribute(string $attribute) : string
+    {
+        if (array_key_exists($attribute, $this->mapping)) {
+            return $this->mapping[$attribute];
+        }
+
+        return $attribute;
+    }
+
+    /**
+     * Get mapped request attribute
+     *
+     * @param string $attribute
+     * @return string
+     */
+    public function mapRequestAttribute(string $attribute) : string
+    {
+        $mapping = array_flip($this->mapping);
+
+        if (array_key_exists($attribute, $mapping)) {
+            return $mapping[$attribute];
+        }
+
+        return $attribute;
+    }
+
+    /**
      * Map attributes names
      *
      * @param array $attributes
