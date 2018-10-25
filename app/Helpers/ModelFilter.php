@@ -1,7 +1,7 @@
 <?php
 namespace App\Helpers;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Models\Model;
 use Illuminate\Database\Eloquent\Builder;
 
 class ModelFilter
@@ -10,6 +10,13 @@ class ModelFilter
      * @var Model
      */
     protected $model;
+
+    /**
+     * Model custom filters
+     *
+     * @var array
+     */
+    protected $filters = [];
 
     /**
      * Supported operators
@@ -43,6 +50,11 @@ class ModelFilter
     public function __construct(Model $model)
     {
         $this->model = $model;
+
+        // save model custom filters for later use
+        if ( method_exists($this->model, 'filters') ) {
+            $this->filters = $this->model->filters();
+        }
     }
 
     /**
@@ -52,12 +64,10 @@ class ModelFilter
      */
     public function getFilterableAttributes(): array
     {
-        $filters = method_exists($this->model, 'filters') ? array_keys($this->model->filters()) : [];
-
         return array_unique(
             array_merge(
                 array_diff($this->model->getColumns(), $this->model->getHidden()),
-                $filters
+                array_keys($this->filters)
             )
         );
     }
@@ -126,10 +136,8 @@ class ModelFilter
     protected function getFilterCallback(string $name)
     {
         // Get callback from model filters if there is one defined
-        if (method_exists($this->model, 'filters')) {
-            if (array_key_exists($name, $this->model->filters())) {
-                return $this->model->filters()[$name];
-            }
+        if (array_key_exists($name, $this->filters)) {
+            return $this->filters[$name];
         }
         
         return false;
@@ -173,8 +181,9 @@ class ModelFilter
     {
         // Get callback from model filters if there is one defined
         if (method_exists($this->model, 'orderBy')) {
-            if (array_key_exists($name, $this->model->orderBy())) {
-                return $this->model->orderBy()[$name];
+            $orderBy = $this->model->orderBy();
+            if (array_key_exists($name, $orderBy)) {
+                return $orderBy[$name];
             }
         }
         

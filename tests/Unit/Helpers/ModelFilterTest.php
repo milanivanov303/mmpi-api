@@ -2,40 +2,58 @@
 
 use App\Helpers\ModelFilter;
 use App\Models\Model;
-use App\Helpers\DataMapper;
+
+/**
+ * Class TestModel
+ * Used to test ModelFilter class
+ */
+class TestModel extends Model
+{
+    public function getColumns () : array
+    {
+        return ['name', 'email'];
+    }
+
+    public function filters () : array
+    {
+        return [
+            'department' => function ($query, $value) {
+                return $query->where('department', $value);
+            }
+        ];
+    }
+
+    public function orderBy () : array
+    {
+        return [
+            'department' => function ($query, $order_dir) {
+                return $query->orderBy('department', $order_dir);
+            }
+        ];
+    }
+}
 
 class ModelFilterTest extends TestCase
 {
-    protected $model;
-    protected $modelFilter;
+    protected $filter;
 
     public function setUp()
     {
         parent::setUp();
-
-        $this->model = Mockery::mock(Model::class)->makePartial();
-
-        // Model constructor is not called by mockery! This is why I set mapper here
-        $this->model->mapper = new DataMapper([]);
-
-        $this->model->shouldReceive('getColumns')
-            ->once()
-            ->andReturn(['name', 'email']);
-
-        $this->modelFilter = new ModelFilter($this->model);
+        $this->filter = new ModelFilter(new TestModel());
     }
 
     public function test_returns_builder()
     {
-        $builder = $this->modelFilter->getBuilder([]);
+        $builder = $this->filter->getBuilder([]);
 
         $this->assertInstanceOf(\Illuminate\Database\Eloquent\Builder::class, $builder);
-        $this->assertEquals($this->model, $builder->getModel());
+        $this->assertEquals(new TestModel(), $builder->getModel());
     }
 
     public function test_adds_limit_and_order_by()
     {
-        $builder = $this->modelFilter->getBuilder([
+        $builder = $this->filter->getBuilder([
             'limit'     => 1,
             'order_by'  => 'name',
             'order_dir' => 'asc',
@@ -46,6 +64,28 @@ class ModelFilterTest extends TestCase
         $this->assertEquals('asc',  $builder->getQuery()->orders[0]['direction']);
     }
 
+    public function test_adds_order_by_from_callback()
+    {
+        $builder = $this->filter->getBuilder([
+            'order_by'  => 'department'
+        ]);
+
+        $this->assertEquals('department', $builder->getQuery()->orders[0]['column']);
+    }
+
+    public function test_adds_wheres_from_callback()
+    {
+        $department = 'Enterprise Applications';
+
+        $builder = $this->filter->getBuilder([
+            'department'  => $department
+        ]);
+
+        $this->assertNotEmpty($builder->getQuery()->wheres);
+        $this->assertArraySubset(['column' => 'department'],  $builder->getQuery()->wheres[0]);
+        $this->assertEquals($department,  $builder->getQuery()->wheres[0]['value']);
+    }
+
     public function test_adds_correct_wheres()
     {
         $faker = Faker\Factory::create();
@@ -53,9 +93,9 @@ class ModelFilterTest extends TestCase
         $name  = $faker->name;
         $email = $faker->email;
 
-        $builder = $this->modelFilter->getBuilder([
+        $builder = $this->filter->getBuilder([
             'name'  => $name,
-            'email' => '!= ' . $email
+            'email' => 'like ' . $email
         ]);
 
         $this->assertNotEmpty($builder->getQuery()->wheres);
@@ -63,15 +103,15 @@ class ModelFilterTest extends TestCase
         $this->assertArraySubset(['column' => 'email'], $builder->getQuery()->wheres[1]);
 
         $this->assertEquals($name,  $builder->getQuery()->wheres[0]['value']);
-        $this->assertEquals($email, $builder->getQuery()->wheres[1]['value']);
+        $this->assertEquals($email . '%', $builder->getQuery()->wheres[1]['value']);
 
         $this->assertEquals('=', $builder->getQuery()->wheres[0]['operator']);
-        $this->assertEquals('!=', $builder->getQuery()->wheres[1]['operator']);
+        $this->assertEquals('like', $builder->getQuery()->wheres[1]['operator']);
     }
 
     public function test_does_not_add_incorrect_wheres()
     {
-        $builder = $this->modelFilter->getBuilder([
+        $builder = $this->filter->getBuilder([
             'NOT-EXISTING-COLUMN' => 'VALUE'
         ]);
 
