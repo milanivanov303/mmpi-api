@@ -46,22 +46,6 @@ class ModelFilter
     }
 
     /**
-     * Get query builder for model
-     *
-     * @param Model $model
-     * @param array $filters
-     * @return Builder
-     */
-    public static function for(Model $model, array $filters = [])
-    {
-        $instance = new static($model);
-
-        $builder = $instance->getBuilder($filters);
-
-        return $builder;
-    }
-
-    /**
      * Get defined filters
      *
      * @return array

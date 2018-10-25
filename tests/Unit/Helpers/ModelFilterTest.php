@@ -23,14 +23,6 @@ class ModelFilterTest extends TestCase
             ->andReturn(['name', 'email']);
 
         $this->modelFilter = new ModelFilter($this->model);
-
-        /*
-         * For some reason Schema facade can not be mocked. This is why I use User model
-        Schema::shouldReceive('getColumnListing')
-            ->once()
-            ->with('key')
-            ->andReturn(Mockery::mock(['name', 'email']));
-        */
     }
 
     public function test_returns_builder()
@@ -56,8 +48,10 @@ class ModelFilterTest extends TestCase
 
     public function test_adds_correct_wheres()
     {
-        $name  = 'John Doe';
-        $email = 'john.doe@example.com';
+        $faker = Faker\Factory::create();
+
+        $name  = $faker->name;
+        $email = $faker->email;
 
         $builder = $this->modelFilter->getBuilder([
             'name'  => $name,
