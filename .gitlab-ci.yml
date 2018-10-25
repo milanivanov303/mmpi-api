@@ -20,6 +20,11 @@ build:
 code_sniffer:
   stage: test
   script: 
+    - echo $pwd
+
+code_sniffer:
+  stage: test
+  script: 
     - files=$(git ls-files -om --exclude-standard); echo $files; ./vendor/bin/phpcs $files
     
 test:
