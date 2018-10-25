@@ -26,7 +26,7 @@ code_sniffer:
 test:
   stage: test
   script: 
-    - ./vendor/bin/phpunit ./tests/Unit/.
+    - ./vendor/bin/phpunit --coverage-text --colors=never ./tests/Unit/.
    
 deploy:
   stage: deploy
