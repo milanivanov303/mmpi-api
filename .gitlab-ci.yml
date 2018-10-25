@@ -20,7 +20,7 @@ build:
 code_sniffer:
   stage: test
   script: 
-    - files=$(git ls-files -om --exclude-standard); ./vendor/bin/phpcs $files
+    - files=$(git ls-files -om --exclude-standard); echo $files; ./vendor/bin/phpcs $files
     
 test:
   stage: test
