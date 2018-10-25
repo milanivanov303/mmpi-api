@@ -52,7 +52,7 @@ class ModelFilter
         $this->model = $model;
 
         // save model custom filters for later use
-        if ( method_exists($this->model, 'filters') ) {
+        if (method_exists($this->model, 'filters')) {
             $this->filters = $this->model->filters();
         }
     }
