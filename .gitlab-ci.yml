@@ -20,7 +20,7 @@ build:
 code_sniffer:
   stage: test
   script: 
-    - ./vendor/bin/phpcs $(git diff-index --name-only --cached HEAD)
+    - files=$(git ls-files -om --exclude-standard); ./vendor/bin/phpcs $files
     
 test:
   stage: test
