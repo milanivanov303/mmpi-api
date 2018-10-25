@@ -6,6 +6,7 @@
 
 before_script:
   - echo "Before script section"
+  - echo $pwd
   - composer install
    
 after_script:
@@ -17,7 +18,7 @@ build:
   script:
     - echo "Build your project here"
    
-code_sniffer:
+pwd:
   stage: test
   script: 
     - echo $pwd
