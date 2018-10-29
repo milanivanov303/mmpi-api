@@ -1,14 +1,4 @@
 <?php
-
-/*
-\Illuminate\Support\Facades\Event::listen(
-    \Illuminate\Database\Events\QueryExecuted::class,
-    function ($query) {
-        var_dump($query->sql);
-    }
-);
-*/
-
 /*
 |--------------------------------------------------------------------------
 | Application Routes
@@ -31,7 +21,7 @@ $router->group([
 
         // Users
         require 'api/v1/users.php';
-        
+
         // Hashes
         require 'api/v1/hashes.php';
 

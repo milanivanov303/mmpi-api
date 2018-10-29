@@ -47,10 +47,17 @@ return [
             'level' => 'debug',
             'days' => 7,
         ],
-        
+
         'http' => [
             'driver' => 'daily',
             'path' => storage_path('logs/http.log'),
+            'level' => 'debug',
+            'days' => 7,
+        ],
+
+        'db' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/db.log'),
             'level' => 'debug',
             'days' => 7,
         ],
