@@ -120,7 +120,7 @@ class ModelFilter
             str_replace($operator, '', $value)
         );
 
-        if ($operator === 'like') {
+        if ($operator === 'like' && strpos($value, '%') === false) {
             $value = "{$value}%";
         }
 
@@ -139,7 +139,7 @@ class ModelFilter
         if (array_key_exists($name, $this->filters)) {
             return $this->filters[$name];
         }
-        
+
         return false;
     }
 
@@ -186,7 +186,7 @@ class ModelFilter
                 return $orderBy[$name];
             }
         }
-        
+
         return false;
     }
 

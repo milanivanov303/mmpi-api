@@ -18,7 +18,7 @@ class Issue extends Model
         'dev_instance_id' => 'dev_instance',
         'parent_issue_id' => 'parent_issue'
     ];
-    
+
     /**
      * The attributes that are mass assignable.
      *
@@ -45,19 +45,28 @@ class Issue extends Model
     public function filters(): array
     {
         return [
-            'subject' => function ($model, $value) {
-                return $model->where('subject', 'like', "%{$value}%");
+            'subject' => function ($builder, $value) {
+                if (strpos($value, '%') === false) {
+                    $value = "{$value}%";
+                }
+                return $builder->where('subject', 'like', $value);
             },
-            'project_id' => function ($model, $value) {
-                return $model->whereHas('project', function ($query) use ($value) {
+            'project_id' => function ($builder, $value) {
+                return $builder->whereHas('project', function ($query) use ($value) {
                     $query->where('name', '=', $value);
                 });
             },
-            'parent_issue_id' => function ($model, $value) {
-                return $model->whereHas('parentIssue', function ($query) use ($value) {
+            'parent_issue_id' => function ($builder, $value) {
+                return $builder->whereHas('parentIssue', function ($query) use ($value) {
                     $query->where('tts_id', '=', $value);
                 });
             },
+            'createdOnFrom' => function ($builder, $value) {
+                return $builder->whereRaw("DATE(created_on) >= ?", $value);
+            },
+            'createdOnTo' => function ($builder, $value) {
+                return $builder->whereRaw("DATE(created_on) <= ?", $value);
+            }
         ];
     }
 
