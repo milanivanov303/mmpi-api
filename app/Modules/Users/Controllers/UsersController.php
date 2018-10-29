@@ -19,35 +19,4 @@ class UsersController extends Controller
     {
         $this->model = $model;
     }
-
-    /**
-     * Retrieve the hash for the given revision.
-     *
-     * @param  string  $username
-     * @return Response
-     */
-    public function getOne($username)
-    {
-        return $this->output(
-            $this->model->find($username)
-        );
-    }
-
-    /**
-     *
-     * @param Request $request
-     * @return User[]|\Illuminate\Database\Eloquent\Collection
-     */
-    public function getMany(Request $request)
-    {
-        $this->model->setFilters($request->all());
-
-        if ($request->input('page')) {
-            $data = $this->model->paginate($request->input('per_page'));
-        } else {
-            $data = $this->model->all();
-        }
-
-        return $this->output($data);
-    }
 }
