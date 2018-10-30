@@ -110,12 +110,10 @@ class Controller extends BaseController
      */
     public function getMany(Request $request)
     {
-        $this->model->setFilters($request->all());
-
         if ($request->input('page')) {
-            $data = $this->model->paginate($request->input('per_page'));
+            $data = $this->model->paginate($request->input('per_page'), $request->all());
         } else {
-            $data = $this->model->all();
+            $data = $this->model->all($request->all());
         }
 
         return $this->output($data);

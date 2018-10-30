@@ -4,9 +4,9 @@ namespace App\Repositories;
 
 interface RepositoryInterface
 {
-    public function all($columns = array('*'));
+    public function all(array $filters = []);
 
-    public function paginate($perPage = 15, $columns = array('*'));
+    public function paginate($perPage = 15, array $filters = []);
 
     public function create(array $data);
 
@@ -14,7 +14,7 @@ interface RepositoryInterface
 
     public function delete($id);
 
-    public function find($id, $columns = array('*'));
+    public function find($id);
 
     public function setFilters(array $filters);
 }
