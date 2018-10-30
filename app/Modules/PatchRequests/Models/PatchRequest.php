@@ -49,10 +49,18 @@ class PatchRequest extends Model
     }
 
     /**
-     * Get parent issue
+     * Get attached modifications
      */
     public function modifications()
     {
-        return $this->morphToMany(Modification::class, 'modif_to_pr');
+        return $this->belongsToMany(Modification::class, 'modif_to_pr', 'pr_id', 'modif_id')->withPivot('removed');
+    }
+
+    /**
+     * Get attached modifications
+     */
+    public function patch()
+    {
+        return $this->hasOne(Patch::class)->with('project');
     }
 }

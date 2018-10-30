@@ -21,7 +21,8 @@ class PatchRequestRepository extends AbstractRepository implements RepositoryInt
      * @var array
      */
     protected $with = [
-        'modifications'
+        'modifications',
+        'patch'
     ];
 
     /**
