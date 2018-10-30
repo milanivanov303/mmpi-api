@@ -41,10 +41,20 @@ class Generate extends Command
         $baseUri = "/api/{$this->argument('version')}";
 
         $document = new OADocument($this->loadDefaultDocument());
+        $document->setSchemas($this->loadSchemas());
 
         foreach ($router->getRoutes() as $route) {
             $pathItem = new OAPathItem($route, $baseUri);
-            
+
+            // set path item schema
+            if (array_key_exists('schema', $route['action'])) {
+                $schema = $document->getSchema($route['action']['schema']);
+                if ($schema) {
+                    $pathItem->setSchema($schema);
+                }
+            }
+
+            // set path item filters
             $filters = $this->getRouteFilters($route);
             if ($filters) {
                 $pathItem->setFilters($filters);
@@ -52,8 +62,6 @@ class Generate extends Command
 
             $document->addPathItem($pathItem);
         }
-
-        //echo $document->toJson();
 
         file_put_contents(
             base_path('public/openapi.json'),
@@ -79,6 +87,56 @@ class Generate extends Command
             file_get_contents($filename),
             JSON_OBJECT_AS_ARRAY
         );
+    }
+
+    /**
+     * Load route schema
+     *
+     * @return false|OASchema
+     */
+    protected function loadSchemas()
+    {
+        $schemas = [];
+
+        $schemas_dir = base_path('schemas'); // this should come from config
+        $dir = $schemas_dir . '/api/' . $this->argument('version');
+
+        if ($handle = opendir($dir)) {
+            while (false !== ($entry = readdir($handle))) {
+                $filename = $dir . '/' . $entry;
+                $id = str_replace($schemas_dir, '', $filename);
+
+                $schema = $this->loadSchema($filename);
+                if ($schema) {
+                    $schemas[$id] = $schema;
+                }
+            }
+
+            closedir($handle);
+        }
+
+        return $schemas;
+    }
+
+    /**
+     * Load route schema
+     *
+     * @return false|OASchema
+     */
+    protected function loadSchema($filename)
+    {
+        if (file_exists($filename)) {
+            $schema = json_decode(
+                file_get_contents($filename),
+                JSON_OBJECT_AS_ARRAY
+            );
+
+            if (json_last_error() === JSON_ERROR_NONE) {
+                return new OASchema($schema);
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -139,7 +197,7 @@ class Generate extends Command
             $model->mapper->mapResponseData(array_flip($filters))
         );
 
-        array_walk($filters, function (&$filter){
+        array_walk($filters, function (&$filter) {
             $filter = [
                 'name' => $filter,
                 'type' => 'string'

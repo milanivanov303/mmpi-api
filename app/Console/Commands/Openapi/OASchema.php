@@ -117,29 +117,9 @@ class OASchema implements Arrayable
 
                 return;
             }
-
-            if ($key === '$ref') {
-                $value = $this->fixRefs($value);
-            }
         });
 
         return $data;
-    }
-
-    /**
-     * Fix references to schemas
-     *
-     * @param string $value
-     * @return string
-     */
-    protected function fixRefs($value)
-    {
-        if (strpos($value, '#') === -1) {
-            return $value;
-        }
-
-        list($id, $ref) = explode("#", $value);
-        return '#/components/schemas/' . $this->convertId($id) . $ref;
     }
 
     /**
