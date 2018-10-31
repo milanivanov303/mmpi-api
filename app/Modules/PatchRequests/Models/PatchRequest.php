@@ -3,49 +3,51 @@
 namespace App\Modules\PatchRequests\Models;
 
 use App\Models\Model;
+use App\Modules\Issues\Models\Issue;
 
 class PatchRequest extends Model
 {
-    /**
-     * Array with mapped attributes for conversion
-     *
-     * @var array
-     */
-    protected $mapping = [
-
-    ];
-
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-
+        'id',
+        'number',
+        'migr_src_email_request',
+        'migr_src_email_request_files',
+        'when_to_install_string',
+        'when_to_install_datetime',
+        'call_back_tech_valid',
+        'notes',
+        'comm_status',
+        'greenlight_status',
+        'greenlighted_on',
+        'greenlighted_by',
+        'customer_infomed',
+        'nr_test',
+        'automated_test',
+        'assign_to_planned_ba'
     ];
 
     /**
-     * Define filters for this model
+     * The attributes that will be hidden in output json
      *
-     * @return array
+     * @var array
      */
-    public function filters(): array
-    {
-        return [
-
-        ];
-    }
+    protected $hidden = [
+        'issue_id',
+        'delivery_chain_id',
+        'migrated_id'
+    ];
 
     /**
-     * Define order by for this model
-     *
-     * @return array
+     * Get issue
      */
-    public function orderBy(): array
+    public function issue()
     {
-        return [
-
-        ];
+        return $this->belongsTo(Issue::class)->with(['project', 'devInstance']);
     }
 
     /**
@@ -53,7 +55,13 @@ class PatchRequest extends Model
      */
     public function modifications()
     {
-        return $this->belongsToMany(Modification::class, 'modif_to_pr', 'pr_id', 'modif_id')->withPivot('removed');
+        return $this->belongsToMany(Modification::class, 'modif_to_pr', 'pr_id', 'modif_id')
+                    //->wherePivot('removed', null)
+                    ->orderBy('order')
+                    ->with([
+                        'issue',
+                        'createdBy'
+                    ]);
     }
 
     /**
@@ -61,6 +69,20 @@ class PatchRequest extends Model
      */
     public function patch()
     {
-        return $this->hasOne(Patch::class)->with('project');
+        return $this->hasOne(Patch::class)->with([
+            'project',
+            'deliveryChain',
+            'patchGroup',
+            'checkedBy',
+            'verifiedBy'
+        ]);
+    }
+
+    /**
+     * Get attached modifications
+     */
+    public function deliveryChain()
+    {
+        return $this->belongsTo(DeliveryChain::class);
     }
 }

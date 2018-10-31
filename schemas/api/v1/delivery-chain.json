@@ -1,0 +1,33 @@
+{
+    "$id": "DeliveryChain",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "description": "Delivery Chain object",
+    "additionalProperties": false,
+    "properties": {
+        "id": {
+            "type": "integer"
+        },
+        "title": {
+            "type": "string"
+        },
+        "type_id": {
+            "type": "integer"
+        },
+        "dlvry_type": {
+            "type": "integer"
+        },
+        "status": {
+            "type": "integer"
+        },
+        "patch_directory_name": {
+            "type": "string"
+        },
+        "dc_version": {
+            "type": ["string", "null"]
+        },
+        "dc_role": {
+            "type": ["string", "null"]
+        }
+    }
+}

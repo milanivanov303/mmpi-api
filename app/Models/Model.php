@@ -20,7 +20,7 @@ class Model extends \Illuminate\Database\Eloquent\Model
      * @var array
      */
     protected $hidden = [
-        'id'
+        //'id'
     ];
 
     /**
@@ -123,6 +123,7 @@ class Model extends \Illuminate\Database\Eloquent\Model
      */
     public function getColumns(): array
     {
+        // TODO: Add cache mehanism here, so we do not hit database every time
         return Schema::getColumnListing($this->getTable());
     }
 }

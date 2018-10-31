@@ -25,25 +25,17 @@ class Error
      */
     public function getProperty()
     {
-        if ($this->error->keyword() === 'required') {
-            return $this->error->keywordArgs()['missing'];
-        }
-
         if ($this->error->keyword() === "additionalProperties") {
             return $this->error->keyword();
         }
 
-        return $this->error->dataPointer()[0];
-    }
+        $property = implode('.', $this->error->dataPointer());
 
-    /**
-     * Get capitalized property name
-     *
-     * @return string
-     */
-    public function getCapitalizedProperty()
-    {
-        return ucfirst($this->getProperty());
+        if ($this->error->keyword() === 'required') {
+            $property .= '.' . $this->error->keywordArgs()['missing'];
+        }
+
+        return $property;
     }
 
     /**
@@ -95,12 +87,12 @@ class Error
         if (method_exists($this, $methodName)) {
             return $this->{$methodName}();
         }
-        return "{$this->getCapitalizedProperty()} is invalid";
+        return "{$this->getProperty()} is invalid";
     }
-    
+
     protected function getRequiredError()
     {
-        return "{$this->getCapitalizedProperty()} is required";
+        return "{$this->getProperty()} is required";
     }
 
     protected function getAdditionalPropertiesError()
@@ -108,7 +100,7 @@ class Error
         $properties = implode(
             ' and ',
             array_map(function ($error) {
-                return $error->dataPointer()[0];
+                return implode('.', $error->dataPointer());
             }, $this->error->subErrors())
         );
         return "Not allowed properties {$properties}";
@@ -116,22 +108,22 @@ class Error
 
     protected function getMaxLengthError()
     {
-        return "{$this->getCapitalizedProperty()} can have a maximum length of {$this->error->keywordArgs()['max']}";
+        return "{$this->getProperty()} can have a maximum length of {$this->error->keywordArgs()['max']}";
     }
 
     protected function getMinLengthError()
     {
-        return "{$this->getCapitalizedProperty()} can have a minimum length of {$this->error->keywordArgs()['min']}";
+        return "{$this->getProperty()} can have a minimum length of {$this->error->keywordArgs()['min']}";
     }
 
     protected function getFiltersError()
     {
-        return "{$this->getCapitalizedProperty()} does not match filter {$this->error->keywordArgs()['filter']}";
+        return "{$this->getProperty()} does not match filter {$this->error->keywordArgs()['filter']}";
     }
 
     protected function getPatternError()
     {
-        return "{$this->getCapitalizedProperty()} should match pattern {$this->error->keywordArgs()['pattern']}";
+        return "{$this->getProperty()} should match pattern {$this->error->keywordArgs()['pattern']}";
     }
 
     protected function getTypeError()
@@ -140,31 +132,41 @@ class Error
         if (is_array($expected)) {
             $expected = implode(' or ', $expected);
         }
-        return "{$this->getCapitalizedProperty()} should be {$expected}";
+        return "{$this->getProperty()} should be {$expected}";
     }
 
     protected function getFormatError()
     {
-        return "{$this->getCapitalizedProperty()} should be valid {$this->error->keywordArgs()['format']}";
+        return "{$this->getProperty()} should be valid {$this->error->keywordArgs()['format']}";
     }
 
     protected function getMaximumError()
     {
-        return "{$this->getCapitalizedProperty()} should be greater or equal {$this->error->keywordArgs()['max']}";
+        return "{$this->getProperty()} should be greater or equal {$this->error->keywordArgs()['max']}";
     }
-    
+
     protected function getMinimumError()
     {
-        return "{$this->getCapitalizedProperty()} should be lower or equal {$this->error->keywordArgs()['min']}";
+        return "{$this->getProperty()} should be lower or equal {$this->error->keywordArgs()['min']}";
     }
 
     protected function getExclusiveMinimumError()
     {
-        return "{$this->getCapitalizedProperty()} should be lower then {$this->error->keywordArgs()['min']}";
+        return "{$this->getProperty()} should be lower then {$this->error->keywordArgs()['min']}";
     }
 
     protected function getExclusiveMaximumError()
     {
-        return "{$this->getCapitalizedProperty()} should be greater then {$this->error->keywordArgs()['max']}";
+        return "{$this->getProperty()} should be greater then {$this->error->keywordArgs()['max']}";
+    }
+
+    protected function getAllOfError()
+    {
+        $message = array_map(function ($error) {
+            $error = new self($error);
+            return $error->getMessage();
+        }, $this->error->subErrors());
+
+        return $message[0];
     }
 }

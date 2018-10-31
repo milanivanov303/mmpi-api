@@ -32,8 +32,11 @@ class JsonValidator
                 $this->getRouteSchema($request->route())
             );
 
+            // TODO: refactor this when there is time
+            $data = json_decode(json_encode($request->json()->all()), false);
+
             $result = $validator->schemaValidation(
-                (object)$request->json()->all(),
+                $data,
                 $schema,
                 PHP_INT_MAX
             );

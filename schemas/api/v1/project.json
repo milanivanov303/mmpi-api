@@ -1,0 +1,114 @@
+{
+    "$id": "Project",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "description": "Project object",
+    "additionalProperties": false,
+    "properties": {
+        "id": {
+            "type": "integer"
+        },
+        "name": {
+            "type": "string",
+            "description": "Project name",
+            "maxLength": 128,
+            "example": "ABSA",
+            "$filters": {
+                "$func": "checkInDb",
+                "$vars": {
+                    "rule": "exists:projects,name"
+                }
+            },
+            "$messages": {
+                "$filters": "Project with this name does not exist"
+            }
+        },
+        "clnt_cvs_dir": {
+            "type": "string"
+        },
+        "pnp_type": {
+            "type": ["string", "null"]
+        },
+        "clnt_code": {
+            "type": "string"
+        },
+        "clnt_code2": {
+            "type": ["string", "null"]
+        },
+        "src_prefix": {
+            "type": "string"
+        },
+        "src_prefix2": {
+            "type": ["string", "null"]
+        },
+        "src_itf_prefix": {
+            "type": ["string", "null"]
+        },
+        "getdcli": {
+            "type": ["string", "null"]
+        },
+        "getdcli2": {
+            "type": ["string", "null"]
+        },
+        "activity": {
+            "type": "integer"
+        },
+        "activite_gpc": {
+            "type": ["string", "null"]
+        },
+        "activite_sdr": {
+            "type": "string"
+        },
+        "imx_formstag": {
+            "type": ["string", "null"]
+        },
+        "forms_lng_dlvry": {
+            "type": "integer"
+        },
+        "uses_transl_upd": {
+            "type": "integer"
+        },
+        "inactive": {
+            "type": "integer"
+        },
+        "display_name": {
+            "type": "string"
+        },
+        "group_id": {
+            "type": "integer"
+        },
+        "country_id": {
+            "type": "integer"
+        },
+        "communication_lng_id": {
+            "type": "integer"
+        },
+        "delivery_method_id": {
+            "type": "integer"
+        },
+        "se_mntd_by_clnt_id": {
+            "type": "integer"
+        },
+        "tl_mntd_by_clnt_id": {
+            "type": "integer"
+        },
+        "njsch_mntd_by_clnt_id": {
+            "type": "integer"
+        },
+        "trans_mntd_by_clnt_id": {
+            "type": "integer"
+        },
+        "sla_from": {
+            "type": "string"
+        },
+        "sla_to": {
+            "type": "string"
+        },
+        "modified_by_id": {
+            "type": "integer"
+        },
+        "type_business": {
+            "type": "string"
+        }
+    }
+}

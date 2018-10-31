@@ -25,6 +25,7 @@ class Issue extends Model
      * @var array
      */
     protected $fillable = [
+        'id',
         'project_id',
         'revision',
         'subject',
