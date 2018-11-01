@@ -1,5 +1,5 @@
 {
-    "$id": "Issue",
+    "$id": "Create Issue",
     "$schema": "http://json-schema.org/draft-07/schema#",
     "type": "object",
     "description": "Issue object",
@@ -13,14 +13,18 @@
             ],
             "properties": {
                 "project": {
-                    "$filters": {
-                        "$func": "checkInDb",
-                        "$vars": {
-                            "rule": "exists:projects,name"
+                    "properties": {
+                        "name": {
+                            "$filters": {
+                                "$func": "checkInDb",
+                                "$vars": {
+                                    "rule": "exists:projects,name"
+                                }
+                            },
+                            "$messages": {
+                                "$filters": "Project with this name does not exist"
+                            }
                         }
-                    },
-                    "$messages": {
-                        "$filters": "Project with this name does not exist"
                     }
                 },
                 "tts_id": {
@@ -36,14 +40,18 @@
                     }
                 },
                 "dev_instance": {
-                    "$filters": {
-                        "$func": "checkInDb",
-                        "$vars": {
-                            "rule": "exists:instances,name"
+                    "properties": {
+                        "name": {
+                            "$filters": {
+                                "$func": "checkInDb",
+                                "$vars": {
+                                    "rule": "exists:instances,name"
+                                }
+                            },
+                            "$messages": {
+                                "$filters": "Dev instance with this name does not exist"
+                            }
                         }
-                    },
-                    "$messages": {
-                        "$filters": "Dev instance with this name does not exist"
                     }
                 }
             }

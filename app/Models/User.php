@@ -12,15 +12,13 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     use Authenticatable, Authorizable;
 
     /**
-     * Array with mapped attributes for conversion
+     * The relations to eager load on every query.
      *
      * @var array
      */
-    protected $mapping = [
-        'manager_id'      => 'manager',
-        'deputy_id'       => 'deputy',
-        'department_id'   => 'department',
-        'access_group_id' => 'access_group'
+    protected $with = [
+        'department',
+        'accessGroup'
     ];
 
     /**
@@ -30,7 +28,11 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      */
     protected $hidden = [
         'id',
-        'password'
+        'password',
+        'manager_id',
+        'deputy_id',
+        'department_id',
+        'access_group_id'
     ];
 
     /**
@@ -112,15 +114,15 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      */
     public function department()
     {
-        return $this->belongsTo('App\Models\Department');
+        return $this->belongsTo(Department::class);
     }
-    
+
     /**
      * Get user access group.
      */
     public function accessGroup()
     {
-        return $this->belongsTo('App\Models\AccessGroup');
+        return $this->belongsTo(AccessGroup::class);
     }
 
     /**
@@ -128,7 +130,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      */
     public function manager()
     {
-        return $this->belongsTo('App\Models\User', 'manager_id', 'id');
+        return $this->belongsTo(User::class, 'manager_id');
     }
 
     /**
@@ -136,34 +138,6 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      */
     public function deputy()
     {
-        return $this->belongsTo('App\Models\User', 'deputy_id', 'id');
-    }
-
-    /**
-     * Get the model's relationships in array form.
-     *
-     * @return array
-     */
-    public function relationsToArray()
-    {
-        $array = parent::relationsToArray();
-
-        if ($this->isVisible('department_id') && array_key_exists('department', $array)) {
-            $array['department_id'] = $array['department']['name'];
-        }
-
-        if ($this->isVisible('access_group_id') && array_key_exists('access_group', $array)) {
-            $array['access_group_id'] = $array['access_group']['name'];
-        }
-
-        if ($this->isVisible('manager_id') && array_key_exists('manager', $array)) {
-            $array['manager_id'] = $array['manager']['username'];
-        }
-
-        if ($this->isVisible('deputy_id') && array_key_exists('deputy', $array)) {
-            $array['deputy_id'] = $array['deputy']['username'];
-        }
-
-        return $array;
+        return $this->belongsTo(User::class, 'deputy_id');
     }
 }

@@ -1,0 +1,48 @@
+{
+    "$id": "Instance",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "description": "Instance object",
+    "additionalProperties": false,
+    "properties": {
+        "id": {
+            "type": "integer"
+        },
+        "name": {
+            "type": "string"
+        },
+        "instance_type_id": {
+            "type": "string"
+        },
+        "play_as_demo": {
+            "type": "string"
+        },
+        "owner": {
+            "$ref": "/api/v1/user.json"
+        },
+        "status": {
+            "type": "integer"
+        },
+        "timezone": {
+            "type": "string"
+        },
+        "host": {
+            "type": "string"
+        },
+        "user": {
+            "type": "string"
+        },
+        "db_user": {
+            "type": "string"
+        },
+        "tns_name": {
+            "type": "string"
+        },
+        "has_patch_install_in_init": {
+            "type": "integer"
+        },
+        "environment_type_id": {
+            "type": "integer"
+        }
+    }
+}

@@ -24,13 +24,14 @@
             "example": "ABSAFUP-1189"
         },
         "jiraissue_id": {
-            "type": ["integer", "null"],
+            "type": ["string", "null"],
             "description": "The id of the issue selected from Jira DB - column jiraissue.ID"
         },
         "parent_issue": {
-            "type": ["string", "null"],
-            "description": "If the task is sub-task, the column contains the id of the master task",
-            "maxLength": 16
+            "oneOf": [
+                {"$ref": "/api/v1/issues/issue.json"},
+                {"type": "null"}
+            ]
         },
         "revision": {
             "type": ["string", "null"],
@@ -38,10 +39,7 @@
             "maxLength": 16
         },
         "dev_instance": {
-            "type": ["string", "null"],
-            "description": "Development instance name",
-            "maxLength": 128,
-            "example": "wasp4"
+            "$ref": "/api/v1/instance.json"
         },
         "priority": {
             "type": "string",

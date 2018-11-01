@@ -66,8 +66,12 @@ class OASchema implements Arrayable
      * @param string $property
      * @return bool
      */
-    public function hasProperty(string $property):bool
+    public function hasProperty(string $property) : bool
     {
+        // TODO: get schema properties if it is extending another schema
+        if (!array_key_exists('properties', $this->data)) {
+            return false;
+        }
         return array_key_exists($property, $this->data['properties']);
     }
 

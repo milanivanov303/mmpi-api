@@ -31,11 +31,11 @@
             "maxLength": 60
         },
         "sidfr": {
-            "type": "string",
+            "type": ["string", "null"],
             "maxLength": 60
         },
         "uidnumber": {
-            "type": "integer"
+            "type": ["integer", "null"]
         },
         "status": {
             "type": "integer"
@@ -51,14 +51,24 @@
             "example": "developers"
         },
         "manager": {
-            "type": "string",
-            "description": "Manager username",
-            "example": "ivasilev"
+            "oneOf": [
+                {
+                    "$ref": "/api/v1/user.json",
+                    "description": "Manager",
+                    "example": "ivasilev"
+                },
+                {"type": "null"}
+            ]
         },
         "deputy": {
-            "type": "string",
-            "description": "Deputy username",
-            "example": "ivasilev"
+            "oneOf": [
+                {
+                    "$ref": "/api/v1/user.json",
+                    "description": "Deputy",
+                    "example": "ivasilev"
+                },
+                {"type": "null"}
+            ]
         }
     }
 }
