@@ -33,10 +33,7 @@ class Instance extends Model
      */
     public function owner()
     {
-        return $this->belongsTo(User::class, 'owner')->with([
-            'department',
-            'accessGroup'
-        ]);
+        return $this->belongsTo(User::class, 'owner');
     }
 
     /**
@@ -47,13 +44,16 @@ class Instance extends Model
         return $this->belongsTo(InstanceType::class, 'instance_type_id');
     }
 
+    /**
+     * Get environment type
+     */
     public function environmentType()
     {
         return $this->belongsTo(DeliveryChainType::class, 'environment_type_id');
     }
 
     /**
-     * Get type
+     * Get status
      */
     public function status()
     {

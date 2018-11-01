@@ -46,7 +46,7 @@ class PatchRequest extends Model
      */
     public function issue()
     {
-        return $this->belongsTo(Issue::class)->with(['project', 'devInstance']);
+        return $this->belongsTo(Issue::class);
     }
 
     /**
