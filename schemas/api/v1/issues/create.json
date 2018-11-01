@@ -3,89 +3,50 @@
     "$schema": "http://json-schema.org/draft-07/schema#",
     "type": "object",
     "description": "Issue object",
-    "required": [
-        "tts_id",
-        "jiraissue_id",
-        "project"
-    ],
-    "properties": {
-        "subject": {
-            "type": "string",
-            "description": "Issue subject",
-            "maxLength": 512,
-            "example": "FUP - ABSA - new file layout for imx2outpmt and imx2experian"
-        },
-        "project": {
-            "type": "string",
-            "description": "Project name",
-            "maxLength": 128,
-            "example": "ABSA",
-            "$filters": {
-                "$func": "checkInDb",
-                "$vars": {
-                    "rule": "exists:projects,name"
+    "allOf": [
+        {"$ref": "/api/v1/issues/issue.json"},
+        {
+            "required": [
+                "tts_id",
+                "jiraissue_id",
+                "project"
+            ],
+            "properties": {
+                "project": {
+                    "$filters": {
+                        "$func": "checkInDb",
+                        "$vars": {
+                            "rule": "exists:projects,name"
+                        }
+                    },
+                    "$messages": {
+                        "$filters": "Project with this name does not exist"
+                    }
+                },
+                "tts_id": {
+                    "$filters": {
+                        "$func": "checkInDb",
+                        "$vars": {
+                            "rule": "unique:issues,tts_id"
+                        }
+                    },
+                    "$messages": {
+                        "pattern": "TTS key is not valid format",
+                        "$filters": "TTS key is already registered"
+                    }
+                },
+                "dev_instance": {
+                    "$filters": {
+                        "$func": "checkInDb",
+                        "$vars": {
+                            "rule": "exists:instances,name"
+                        }
+                    },
+                    "$messages": {
+                        "$filters": "Dev instance with this name does not exist"
+                    }
                 }
-            },
-            "$messages": {
-                "$filters": "Project with this name does not exist"
             }
-        },
-        "tts_id": {
-            "type": "string",
-            "description": "TTS key",
-            "maxLength": 16,
-            "pattern": "[A-Z]*-[0-9]*",
-            "example": "ABSAFUP-1189",
-            "$filters": {
-                "$func": "checkInDb",
-                "$vars": {
-                    "rule": "unique:issues,tts_id"
-                }
-            },
-            "$messages": {
-                "pattern": "TTS key is not valid format",
-                "$filters": "TTS key is already registered"
-            }
-        },
-        "jiraissue_id": {
-            "type": ["integer", "null"],
-            "description": "The id of the issue selected from Jira DB - column jiraissue.ID"
-        },
-        "parent_issue": {
-            "type": ["string", "null"],
-            "description": "If the task is sub-task, the column contains the id of the master task",
-            "maxLength": 16
-        },
-        "revision": {
-            "type": ["string", "null"],
-            "description": "",
-            "maxLength": 16
-        },
-        "dev_instance": {
-            "type": ["string", "null"],
-            "description": "Development instance name",
-            "maxLength": 128,
-            "example": "wasp4",
-            "$filters": {
-                "$func": "checkInDb",
-                "$vars": {
-                    "rule": "exists:instances,name"
-                }
-            },
-            "$messages": {
-                "$filters": "Dev instance with this name does not exist"
-            }
-        },
-        "priority": {
-            "type": "string",
-            "description": "Issue priority",
-            "maxLength": 20,
-            "example": "Critical"
-        },
-        "jira_admin_status": {
-            "type": "string",
-            "description": "Issue priority",
-            "enum": ["ok", "migr", "herrors", "moved", "deleted"]
         }
-    }
+    ]
 }

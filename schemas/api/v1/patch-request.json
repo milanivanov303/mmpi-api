@@ -67,6 +67,12 @@
             "items": {
                 "$ref": "/api/v1/modification.json"
             }
+        },
+        "patches": {
+            "type": "array",
+            "items": {
+                "$ref": "/api/v1/patch.json"
+            }
         }
     }
 }

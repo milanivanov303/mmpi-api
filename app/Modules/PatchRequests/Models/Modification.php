@@ -9,15 +9,6 @@ use App\Models\User;
 class Modification extends Model
 {
     /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [
-        'id'
-    ];
-
-    /**
      * The attributes that will be hidden in output json
      *
      * @var array

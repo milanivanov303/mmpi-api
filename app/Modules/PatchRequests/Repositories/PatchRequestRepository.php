@@ -28,7 +28,7 @@ class PatchRequestRepository extends AbstractRepository implements RepositoryInt
     protected $with = [
         'issue',
         'modifications',
-        //'patch',
+        'patches',
         'deliveryChain'
     ];
 
@@ -141,7 +141,7 @@ class PatchRequestRepository extends AbstractRepository implements RepositoryInt
         $added = array_diff($newModifications, $oldModifications);
         $order = count($oldModifications);
         DB::table('modif_to_pr')->insert(
-            array_map(function ($modif_id) use ($modifications, $order) {
+            array_map(function ($modif_id) use ($modifications, &$order) {
                 $type_id = $modifications[$modif_id];
                 return [
                     'pr_id'    => $this->model->id,

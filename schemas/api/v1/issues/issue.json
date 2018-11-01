@@ -4,6 +4,9 @@
     "type": "object",
     "description": "Issue object",
     "properties": {
+        "id": {
+            "type": "integer"
+        },
         "subject": {
             "type": "string",
             "description": "Issue subject",
@@ -11,10 +14,7 @@
             "example": "FUP - ABSA - new file layout for imx2outpmt and imx2experian"
         },
         "project": {
-            "type": "string",
-            "description": "Project name",
-            "maxLength": 128,
-            "example": "ABSA"
+            "$ref": "/api/v1/project.json"
         },
         "tts_id": {
             "type": "string",

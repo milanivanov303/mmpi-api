@@ -13,7 +13,6 @@ class PatchRequest extends Model
      * @var array
      */
     protected $fillable = [
-        'id',
         'number',
         'migr_src_email_request',
         'migr_src_email_request_files',
@@ -56,7 +55,7 @@ class PatchRequest extends Model
     public function modifications()
     {
         return $this->belongsToMany(Modification::class, 'modif_to_pr', 'pr_id', 'modif_id')
-                    //->wherePivot('removed', null)
+                    ->wherePivot('removed', null)
                     ->orderBy('order')
                     ->with([
                         'issue',
@@ -65,11 +64,11 @@ class PatchRequest extends Model
     }
 
     /**
-     * Get attached modifications
+     * Get patch
      */
-    public function patch()
+    public function patches()
     {
-        return $this->hasOne(Patch::class)->with([
+        return $this->hasMany(Patch::class)->with([
             'project',
             'deliveryChain',
             'patchGroup',
