@@ -38,13 +38,14 @@ class Generate extends Command
      */
     public function handle(Router $router)
     {
-        $baseUri = "/api/{$this->argument('version')}";
-
         $document = new OADocument($this->loadDefaultDocument());
         $document->setSchemas($this->loadSchemas());
 
         foreach ($router->getRoutes() as $route) {
-            $pathItem = new OAPathItem($route, $baseUri);
+            $pathItem = new OAPathItem($route);
+
+            // set route base URI
+            $pathItem->setBaseUri($this->baseUri());
 
             // set path item schema
             if (array_key_exists('schema', $route['action'])) {
@@ -67,6 +68,11 @@ class Generate extends Command
             base_path('public/openapi.json'),
             $document->toJson()
         );
+    }
+
+    protected function baseUri()
+    {
+        return "/api/{$this->argument('version')}";
     }
 
     /**
@@ -98,21 +104,19 @@ class Generate extends Command
     {
         $schemas = [];
 
-        $schemas_dir = base_path('schemas'); // this should come from config
-        $dir = $schemas_dir . '/api/' . $this->argument('version');
+        $dir = base_path('schemas'); // this should come from config
 
-        if ($handle = opendir($dir)) {
-            while (false !== ($entry = readdir($handle))) {
-                $filename = $dir . '/' . $entry;
-                $id = str_replace($schemas_dir, '', $filename);
+        $files = new \RecursiveIteratorIterator(
+            new \RecursiveDirectoryIterator($dir . $this->baseUri())
+        );
 
-                $schema = $this->loadSchema($filename);
+        foreach ($files as $file) {
+            if (is_file($file)) {
+                $schema = $this->loadSchema($file);
                 if ($schema) {
-                    $schemas[$id] = $schema;
+                    $schemas[str_replace($dir, '', $file)] = $schema;
                 }
             }
-
-            closedir($handle);
         }
 
         return $schemas;

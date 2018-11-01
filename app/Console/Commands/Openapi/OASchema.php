@@ -130,8 +130,14 @@ class OASchema implements Arrayable
      */
     protected function fixNotValidTypeProperty($value)
     {
-        // Don't do anything if type is not array
-        if (!is_array($value['type'])) {
+        if (is_string($value['type'])) {
+            // if type is null set nullable property
+            if ($value['type'] === "null") {
+                $value['nullable'] = true;
+                unset($value['type']);
+                return $value;
+            }
+            // don't do anything if type is string
             return $value;
         }
 

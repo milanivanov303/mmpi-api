@@ -19,7 +19,7 @@ class OAPathItem implements Arrayable
      *
      * @var string
      */
-    protected $baseUri;
+    protected $baseUri = '';
 
     /**
      * Route filters
@@ -41,11 +41,19 @@ class OAPathItem implements Arrayable
 
     /**
      * @param array $route
-     * @param string $baseUri
      */
-    public function __construct(array $route, string $baseUri)
+    public function __construct(array $route)
     {
         $this->route   = $route;
+    }
+
+    /**
+     * Set base URI
+     *
+     * @param string $baseUri
+     */
+    public function setBaseUri(string $baseUri)
+    {
         $this->baseUri = $baseUri;
     }
 
