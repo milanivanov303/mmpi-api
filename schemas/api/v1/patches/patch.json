@@ -9,14 +9,14 @@
             "type": "integer"
         },
         "patch_request": {
-            "$ref": "/api/v1/patch-request.json"
+            "$ref": "/api/v1/patch-requests/patch-request.json"
         },
         "delivery_chain": {
-            "$ref": "/api/v1/delivery-chain.json"
+            "$ref": "/api/v1/delivery-chains/delivery-chain.json"
         },
         "patch_group": {
             "oneOf": [
-                {"$ref": "/api/v1/patch-group.json"},
+                {"$ref": "/api/v1/patches/patch-group.json"},
                 {"type": "null"}
             ]
         },

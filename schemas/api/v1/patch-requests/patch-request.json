@@ -27,7 +27,7 @@
             "type": ["integer", "null"]
         },
         "delivery_chain": {
-            "$ref": "/api/v1/delivery-chain.json"
+            "$ref": "/api/v1/delivery-chains/delivery-chain.json"
         },
         "call_back_tech_valid": {
             "type": "integer"
@@ -65,7 +65,7 @@
         "modifications": {
             "type": "array",
             "items": {
-                "$ref": "/api/v1/modification.json"
+                "$ref": "/api/v1/modifications/modification.json"
             }
         },
         "patches": {

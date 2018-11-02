@@ -50,7 +50,7 @@
             "type": "integer"
         },
         "environment_type": {
-            "$ref": "/api/v1/delivery-chain-type.json"
+            "$ref": "/api/v1/delivery-chains/delivery-chain-type.json"
         }
     }
 }

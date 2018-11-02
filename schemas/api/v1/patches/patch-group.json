@@ -5,6 +5,9 @@
     "description": "Patch Group object",
     "additionalProperties": false,
     "properties": {
+        "id": {
+            "type": "integer"
+        },
         "title": {
             "type": "string"
         }

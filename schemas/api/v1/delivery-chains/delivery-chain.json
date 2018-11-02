@@ -11,8 +11,8 @@
         "title": {
             "type": "string"
         },
-        "type_id": {
-            "type": "integer"
+        "type": {
+            "$ref": "/api/v1/delivery-chains/delivery-chain-type.json"
         },
         "dlvry_type": {
             "type": "integer"

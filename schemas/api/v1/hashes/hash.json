@@ -1,0 +1,105 @@
+{
+    "$id": "Hash",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "description": "Hash object",
+    "additionalProperties": false,
+    "required": [
+        "branch",
+        "owner",
+        "rev"
+    ],
+    "properties": {
+        "branch": {
+            "type": "string",
+            "description": "Branch name",
+            "example": "default"
+        },
+        "owner": {
+            "type": "string",
+            "description": "Should be valid username",
+            "example": "mmpi_auto",
+            "$filters": { 
+                "$func": "checkInDb",
+                "$vars": {
+                    "rule": "exists:users,username"
+                }
+            },
+            "$messages": {
+                "$filters": "Owner should be valid username"
+            }
+        },
+        "rev": {
+            "type": "string",
+            "description": "Version control system revision hash",
+            "example": "891b688fe1a49c5383de94c26717c8c3b7c47ab48",
+            "pattern": "^[0-9a-z]*$",
+            "$filters": {
+                "$func": "checkInDb",
+                "$vars": {
+                    "rule": "unique:hash_commits,hash_rev"
+                }
+            },
+            "$messages": {
+                "pattern": "Revision can content only numbers and lowercase letters",
+                "$filters": "Revision is already registered"
+            }
+        },
+        "chains": {  
+           "type": "array",
+            "description": "List with delivery chanis",
+            "example": [
+                "bcol_imx_v9_rel",
+                "bpi_imx_v9_rel"
+            ],
+            "items": {
+                "type": "string",
+                "$filters": {
+                    "$func": "checkInDb",
+                    "$vars": {
+                        "rule": "exists:hash_chains,chain_name"
+                    }
+                },
+                "$messages": {
+                    "$filters": "Chain %s does not exists"
+                }
+            }
+        },
+        "description": {
+            "type": "string",
+             "description": "Description of changes"
+        },
+        "files": {
+            "type": "array",
+            "description": "List with changed files in this revision",
+            "example": [
+                "BundlesResourceTest.java",
+                "ITitleDao.java"
+            ],
+            "items": {
+                "type": "string"
+            }
+        },
+        "merge_branch": {
+            "type": "string",
+            "description": "Branch name changes are merged to",
+            "example": "_DEV_IXDEV-4271_e_funding_in_bundles"
+        },
+        "module": {
+            "type": "string",
+            "description": "Repository name",
+            "example": "imx_be"
+        },
+        "repo_path": {
+            "type": "string",
+            "description": "Repository path",
+            "example": "extranet/hg/v9_be"
+        },
+        "repo_url": {
+            "type": "string",
+            "description": "Repository URL",
+            "example": "http://lemon.codixfr.private:6002/v9_be",
+            "format": "url"
+        }
+    }
+}
