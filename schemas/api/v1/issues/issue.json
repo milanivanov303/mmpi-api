@@ -39,7 +39,7 @@
             "maxLength": 16
         },
         "dev_instance": {
-            "$ref": "/api/v1/instance.json"
+            "$ref": "/api/v1/instances/instance.json"
         },
         "priority": {
             "type": "string",

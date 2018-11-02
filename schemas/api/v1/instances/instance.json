@@ -11,8 +11,16 @@
         "name": {
             "type": "string"
         },
-        "instance_type_id": {
-            "type": "string"
+        "instance_type": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
         },
         "play_as_demo": {
             "type": "string"
@@ -21,7 +29,7 @@
             "$ref": "/api/v1/user.json"
         },
         "status": {
-            "type": "integer"
+            "$ref": "/api/v1/enum-value.json"
         },
         "timezone": {
             "type": "string"
@@ -41,8 +49,8 @@
         "has_patch_install_in_init": {
             "type": "integer"
         },
-        "environment_type_id": {
-            "type": "integer"
+        "environment_type": {
+            "$ref": "/api/v1/delivery-chain-type.json"
         }
     }
 }

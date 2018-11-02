@@ -1,7 +1,10 @@
 <?php
 
-namespace App\Models;
+namespace App\Modules\Instances\Models;
 
+use App\Models\Model;
+use App\Models\User;
+use App\Models\EnumValue;
 use App\Modules\PatchRequests\Models\DeliveryChainType;
 
 class Instance extends Model
@@ -13,7 +16,7 @@ class Instance extends Model
      */
     protected $with = [
         'owner',
-        'type',
+        'instanceType',
         'status',
         'environmentType'
     ];
@@ -37,11 +40,11 @@ class Instance extends Model
     }
 
     /**
-     * Get type
+     * Get instance type
      */
-    public function type()
+    public function instanceType()
     {
-        return $this->belongsTo(InstanceType::class, 'instance_type_id');
+        return $this->belongsTo(InstanceType::class);
     }
 
     /**
@@ -49,7 +52,7 @@ class Instance extends Model
      */
     public function environmentType()
     {
-        return $this->belongsTo(DeliveryChainType::class, 'environment_type_id');
+        return $this->belongsTo(DeliveryChainType::class);
     }
 
     /**

@@ -31,6 +31,9 @@ $router->group([
         // Projects
         require 'api/v1/projects.php';
 
+        // Instances
+        require 'api/v1/instances.php';
+
         // Patch Requests
         require 'api/v1/patch-requests.php';
     });
