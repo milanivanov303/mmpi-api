@@ -1,11 +1,22 @@
 <?php
 
-namespace App\Modules\PatchRequests\Models;
+namespace App\Modules\DeliveryChains\Models;
 
 use App\Models\Model;
+use App\Models\EnumValue;
 
 class DeliveryChain extends Model
 {
+    /**
+     * The relations to eager load on every query.
+     *
+     * @var array
+     */
+    protected $with = [
+        'type',
+        'dlvryType',
+        'status'
+    ];
 
     /**
      * The attributes that will be hidden in output json
@@ -15,7 +26,7 @@ class DeliveryChain extends Model
     protected $hidden = [
         'type_id'
     ];
-    
+
     /**
      * The attributes that are mass assignable.
      *
@@ -31,8 +42,27 @@ class DeliveryChain extends Model
         'dc_role'
     ];
 
+    /**
+     * Get type
+     */
     public function type()
     {
         return $this->belongsTo(DeliveryChainType::class, 'type_id');
+    }
+
+    /**
+     * Get dlvry_type
+     */
+    public function dlvryType()
+    {
+        return $this->belongsTo(EnumValue::class, 'dlvry_type')->minimal();
+    }
+
+    /**
+     * Get status
+     */
+    public function status()
+    {
+        return $this->belongsTo(EnumValue::class, 'status')->minimal();
     }
 }

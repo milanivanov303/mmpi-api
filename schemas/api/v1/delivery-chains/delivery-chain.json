@@ -15,10 +15,10 @@
             "$ref": "/api/v1/delivery-chains/delivery-chain-type.json"
         },
         "dlvry_type": {
-            "type": "integer"
+            "$ref": "/api/v1/enum-value.json"
         },
         "status": {
-            "type": "integer"
+            "$ref": "/api/v1/enum-value.json"
         },
         "patch_directory_name": {
             "type": "string"

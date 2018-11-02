@@ -7,8 +7,8 @@ use App\Repositories\AbstractRepository;
 use App\Models\Model;
 use App\Modules\PatchRequests\Models\PatchRequest;
 use App\Modules\Issues\Models\Issue;
-use App\Modules\PatchRequests\Models\DeliveryChain;
-use App\Modules\PatchRequests\Models\Modification;
+use App\Modules\DeliveryChains\Models\DeliveryChain;
+use App\Modules\Modifications\Models\Modification;
 use Illuminate\Support\Facades\DB;
 
 class PatchRequestRepository extends AbstractRepository implements RepositoryInterface

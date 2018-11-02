@@ -34,6 +34,9 @@ $router->group([
         // Instances
         require 'api/v1/instances.php';
 
+        // Delivery chains
+        require 'api/v1/delivery-chains.php';
+
         // Modifications
         require 'api/v1/modifications.php';
 
