@@ -4,6 +4,9 @@ namespace App\Modules\PatchRequests\Models;
 
 use App\Models\Model;
 use App\Modules\Issues\Models\Issue;
+use App\Modules\Modifications\Models\Modification;
+use App\Modules\DeliveryChains\Models\DeliveryChain;
+use App\Modules\Patches\Models\Patch;
 
 class PatchRequest extends Model
 {

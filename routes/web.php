@@ -42,5 +42,8 @@ $router->group([
 
         // Patch Requests
         require 'api/v1/patch-requests.php';
+
+        // Patches
+        require 'api/v1/patches.php';
     });
 });

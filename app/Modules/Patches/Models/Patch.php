@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Modules\PatchRequests\Models;
+namespace App\Modules\Patches\Models;
 
 use App\Models\Model;
-use App\Modules\Projects\Models\Project;
 use App\Models\User;
+use App\Modules\Projects\Models\Project;
+use App\Modules\DeliveryChains\Models\DeliveryChain;
 
 class Patch extends Model
 {
