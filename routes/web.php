@@ -34,6 +34,9 @@ $router->group([
         // Instances
         require 'api/v1/instances.php';
 
+        // Modifications
+        require 'api/v1/modifications.php';
+
         // Patch Requests
         require 'api/v1/patch-requests.php';
     });

@@ -4,7 +4,7 @@ namespace App\Modules\Issues\Models;
 
 use App\Models\Model;
 use App\Modules\Projects\Models\Project;
-use App\Models\Instance;
+use App\Modules\Instances\Models\Instance;
 
 class Issue extends Model
 {

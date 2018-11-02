@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\PatchRequests\Models;
+namespace App\Modules\Modifications\Models;
 
 use App\Models\Model;
 

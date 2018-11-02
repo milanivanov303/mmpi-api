@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Modules\PatchRequests\Models;
+namespace App\Modules\Modifications\Models;
 
 use App\Models\Model;
 use App\Modules\Issues\Models\Issue;
+use App\Modules\Instances\Models\Instance;
+use App\Modules\PatchRequests\Models\DeliveryChain;
 use App\Models\User;
-use App\Models\Instance;
 use App\Models\EnumValue;
 use App\Models\DbSchema;
 
