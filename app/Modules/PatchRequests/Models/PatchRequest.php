@@ -56,11 +56,7 @@ class PatchRequest extends Model
     {
         return $this->belongsToMany(Modification::class, 'modif_to_pr', 'pr_id', 'modif_id')
                     ->wherePivot('removed', null)
-                    ->orderBy('order')
-                    ->with([
-                        'issue',
-                        'createdBy'
-                    ]);
+                    ->orderBy('order');
     }
 
     /**
@@ -68,13 +64,7 @@ class PatchRequest extends Model
      */
     public function patches()
     {
-        return $this->hasMany(Patch::class)->with([
-            'project',
-            'deliveryChain',
-            'patchGroup',
-            'checkedBy',
-            'verifiedBy'
-        ]);
+        return $this->hasMany(Patch::class);
     }
 
     /**

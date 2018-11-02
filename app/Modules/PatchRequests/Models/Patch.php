@@ -9,6 +9,19 @@ use App\Models\User;
 class Patch extends Model
 {
     /**
+     * The relations to eager load on every query.
+     *
+     * @var array
+     */
+    protected $with = [
+        'project',
+        'deliveryChain',
+        'patchGroup',
+        'checkedBy',
+        'verifiedBy'
+    ];
+
+    /**
      * The attributes that will be hidden in output json
      *
      * @var array
