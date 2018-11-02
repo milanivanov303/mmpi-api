@@ -87,7 +87,7 @@
             "type": "string"
         },
         "project": {
-            "$ref": "/api/v1/project.json"
+            "$ref": "/api/v1/projects/project.json"
         }
     }
 }

@@ -51,7 +51,7 @@
             "type": ["string", "null"]
         },
         "activity": {
-            "type": "integer"
+            "$ref": "/api/v1/enum-value.json"
         },
         "activite_gpc": {
             "type": ["string", "null"]
@@ -74,29 +74,29 @@
         "display_name": {
             "type": "string"
         },
-        "group_id": {
-            "type": "integer"
+        "group": {
+            "$ref": "/api/v1/enum-value.json"
         },
-        "country_id": {
-            "type": "integer"
+        "country": {
+            "$ref": "/api/v1/enum-value.json"
         },
-        "communication_lng_id": {
-            "type": "integer"
+        "communication_lng": {
+            "$ref": "/api/v1/enum-value.json"
         },
-        "delivery_method_id": {
-            "type": "integer"
+        "delivery_method": {
+            "$ref": "/api/v1/enum-value.json"
         },
-        "se_mntd_by_clnt_id": {
-            "type": "integer"
+        "se_mntd_by_clnt": {
+            "$ref": "/api/v1/enum-value.json"
         },
-        "tl_mntd_by_clnt_id": {
-            "type": "integer"
+        "tl_mntd_by_clnt": {
+            "$ref": "/api/v1/enum-value.json"
         },
-        "njsch_mntd_by_clnt_id": {
-            "type": "integer"
+        "njsch_mntd_by_clnt": {
+            "$ref": "/api/v1/enum-value.json"
         },
-        "trans_mntd_by_clnt_id": {
-            "type": "integer"
+        "trans_mntd_by_clnt": {
+            "$ref": "/api/v1/enum-value.json"
         },
         "sla_from": {
             "type": "string"
@@ -104,8 +104,8 @@
         "sla_to": {
             "type": "string"
         },
-        "modified_by_id": {
-            "type": "integer"
+        "modified_by": {
+            "$ref": "/api/v1/user.json"
         },
         "type_business": {
             "type": "string"

@@ -1,6 +1,10 @@
 <?php
 
-namespace App\Models;
+namespace App\Modules\Projects\Models;
+
+use App\Models\Model;
+use App\Models\User;
+use App\Models\EnumValue;
 
 class Project extends Model
 {

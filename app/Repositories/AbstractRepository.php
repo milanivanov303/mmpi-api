@@ -46,18 +46,28 @@ abstract class AbstractRepository
         return $this->model;
     }
 
+    /**
+     * Get model relations
+     *
+     * @return array
+     */
     protected function getWith()
     {
+        $with = array_merge(
+            $this->with,
+            $this->model->getWith()
+        );
+
         $visible = $this->model->getVisible();
 
         // if no visible fields set return all relations
         if (empty($visible)) {
-            return $this->with;
+            return $with;
         }
 
-        // return only relations that are needed
+        // return only relations that will be needed
         return array_intersect(
-            $this->with,
+            $with,
             $visible
         );
     }
@@ -168,6 +178,18 @@ abstract class AbstractRepository
         if (is_string($fields)) {
             $fields = array_map('trim', explode(',', $fields));
         }
+
+        // convert fields to pascal case, because of the relations names
+        $fieldsPascalCase = array_map(function ($field) {
+            return lcfirst(
+                str_replace('_', '', ucwords($field, '_'))
+            );
+        }, $fields);
+
+        // Merge fields and keep only unique names
+        $fields = array_unique(
+            array_merge($fields, $fieldsPascalCase)
+        );
 
         $this->model->setVisible($fields);
     }

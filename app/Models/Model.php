@@ -126,4 +126,14 @@ class Model extends \Illuminate\Database\Eloquent\Model
         // TODO: Add cache mehanism here, so we do not hit database every time
         return Schema::getColumnListing($this->getTable());
     }
+
+    /**
+     * Get with
+     *
+     * @return array
+     */
+    public function getWith()
+    {
+        return $this->with;
+    }
 }

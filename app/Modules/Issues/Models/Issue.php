@@ -3,7 +3,7 @@
 namespace App\Modules\Issues\Models;
 
 use App\Models\Model;
-use App\Models\Project;
+use App\Modules\Projects\Models\Project;
 use App\Models\Instance;
 
 class Issue extends Model
