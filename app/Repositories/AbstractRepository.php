@@ -150,17 +150,15 @@ abstract class AbstractRepository
      */
     public function find($id)
     {
-        $model = $this->model->with($this->getWith());
-
         // Try to get record with custom primary key
         if ($this->primaryKey !== 'id') {
-            $record = $model->where($this->primaryKey, $id)->first();
+            $record = $this->model->with($this->getWith())->where($this->primaryKey, urldecode($id))->first();
             if ($record) {
                 return $record;
             }
         }
 
-        return $model->findOrFail($id);
+        return $this->model->with($this->getWith())->findOrFail($id);
     }
 
     /**
