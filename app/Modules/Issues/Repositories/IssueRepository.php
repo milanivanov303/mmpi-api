@@ -5,8 +5,6 @@ namespace App\Modules\Issues\Repositories;
 use App\Repositories\RepositoryInterface;
 use App\Repositories\AbstractRepository;
 use App\Modules\Issues\Models\Issue;
-use App\Modules\Projects\Models\Project;
-use App\Modules\Instances\Models\Instance;
 
 class IssueRepository extends AbstractRepository implements RepositoryInterface
 {
@@ -37,30 +35,6 @@ class IssueRepository extends AbstractRepository implements RepositoryInterface
     }
 
     /**
-     * Create new record
-     *
-     * @param array $data
-     * @return Model
-     */
-    public function create(array $data)
-    {
-        return $this->save($data);
-    }
-
-    /**
-     * Update existing record
-     *
-     * @param array $data
-     * @param mixed $id
-     * @return Model
-     */
-    public function update(array $data, $id)
-    {
-        $this->model = $this->find($id);
-        return $this->save($data);
-    }
-
-    /**
      * Save issue
      *
      * @param array $data
@@ -70,37 +44,15 @@ class IssueRepository extends AbstractRepository implements RepositoryInterface
     {
         $this->model->fill($data);
 
-        $this->associateProject($data['project']);
-        $this->associateDevInstance($data['dev_instance']);
+        $this->model->project()->associate($data['project']['id']);
+        $this->model->devInstance()->associate(
+            isset($data['dev_instance']) ? $data['dev_instance']['id'] : null
+        );
 
         $this->model->saveOrFail();
 
         $this->model->load($this->getWith());
 
         return $this->model;
-    }
-
-    /**
-     * Associate project
-     *
-     * @param array $data Project data
-     */
-    protected function associateProject($data)
-    {
-        $project = new Project();
-        $project->id = $data['id'];
-        $this->model->project()->associate($project);
-    }
-
-    /**
-     * Associate dev instance
-     *
-     * @param array $data Instance data
-     */
-    protected function associateDevInstance($data)
-    {
-        $instance = new Instance();
-        $instance->id = $data['id'];
-        $this->model->devInstance()->associate($instance);
     }
 }

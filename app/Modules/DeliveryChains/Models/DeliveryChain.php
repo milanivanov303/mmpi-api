@@ -15,7 +15,9 @@ class DeliveryChain extends Model
     protected $with = [
         'type',
         'dlvryType',
-        'status'
+        'status',
+        'dcVersion',
+        'dcRole'
     ];
 
     /**
@@ -34,12 +36,7 @@ class DeliveryChain extends Model
      */
     protected $fillable = [
         'title',
-        'type_id',
-        'dlvry_type',
-        'status',
-        'patch_directory_name',
-        'dc_version',
-        'dc_role'
+        'patch_directory_name'
     ];
 
     /**
@@ -64,5 +61,21 @@ class DeliveryChain extends Model
     public function status()
     {
         return $this->belongsTo(EnumValue::class, 'status')->minimal();
+    }
+
+    /**
+     * Get dc_version
+     */
+    public function dcVersion()
+    {
+        return $this->belongsTo(EnumValue::class, 'dc_version')->minimal();
+    }
+
+    /**
+     * Get dc_role
+     */
+    public function dcRole()
+    {
+        return $this->belongsTo(EnumValue::class, 'dc_role')->minimal();
     }
 }

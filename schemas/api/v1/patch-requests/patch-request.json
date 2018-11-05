@@ -4,6 +4,10 @@
     "type": "object",
     "description": "Patch Request object",
     "additionalProperties": false,
+    "require": [
+        "issue",
+        "delivery_chain"
+    ],
     "properties": {
         "id": {
             "type": "integer"

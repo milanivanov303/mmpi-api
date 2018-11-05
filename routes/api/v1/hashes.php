@@ -17,16 +17,16 @@ $router->group([
         'uses'        => 'HashesController@getOne'
     ]);
     $router->post('', [
-            'as'          => 'hashes.create',
-            'schema'      => '/api/v1/hashes/hash.json',
-            'description' => 'Create new hash',
-            'uses'        => 'HashesController@create'
+        'as'          => 'hashes.create',
+        'schema'      => '/api/v1/hashes/hash.json',
+        'description' => 'Create new hash',
+        'uses'        => 'HashesController@create'
     ]);
     $router->put('/{rev:[0-9a-z]+}', [
-            'as'          => 'hashes.update',
-            'description' => 'Update hash',
-            'schema'      => '/api/v1/hashes/hash.json',
-            'uses'        => 'HashesController@update'
+        'as'          => 'hashes.update',
+        'description' => 'Update hash',
+        'schema'      => '/api/v1/hashes/hash.json',
+        'uses'        => 'HashesController@update'
     ]);
     $router->delete('/{rev:[0-9a-z]+}', [
         'as'          => 'hash.delete',

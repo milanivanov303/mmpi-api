@@ -105,10 +105,7 @@ abstract class AbstractRepository
      */
     public function create(array $data)
     {
-        $this->model->fill($data)->saveOrFail();
-        $this->model->load($this->getWith());
-
-        return $this->model;
+        return $this->save($data);
     }
 
     /**
@@ -120,12 +117,22 @@ abstract class AbstractRepository
      */
     public function update(array $data, $id)
     {
-        $model = $this->find($id);
+        $this->model = $this->find($id);
+        return $this->save($data);
+    }
 
-        $model->fill($data)->saveOrFail();
-        $model->load($this->getWith());
+    /**
+     * Save record
+     *
+     * @param array $data
+     * @return Model
+     */
+    protected function save($data)
+    {
+        $this->model->fill($data)->saveOrFail();
+        $this->model->load($this->getWith());
 
-        return $model;
+        return $this->model;
     }
 
     /**

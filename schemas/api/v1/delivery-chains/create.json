@@ -1,0 +1,35 @@
+{
+    "$id": "CreateDeliveryChain",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "description": "Delivery Chain object",
+    "allOf": [
+        {"$ref": "/api/v1/delivery-chains/delivery-chain.json"},
+        {
+            "properties": {
+                "title": {
+                    "$filters": {
+                        "$func": "checkInDb",
+                        "$vars": {
+                            "rule": "unique:delivery_chains,title"
+                        }
+                    },
+                    "$messages": {
+                        "$filters": "Delivery chain with this title is already defined"
+                    }
+                },
+                "patch_directory_name": {
+                    "$filters": {
+                        "$func": "checkInDb",
+                        "$vars": {
+                            "rule": "unique:delivery_chains,patch_directory_name"
+                        }
+                    },
+                    "$messages": {
+                        "$filters": "Delivery chain with this patch_directory_name is already defined"
+                    }
+                }
+            }
+        }
+    ]
+}

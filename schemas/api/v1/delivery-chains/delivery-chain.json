@@ -4,6 +4,11 @@
     "type": "object",
     "description": "Delivery Chain object",
     "additionalProperties": false,
+    "require": [
+        "type",
+        "dlvry_type",
+        "status"
+    ],
     "properties": {
         "id": {
             "type": "integer"
@@ -21,13 +26,19 @@
             "$ref": "/api/v1/enum-value.json"
         },
         "patch_directory_name": {
-            "type": "string"
+            "type": ["string", "null"]
         },
         "dc_version": {
-            "type": ["string", "null"]
+            "oneOf": [
+                {"$ref": "/api/v1/enum-value.json"},
+                {"type": "null"}
+            ]
         },
         "dc_role": {
-            "type": ["string", "null"]
+            "oneOf": [
+                {"$ref": "/api/v1/enum-value.json"},
+                {"type": "null"}
+            ]
         }
     }
 }

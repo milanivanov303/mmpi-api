@@ -13,7 +13,7 @@ class ProjectRepository extends AbstractRepository implements RepositoryInterfac
      *
      * @var string
      */
-    protected $primaryKey = 'username';
+    protected $primaryKey = 'name';
 
     /**
      * ProjectRepository constructor

@@ -43,30 +43,6 @@ class PatchRequestRepository extends AbstractRepository implements RepositoryInt
     }
 
     /**
-     * Create new record
-     *
-     * @param array $data
-     * @return Model
-     */
-    public function create(array $data)
-    {
-        return $this->save($data);
-    }
-
-    /**
-     * Update existing record
-     *
-     * @param array $data
-     * @param mixed $id
-     * @return Model
-     */
-    public function update(array $data, $id)
-    {
-        $this->model = $this->find($id);
-        return $this->save($data);
-    }
-
-    /**
      * Save patch request
      *
      * @param array $data
@@ -76,8 +52,8 @@ class PatchRequestRepository extends AbstractRepository implements RepositoryInt
     {
         $this->model->fill($data);
 
-        $this->associateIssue($data['issue']);
-        $this->associateDeliveryChain($data['delivery_chain']);
+        $this->model->issue()->associate($data['issue']['id']);
+        $this->model->deliveryChain()->associate($data['delivery_chain']['id']);
 
         $this->model->saveOrFail();
 
@@ -86,30 +62,6 @@ class PatchRequestRepository extends AbstractRepository implements RepositoryInt
         $this->model->load($this->getWith());
 
         return $this->model;
-    }
-
-    /**
-     * Associate issue
-     *
-     * @param array $data Issue data
-     */
-    protected function associateIssue($data)
-    {
-        $issue = new Issue();
-        $issue->id = $data['id'];
-        $this->model->issue()->associate($issue);
-    }
-
-    /**
-     * Associate delivery chain
-     *
-     * @param array $data DeliveryChain data
-     */
-    protected function associateDeliveryChain($data)
-    {
-        $deliveryChain = new DeliveryChain();
-        $deliveryChain->id = $data['id'];
-        $this->model->deliveryChain()->associate($deliveryChain);
     }
 
     /**
