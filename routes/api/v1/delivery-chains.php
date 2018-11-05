@@ -10,7 +10,7 @@ $router->group([
         'description' => 'Get delivery chains list',
         'uses'        => 'DeliveryChainsController@getMany'
     ]);
-    $router->get('/{id}', [
+    $router->get('/{title}', [
         'as'          => 'delivery-chains.one',
         'schema'      => '/api/v1/delivery-chains/delivery-chain.json',
         'description' => 'Get single delivery chain',
@@ -22,13 +22,13 @@ $router->group([
         'description' => 'Create new delivery chain',
         'uses'        => 'DeliveryChainsController@create'
     ]);
-    $router->put('/{rev:[0-9a-z]+}', [
+    $router->put('/{title}', [
         'as'          => 'delivery-chains.update',
         'description' => 'Update delivery chain',
         'schema'      => '/api/v1/delivery-chains/create.json',
         'uses'        => 'DeliveryChainsController@update'
     ]);
-    $router->delete('/{rev:[0-9a-z]+}', [
+    $router->delete('/{title}', [
         'as'          => 'delivery-chains.delete',
         'description' => 'Delete delivery chain',
         'uses'        => 'DeliveryChainsController@delete'

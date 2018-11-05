@@ -9,6 +9,13 @@ use App\Modules\DeliveryChains\Models\DeliveryChain;
 class DeliveryChainRepository extends AbstractRepository implements RepositoryInterface
 {
     /**
+     * Column to use on get/update/delete
+     *
+     * @var string
+     */
+    protected $primaryKey = 'title';
+
+    /**
      * ProjectRepository constructor
      *
      * @param DeliveryChain $model

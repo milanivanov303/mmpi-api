@@ -94,6 +94,8 @@ class Controller extends BaseController
             $this->model->delete($id);
             return response('Deleted successfully', 204);
         } catch (\Exception $e) {
+            // TODO: add more detaild error message here
+            //       could define messages in controller and check error number
             return response('Could not be deleted', 400);
         }
     }
