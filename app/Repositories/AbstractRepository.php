@@ -105,7 +105,7 @@ abstract class AbstractRepository
      */
     public function create(array $data)
     {
-        $this->model->fill($data)->save();
+        $this->model->fill($data)->saveOrFail();
         $this->model->load($this->getWith());
 
         return $this->model;
@@ -122,7 +122,7 @@ abstract class AbstractRepository
     {
         $model = $this->find($id);
 
-        $model->fill($data)->save();
+        $model->fill($data)->saveOrFail();
         $model->load($this->getWith());
 
         return $model;
@@ -150,7 +150,17 @@ abstract class AbstractRepository
      */
     public function find($id)
     {
-        return $this->model->with($this->getWith())->where($this->primaryKey, $id)->firstOrFail();
+        $model = $this->model->with($this->getWith());
+
+        // Try to get record with custom primary key
+        if ($this->primaryKey !== 'id') {
+            $record = $model->where($this->primaryKey, $id)->first();
+            if ($record) {
+                return $record;
+            }
+        }
+
+        return $model->findOrFail($id);
     }
 
     /**

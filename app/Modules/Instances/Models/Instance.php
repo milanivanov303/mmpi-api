@@ -32,6 +32,24 @@ class Instance extends Model
     ];
 
     /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'id',
+        'name',
+        'play_as_demo',
+        'timezone',
+        'host',
+        'user',
+        'db_user',
+        'tns_name',
+        'has_patch_install_in_init',
+        'instance_type'
+    ];
+
+    /**
      * Get owner
      */
     public function owner()

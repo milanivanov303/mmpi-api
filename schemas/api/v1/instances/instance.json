@@ -12,7 +12,7 @@
             "type": "string"
         },
         "instance_type": {
-            "type": "object",
+            "type": ["object", "null"],
             "properties": {
                 "id": {
                     "type": "integer"
@@ -38,13 +38,13 @@
             "type": "string"
         },
         "user": {
-            "type": "string"
+            "type": ["string", "null"]
         },
         "db_user": {
-            "type": "string"
+            "type": ["string", "null"]
         },
         "tns_name": {
-            "type": "string"
+            "type": ["string", "null"]
         },
         "has_patch_install_in_init": {
             "type": "integer"

@@ -44,6 +44,36 @@ class Project extends Model
     ];
 
     /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'id',
+        'name',
+        'clnt_cvs_dir',
+        'pnp_type',
+        'clnt_code',
+        'clnt_code2',
+        'src_prefix',
+        'src_prefix2',
+        'src_itf_prefix',
+        'getdcli',
+        'getdcli2',
+        'activity',
+        'activite_gpc',
+        'activite_sdr',
+        'imx_formstag',
+        'forms_lng_dlvry',
+        'uses_transl_upd',
+        'inactive',
+        'display_name',
+        'sla_from',
+        'sla_to',
+        'type_business'
+    ];
+
+    /**
      * Get modifiedBy
      */
     public function modifiedBy()

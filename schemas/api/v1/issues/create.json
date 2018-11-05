@@ -6,23 +6,18 @@
     "allOf": [
         {"$ref": "/api/v1/issues/issue.json"},
         {
-            "required": [
-                "tts_id",
-                "jiraissue_id",
-                "project"
-            ],
             "properties": {
                 "project": {
                     "properties": {
-                        "name": {
+                        "id": {
                             "$filters": {
                                 "$func": "checkInDb",
                                 "$vars": {
-                                    "rule": "exists:projects,name"
+                                    "rule": "exists:projects,id"
                                 }
                             },
                             "$messages": {
-                                "$filters": "Project with this name does not exist"
+                                "$filters": "Project does not exist"
                             }
                         }
                     }
@@ -41,15 +36,15 @@
                 },
                 "dev_instance": {
                     "properties": {
-                        "name": {
+                        "id": {
                             "$filters": {
                                 "$func": "checkInDb",
                                 "$vars": {
-                                    "rule": "exists:instances,name"
+                                    "rule": "exists:instances,id"
                                 }
                             },
                             "$messages": {
-                                "$filters": "Dev instance with this name does not exist"
+                                "$filters": "Dev instance does not exist"
                             }
                         }
                     }

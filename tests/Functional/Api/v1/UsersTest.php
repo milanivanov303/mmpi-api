@@ -10,7 +10,7 @@ class UsersTest extends TestCase
     protected $uri        = 'api/v1/users';
     protected $table      = 'users';
     protected $primaryKey = 'username';
-    
+
     public function setUp() {
         parent::setUp();
         $this->actingAs(User::first());
@@ -18,12 +18,12 @@ class UsersTest extends TestCase
 
     /**
      * Test get single user
-     * 
+     *
      * @return void
      */
     public function testGetUser()
     {
-        $user = User::with(['department', 'manager', 'deputy', 'accessGroup'])->first();
+        $user = User::with(['manager', 'deputy'])->first();
 
         $this
             ->get($this->uri . '/' . $user->{$this->primaryKey})
@@ -43,16 +43,16 @@ class UsersTest extends TestCase
             ->get($this->uri . '/NON-EXISTING-HASH')
             ->assertResponseStatus(404);
     }
-    
+
     /**
      * Test get users list
-     * 
+     *
      * @return void
      */
     public function testGetUsersList()
     {
         $this
-            ->json('GET', $this->uri . '?limit=100')
+            ->json('GET', $this->uri . '?limit=10')
             ->shouldReturnJson()
             ->seeJsonStructure(['data'])
             ->assertResponseOk();
@@ -67,7 +67,7 @@ class UsersTest extends TestCase
     public function testGetPaginatedUsersList()
     {
         $this
-            ->json('GET', $this->uri . '?page=3')
+            ->json('GET', $this->uri . '?page=1')
             ->shouldReturnJson()
             ->seeJsonStructure(['meta' => ['pagination' => ['total', 'current_page']], 'data'])
             ->assertResponseOk();

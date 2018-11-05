@@ -10,22 +10,22 @@ class IssuesTest extends TestCase
     protected $uri        = 'api/v1/issues';
     protected $table      = 'issues';
     protected $primaryKey = 'tts_id';
-    
+
     public function setUp() {
         parent::setUp();
         $this->actingAs(User::first());
     }
     /**
      * Get request data
-     * 
+     *
      * @return array
      */
     public function getData()
     {
         $faker = Faker\Factory::create();
 
-        $instance = \App\Models\Instance::inRandomOrder()->first();
-        $project  = \App\Models\Project::inRandomOrder()->first();
+        $instance = \App\Modules\Instances\Models\Instance::inRandomOrder()->first();
+        $project  = \App\Modules\Projects\Models\Project::inRandomOrder()->first();
 
         return [
             'subject'           => $faker->realText(),
@@ -34,12 +34,12 @@ class IssuesTest extends TestCase
             'created_on'        => $faker->date('Y-m-d H:i:s'),
             'priority'          => $faker->text(10),
             'jira_admin_status' => $faker->randomElement(["ok", "migr", "herrors", "moved", "deleted"]),
-            'project'           => $project->name,
-            'dev_instance'      => $instance->name,
+            'project'           => $project->toArray(),
+            'dev_instance'      => $instance->toArray(),
             'parent_issue'      => null
         ];
     }
-    
+
     /**
      * Test creation of issue
      *
@@ -53,7 +53,7 @@ class IssuesTest extends TestCase
             ->json('POST', $this->uri, $data)
             ->seeJson($data)
             ->assertResponseStatus(201);
-        
+
         $this->seeInDatabase($this->table, [
             $this->primaryKey => $data[$this->primaryKey]
         ]);
@@ -84,10 +84,10 @@ class IssuesTest extends TestCase
             $this->primaryKey => $data[$this->primaryKey]
         ]);
     }
-    
+
     /**
      * Test get single issue
-     * 
+     *
      * @return void
      */
     public function testGetIssue()
@@ -107,7 +107,7 @@ class IssuesTest extends TestCase
      *
      * @return void
      */
-    public function testGetNonExistingHash()
+    public function testGetNonExistingIssue()
     {
         $this
             ->get($this->uri . '/NON-EXISTING-ISSUE')
@@ -116,13 +116,13 @@ class IssuesTest extends TestCase
 
     /**
      * Test update of issue
-     * 
+     *
      * @return void
      */
     public function testUpdateIssue()
     {
         $data = $this->getData();
-        
+
         $this->json('POST', $this->uri, $data);
 
         // Change parameters
@@ -132,10 +132,10 @@ class IssuesTest extends TestCase
             ->json('PUT', $this->uri . '/' . $data[$this->primaryKey], $data)
             ->seeJson($data)
             ->assertResponseOk();
-        
+
         $this->seeInDatabase($this->table, [
-            $this->primaryKey => $data[$this->primaryKey]]
-        );
+            $this->primaryKey => $data[$this->primaryKey]
+        ]);
     }
 
     /**
@@ -157,10 +157,10 @@ class IssuesTest extends TestCase
             $this->primaryKey => $data[$this->primaryKey]]
         );
     }
-    
+
     /**
      * Test get issue list
-     * 
+     *
      * @return void
      */
     public function testGetIssuesList()

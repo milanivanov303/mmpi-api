@@ -3,6 +3,12 @@
     "$schema": "http://json-schema.org/draft-07/schema#",
     "type": "object",
     "description": "Issue object",
+    "additionalProperties": false,
+    "required": [
+        "tts_id",
+        "jiraissue_id",
+        "project"
+    ],
     "properties": {
         "id": {
             "type": "integer"
@@ -24,7 +30,7 @@
             "example": "ABSAFUP-1189"
         },
         "jiraissue_id": {
-            "type": ["string", "null"],
+            "type": ["integer", "null"],
             "description": "The id of the issue selected from Jira DB - column jiraissue.ID"
         },
         "parent_issue": {
@@ -51,6 +57,10 @@
             "type": "string",
             "description": "Issue priority",
             "enum": ["ok", "migr", "herrors", "moved", "deleted"]
+        },
+        "created_on": {
+            "type": "string",
+            "description": "Date issue was imported in MMPI"
         }
     }
 }

@@ -29,13 +29,13 @@ class Error
             return $this->error->keyword();
         }
 
-        $property = implode('.', $this->error->dataPointer());
+        $property = $this->error->dataPointer() ?? [];
 
         if ($this->error->keyword() === 'required') {
-            $property .= '.' . $this->error->keywordArgs()['missing'];
+            $property[] = $this->error->keywordArgs()['missing'];
         }
 
-        return $property;
+        return  implode('.', $property);
     }
 
     /**
@@ -162,11 +162,13 @@ class Error
 
     protected function getAllOfError()
     {
-        $message = array_map(function ($error) {
-            $error = new self($error);
-            return $error->getMessage();
-        }, $this->error->subErrors());
+        $messages = [];
 
-        return $message[0];
+        foreach ($this->error->subErrors() as $error) {
+            $error = new self($error);
+            $messages[$error->getProperty()] = $error->getMessage();
+        }
+
+        return $messages;
     }
 }

@@ -24,19 +24,19 @@
             }
         },
         "clnt_cvs_dir": {
-            "type": "string"
+            "type": ["string", "null"]
         },
         "pnp_type": {
             "type": ["string", "null"]
         },
         "clnt_code": {
-            "type": "string"
+            "type": ["string", "null"]
         },
         "clnt_code2": {
             "type": ["string", "null"]
         },
         "src_prefix": {
-            "type": "string"
+            "type": ["string", "null"]
         },
         "src_prefix2": {
             "type": ["string", "null"]
@@ -51,7 +51,10 @@
             "type": ["string", "null"]
         },
         "activity": {
-            "$ref": "/api/v1/enum-value.json"
+            "oneOf": [
+                {"$ref": "/api/v1/enum-value.json"},
+                {"type": "null"}
+            ]
         },
         "activite_gpc": {
             "type": ["string", "null"]
@@ -75,40 +78,67 @@
             "type": "string"
         },
         "group": {
-            "$ref": "/api/v1/enum-value.json"
+            "oneOf": [
+                {"$ref": "/api/v1/enum-value.json"},
+                {"type": "null"}
+            ]
         },
         "country": {
-            "$ref": "/api/v1/enum-value.json"
+            "oneOf": [
+                {"$ref": "/api/v1/enum-value.json"},
+                {"type": "null"}
+            ]
         },
         "communication_lng": {
-            "$ref": "/api/v1/enum-value.json"
+            "oneOf": [
+                {"$ref": "/api/v1/enum-value.json"},
+                {"type": "null"}
+            ]
         },
         "delivery_method": {
-            "$ref": "/api/v1/enum-value.json"
+            "oneOf": [
+                {"$ref": "/api/v1/enum-value.json"},
+                {"type": "null"}
+            ]
         },
         "se_mntd_by_clnt": {
-            "$ref": "/api/v1/enum-value.json"
+            "oneOf": [
+                {"$ref": "/api/v1/enum-value.json"},
+                {"type": "null"}
+            ]
         },
         "tl_mntd_by_clnt": {
-            "$ref": "/api/v1/enum-value.json"
+            "oneOf": [
+                {"$ref": "/api/v1/enum-value.json"},
+                {"type": "null"}
+            ]
         },
         "njsch_mntd_by_clnt": {
-            "$ref": "/api/v1/enum-value.json"
+            "oneOf": [
+                {"$ref": "/api/v1/enum-value.json"},
+                {"type": "null"}
+            ]
         },
         "trans_mntd_by_clnt": {
-            "$ref": "/api/v1/enum-value.json"
+            "oneOf": [
+                {"$ref": "/api/v1/enum-value.json"},
+                {"type": "null"}
+            ]
         },
         "sla_from": {
-            "type": "string"
+            "type": ["string", "null"]
         },
         "sla_to": {
-            "type": "string"
+            "type": ["string", "null"]
         },
         "modified_by": {
-            "$ref": "/api/v1/user.json"
+            "oneOf": [
+                {"$ref": "/api/v1/user.json"},
+                {"type": "null"}
+            ]
         },
         "type_business": {
-            "type": "string"
+            "type": ["string", "null"]
         }
     }
 }

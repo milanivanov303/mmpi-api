@@ -248,10 +248,9 @@ class ModelFilter
             $builder = $this->setOrder($builder, $filters['order_by'], $filters['order_dir'] ?? 'asc');
         }
 
-        // set limit
-        if (array_key_exists('limit', $filters)) {
-            $builder = $builder->limit($filters['limit']);
-        }
+        // set limit. If no limit send set it to 100
+        // TODO: move default limit to config file
+        $builder = $builder->limit($filters['limit'] ?? 100);
 
         return $builder;
     }

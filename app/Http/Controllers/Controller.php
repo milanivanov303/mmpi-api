@@ -54,10 +54,14 @@ class Controller extends BaseController
      */
     public function create(Request $request)
     {
-        return $this->output(
-            $this->model->create($request->json()->all()),
-            201
-        );
+        try {
+            return $this->output(
+                $this->model->create($request->json()->all()),
+                201
+            );
+        } catch (\Exceprion $e) {
+            return response('Could not be created', 400);
+        }
     }
 
     /**
@@ -69,9 +73,13 @@ class Controller extends BaseController
      */
     public function update(Request $request, $id)
     {
-        return $this->output(
-            $this->model->update($request->json()->all(), $id)
-        );
+        try {
+            return $this->output(
+                $this->model->update($request->json()->all(), $id)
+            );
+        } catch (\Exceprion $e) {
+            return response('Could not be saved', 400);
+        }
     }
 
     /**
@@ -85,7 +93,7 @@ class Controller extends BaseController
         try {
             $this->model->delete($id);
             return response('Deleted successfully', 204);
-        } catch (\Exception $exception) {
+        } catch (\Exception $e) {
             return response('Could not be deleted', 400);
         }
     }
