@@ -10,6 +10,7 @@ use Laravel\Lumen\Exceptions\Handler as ExceptionHandler;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Illuminate\Database\QueryException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class Handler extends ExceptionHandler
 {
@@ -49,10 +50,18 @@ class Handler extends ExceptionHandler
     {
         if ($e instanceof MethodNotAllowedHttpException) {
             return response('Request is not allowed', 405);
-        } elseif ($e instanceof ModelNotFoundException) {
+        }
+
+        if ($e instanceof ModelNotFoundException) {
             return response('The resource you are looking for was not found', 404);
-        } elseif ($e instanceof QueryException) {
+        }
+
+        if ($e instanceof QueryException) {
             return response('There was an error while performance of a requester', 400);
+        }
+
+        if ($e instanceof NotFoundHttpException) {
+            return response('Page you are looking for was not found', 404);
         }
 
         return parent::render($request, $e);
