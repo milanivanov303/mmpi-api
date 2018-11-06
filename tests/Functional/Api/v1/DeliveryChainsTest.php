@@ -3,18 +3,19 @@
 use \App\Models\User;
 use Laravel\Lumen\Testing\DatabaseTransactions;
 
-class HashesTest extends TestCase
+class DeliveryChainsTest extends TestCase
 {
     use DatabaseTransactions;
 
-    protected $uri        = 'api/v1/hashes';
-    protected $table      = 'hash_commits';
-    protected $primaryKey = 'hash_rev';
+    protected $uri        = 'api/v1/delivery-chains';
+    protected $table      = 'delivery_chains';
+    protected $primaryKey = 'title';
 
     public function setUp() {
         parent::setUp();
         $this->actingAs(User::first());
     }
+    
     /**
      * Get request data
      *
@@ -22,32 +23,22 @@ class HashesTest extends TestCase
      */
     public function getData()
     {
-        try {
-            $rev = bin2hex(random_bytes(10));
-        } catch (\Exception $exception) {}
+        $faker = Faker\Factory::create();
 
-        $user = User::inRandomOrder()->first();
+        $dlvryType = \App\Models\EnumValue::where('type', 'dc_dlvry_type')->inRandomOrder()->minimal()->first();
+        $status    = \App\Models\EnumValue::where('type', 'active_inactive')->inRandomOrder()->minimal()->first();
+        $dcVersion = \App\Models\EnumValue::where('type', 'delivery_chain_version')->inRandomOrder()->minimal()->first();
+        $dcRole    = \App\Models\EnumValue::where('type', 'delivery_chain_role')->inRandomOrder()->minimal()->first();
+        $type      = \App\Modules\DeliveryChains\Models\DeliveryChainType::inRandomOrder()->first();
 
         return [
-            'branch'       => 'default',
-            'chains'       => [
-                'bcol_imx_v9_rel',
-                'bcol_imx_v9_rel'
-            ],
-            'description'  => 'IXDEV-1650 e_honor_param backend\n\nadd MOLO as mvn profile',
-            'files'        => [
-                'etc/configs/MOLOTCWALLET/imx_backend.properties',
-                'etc/configs/MOLOTCWALLET/imx_backend.xml',
-                'etc/configs/MOLOTCWALLET/wallet/cwallet.sso',
-                'etc/configs/MOLOTCWALLET/wallet/tnsnames.ora',
-                'pom.xml'
-             ],
-            'merge_branch' => '_DEV_IXDEV-1763 e_honor_param backend',
-            'module'       => 'imx_be',
-            'owner'        => $user->username,
-            'repo_path'    => '/extranet/hg/v9_be',
-            'repo_url'     => 'http://lemon.codixfr.private:6002/v9_be',
-            'rev'          => $rev
+            'title'                => $faker->word(),
+            'patch_directory_name' => $faker->word(),
+            'dlvry_type'           => $dlvryType->toArray(),
+            'status'               => $status->toArray(),
+            'dc_version'           => $dcVersion->toArray(),
+            'dc_role'              => $dcRole->toArray(),
+            'type'                 => $type->toArray()
         ];
     }
 
@@ -66,9 +57,8 @@ class HashesTest extends TestCase
             ->assertResponseStatus(201);
 
         $this->seeInDatabase($this->table, [
-            $this->primaryKey => $data['rev']
+            $this->primaryKey => $data[$this->primaryKey]
         ]);
-
     }
 
     /**
@@ -81,19 +71,18 @@ class HashesTest extends TestCase
         $data = $this->getData();
 
         // Set invalid parameters
-        $data['owner'] = 'INVALID_OWNER';
-        $data['rev']   = 'INVALID_REV';
+        $data['patch_directory_name'] = 123;
 
         // remove required parameters
-        unset($data['branch']);
+        unset($data['type']);
 
         $this
             ->json('POST', $this->uri, $data)
-            ->seeJsonStructure(['branch', 'owner', 'rev'])
+            ->seeJsonStructure(['patch_directory_name', 'type'])
             ->assertResponseStatus(422);
 
         $this->missingFromDatabase($this->table, [
-            $this->primaryKey => $data['rev']
+            $this->primaryKey => $data[$this->primaryKey]
         ]);
     }
 
@@ -109,7 +98,7 @@ class HashesTest extends TestCase
         $this->json('POST', $this->uri, $data);
 
         $this
-            ->get($this->uri . '/' . $data['rev'])
+            ->get( $this->uri . '/' . $data[$this->primaryKey])
             ->seeJson($data)
             ->assertResponseOk();
     }
@@ -122,7 +111,7 @@ class HashesTest extends TestCase
     public function testGetNonExisting()
     {
         $this
-            ->get($this->uri . '/NON-EXISTING-HASH')
+            ->get($this->uri . '/NON-EXISTING')
             ->assertResponseStatus(404);
     }
 
@@ -138,20 +127,20 @@ class HashesTest extends TestCase
         $this->json('POST', $this->uri, $data);
 
         // Change parameters
-        $data['description'] = 'UPDATED_DESCRIPTION';
+        $data['patch_directory_name'] = 'UPDATED_PATH';
 
         $this
-            ->json('PUT', $this->uri . '/' . $data['rev'], $data)
+            ->json('PUT', $this->uri . '/' . $data[$this->primaryKey], $data)
             ->seeJson($data)
             ->assertResponseOk();
 
         $this->seeInDatabase($this->table, [
-            $this->primaryKey => $data['rev']
+            $this->primaryKey => $data[$this->primaryKey]
         ]);
     }
 
     /**
-     * Test get single
+     * Test delete
      *
      * @return void
      */
@@ -162,12 +151,12 @@ class HashesTest extends TestCase
         $this->json('POST', $this->uri, $data);
 
         $this
-            ->json('DELETE', $this->uri . '/' . $data['rev'])
+            ->json('DELETE', $this->uri . '/' . $data[$this->primaryKey])
             ->assertResponseStatus(204);
 
         $this->missingFromDatabase($this->table, [
-            $this->primaryKey => $data['rev']
-        ]);
+            $this->primaryKey => $data[$this->primaryKey]]
+        );
     }
 
     /**
@@ -190,7 +179,7 @@ class HashesTest extends TestCase
      *
      * @return void
      */
-    public function testGetPaginatedList()
+    public function testGetPaginatedIssuesList()
     {
         $this
             ->json('GET', $this->uri . '?page=3')

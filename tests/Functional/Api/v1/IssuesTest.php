@@ -15,6 +15,7 @@ class IssuesTest extends TestCase
         parent::setUp();
         $this->actingAs(User::first());
     }
+
     /**
      * Get request data
      *
@@ -41,11 +42,11 @@ class IssuesTest extends TestCase
     }
 
     /**
-     * Test creation of issue
+     * Test creation
      *
      * @return void
      */
-    public function testCreateIssue()
+    public function testCreate()
     {
         $data = $this->getData();
 
@@ -60,11 +61,11 @@ class IssuesTest extends TestCase
     }
 
     /**
-     * Test creation of issue with wrong data
+     * Test creation with wrong data
      *
      * @return void
      */
-    public function testCreateIssueWithInvalidData()
+    public function testCreateWithInvalidData()
     {
         $data = $this->getData();
 
@@ -86,11 +87,11 @@ class IssuesTest extends TestCase
     }
 
     /**
-     * Test get single issue
+     * Test get single
      *
      * @return void
      */
-    public function testGetIssue()
+    public function testGet()
     {
         $data = $this->getData();
 
@@ -103,11 +104,11 @@ class IssuesTest extends TestCase
     }
 
     /**
-     * Test get non existing issue
+     * Test get non existing
      *
      * @return void
      */
-    public function testGetNonExistingIssue()
+    public function testGetNonExisting()
     {
         $this
             ->get($this->uri . '/NON-EXISTING-ISSUE')
@@ -115,11 +116,11 @@ class IssuesTest extends TestCase
     }
 
     /**
-     * Test update of issue
+     * Test update
      *
      * @return void
      */
-    public function testUpdateIssue()
+    public function testUpdate()
     {
         $data = $this->getData();
 
@@ -139,18 +140,18 @@ class IssuesTest extends TestCase
     }
 
     /**
-     * Test get single issue
+     * Test get single
      *
      * @return void
      */
-    public function testDeleteIssue()
+    public function testDelete()
     {
         $data = $this->getData();
 
         $this->json('POST', $this->uri, $data);
 
         $this
-            ->json('DELETE', $this->uri . '/' . $data['tts_id'])
+            ->json('DELETE', $this->uri . '/' . $data[$this->primaryKey])
             ->assertResponseStatus(204);
 
         $this->missingFromDatabase($this->table, [
@@ -159,14 +160,14 @@ class IssuesTest extends TestCase
     }
 
     /**
-     * Test get issue list
+     * Test get list
      *
      * @return void
      */
-    public function testGetIssuesList()
+    public function testGetList()
     {
         $this
-            ->json('GET', $this->uri . '?limit=100')
+            ->json('GET', $this->uri . '?limit=10')
             ->shouldReturnJson()
             ->seeJsonStructure(['data'])
             ->assertResponseOk();
@@ -174,11 +175,11 @@ class IssuesTest extends TestCase
 
 
     /**
-     * Test get paginated issues list
+     * Test get paginated list
      *
      * @return void
      */
-    public function testGetPaginatedIssuesList()
+    public function testGetPaginatedList()
     {
         $this
             ->json('GET', $this->uri . '?page=3')

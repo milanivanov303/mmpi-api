@@ -91,7 +91,7 @@ abstract class AbstractRepository
             }
         }
 
-        return $this->model->findOrFail($id);
+        return $this->model->findOrFail(is_numeric($id) ? $id : '-1');
     }
 
     /**

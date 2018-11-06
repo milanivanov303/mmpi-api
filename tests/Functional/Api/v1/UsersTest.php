@@ -17,11 +17,11 @@ class UsersTest extends TestCase
     }
 
     /**
-     * Test get single user
+     * Test get single
      *
      * @return void
      */
-    public function testGetUser()
+    public function testGet()
     {
         $user = User::with(['manager', 'deputy'])->first();
 
@@ -33,11 +33,11 @@ class UsersTest extends TestCase
     }
 
     /**
-     * Test get non existing user
+     * Test get non existing
      *
      * @return void
      */
-    public function testGetNonExistingUser()
+    public function testGetNonExisting()
     {
         $this
             // Check with string not working, because string is cast to int and the result is 0.
@@ -48,11 +48,11 @@ class UsersTest extends TestCase
     }
 
     /**
-     * Test get users list
+     * Test get list
      *
      * @return void
      */
-    public function testGetUsersList()
+    public function testGetList()
     {
         $this
             ->json('GET', $this->uri . '?limit=10')
@@ -63,11 +63,11 @@ class UsersTest extends TestCase
 
 
     /**
-     * Test get paginated users list
+     * Test get paginated list
      *
      * @return void
      */
-    public function testGetPaginatedUsersList()
+    public function testGetPaginatedList()
     {
         $this
             ->json('GET', $this->uri . '?page=1')
