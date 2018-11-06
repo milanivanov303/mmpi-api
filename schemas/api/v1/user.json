@@ -70,8 +70,7 @@
             "oneOf": [
                 {
                     "$ref": "/api/v1/user.json",
-                    "description": "Manager",
-                    "example": "ivasilev"
+                    "description": "Manager"
                 },
                 {"type": "null"}
             ]
@@ -80,8 +79,7 @@
             "oneOf": [
                 {
                     "$ref": "/api/v1/user.json",
-                    "description": "Deputy",
-                    "example": "ivasilev"
+                    "description": "Deputy"
                 },
                 {"type": "null"}
             ]

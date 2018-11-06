@@ -87,14 +87,6 @@ class OASchema implements Arrayable
             return !in_array($key, self::NOT_VALID_PROPERTIES, true);
         }, ARRAY_FILTER_USE_KEY);
 
-        /*
-        foreach ($validData as &$value) {
-            if (is_array($value)) {
-                $value = $this->{__FUNCTION__}($value);
-            }
-        }
-
-        */
         return $validData;
     }
 
@@ -113,7 +105,7 @@ class OASchema implements Arrayable
         array_walk($data, function (&$value, $key) use ($function) {
 
             if (is_array($value)) {
-                if (array_key_exists('type', $value)) {
+                if (array_key_exists('type', $value) && $key !== 'properties') {
                     $value = $this->fixNotValidTypeProperty($value);
                 }
 
@@ -123,7 +115,18 @@ class OASchema implements Arrayable
             }
         });
 
+        $data = array_filter($data, [$this, 'removeEmptyProperties']);
+
         return $data;
+    }
+
+    protected function removeEmptyProperties($data)
+    {
+        if (is_array($data)) {
+            return array_filter($data, [$this, __FUNCTION__]);
+        }
+
+        return !empty($data);
     }
 
     /**

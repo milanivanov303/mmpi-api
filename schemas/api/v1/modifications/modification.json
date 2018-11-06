@@ -135,7 +135,7 @@
             "type": ["string", "null"]
         },
         "created_by": {
-            "$rev": "/api/v1/user.json"
+            "$ref": "/api/v1/user.json"
         },
         "updated_on": {
             "type": ["string", "null"]
@@ -174,7 +174,6 @@
             "type": ["string", "null"]
         },
         "issue": {
-            "type": "object",
             "$ref": "/api/v1/issues/issue.json"
         }
     }

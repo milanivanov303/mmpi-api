@@ -4,7 +4,7 @@
     "type": "object",
     "description": "Patch Request object",
     "additionalProperties": false,
-    "require": [
+    "required": [
         "issue",
         "delivery_chain"
     ],

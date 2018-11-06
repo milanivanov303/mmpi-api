@@ -4,7 +4,7 @@
     "type": "object",
     "description": "Delivery Chain object",
     "additionalProperties": false,
-    "require": [
+    "required": [
         "type",
         "dlvry_type",
         "status"
