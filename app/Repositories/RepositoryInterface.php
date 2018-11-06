@@ -14,7 +14,7 @@ interface RepositoryInterface
 
     public function delete($id);
 
-    public function find($id);
+    public function find($id, array $fields);
 
     public function setFilters(array $filters);
 }

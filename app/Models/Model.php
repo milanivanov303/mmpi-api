@@ -42,6 +42,11 @@ class Model extends \Illuminate\Database\Eloquent\Model
         parent::__construct($attributes);
     }
 
+    public function setWith(array $with)
+    {
+        $this->with = $with;
+    }
+
     /**
      * Fill the model with an array of attributes.
      *
@@ -79,6 +84,7 @@ class Model extends \Illuminate\Database\Eloquent\Model
         $model = parent::newInstance($attributes, $exists);
 
         // set model visible attributes from original model
+        // this is needed because dynamicaly set visible attributes are lost
         $model->setVisible($this->getVisible());
 
         return $model;
@@ -98,11 +104,27 @@ class Model extends \Illuminate\Database\Eloquent\Model
     /**
      * Set the visible attributes for the model.
      *
-     * @param  array  $visible
+     * @param  string|array  $visible
      * @return $this
      */
-    public function setVisible(array $visible)
+    public function setVisible($visible)
     {
+        if (is_string($visible)) {
+            $visible = array_map('trim', explode(',', $visible));
+        }
+
+        // convert visible to pascal case, because of the relations names
+        $visiblePascalCase = array_map(function ($attribute) {
+            return lcfirst(
+                str_replace('_', '', ucwords($attribute, '_'))
+            );
+        }, $visible);
+
+        // Merge visible and keep only unique names
+        $visible = array_unique(
+            array_merge($visible, $visiblePascalCase)
+        );
+
         // We need to map items to local names and keep both, because relations will stop working
         $visible = array_unique(
             array_merge(

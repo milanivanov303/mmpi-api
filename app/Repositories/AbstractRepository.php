@@ -73,6 +73,28 @@ abstract class AbstractRepository
     }
 
     /**
+     * Get single record
+     *
+     * @param mixed $id
+     * @return Model
+     */
+    public function find($id, $fields = [])
+    {
+        $this->model->setVisible($fields);
+        $this->model->setWith($this->getWith());
+
+        // Try to get record with custom primary key
+        if ($this->primaryKey !== 'id') {
+            $record = $this->model->where($this->primaryKey, urldecode($id))->first();
+            if ($record) {
+                return $record;
+            }
+        }
+
+        return $this->model->findOrFail($id);
+    }
+
+    /**
      * Get all records
      *
      * @param array $filters
@@ -150,25 +172,6 @@ abstract class AbstractRepository
     }
 
     /**
-     * Get single record
-     *
-     * @param mixed $id
-     * @return Model
-     */
-    public function find($id)
-    {
-        // Try to get record with custom primary key
-        if ($this->primaryKey !== 'id') {
-            $record = $this->model->with($this->getWith())->where($this->primaryKey, urldecode($id))->first();
-            if ($record) {
-                return $record;
-            }
-        }
-
-        return $this->model->with($this->getWith())->findOrFail($id);
-    }
-
-    /**
      * Set model filters
      *
      * @param array $filters
@@ -177,35 +180,9 @@ abstract class AbstractRepository
     public function setFilters($filters)
     {
         if (array_key_exists('fields', $filters)) {
-            $this->setVisible($filters['fields']);
+            $this->model->setVisible($filters['fields']);
         }
 
         return (new ModelFilter($this->model))->getBuilder($filters);
-    }
-
-    /**
-     * Set model visible columns
-     *
-     * @param string|array $fields
-     */
-    protected function setVisible($fields)
-    {
-        if (is_string($fields)) {
-            $fields = array_map('trim', explode(',', $fields));
-        }
-
-        // convert fields to pascal case, because of the relations names
-        $fieldsPascalCase = array_map(function ($field) {
-            return lcfirst(
-                str_replace('_', '', ucwords($field, '_'))
-            );
-        }, $fields);
-
-        // Merge fields and keep only unique names
-        $fields = array_unique(
-            array_merge($fields, $fieldsPascalCase)
-        );
-
-        $this->model->setVisible($fields);
     }
 }

@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Laravel\Lumen\Routing\Controller as BaseController;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\ResourceCollection;
+use App\Http\Resources\ResourceModel;
 
 class Controller extends BaseController
 {
@@ -18,32 +21,15 @@ class Controller extends BaseController
      *
      * @param mixed $data
      * @param integer $status
-     * @param array $meta
      * @return Response
      */
-    public function output($data, $status = 200, $meta = [])
+    public function output($data)
     {
-        $output = [];
-
-        if ($meta) {
-            $output['meta'] = $meta;
+        if ($data instanceof \App\Models\Model) {
+            return new ResourceModel($data);
         }
 
-        if ($data instanceof \Illuminate\Pagination\AbstractPaginator) {
-            $output['data'] = $data->items();
-            $output['meta']['pagination'] = [
-                'current_page' => $data->currentPage(),
-                'last_page'    => $data->lastPage(),
-                'from'         => $data->firstItem(),
-                'to'           => $data->lastItem(),
-                'per_page'     => $data->perPage(),
-                'total'        => $data->total(),
-            ];
-        } else {
-            $output['data'] = $data;
-        }
-
-        return response()->json($output, $status);
+        return new ResourceCollection($data);
     }
 
     /**
@@ -56,8 +42,7 @@ class Controller extends BaseController
     {
         try {
             return $this->output(
-                $this->model->create($request->json()->all()),
-                201
+                $this->model->create($request->json()->all())
             );
         } catch (\Exceprion $e) {
             return response('Could not be created', 400);
@@ -106,10 +91,10 @@ class Controller extends BaseController
      * @param  mixed  $id
      * @return Response
      */
-    public function getOne($id)
+    public function getOne(Request $request, $id)
     {
         return $this->output(
-            $this->model->find($id)
+            $this->model->find($id, $request->input('fields', []))
         );
     }
 

@@ -240,7 +240,7 @@ class ModelFilter
         $builder = $this->model->newModelQuery();
 
         foreach ($this->getFilters($filters) as $filter) {
-            $builder= $this->setFilter($builder, $filter);
+            $builder = $this->setFilter($builder, $filter);
         }
 
         // set order
