@@ -20,7 +20,7 @@ class HashCommit extends Model
         'committed_by'       => 'owner',
         'hash_rev'           => 'rev'
     ];
-    
+
     /**
      * The attributes that are mass assignable.
      *
@@ -46,9 +46,9 @@ class HashCommit extends Model
     public function filters(): array
     {
         return [
-            'committed_by' => function ($model, $value) {
-                return $model->whereHas('owner', function ($query) use ($value) {
-                    $query->where('username', '=', $value);
+            'committed_by' => function ($model, $value, $operator) {
+                return $model->whereHas('owner', function ($query) use ($value, $operator) {
+                    $query->where('username', $operator, $value);
                 });
             },
             'files' => function ($model, $value) {
@@ -85,7 +85,7 @@ class HashCommit extends Model
     {
         return $this->hasMany(HashCommitFile::class, 'hash_commit_id');
     }
-    
+
     /**
      * Get the files for the hash.
      */
@@ -93,7 +93,7 @@ class HashCommit extends Model
     {
         return $this->hasMany(HashCommitToChain::class, 'hash_commit_id');
     }
-    
+
     /**
      * Get user for the hash.
      */
@@ -101,7 +101,7 @@ class HashCommit extends Model
     {
         return $this->belongsTo(User::class, 'committed_by');
     }
-    
+
     /**
      * Set committed by attribute
      *
@@ -139,7 +139,7 @@ class HashCommit extends Model
         if ($this->isVisible('committed_by') && array_key_exists('owner', $array)) {
             $array['committed_by'] = $array['owner']['username'];
         }
-        
+
         return $array;
     }
 }

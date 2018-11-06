@@ -61,14 +61,14 @@ class Issue extends Model
                 }
                 return $builder->where('subject', 'like', $value);
             },
-            'project_id' => function ($builder, $value) {
-                return $builder->whereHas('project', function ($query) use ($value) {
-                    $query->where('name', '=', $value);
+            'project' => function ($builder, $value, $operator) {
+                return $builder->whereHas('project', function ($query) use ($value, $operator) {
+                    $query->where('name', $operator, $value);
                 });
             },
-            'parent_issue_id' => function ($builder, $value) {
-                return $builder->whereHas('parentIssue', function ($query) use ($value) {
-                    $query->where('tts_id', '=', $value);
+            'parent_issue' => function ($builder, $value, $operator) {
+                return $builder->whereHas('parentIssue', function ($query) use ($value, $operator) {
+                    $query->where('tts_id', $operator, $value);
                 });
             },
             'createdOnFrom' => function ($builder, $value) {
@@ -88,11 +88,11 @@ class Issue extends Model
     public function orderBy(): array
     {
         return [
-            'project_id' => function ($model, $order_dir) {
+            'project' => function ($model, $order_dir) {
                 return $model->select('issues.*')->join('projects', 'projects.id', '=', 'issues.project_id')
                              ->orderBy('projects.name', $order_dir);
             },
-            'parent_issue_id' => function ($model, $order_dir) {
+            'parent_issue' => function ($model, $order_dir) {
                 return $model->select('issues.*')->join('issues AS parent', 'parent.id', '=', 'issues.parent_issue_id')
                              ->orderBy('parent.tts_id', $order_dir);
             }
