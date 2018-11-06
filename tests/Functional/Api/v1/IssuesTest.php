@@ -182,7 +182,7 @@ class IssuesTest extends TestCase
     {
         $this
             ->json('GET', $this->uri . '?page=3')
-            ->seeJsonStructure(['meta' => ['pagination' => ['total', 'current_page']], 'data'])
+            ->seeJsonStructure(['meta' => ['total', 'current_page'], 'data'])
             ->assertResponseOk();
     }
 }

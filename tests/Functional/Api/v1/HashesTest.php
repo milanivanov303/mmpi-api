@@ -10,14 +10,14 @@ class HashesTest extends TestCase
     protected $uri        = 'api/v1/hashes';
     protected $table      = 'hash_commits';
     protected $primaryKey = 'hash_rev';
-    
+
     public function setUp() {
         parent::setUp();
         $this->actingAs(User::first());
     }
     /**
      * Get request data
-     * 
+     *
      * @return array
      */
     public function getData()
@@ -50,7 +50,7 @@ class HashesTest extends TestCase
             'rev'          => $rev
         ];
     }
-    
+
     /**
      * Test creation of hash
      *
@@ -96,10 +96,10 @@ class HashesTest extends TestCase
             $this->primaryKey => $data['rev']
         ]);
     }
-    
+
     /**
      * Test get single hash
-     * 
+     *
      * @return void
      */
     public function testGetHash()
@@ -128,13 +128,13 @@ class HashesTest extends TestCase
 
     /**
      * Test update of hash
-     * 
+     *
      * @return void
      */
     public function testUpdateHash()
     {
         $data = $this->getData();
-        
+
         $this->json('POST', $this->uri, $data);
 
         // Change parameters
@@ -144,7 +144,7 @@ class HashesTest extends TestCase
             ->json('PUT', $this->uri . '/' . $data['rev'], $data)
             ->seeJson($data)
             ->assertResponseOk();
-        
+
         $this->seeInDatabase($this->table, [
             $this->primaryKey => $data['rev']
         ]);
@@ -169,10 +169,10 @@ class HashesTest extends TestCase
             $this->primaryKey => $data['rev']
         ]);
     }
-    
+
     /**
      * Test get hash list
-     * 
+     *
      * @return void
      */
     public function testGetHashesList()
@@ -194,7 +194,7 @@ class HashesTest extends TestCase
     {
         $this
             ->json('GET', $this->uri . '?page=3')
-            ->seeJsonStructure(['meta' => ['pagination' => ['total', 'current_page']], 'data'])
+            ->seeJsonStructure(['meta' => ['total', 'current_page'], 'data'])
             ->assertResponseOk();
     }
 }
