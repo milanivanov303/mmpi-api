@@ -52,12 +52,14 @@ class PatchRequestRepository extends AbstractRepository implements RepositoryInt
     {
         $this->model->fill($data);
 
-        $this->model->issue()->associate($data['issue']['id']);
-        $this->model->deliveryChain()->associate($data['delivery_chain']['id']);
+        DB::transaction(function () use ($data) {
+            $this->model->issue()->associate($data['issue']['id']);
+            $this->model->deliveryChain()->associate($data['delivery_chain']['id']);
 
-        $this->model->saveOrFail();
+            $this->model->saveOrFail();
 
-        $this->syncModifications($data['modifications'] ?? []);
+            $this->syncModifications($data['modifications'] ?? []);
+        });
 
         $this->model->load($this->getWith());
 

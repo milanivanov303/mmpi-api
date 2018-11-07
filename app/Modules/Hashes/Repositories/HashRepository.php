@@ -8,6 +8,7 @@ use App\Repositories\AbstractRepository;
 use App\Modules\Hashes\Models\HashChain;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
+use App\Modules\Hashes\Services\DescriptionParser;
 
 class HashRepository extends AbstractRepository implements RepositoryInterface
 {
@@ -40,30 +41,6 @@ class HashRepository extends AbstractRepository implements RepositoryInterface
     }
 
     /**
-     * Create new record
-     *
-     * @param array $data
-     * @return \Illuminate\Database\Eloquent\Model
-     */
-    public function create(array $data)
-    {
-        return $this->save($data);
-    }
-
-    /**
-     * Update existing record
-     *
-     * @param array $data
-     * @param mixed $id
-     * @return \Illuminate\Database\Eloquent\Model
-     */
-    public function update(array $data, $id)
-    {
-        $this->model = $this->model->where($this->primaryKey, $id)->firstOrFail();
-        return $this->save($data);
-    }
-
-    /**
      * Delete record
      *
      * @param type $id
@@ -89,7 +66,11 @@ class HashRepository extends AbstractRepository implements RepositoryInterface
         $this->model->fill($data);
 
         DB::transaction(function () use ($data) {
-            $this->model->save();
+            $this->model->saveOrFail();
+
+            //$parser = new DescriptionParser($this->model->commit_description);
+
+            //var_dump($parser);
 
             // save hash files
             $this->saveFiles($data['files'] ?? []);
@@ -127,14 +108,10 @@ class HashRepository extends AbstractRepository implements RepositoryInterface
      */
     protected function saveChains($chains)
     {
-        // delete old chains before setting new ones
-        $this->model->chains()->delete();
+        $chains = array_map(function ($chain_name) {
+            return HashChain::where('chain_name', $chain_name)->first();
+        }, $chains);
 
-        $this->model->chains()->createMany(
-            array_map(function ($chain_name) {
-                $chain = HashChain::where('chain_name', $chain_name)->first();
-                return ['hash_chain_id' => $chain->id];
-            }, $chains)
-        );
+        $this->model->chains()->sync(array_column($chains, 'id'));
     }
 }
