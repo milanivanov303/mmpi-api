@@ -1,26 +1,31 @@
 <?php
 
-use \App\Models\User;
-use Laravel\Lumen\Testing\DatabaseTransactions;
+use App\Models\User;
 
-class HashesTest extends TestCase
+class HashesTest extends RestTestCase
 {
-    use DatabaseTransactions;
+    protected $uri              = 'api/v1/hashes';
+    protected $table            = 'hash_commits';
+    protected $primaryKey       = 'hash_rev';
+    protected $primaryKeyMapped = 'rev';
 
-    protected $uri        = 'api/v1/hashes';
-    protected $table      = 'hash_commits';
-    protected $primaryKey = 'hash_rev';
-    
-    public function setUp() {
-        parent::setUp();
-        $this->actingAs(User::first());
+    /**
+     * Get primary key value
+     *
+     * @param array $data
+     * @return mixed
+     */
+    protected function getPrimaryKeyValue($data)
+    {
+        return $data['rev'];
     }
+
     /**
      * Get request data
-     * 
+     *
      * @return array
      */
-    public function getData()
+    protected function getData()
     {
         try {
             $rev = bin2hex(random_bytes(10));
@@ -50,36 +55,14 @@ class HashesTest extends TestCase
             'rev'          => $rev
         ];
     }
-    
-    /**
-     * Test creation of hash
-     *
-     * @return void
-     */
-    public function testCreateHash()
-    {
-        $data = $this->getData();
-
-        $this
-            ->json('POST', $this->uri, $data)
-            ->seeJson($data)
-            ->assertResponseStatus(201);
-
-        $this->seeInDatabase($this->table, [
-            $this->primaryKey => $data['rev']
-        ]);
-
-    }
 
     /**
-     * Test creation of hash with wrong data
+     * Get request invalid data
      *
-     * @return void
+     * @return array
      */
-    public function testCreateHashWithInvalidData()
+    protected function getInvalidData($data)
     {
-        $data = $this->getData();
-
         // Set invalid parameters
         $data['owner'] = 'INVALID_OWNER';
         $data['rev']   = 'INVALID_REV';
@@ -87,114 +70,19 @@ class HashesTest extends TestCase
         // remove required parameters
         unset($data['branch']);
 
-        $this
-            ->json('POST', $this->uri, $data)
-            ->seeJsonStructure(['branch', 'owner', 'rev'])
-            ->assertResponseStatus(422);
-
-        $this->missingFromDatabase($this->table, [
-            $this->primaryKey => $data['rev']
-        ]);
-    }
-    
-    /**
-     * Test get single hash
-     * 
-     * @return void
-     */
-    public function testGetHash()
-    {
-        $data = $this->getData();
-
-        $this->json('POST', $this->uri, $data);
-
-        $this
-            ->get($this->uri . '/' . $data['rev'])
-            ->seeJson($data)
-            ->assertResponseOk();
+        return $data;
     }
 
     /**
-     * Test get non existing hash
+     * Get request update data
      *
-     * @return void
+     * @return array
      */
-    public function testGetNonExistingHash()
+    protected function getUpdateData($data)
     {
-        $this
-            ->get($this->uri . '/NON-EXISTING-HASH')
-            ->assertResponseStatus(404);
-    }
-
-    /**
-     * Test update of hash
-     * 
-     * @return void
-     */
-    public function testUpdateHash()
-    {
-        $data = $this->getData();
-        
-        $this->json('POST', $this->uri, $data);
-
         // Change parameters
         $data['description'] = 'UPDATED_DESCRIPTION';
 
-        $this
-            ->json('PUT', $this->uri . '/' . $data['rev'], $data)
-            ->seeJson($data)
-            ->assertResponseOk();
-        
-        $this->seeInDatabase($this->table, [
-            $this->primaryKey => $data['rev']
-        ]);
-    }
-
-    /**
-     * Test get single hash
-     *
-     * @return void
-     */
-    public function testDeleteHash()
-    {
-        $data = $this->getData();
-
-        $this->json('POST', $this->uri, $data);
-
-        $this
-            ->json('DELETE', $this->uri . '/' . $data['rev'])
-            ->assertResponseStatus(204);
-
-        $this->missingFromDatabase($this->table, [
-            $this->primaryKey => $data['rev']
-        ]);
-    }
-    
-    /**
-     * Test get hash list
-     * 
-     * @return void
-     */
-    public function testGetHashesList()
-    {
-        $this
-            ->json('GET', $this->uri . '?limit=100')
-            ->shouldReturnJson()
-            ->seeJsonStructure(['data'])
-            ->assertResponseOk();
-    }
-
-
-    /**
-     * Test get paginated hash list
-     *
-     * @return void
-     */
-    public function testGetPaginatedHashesList()
-    {
-        $this
-            ->json('GET', $this->uri . '?page=3')
-            ->seeJsonStructure(['meta' => ['pagination' => ['total', 'current_page']], 'data'])
-            ->assertResponseOk();
+        return $data;
     }
 }

@@ -120,7 +120,7 @@ class ModelFilter
             str_replace($operator, '', $value)
         );
 
-        if ($operator === 'like') {
+        if ($operator === 'like' && strpos($value, '%') === false) {
             $value = "{$value}%";
         }
 
@@ -139,7 +139,7 @@ class ModelFilter
         if (array_key_exists($name, $this->filters)) {
             return $this->filters[$name];
         }
-        
+
         return false;
     }
 
@@ -186,7 +186,7 @@ class ModelFilter
                 return $orderBy[$name];
             }
         }
-        
+
         return false;
     }
 
@@ -240,7 +240,7 @@ class ModelFilter
         $builder = $this->model->newModelQuery();
 
         foreach ($this->getFilters($filters) as $filter) {
-            $builder= $this->setFilter($builder, $filter);
+            $builder = $this->setFilter($builder, $filter);
         }
 
         // set order
@@ -248,10 +248,9 @@ class ModelFilter
             $builder = $this->setOrder($builder, $filters['order_by'], $filters['order_dir'] ?? 'asc');
         }
 
-        // set limit
-        if (array_key_exists('limit', $filters)) {
-            $builder = $builder->limit($filters['limit']);
-        }
+        // set limit. If no limit send set it to 100
+        // TODO: move default limit to config file
+        $builder = $builder->limit($filters['limit'] ?? 100);
 
         return $builder;
     }

@@ -19,7 +19,7 @@ class OAPathItem implements Arrayable
      *
      * @var string
      */
-    protected $baseUri;
+    protected $baseUri = '';
 
     /**
      * Route filters
@@ -28,21 +28,33 @@ class OAPathItem implements Arrayable
      */
     protected $filters = [];
 
+    /**
+     * Route schema
+     * @var OASchema
+     */
+    protected $schema;
+
+    /**
+     * Base $ref to schemas
+     */
     protected $schemasBaseUri = '#/components/schemas/';
 
     /**
      * @param array $route
-     * @param string $baseUri
-     * @param array $filters
      */
-    public function __construct(array $route, string $baseUri)
+    public function __construct(array $route)
     {
         $this->route   = $route;
-        $this->baseUri = $baseUri;
+    }
 
-        if ($this->hasSchema()) {
-            $this->loadSchema();
-        }
+    /**
+     * Set base URI
+     *
+     * @param string $baseUri
+     */
+    public function setBaseUri(string $baseUri)
+    {
+        $this->baseUri = $baseUri;
     }
 
     /**
@@ -53,6 +65,36 @@ class OAPathItem implements Arrayable
     public function setFilters(array $filters)
     {
         $this->filters = $filters;
+    }
+
+    /**
+     * Set route filters
+     *
+     * @param OASchema $schema
+     */
+    public function setSchema(OASchema $schema)
+    {
+        $this->schema = $schema;
+    }
+
+    /**
+     * Check if there is schema defined for this route
+     *
+     * @return bool
+     */
+    public function hasSchema() : bool
+    {
+        return $this->schema instanceof OASchema;
+    }
+
+    /**
+     * Get route schema if there is one defined
+     *
+     * @return OASchema
+     */
+    public function getSchema()
+    {
+        return $this->schema;
     }
 
     /**
@@ -74,56 +116,6 @@ class OAPathItem implements Arrayable
     public function getMethod():string
     {
         return strtolower($this->route['method']);
-    }
-
-    /**
-     * Check if there is schema defined for this route
-     *
-     * @return bool
-     */
-    public function hasSchema():bool
-    {
-        return array_key_exists('schema', $this->route['action']);
-    }
-
-    /**
-     * Get route schema if there is one defined
-     *
-     * @return false|OASchema
-     */
-    public function getSchema()
-    {
-        if ($this->hasSchema()) {
-            if ($this->route['action']['schema'] instanceof OASchema) {
-                return $this->route['action']['schema'];
-            }
-            return new OASchema(['$id' => $this->route['action']['schema']]);
-        }
-        return false;
-    }
-
-    /**
-     * Load route schema
-     *
-     * @return false|OASchema
-     */
-    protected function loadSchema()
-    {
-        $filename = base_path('schemas/' . $this->route['action']['schema']);
-
-        if (file_exists($filename)) {
-            $schema = new OASchema(json_decode(
-                file_get_contents($filename),
-                JSON_OBJECT_AS_ARRAY
-            ));
-
-            if ($schema) {
-                $this->route['action']['schema'] = $schema;
-                return $schema;
-            }
-        }
-
-        return false;
     }
 
     /**
@@ -229,7 +221,7 @@ class OAPathItem implements Arrayable
                 '$ref' => $this->getLinkToSchema("properties/{$parameter}")
             ];
         }
-        
+
         return ['type' => 'string'];
     }
 

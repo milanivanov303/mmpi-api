@@ -1,0 +1,15 @@
+{
+    "$id": "DeliveryChainType",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "description": "Delivery Chain Type object",
+    "additionalProperties": false,
+    "properties": {
+        "id": {
+            "type": "integer"
+        },
+        "type": {
+            "type": "string"
+        }
+    }
+}

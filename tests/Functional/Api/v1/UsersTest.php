@@ -1,75 +1,128 @@
 <?php
 
-use \App\Models\User;
-use Laravel\Lumen\Testing\DatabaseTransactions;
+use App\Models\User;
+use App\Models\Department;
+use App\Models\AccessGroup;
 
-class UsersTest extends TestCase
+class UsersTest extends RestTestCase
 {
-    use DatabaseTransactions;
-
     protected $uri        = 'api/v1/users';
     protected $table      = 'users';
     protected $primaryKey = 'username';
-    
-    public function setUp() {
-        parent::setUp();
-        $this->actingAs(User::first());
-    }
 
     /**
-     * Test get single user
-     * 
-     * @return void
+     * Get request data
+     *
+     * @return array
      */
-    public function testGetUser()
+    protected function getData()
     {
-        $user = User::with(['department', 'manager', 'deputy', 'accessGroup'])->first();
+        $faker = Faker\Factory::create();
 
-        $this
-            ->get($this->uri . '/' . $user->{$this->primaryKey})
-            ->shouldReturnJson()
-            ->seeJson($user->toArray())
-            ->assertResponseOk();
+        $department  = Department::inRandomOrder()->first();
+        $accessGroup = AccessGroup::inRandomOrder()->first();
+
+        return [
+            'name'         => $faker->name(),
+            'username'     => $faker->username(),
+            'email'        => $faker->email(),
+            'sid'          => $faker->word(),
+            'sidfr'        => $faker->word(),
+            'uidnumber'    => null,
+            'status'       => 0,
+            'manager'      => null,
+            'deputy'       => null,
+            'department'   => $department->toArray(),
+            'access_group' => $accessGroup->toArray()
+        ];
     }
 
     /**
-     * Test get non existing user
+     * Get request invalid data
+     *
+     * @param array $data
+     * @return array
+     */
+    protected function getInvalidData(array $data)
+    {
+        return $data;
+    }
+
+    /**
+     * Get request update data
+     *
+     * @param array $data
+     * @return array
+     */
+    protected function getUpdateData(array $data)
+    {
+        return $data;
+    }
+
+    /**
+     * Test creation
      *
      * @return void
      */
-    public function testGetNonExistingUser()
+    public function testCreate()
     {
         $this
-            ->get($this->uri . '/NON-EXISTING-HASH')
-            ->assertResponseStatus(404);
-    }
-    
-    /**
-     * Test get users list
-     * 
-     * @return void
-     */
-    public function testGetUsersList()
-    {
-        $this
-            ->json('GET', $this->uri . '?limit=100')
-            ->shouldReturnJson()
-            ->seeJsonStructure(['data'])
-            ->assertResponseOk();
+            ->json('POST', $this->uri)
+            ->assertResponseStatus(405);
     }
 
-
     /**
-     * Test get paginated users list
+     * Test creation with wrong data
      *
      * @return void
      */
-    public function testGetPaginatedUsersList()
+    public function testCreateWithInvalidData()
     {
         $this
-            ->json('GET', $this->uri . '?page=3')
-            ->shouldReturnJson()
-            ->seeJsonStructure(['meta' => ['pagination' => ['total', 'current_page']], 'data'])
+            ->json('POST', $this->uri)
+            ->assertResponseStatus(405);
+    }
+
+    /**
+     * Test update
+     *
+     * @return void
+     */
+    public function testUpdate()
+    {
+        $data = $this->getData();
+
+        $this
+            ->json('PUT', $this->uri . '/' . $this->getPrimaryKeyValue($data))
+            ->assertResponseStatus(405);
+    }
+
+    /**
+     * Test delete single
+     *
+     * @return void
+     */
+    public function testDelete()
+    {
+        $data = $this->getData();
+
+        $this
+            ->json('DELETE', $this->uri . '/' . $this->getPrimaryKeyValue($data))
+            ->assertResponseStatus(405);
+    }
+
+    /**
+     * Test get single
+     *
+     * @return void
+     */
+    public function testGet()
+    {
+        $data = User::inRandomOrder()->first()->toArray();
+
+        $this
+            ->get( $this->uri . '/' . $this->getPrimaryKeyValue($data))
+            ->seeJson($data)
             ->assertResponseOk();
     }
 }

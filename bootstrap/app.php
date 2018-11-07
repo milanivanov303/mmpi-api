@@ -59,10 +59,11 @@ $app->singleton(
 |
 */
 
- $app->middleware([
+$app->middleware([
     App\Http\Middleware\HttpLogger::class,
+    App\Http\Middleware\DbLogger::class,
     App\Http\Middleware\Cors::class
- ]);
+]);
 
 $app->routeMiddleware([
     'auth'           => App\Http\Middleware\Authenticate::class,

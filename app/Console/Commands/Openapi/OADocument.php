@@ -26,7 +26,7 @@ class OADocument implements Arrayable, Jsonable
      * @var array
      */
     protected $schemas;
-    
+
     public function __construct(array $document)
     {
         $this->document = $document;
@@ -47,7 +47,7 @@ class OADocument implements Arrayable, Jsonable
      *
      * @return array
      */
-    protected function getPathItems():array
+    protected function getPathItemsArray():array
     {
         $pathItems = [];
         foreach ($this->pathItems as $pathItem) {
@@ -65,9 +65,65 @@ class OADocument implements Arrayable, Jsonable
      *
      * @param OASchema $schema
      */
-    protected function addSchema(OASchema $schema)
+    public function addSchema(OASchema $schema)
     {
         $this->schemas[] = $schema;
+    }
+
+    /**
+     * Set document schemas
+     *
+     * @param array $schemas
+     */
+    public function setSchemas(array $schemas)
+    {
+        $this->schemas = $schemas;
+    }
+
+    /**
+     * Convert JSON schema to valid OpenApi
+     *
+     * @param array $data
+     * @return array
+     */
+    protected function fixRefs(array $data) : array
+    {
+        $function = __FUNCTION__;
+
+        array_walk($data, function (&$value, $key) use ($function) {
+
+            if (is_array($value)) {
+                $value = $this->{$function}($value);
+                return;
+            }
+
+            if ($key === '$ref') {
+                if (strpos($value, '#') !== false) {
+                    list($id, $ref) = explode("#", $value);
+                }
+
+                if (array_key_exists($id ?? $value, $this->schemas)) {
+                    $value = '#/components/schemas/' . $this->schemas[$id ?? $value]->getId() . ($ref ?? '');
+                }
+            }
+        });
+
+        return $data;
+    }
+
+    /**
+     * Get document schema
+     *
+     * @param string $id
+     * @return OASchema|false
+     */
+    public function getSchema($id)
+    {
+        if (array_key_exists($id, $this->schemas)) {
+            return $this->schemas[$id];
+        }
+
+        return false;
     }
 
     /**
@@ -75,11 +131,11 @@ class OADocument implements Arrayable, Jsonable
      *
      * @return array
      */
-    protected function getSchemas():array
+    protected function getSchemasArray():array
     {
         $schemas = [];
         foreach ($this->schemas as $schema) {
-            $schemas[$schema->getId()] = $schema->toArray();
+            $schemas[$schema->getId()] = $this->fixRefs($schema->toArray());
         }
         return $schemas;
     }
@@ -95,9 +151,9 @@ class OADocument implements Arrayable, Jsonable
         return array_merge_recursive(
             $this->document,
             [
-                'paths' => $this->getPathItems(),
+                'paths' => $this->getPathItemsArray(),
                 'components' => [
-                    'schemas' => $this->getSchemas()
+                    'schemas' => $this->getSchemasArray()
                 ]
             ]
         );

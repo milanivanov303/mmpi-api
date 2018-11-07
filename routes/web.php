@@ -1,14 +1,4 @@
 <?php
-
-/*
-\Illuminate\Support\Facades\Event::listen(
-    \Illuminate\Database\Events\QueryExecuted::class,
-    function ($query) {
-        var_dump($query->sql);
-    }
-);
-*/
-
 /*
 |--------------------------------------------------------------------------
 | Application Routes
@@ -31,11 +21,29 @@ $router->group([
 
         // Users
         require 'api/v1/users.php';
-        
+
         // Hashes
         require 'api/v1/hashes.php';
 
         // Issues
         require 'api/v1/issues.php';
+
+        // Projects
+        require 'api/v1/projects.php';
+
+        // Instances
+        require 'api/v1/instances.php';
+
+        // Delivery chains
+        require 'api/v1/delivery-chains.php';
+
+        // Modifications
+        require 'api/v1/modifications.php';
+
+        // Patch Requests
+        require 'api/v1/patch-requests.php';
+
+        // Patches
+        require 'api/v1/patches.php';
     });
 });

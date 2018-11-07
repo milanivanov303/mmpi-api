@@ -20,7 +20,7 @@ class Model extends \Illuminate\Database\Eloquent\Model
      * @var array
      */
     protected $hidden = [
-        'id'
+        //'id'
     ];
 
     /**
@@ -40,6 +40,11 @@ class Model extends \Illuminate\Database\Eloquent\Model
     {
         $this->mapper = new DataMapper($this->mapping);
         parent::__construct($attributes);
+    }
+
+    public function setWith(array $with)
+    {
+        $this->with = $with;
     }
 
     /**
@@ -79,6 +84,7 @@ class Model extends \Illuminate\Database\Eloquent\Model
         $model = parent::newInstance($attributes, $exists);
 
         // set model visible attributes from original model
+        // this is needed because dynamicaly set visible attributes are lost
         $model->setVisible($this->getVisible());
 
         return $model;
@@ -98,11 +104,24 @@ class Model extends \Illuminate\Database\Eloquent\Model
     /**
      * Set the visible attributes for the model.
      *
-     * @param  array  $visible
+     * @param  string|array  $visible
      * @return $this
      */
-    public function setVisible(array $visible)
+    public function setVisible($visible)
     {
+        if (is_string($visible)) {
+            $visible = array_map('trim', explode(',', $visible));
+        }
+
+        // Convert visible to camel case, because of the relations names
+        // Merge visible with and keep only unique names
+        $visible = array_unique(
+            array_merge(
+                $visible,
+                array_map('camel_case', $visible)
+            )
+        );
+
         // We need to map items to local names and keep both, because relations will stop working
         $visible = array_unique(
             array_merge(
@@ -123,6 +142,17 @@ class Model extends \Illuminate\Database\Eloquent\Model
      */
     public function getColumns(): array
     {
+        // TODO: Add cache mehanism here, so we do not hit database every time
         return Schema::getColumnListing($this->getTable());
+    }
+
+    /**
+     * Get with
+     *
+     * @return array
+     */
+    public function getWith()
+    {
+        return $this->with;
     }
 }

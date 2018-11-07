@@ -21,8 +21,6 @@ class IssueRepository extends AbstractRepository implements RepositoryInterface
      * @var array
      */
     protected $with = [
-        'project',
-        'devInstance',
         'parentIssue'
     ];
 
@@ -34,5 +32,27 @@ class IssueRepository extends AbstractRepository implements RepositoryInterface
     public function __construct(Issue $model)
     {
         $this->model = $model;
+    }
+
+    /**
+     * Save issue
+     *
+     * @param array $data
+     * @return Model
+     */
+    protected function save($data)
+    {
+        $this->model->fill($data);
+
+        $this->model->project()->associate($data['project']['id']);
+        $this->model->devInstance()->associate(
+            isset($data['dev_instance']) ? $data['dev_instance']['id'] : null
+        );
+
+        $this->model->saveOrFail();
+
+        $this->model->load($this->getWith());
+
+        return $this->model;
     }
 }

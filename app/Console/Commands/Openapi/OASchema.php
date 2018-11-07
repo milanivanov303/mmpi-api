@@ -66,8 +66,12 @@ class OASchema implements Arrayable
      * @param string $property
      * @return bool
      */
-    public function hasProperty(string $property):bool
+    public function hasProperty(string $property) : bool
     {
+        // TODO: get schema properties if it is extending another schema
+        if (!array_key_exists('properties', $this->data)) {
+            return false;
+        }
         return array_key_exists($property, $this->data['properties']);
     }
 
@@ -83,14 +87,6 @@ class OASchema implements Arrayable
             return !in_array($key, self::NOT_VALID_PROPERTIES, true);
         }, ARRAY_FILTER_USE_KEY);
 
-        /*
-        foreach ($validData as &$value) {
-            if (is_array($value)) {
-                $value = $this->{__FUNCTION__}($value);
-            }
-        }
-
-        */
         return $validData;
     }
 
@@ -109,7 +105,7 @@ class OASchema implements Arrayable
         array_walk($data, function (&$value, $key) use ($function) {
 
             if (is_array($value)) {
-                if (array_key_exists('type', $value)) {
+                if (array_key_exists('type', $value) && $key !== 'properties') {
                     $value = $this->fixNotValidTypeProperty($value);
                 }
 
@@ -117,29 +113,20 @@ class OASchema implements Arrayable
 
                 return;
             }
-
-            if ($key === '$ref') {
-                $value = $this->fixRefs($value);
-            }
         });
+
+        $data = array_filter($data, [$this, 'removeEmptyProperties']);
 
         return $data;
     }
 
-    /**
-     * Fix references to schemas
-     *
-     * @param string $value
-     * @return string
-     */
-    protected function fixRefs($value)
+    protected function removeEmptyProperties($data)
     {
-        if (strpos($value, '#') === -1) {
-            return $value;
+        if (is_array($data)) {
+            return array_filter($data, [$this, __FUNCTION__]);
         }
 
-        list($id, $ref) = explode("#", $value);
-        return '#/components/schemas/' . $this->convertId($id) . $ref;
+        return !empty($data);
     }
 
     /**
@@ -150,8 +137,14 @@ class OASchema implements Arrayable
      */
     protected function fixNotValidTypeProperty($value)
     {
-        // Don't do anything if type is not array
-        if (!is_array($value['type'])) {
+        if (is_string($value['type'])) {
+            // if type is null set nullable property
+            if ($value['type'] === "null") {
+                $value['nullable'] = true;
+                unset($value['type']);
+                return $value;
+            }
+            // don't do anything if type is string
             return $value;
         }
 

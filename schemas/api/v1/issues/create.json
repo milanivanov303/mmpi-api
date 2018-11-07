@@ -1,0 +1,55 @@
+{
+    "$id": "CreateIssue",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "description": "Issue object",
+    "allOf": [
+        {"$ref": "/api/v1/issues/issue.json"},
+        {
+            "properties": {
+                "project": {
+                    "properties": {
+                        "id": {
+                            "$filters": {
+                                "$func": "checkInDb",
+                                "$vars": {
+                                    "rule": "exists:projects,id"
+                                }
+                            },
+                            "$messages": {
+                                "$filters": "Project does not exist"
+                            }
+                        }
+                    }
+                },
+                "tts_id": {
+                    "$filters": {
+                        "$func": "checkInDb",
+                        "$vars": {
+                            "rule": "unique:issues,tts_id"
+                        }
+                    },
+                    "$messages": {
+                        "pattern": "TTS key is not valid format",
+                        "$filters": "TTS key is already registered"
+                    }
+                },
+                "dev_instance": {
+                    "properties": {
+                        "id": {
+                            "$filters": {
+                                "$func": "checkInDb",
+                                "$vars": {
+                                    "rule": "exists:instances,id"
+                                }
+                            },
+                            "$messages": {
+                                "$filters": "Dev instance does not exist"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

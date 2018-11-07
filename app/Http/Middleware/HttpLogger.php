@@ -25,7 +25,7 @@ class HttpLogger
         }
         return $response;
     }
-    
+
     /**
      * Log request
      *
@@ -39,7 +39,7 @@ class HttpLogger
             $this->getRequestCurl($request) .
             PHP_EOL .
             PHP_EOL .
-            $response->getStatusCode() . ' ' . $response->getContent().
+            $response->getStatusCode() . ' ' . $response->getContent() .
             PHP_EOL
         );
     }

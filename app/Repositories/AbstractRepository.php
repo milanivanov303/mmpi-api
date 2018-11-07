@@ -3,7 +3,7 @@
 namespace App\Repositories;
 
 use App\Helpers\DataFilter;
-use Illuminate\Database\Eloquent\Model;
+use App\Models\Model;
 use App\Helpers\Mapper;
 use App\Helpers\ModelFilter;
 
@@ -12,7 +12,7 @@ abstract class AbstractRepository
     /**
      * Eloquent model
      *
-     * @var \Illuminate\Database\Eloquent\Model
+     * @var Model
      */
     protected $model;
 
@@ -47,40 +47,79 @@ abstract class AbstractRepository
     }
 
     /**
+     * Get model relations
+     *
+     * @return array
+     */
+    protected function getWith()
+    {
+        $with = array_merge(
+            $this->with,
+            $this->model->getWith()
+        );
+
+        $visible = $this->model->getVisible();
+
+        // if no visible fields set return all relations
+        if (empty($visible)) {
+            return $with;
+        }
+
+        // return only relations that will be needed
+        return array_intersect(
+            $with,
+            $visible
+        );
+    }
+
+    /**
+     * Get single record
+     *
+     * @param mixed $id
+     * @return Model
+     */
+    public function find($id, $fields = [])
+    {
+        $this->model->setVisible($fields);
+        $this->model->setWith($this->getWith());
+
+        return $this->model->where($this->primaryKey, urldecode($id))->firstOrFail();
+    }
+
+    /**
      * Get all records
      *
-     * @param array $columns
+     * @param array $filters
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function all($columns = array('*'))
+    public function all(array $filters = [])
     {
-        return $this->model->with($this->with)->get();
+        $builder = $this->setFilters($filters);
+        return $builder->with($this->getWith())->get();
     }
 
     /**
      * Get paginated records
      *
-     * @param integer $perPage
-     * @param array $columns
+     * @param integer|null $perPage
+     * @param array $filters
      * @return \Illuminate\Pagination\LengthAwarePaginator
      */
-    public function paginate($perPage = 15, $columns = array('*'))
+    public function paginate($perPage = 15, array $filters = [])
     {
-        return $this->model->with($this->with)->paginate($perPage);
+        $builder = $this->setFilters($filters);
+        return $builder->with($this->getWith())->paginate($perPage);
     }
 
     /**
      * Create new record
      *
      * @param array $data
-     * @return \Illuminate\Database\Eloquent\Model
+     * @return Model
      */
     public function create(array $data)
     {
-        $this->model->fill($data)->save();
-        $this->model->load($this->with);
-
-        return $this->model;
+        return $this->save($data);
     }
 
     /**
@@ -88,16 +127,26 @@ abstract class AbstractRepository
      *
      * @param array $data
      * @param mixed $id
-     * @return \Illuminate\Database\Eloquent\Model
+     * @return Model
      */
     public function update(array $data, $id)
     {
-        $model = $this->find($id);
+        $this->model = $this->find($id);
+        return $this->save($data);
+    }
 
-        $model->fill($data)->save();
-        $model->load($this->with);
+    /**
+     * Save record
+     *
+     * @param array $data
+     * @return Model
+     */
+    protected function save($data)
+    {
+        $this->model->fill($data)->saveOrFail();
+        $this->model->load($this->getWith());
 
-        return $model;
+        return $this->model;
     }
 
     /**
@@ -115,21 +164,10 @@ abstract class AbstractRepository
     }
 
     /**
-     * Get single record
-     *
-     * @param mixed $id
-     * @param array $columns
-     * @return \Illuminate\Database\Eloquent\Model
-     */
-    public function find($id, $columns = array('*'))
-    {
-        return $this->model->with($this->with)->where($this->primaryKey, $id)->firstOrFail($columns);
-    }
-
-    /**
      * Set model filters
      *
      * @param array $filters
+     * @return \Illuminate\Database\Eloquent\Builder
      */
     public function setFilters($filters)
     {
@@ -137,20 +175,6 @@ abstract class AbstractRepository
             $this->model->setVisible($filters['fields']);
         }
 
-        $this->model = (new ModelFilter($this->model))->getBuilder($filters);
-    }
-
-    /**
-     * Set model visible columns
-     *
-     * @param string|array $fields
-     */
-    protected function setVisible($fields)
-    {
-        if (is_string($fields)) {
-            $fields = array_map('trim', explode(',', $fields));
-        }
-
-        $this->model->setVisible($fields);
+        return (new ModelFilter($this->model))->getBuilder($filters);
     }
 }

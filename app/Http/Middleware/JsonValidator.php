@@ -32,8 +32,11 @@ class JsonValidator
                 $this->getRouteSchema($request->route())
             );
 
+            // TODO: refactor this when there is time
+            $data = json_decode(json_encode($request->json()->all()), false);
+
             $result = $validator->schemaValidation(
-                (object)$request->json()->all(),
+                $data,
                 $schema,
                 PHP_INT_MAX
             );
@@ -82,6 +85,7 @@ class JsonValidator
         $filterContainer = new \Opis\JsonSchema\FilterContainer();
 
         $filterContainer->add("string", "checkInDb", new CheckInDbFilter);
+        $filterContainer->add("integer", "checkInDb", new CheckInDbFilter);
         $filterContainer->add("null", "checkInDb", new CheckInDbFilter);
 
         return $filterContainer;
@@ -92,17 +96,29 @@ class JsonValidator
      *
      * @param \Opis\JsonSchema\ValidationResult $result
      * @return array
+     *
+     * TODO: refactor erorrs converting to be more flexible.
+     *       We can have multidimentional array instead of dots notations in properties names
      */
     protected function getConvertedErrors(\Opis\JsonSchema\ValidationResult $result)
     {
         $errors = [];
         foreach ($result->getErrors() as $error) {
             $error = new Error($error);
-            if (array_key_exists($error->getProperty(), $errors)) {
-                array_push($errors[$error->getProperty()], $error->getMessage());
-            } else {
-                $errors[$error->getProperty()] = [$error->getMessage()];
+            $property = $error->getProperty();
+            $message  = $error->getMessage();
+
+            if (is_array($message)) {
+                $errors = array_merge($errors, $message);
+                continue;
             }
+
+            if (array_key_exists($property, $errors)) {
+                array_push($errors[$property], $message);
+                continue;
+            }
+
+            $errors[$property] = [$message];
         }
         return $errors;
     }

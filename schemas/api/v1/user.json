@@ -20,7 +20,6 @@
             "type": "string",
             "description": "User email",
             "example": "jdoe@codix.fr",
-            "format": "email",
             "maxLength": 50
         },
         "password": {
@@ -31,34 +30,59 @@
             "maxLength": 60
         },
         "sidfr": {
-            "type": "string",
+            "type": ["string", "null"],
             "maxLength": 60
         },
         "uidnumber": {
-            "type": "integer"
+            "type": ["integer", "null"]
         },
         "status": {
             "type": "integer"
         },
         "department": {
-            "type": "string",
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "src_dlv_by_revision": {
+                    "type": "integer"
+                },
+                "department_type": {
+                    "$ref": "/api/v1/enum-value.json"
+                },
+                "status": {
+                    "type": "integer"
+                }
+            },
             "description": "User department",
             "example": "Enterprise Applications"
         },
         "access_group": {
-            "type": "string",
+            "type": "object",
             "description": "User access group",
             "example": "developers"
         },
         "manager": {
-            "type": "string",
-            "description": "Manager username",
-            "example": "ivasilev"
+            "oneOf": [
+                {
+                    "$ref": "/api/v1/user.json",
+                    "description": "Manager"
+                },
+                {"type": "null"}
+            ]
         },
         "deputy": {
-            "type": "string",
-            "description": "Deputy username",
-            "example": "ivasilev"
+            "oneOf": [
+                {
+                    "$ref": "/api/v1/user.json",
+                    "description": "Deputy"
+                },
+                {"type": "null"}
+            ]
         }
     }
 }
