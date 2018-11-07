@@ -83,15 +83,7 @@ abstract class AbstractRepository
         $this->model->setVisible($fields);
         $this->model->setWith($this->getWith());
 
-        // Try to get record with custom primary key
-        if ($this->primaryKey !== 'id') {
-            $record = $this->model->where($this->primaryKey, urldecode($id))->first();
-            if ($record) {
-                return $record;
-            }
-        }
-
-        return $this->model->findOrFail(is_numeric($id) ? $id : '-1');
+        return $this->model->where($this->primaryKey, urldecode($id))->firstOrFail();
     }
 
     /**

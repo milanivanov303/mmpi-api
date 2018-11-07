@@ -1,26 +1,31 @@
 <?php
 
-use \App\Models\User;
-use Laravel\Lumen\Testing\DatabaseTransactions;
+use App\Models\User;
 
-class HashesTest extends TestCase
+class HashesTest extends RestTestCase
 {
-    use DatabaseTransactions;
+    protected $uri              = 'api/v1/hashes';
+    protected $table            = 'hash_commits';
+    protected $primaryKey       = 'hash_rev';
+    protected $primaryKeyMapped = 'rev';
 
-    protected $uri        = 'api/v1/hashes';
-    protected $table      = 'hash_commits';
-    protected $primaryKey = 'hash_rev';
-
-    public function setUp() {
-        parent::setUp();
-        $this->actingAs(User::first());
+    /**
+     * Get primary key value
+     *
+     * @param array $data
+     * @return mixed
+     */
+    protected function getPrimaryKeyValue($data)
+    {
+        return $data['rev'];
     }
+
     /**
      * Get request data
      *
      * @return array
      */
-    public function getData()
+    protected function getData()
     {
         try {
             $rev = bin2hex(random_bytes(10));
@@ -52,34 +57,12 @@ class HashesTest extends TestCase
     }
 
     /**
-     * Test creation
+     * Get request invalid data
      *
-     * @return void
+     * @return array
      */
-    public function testCreate()
+    protected function getInvalidData($data)
     {
-        $data = $this->getData();
-
-        $this
-            ->json('POST', $this->uri, $data)
-            ->seeJson($data)
-            ->assertResponseStatus(201);
-
-        $this->seeInDatabase($this->table, [
-            $this->primaryKey => $data['rev']
-        ]);
-
-    }
-
-    /**
-     * Test creation with wrong data
-     *
-     * @return void
-     */
-    public function testCreateWithInvalidData()
-    {
-        $data = $this->getData();
-
         // Set invalid parameters
         $data['owner'] = 'INVALID_OWNER';
         $data['rev']   = 'INVALID_REV';
@@ -87,114 +70,19 @@ class HashesTest extends TestCase
         // remove required parameters
         unset($data['branch']);
 
-        $this
-            ->json('POST', $this->uri, $data)
-            ->seeJsonStructure(['branch', 'owner', 'rev'])
-            ->assertResponseStatus(422);
-
-        $this->missingFromDatabase($this->table, [
-            $this->primaryKey => $data['rev']
-        ]);
+        return $data;
     }
 
     /**
-     * Test get single
+     * Get request update data
      *
-     * @return void
+     * @return array
      */
-    public function testGet()
+    protected function getUpdateData($data)
     {
-        $data = $this->getData();
-
-        $this->json('POST', $this->uri, $data);
-
-        $this
-            ->get($this->uri . '/' . $data['rev'])
-            ->seeJson($data)
-            ->assertResponseOk();
-    }
-
-    /**
-     * Test get non existing
-     *
-     * @return void
-     */
-    public function testGetNonExisting()
-    {
-        $this
-            ->get($this->uri . '/NON-EXISTING-HASH')
-            ->assertResponseStatus(404);
-    }
-
-    /**
-     * Test update
-     *
-     * @return void
-     */
-    public function testUpdate()
-    {
-        $data = $this->getData();
-
-        $this->json('POST', $this->uri, $data);
-
         // Change parameters
         $data['description'] = 'UPDATED_DESCRIPTION';
 
-        $this
-            ->json('PUT', $this->uri . '/' . $data['rev'], $data)
-            ->seeJson($data)
-            ->assertResponseOk();
-
-        $this->seeInDatabase($this->table, [
-            $this->primaryKey => $data['rev']
-        ]);
-    }
-
-    /**
-     * Test get single
-     *
-     * @return void
-     */
-    public function testDelete()
-    {
-        $data = $this->getData();
-
-        $this->json('POST', $this->uri, $data);
-
-        $this
-            ->json('DELETE', $this->uri . '/' . $data['rev'])
-            ->assertResponseStatus(204);
-
-        $this->missingFromDatabase($this->table, [
-            $this->primaryKey => $data['rev']
-        ]);
-    }
-
-    /**
-     * Test get list
-     *
-     * @return void
-     */
-    public function testGetList()
-    {
-        $this
-            ->json('GET', $this->uri . '?limit=10')
-            ->shouldReturnJson()
-            ->seeJsonStructure(['data'])
-            ->assertResponseOk();
-    }
-
-
-    /**
-     * Test get paginated list
-     *
-     * @return void
-     */
-    public function testGetPaginatedList()
-    {
-        $this
-            ->json('GET', $this->uri . '?page=3')
-            ->seeJsonStructure(['meta' => ['total', 'current_page'], 'data'])
-            ->assertResponseOk();
+        return $data;
     }
 }

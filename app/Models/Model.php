@@ -113,16 +113,13 @@ class Model extends \Illuminate\Database\Eloquent\Model
             $visible = array_map('trim', explode(',', $visible));
         }
 
-        // convert visible to pascal case, because of the relations names
-        $visiblePascalCase = array_map(function ($attribute) {
-            return lcfirst(
-                str_replace('_', '', ucwords($attribute, '_'))
-            );
-        }, $visible);
-
-        // Merge visible and keep only unique names
+        // Convert visible to camel case, because of the relations names
+        // Merge visible with and keep only unique names
         $visible = array_unique(
-            array_merge($visible, $visiblePascalCase)
+            array_merge(
+                $visible,
+                array_map('camel_case', $visible)
+            )
         );
 
         // We need to map items to local names and keep both, because relations will stop working
