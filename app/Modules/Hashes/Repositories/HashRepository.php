@@ -8,6 +8,7 @@ use App\Repositories\AbstractRepository;
 use App\Modules\Hashes\Models\HashChain;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
+use App\Modules\Hashes\Services\Tags;
 use App\Modules\Hashes\Services\DescriptionParser;
 
 class HashRepository extends AbstractRepository implements RepositoryInterface
@@ -68,9 +69,8 @@ class HashRepository extends AbstractRepository implements RepositoryInterface
         DB::transaction(function () use ($data) {
             $this->model->saveOrFail();
 
-            //$parser = new DescriptionParser($this->model->commit_description);
-
-            //var_dump($parser);
+            // save tags from description
+            $this->saveTags($data['description'] ?? "");
 
             // save hash files
             $this->saveFiles($data['files'] ?? []);
@@ -82,6 +82,14 @@ class HashRepository extends AbstractRepository implements RepositoryInterface
         $this->model->load($this->with);
 
         return $this->model;
+    }
+
+    protected function saveTags($description)
+    {
+        $parser = new DescriptionParser($description);
+        $tags = new Tags($this->model, $parser);
+
+        $tags->save();
     }
 
     /**

@@ -15,6 +15,8 @@ class DescriptionParser
     const SUBJECTS_KEY     = 'cvs_tag_subject';
     const OTH_DEPS_KEY     = 'cvs_tag_oth_deps';
 
+    const TAG_END          = 'tag_end';
+
     /**
      * Hash description
      *
@@ -66,11 +68,11 @@ class DescriptionParser
      * Add tag data
      *
      * @param string $key
-     * @param mixed $data
+     * @param string $data
      */
-    protected function addTagData(string $key, $data)
+    protected function addTagData(string $key, string $data)
     {
-        $this->tags[$key][] = trim($data);
+        $this->tags[$key] = trim($data);
     }
 
     /**
@@ -78,19 +80,60 @@ class DescriptionParser
      */
     protected function parse()
     {
-        /*
-         * Split description to line and search in every line for keys
-         * Regular expressions are writen this why. We can change them later!
-         */
-        $lines = explode(PHP_EOL, $this->description);
+        // add tag_end, before every tag, so we can split by it
+        foreach ($this->keys as $key => $pattern) {
+            $this->description = preg_replace_callback($pattern, function ($matches) {
+                return self::TAG_END . $matches[0];
+            }, $this->description);
+        }
+
+        $lines = array_filter(
+            array_map(
+                'trim',
+                explode(self::TAG_END, $this->description)
+            )
+        );
 
         foreach ($lines as $line) {
             foreach ($this->keys as $key => $pattern) {
-                if (preg_match($pattern, $line, $match)) {
-                    $this->addTagData($key, preg_replace($pattern, '', $line));
+                if (preg_match($pattern, $line)) {
+                    $this->addTagData($key, $line);
                 }
             }
         }
+    }
+
+    /**
+     * Get tag data as string
+     *
+     * @param string $key
+     * @return string
+     */
+    protected function getData($key)
+    {
+        $tag     = $this->tags[$key] ?? '';
+        $pattern = $this->keys[$key];
+
+        return trim(
+            preg_replace($pattern, '', $tag)
+        );
+    }
+
+    /**
+     * Get tag data as array
+     *
+     * @param string $key
+     * @return array
+     */
+    protected function getDataArray(string $key)
+    {
+        $data = $this->getData($key);
+        return array_filter(
+            array_map(
+                'trim',
+                preg_split('/(,)|(\n)|(;)/', $data)
+            )
+        );
     }
 
     /**
@@ -104,13 +147,23 @@ class DescriptionParser
     }
 
     /**
+     * Get all tags
+     *
+     * @return array
+     */
+    public function getTags()
+    {
+        return $this->tags;
+    }
+
+    /**
      * Get TTS keys
      *
      * @return array
      */
     public function getTtsKeys()
     {
-        return $this->tags[static::TTS_KEYS_KEY] ?? [];
+        return $this->getDataArray(static::TTS_KEYS_KEY);
     }
 
     /**
@@ -120,7 +173,7 @@ class DescriptionParser
      */
     public function getFuncChanges()
     {
-        return $this->tags[static::FUNC_CHANGES_KEY] ?? [];
+        return $this->getData(static::FUNC_CHANGES_KEY);
     }
 
     /**
@@ -130,7 +183,7 @@ class DescriptionParser
      */
     public function getTechChanges()
     {
-        return $this->tags[static::TECH_CHANGES_KEY] ?? [];
+        return $this->getData(static::TECH_CHANGES_KEY);
     }
 
     /**
@@ -140,7 +193,7 @@ class DescriptionParser
      */
     public function getMerges()
     {
-        return $this->tags[static::MERGES_KEY] ?? [];
+        return $this->getData(static::MERGES_KEY);
     }
 
     /**
@@ -150,7 +203,7 @@ class DescriptionParser
      */
     public function getDependencies()
     {
-        return $this->tags[static::DEPENDENCIES_KEY] ?? [];
+        return $this->getDataArray(static::DEPENDENCIES_KEY);
     }
 
     /**
@@ -160,7 +213,7 @@ class DescriptionParser
      */
     public function getTests()
     {
-        return $this->tags[static::TESTS_KEY] ?? [];
+        return $this->getDataArray(static::TESTS_KEY);
     }
 
     /**
@@ -170,7 +223,7 @@ class DescriptionParser
      */
     public function getSubjects()
     {
-        return $this->tags[static::SUBJECTS_KEY] ?? [];
+        return $this->getData(static::SUBJECTS_KEY);
     }
 
     /**
@@ -180,6 +233,6 @@ class DescriptionParser
      */
     public function getOtherDependencies()
     {
-        return $this->tags[static::OTH_DEPS_KEY] ?? [];
+        return $this->getDataArray(static::OTH_DEPS_KEY);
     }
 }
