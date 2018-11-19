@@ -12,7 +12,7 @@
         },
         "username": {
             "type": "string",
-            "description": "User username",
+            "description": "Username",
             "example": "jdoe",
             "maxLength": 50
         },

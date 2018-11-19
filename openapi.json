@@ -16,16 +16,22 @@
   "security": [
     {
       "api_key": [
-
       ]
     }
   ],
   "components": {
     "securitySchemes": {
-      "api_key": {
+      "xAuthToken": {
         "in": "header",
         "name": "X-AUTH-TOKEN",
-        "type": "apiKey"
+        "type": "apiKey",
+        "description": "Make auth request and you will get JWT to use in next requests"
+      },
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "Make auth request and you will get JWT to use in next requests"
       }
     },
     "parameters": {
@@ -94,6 +100,62 @@
           "example": "field1, field2"
         }
       }
+    },
+    "responses": {
+      "Deleted": {
+        "description": "Deleted",
+        "content": {
+          "text\/html": {
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "Unauthorized": {
+        "description": "Unauthorized",
+        "content": {
+          "text\/html": {
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "NotFound": {
+        "description": "Not found",
+        "content": {
+          "text\/html": {
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "ValidationError": {
+        "description": "Unprocessable Entity",
+        "content": {
+          "application\/json": {
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object"
+              }
+            }
+          }
+        }
+      },
+      "InternalServerError": {
+        "description": "Internal Server Error",
+        "content": {
+          "text\/html": {
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
     }
-  }
+  },
+  "paths": {}
 }

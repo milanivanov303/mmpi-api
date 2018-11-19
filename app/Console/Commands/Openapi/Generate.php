@@ -158,7 +158,7 @@ class Generate extends Command
             $model = $this->getModelInstance($controller);
             return $this->getModelFilters($model);
         } catch (\ReflectionException $e) {
-            var_dump($e->getMessage());
+            //var_dump($e->getMessage());
         }
 
          return $filters;
