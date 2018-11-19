@@ -32,13 +32,13 @@ class AuthController extends BaseController
             );
 
             if ($user = $ldap->auth($username, $password)) {
-                return $response->header('X-AUTH-TOKEN', $this->getJWT($user));
+                return $response->setContent(['token' => $this->getJWT($user)]);
             }
         } catch (\Exception $e) {
             Log::error($e->getMessage());
         }
 
-        return $response->setStatusCode(401);
+        return $response->setContent('Authentication failed')->setStatusCode(401);
     }
 
     /**
