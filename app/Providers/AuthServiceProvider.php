@@ -38,6 +38,8 @@ class AuthServiceProvider extends ServiceProvider
                     return $this->basicAuth($credentials);
                 } elseif ($type === 'Digest') {
                     return $this->digestAuth($credentials);
+                } elseif ($type === 'Bearer') {
+                    return $this->tokenAuth($credentials);
                 }
             }
 
