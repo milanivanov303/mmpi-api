@@ -2,9 +2,7 @@
 
 namespace App\Repositories;
 
-use App\Helpers\DataFilter;
 use App\Models\Model;
-use App\Helpers\Mapper;
 use App\Helpers\ModelFilter;
 
 abstract class AbstractRepository
@@ -76,6 +74,8 @@ abstract class AbstractRepository
      * Get single record
      *
      * @param mixed $id
+     * @param array $fields
+     *
      * @return Model
      */
     public function find($id, array $fields = [])
@@ -116,6 +116,8 @@ abstract class AbstractRepository
      *
      * @param array $data
      * @return Model
+     *
+     * @throws \Throwable
      */
     public function create(array $data)
     {
@@ -128,6 +130,8 @@ abstract class AbstractRepository
      * @param array $data
      * @param mixed $id
      * @return Model
+     *
+     * @throws \Throwable
      */
     public function update(array $data, $id)
     {
@@ -171,7 +175,7 @@ abstract class AbstractRepository
      * @param array $filters
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function setFilters($filters)
+    public function setFilters(array $filters)
     {
         if (array_key_exists('fields', $filters)) {
             $this->model->setVisible($filters['fields']);

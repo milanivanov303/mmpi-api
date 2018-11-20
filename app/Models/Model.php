@@ -142,7 +142,7 @@ class Model extends \Illuminate\Database\Eloquent\Model
      */
     public function getColumns(): array
     {
-        // TODO: Add cache mehanism here, so we do not hit database every time
+        // TODO: Add cache mechanism here, so we do not hit database every time
         return Schema::getColumnListing($this->getTable());
     }
 

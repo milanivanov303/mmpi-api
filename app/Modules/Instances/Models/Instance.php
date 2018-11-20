@@ -3,7 +3,6 @@
 namespace App\Modules\Instances\Models;
 
 use App\Models\Model;
-use App\Models\User;
 use App\Models\EnumValue;
 use App\Modules\DeliveryChains\Models\DeliveryChainType;
 
