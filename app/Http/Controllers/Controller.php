@@ -20,8 +20,8 @@ class Controller extends BaseController
      * Get output response
      *
      * @param mixed $data
-     * @param integer $status
-     * @return Response
+     *
+     * @return JsonResource
      */
     public function output($data)
     {
@@ -36,7 +36,8 @@ class Controller extends BaseController
      * Create new
      *
      * @param Request $request
-     * @return Response
+     *
+     * @return JsonResource
      */
     public function create(Request $request)
     {
@@ -54,7 +55,8 @@ class Controller extends BaseController
      *
      * @param  Request  $request
      * @param  mixed  $id
-     * @return Response
+     *
+     * @return JsonResource
      */
     public function update(Request $request, $id)
     {
@@ -89,7 +91,8 @@ class Controller extends BaseController
      * Retrieve by id.
      *
      * @param  mixed  $id
-     * @return Response
+     *
+     * @return JsonResource
      */
     public function getOne(Request $request, $id)
     {
@@ -101,7 +104,8 @@ class Controller extends BaseController
     /**
      *
      * @param Request $request
-     * @return Response
+     *
+     * @return JsonResource
      */
     public function getMany(Request $request)
     {

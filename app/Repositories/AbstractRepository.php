@@ -74,11 +74,11 @@ abstract class AbstractRepository
      * Get single record
      *
      * @param mixed $id
-     * @param array $fields
+     * @param mixed $fields
      *
      * @return Model
      */
-    public function find($id, array $fields = [])
+    public function find($id, $fields = [])
     {
         $this->model->setVisible($fields);
         $this->model->setWith($this->getWith());
