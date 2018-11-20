@@ -38,7 +38,9 @@ class IssueRepository extends AbstractRepository implements RepositoryInterface
      * Save issue
      *
      * @param array $data
-     * @return Model
+     * @return Issue
+     *
+     * @throws \Throwable
      */
     protected function save($data)
     {

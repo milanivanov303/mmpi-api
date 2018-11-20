@@ -52,7 +52,12 @@
                     "type": "integer"
                 },
                 "department_type": {
-                    "$ref": "/api/v1/enum-value.json"
+                    "oneOf": [
+                        {
+                            "$ref": "/api/v1/enum-value.json"
+                        },
+                        {"type": "null"}
+                    ]
                 },
                 "status": {
                     "type": "integer"

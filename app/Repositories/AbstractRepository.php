@@ -78,7 +78,7 @@ abstract class AbstractRepository
      * @param mixed $id
      * @return Model
      */
-    public function find($id, $fields = [])
+    public function find($id, array $fields = [])
     {
         $this->model->setVisible($fields);
         $this->model->setWith($this->getWith());
@@ -140,6 +140,8 @@ abstract class AbstractRepository
      *
      * @param array $data
      * @return Model
+     *
+     * @throws \Throwable
      */
     protected function save($data)
     {
