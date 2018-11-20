@@ -10,6 +10,9 @@
         "rev"
     ],
     "properties": {
+        "id": {
+            "type": "integer"
+        },
         "branch": {
             "type": "string",
             "description": "Branch name",

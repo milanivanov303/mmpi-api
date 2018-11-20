@@ -11,39 +11,42 @@
 */
 
 // API
-$router->group([
-    'prefix'     => 'api',
-    'middleware' => ['auth', 'json-validator']
-], function () use ($router) {
+$router->group(['prefix' => 'api'], function () use ($router) {
 
     // v1
     $router->group(['prefix' => 'v1'], function () use ($router) {
 
-        // Users
-        require 'api/v1/users.php';
+        // Auth
+        require 'api/v1/auth.php';
 
-        // Hashes
-        require 'api/v1/hashes.php';
+        $router->group(['middleware' => ['auth', 'json-validator']], function () use ($router) {
 
-        // Issues
-        require 'api/v1/issues.php';
+            // Users
+            require 'api/v1/users.php';
 
-        // Projects
-        require 'api/v1/projects.php';
+            // Hashes
+            require 'api/v1/hashes.php';
 
-        // Instances
-        require 'api/v1/instances.php';
+            // Issues
+            require 'api/v1/issues.php';
 
-        // Delivery chains
-        require 'api/v1/delivery-chains.php';
+            // Projects
+            require 'api/v1/projects.php';
 
-        // Modifications
-        require 'api/v1/modifications.php';
+            // Instances
+            require 'api/v1/instances.php';
 
-        // Patch Requests
-        require 'api/v1/patch-requests.php';
+            // Delivery chains
+            require 'api/v1/delivery-chains.php';
 
-        // Patches
-        require 'api/v1/patches.php';
+            // Modifications
+            require 'api/v1/modifications.php';
+
+            // Patch Requests
+            require 'api/v1/patch-requests.php';
+
+            // Patches
+            require 'api/v1/patches.php';
+        });
     });
 });

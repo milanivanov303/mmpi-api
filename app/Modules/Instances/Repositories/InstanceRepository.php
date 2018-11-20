@@ -17,4 +17,30 @@ class InstanceRepository extends AbstractRepository implements RepositoryInterfa
     {
         $this->model = $model;
     }
+
+    /**
+     * Save Instance
+     *
+     * @param array $data
+     * @return Instance
+     *
+     * @throws \Throwable
+     */
+    protected function save($data)
+    {
+        $this->model->fill($data);
+
+        $this->model->owner()->associate($data['owner']['id']);
+        $this->model->status()->associate($data['status']['id']);
+        $this->model->environmentType()->associate($data['environment_type']['id']);
+        $this->model->instanceType()->associate(
+            isset($data['instance_type']) ? $data['instance_type']['id'] : null
+        );
+
+        $this->model->saveOrFail();
+
+        $this->model->load($this->getWith());
+
+        return $this->model;
+    }
 }

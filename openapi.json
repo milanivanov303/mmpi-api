@@ -7,25 +7,23 @@
   },
   "servers": [
     {
-      "url": "http:\/\/yarnaudov.codixfr.private:8111\/api\/v1\/"
-    },
-    {
-      "url": "http:\/\/localhost:8111\/api\/v1\/"
-    }
-  ],
-  "security": [
-    {
-      "api_key": [
-
-      ]
+      "url": "https:\/\/asparuh.codixfr.private:4681\/mmpi-api\/api\/v1\/",
+      "description": "Development server"
     }
   ],
   "components": {
     "securitySchemes": {
-      "api_key": {
+      "xAuthToken": {
         "in": "header",
         "name": "X-AUTH-TOKEN",
-        "type": "apiKey"
+        "type": "apiKey",
+        "description": "Make auth request first and get JWT to use here"
+      },
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "Make auth request first and get JWT to use here"
       }
     },
     "parameters": {
@@ -94,6 +92,62 @@
           "example": "field1, field2"
         }
       }
+    },
+    "responses": {
+      "Deleted": {
+        "description": "Deleted",
+        "content": {
+          "text\/html": {
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "Unauthorized": {
+        "description": "Unauthorized",
+        "content": {
+          "text\/html": {
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "NotFound": {
+        "description": "Not found",
+        "content": {
+          "text\/html": {
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "ValidationError": {
+        "description": "Unprocessable Entity",
+        "content": {
+          "application\/json": {
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object"
+              }
+            }
+          }
+        }
+      },
+      "InternalServerError": {
+        "description": "Internal Server Error",
+        "content": {
+          "text\/html": {
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
     }
-  }
+  },
+  "paths": {}
 }

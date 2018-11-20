@@ -43,7 +43,7 @@ abstract class RestTestCase extends TestCase
      */
     protected function getPrimaryKeyValue($data)
     {
-        return $data[$this->primaryKey];
+        return $data[$this->primaryKey] ?? null;
     }
 
     /**
@@ -66,6 +66,21 @@ abstract class RestTestCase extends TestCase
     }
 
     /**
+     * Get response data
+     *
+     * @return array
+     */
+    protected function create($data)
+    {
+        $this
+            ->json('POST', $this->uri, $data)
+            ->seeJson($data)
+            ->assertResponseStatus(201);
+
+        return json_decode($this->response->getContent(), JSON_OBJECT_AS_ARRAY)['data'];
+    }
+
+    /**
      * Test creation
      *
      * @return void
@@ -73,11 +88,7 @@ abstract class RestTestCase extends TestCase
     public function testCreate()
     {
         $data = $this->getData();
-
-        $this
-            ->json('POST', $this->uri, $data)
-            ->seeJson($data)
-            ->assertResponseStatus(201);
+        $data = $this->create($data);
 
         $this->seeInDatabase($this->table, [
             $this->primaryKey => $this->getPrimaryKeyValue($data)
@@ -111,10 +122,8 @@ abstract class RestTestCase extends TestCase
      */
     public function testUpdate()
     {
-        $data       = $this->getData();
+        $data       = $this->create($this->getData());
         $updateData = $this->getUpdateData($data);
-
-        $this->json('POST', $this->uri, $data);
 
         $this
             ->json('PUT', $this->uri . '/' . $this->getPrimaryKeyValue($data), $updateData)
@@ -133,9 +142,7 @@ abstract class RestTestCase extends TestCase
      */
     public function testDelete()
     {
-        $data = $this->getData();
-
-        $this->json('POST', $this->uri, $data);
+        $data = $this->create($this->getData());
 
         $this
             ->json('DELETE', $this->uri . '/' . $this->getPrimaryKeyValue($data))
@@ -153,9 +160,7 @@ abstract class RestTestCase extends TestCase
      */
     public function testGet()
     {
-        $data = $this->getData();
-
-        $this->json('POST', $this->uri, $data);
+        $data = $this->create($this->getData());
 
         $this
             ->get( $this->uri . '/' . $this->getPrimaryKeyValue($data))

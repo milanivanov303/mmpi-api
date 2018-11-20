@@ -126,10 +126,14 @@ class OAPathItem implements Arrayable
      */
     protected function getLinkToSchema(string $resource = ''):string
     {
-        return trim(
-            "{$this->schemasBaseUri}{$this->getSchema()->getId()}/{$resource}",
-            '/'
-        );
+        if ($this->hasSchema()) {
+            return trim(
+                "{$this->schemasBaseUri}{$this->getSchema()->getId()}/{$resource}",
+                '/'
+            );
+        }
+
+        return '';
     }
 
     /**
@@ -344,22 +348,9 @@ class OAPathItem implements Arrayable
             ];
         }
 
-        if ($this->isMethod('delete')) {
-            $responses['204'] = [
-                'description' => 'Deleted',
-                'content' => [
-                    'text/html' => [
-                        'schema' => [
-                            'type' => 'string'
-                        ]
-                    ]
-                ]
-            ];
-        }
-
         if ($this->isMethod('get') && $this->isListResorceUri()) {
             $responses['200'] = [
-                'description' => '',
+                'description' => 'Success',
                 'content' => [
                     'application/json' => [
                         'schema' => [
@@ -385,7 +376,7 @@ class OAPathItem implements Arrayable
 
         if ($this->isMethod('put') || ($this->isMethod('get') && $this->isSingleResorceUri())) {
             $responses['200'] = [
-                'description' => '',
+                'description' => 'Success',
                 'content' => [
                     'application/json' => [
                         'schema' => [
@@ -405,56 +396,21 @@ class OAPathItem implements Arrayable
             ];
         }
 
-        $responses['401'] = [
-            'description' => 'Unauthorized',
-            'content' => [
-                'text/html' => [
-                    'schema' => [
-                        'type' => 'string'
-                    ]
-                ]
-            ]
-        ];
+        if ($this->isMethod('delete')) {
+            $responses['204'] = ['$ref' => '#/components/responses/Deleted'];
+        }
+
+        $responses['401'] = ['$ref' => '#/components/responses/Unauthorized'];
 
         if ($this->isSingleResorceUri()) {
-            $responses['404'] = [
-                'description' => 'Not found',
-                'content' => [
-                    'text/html' => [
-                        'schema' => [
-                            'type' => 'string'
-                        ]
-                    ]
-                ]
-            ];
+            $responses['404'] = ['$ref' => '#/components/responses/NotFound'];
         }
 
         if ($this->isMethod('post') || $this->isMethod('put')) {
-            $responses['422'] = [
-                'description' => 'Unprocessable Entity',
-                'content' => [
-                    'application/json' => [
-                        'schema' => [
-                            'type' => 'array',
-                            'items' => [
-                                'type' => 'object'
-                            ]
-                        ]
-                    ]
-                ]
-            ];
+            $responses['422'] = ['$ref' => '#/components/responses/ValidationError'];
         }
 
-        $responses['500'] = [
-            'description' => 'Internal Server Error',
-            'content' => [
-                'text/html' => [
-                    'schema' => [
-                        'type' => 'string'
-                    ]
-                ]
-            ]
-        ];
+        $responses['500'] = ['$ref' => '#/components/responses/InternalServerError'];
 
         return $responses;
     }
@@ -466,18 +422,25 @@ class OAPathItem implements Arrayable
      */
     public function toArray():array
     {
-        return array_filter(
-            [
-                'description' => $this->getDescription(),
-                'operationId' => $this->getOperationId(),
-                'tags'        => $this->getTags(),
-                'parameters'  => $this->getParameters(),
-                'requestBody' => $this->getRequestBody(),
-                'responses'   => $this->getResponses(),
-                'security'    => [
-                    ['api_key' => []]
+        $pathItem = [
+            'description' => $this->getDescription(),
+            'operationId' => $this->getOperationId(),
+            'tags'        => $this->getTags(),
+            'parameters'  => $this->getParameters(),
+            'requestBody' => $this->getRequestBody(),
+            'responses'   => $this->getResponses(),
+            'security'    => [
+                [
+                    'xAuthToken' => [],
+                    'bearerAuth' => []
                 ]
             ]
-        );
+        ];
+
+        if (array_key_exists('openapi', $this->route['action'])) {
+            $pathItem = array_merge($pathItem, $this->route['action']['openapi']);
+        }
+
+        return array_filter($pathItem);
     }
 }

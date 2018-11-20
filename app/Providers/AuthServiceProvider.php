@@ -4,8 +4,11 @@ namespace App\Providers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;
+use App\Helpers\Ldap;
+use Adldap\Adldap;
+use Firebase\JWT\JWT;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -27,7 +30,6 @@ class AuthServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->app['auth']->viaRequest('api', function (Request $request) {
-
             $header = $request->header('Authorization');
             if ($header) {
                 list($type, $credentials) = explode(' ', $header);
@@ -36,6 +38,8 @@ class AuthServiceProvider extends ServiceProvider
                     return $this->basicAuth($credentials);
                 } elseif ($type === 'Digest') {
                     return $this->digestAuth($credentials);
+                } elseif ($type === 'Bearer') {
+                    return $this->tokenAuth($credentials);
                 }
             }
 
@@ -52,17 +56,22 @@ class AuthServiceProvider extends ServiceProvider
      * Basic authentication
      *
      * @param string $credentials Base64 encoded credentials
-     * @return true|null
+     * @return User|null
      */
     protected function basicAuth($credentials)
     {
+        /*
+        list($username, $password) = explode(':', base64_decode($credentials));
+
         try {
-            list($user, $pass) = explode(':', base64_decode($credentials));
-            return User::auth($user, $pass);
-        } catch (QueryException $e) {
+            $ldap = new Ldap(
+                new Adldap(['default' => config('app.ldap')])
+            );
+            return $ldap->auth($username, $password);
+        } catch (\Exception $e) {
             Log::error($e->getMessage());
         }
-
+        */
         return null;
     }
 
@@ -75,6 +84,7 @@ class AuthServiceProvider extends ServiceProvider
     protected function digestAuth($credentials)
     {
         // implement logic for Digest auth
+        return null;
     }
 
     /**
@@ -85,14 +95,17 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected function tokenAuth($token)
     {
-        // hardcore this for now till we have clear idea how tokens will work
-        if ($token === 'GOSTUN-19751019-ORGANA') {
-            return new User();
+        try {
+            $decoded = JWT::decode(
+                $token,
+                config('app.jwt.secret_key'),
+                [config('app.jwt.algorithm')]
+            );
+            return User::where('email', $decoded->email)->first();
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
         }
         
         return null;
-        
-        // implement logic for token auth
-        // return User::where('api_token', $token)->first();
     }
 }

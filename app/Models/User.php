@@ -91,24 +91,6 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     }
 
     /**
-     * Auth user
-     *
-     * @param string $email
-     * @param string $password
-     * @return bool
-     */
-    public static function auth($email, $password)
-    {
-        $user = self::where('email', $email)->first();
-
-        if ($user && password_verify($password, $user->password)) {
-            return $user;
-        }
-
-        return null;
-    }
-
-    /**
      * Get user department.
      */
     public function department()
