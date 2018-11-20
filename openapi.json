@@ -7,16 +7,8 @@
   },
   "servers": [
     {
-      "url": "http:\/\/yarnaudov.codixfr.private:8111\/api\/v1\/"
-    },
-    {
-      "url": "http:\/\/localhost:8111\/api\/v1\/"
-    }
-  ],
-  "security": [
-    {
-      "api_key": [
-      ]
+      "url": "https:\/\/asparuh.codixfr.private:4681\/mmpi-api\/api\/v1\/",
+      "description": "Development server"
     }
   ],
   "components": {
@@ -25,13 +17,13 @@
         "in": "header",
         "name": "X-AUTH-TOKEN",
         "type": "apiKey",
-        "description": "Make auth request and you will get JWT to use in next requests"
+        "description": "Make auth request first and get JWT to use here"
       },
       "bearerAuth": {
         "type": "http",
         "scheme": "bearer",
         "bearerFormat": "JWT",
-        "description": "Make auth request and you will get JWT to use in next requests"
+        "description": "Make auth request first and get JWT to use here"
       }
     },
     "parameters": {
