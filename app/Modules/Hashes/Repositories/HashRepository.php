@@ -2,14 +2,13 @@
 
 namespace App\Modules\Hashes\Repositories;
 
+use App\Modules\Hashes\Jobs\ProcessTags;
 use App\Modules\Hashes\Models\HashCommit;
 use App\Repositories\RepositoryInterface;
 use App\Repositories\AbstractRepository;
 use App\Modules\Hashes\Models\HashChain;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
-use App\Modules\Hashes\Services\Tags;
-use App\Modules\Hashes\Services\DescriptionParser;
 
 class HashRepository extends AbstractRepository implements RepositoryInterface
 {
@@ -69,14 +68,14 @@ class HashRepository extends AbstractRepository implements RepositoryInterface
         DB::transaction(function () use ($data) {
             $this->model->saveOrFail();
 
-            // save tags from description
-            $this->saveTags($data['description'] ?? "");
-
             // save hash files
             $this->saveFiles($data['files'] ?? []);
 
             // save hash chains
             $this->saveChains($data['chains'] ?? []);
+
+            // save tags from description
+            $this->saveTags();
         });
 
         $this->model->load($this->with);
@@ -84,12 +83,15 @@ class HashRepository extends AbstractRepository implements RepositoryInterface
         return $this->model;
     }
 
-    protected function saveTags($description)
+    /**
+     * Save tags
+     */
+    protected function saveTags()
     {
-        $parser = new DescriptionParser($description);
-        $tags = new Tags($this->model, $parser);
-
-        $tags->save();
+        dispatch(
+            (new ProcessTags($this->model))
+                ->onQueue('tags')
+        );
     }
 
     /**

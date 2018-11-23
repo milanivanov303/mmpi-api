@@ -39,7 +39,11 @@
     "scripts": {
         "post-root-package-install": [
             "php -r \"copy('.env.example', '.env');\""
-        ]
+        ],
+        "test": "phpunit --colors=always",
+        "test:unit": "phpunit --colors=always ./tests/Unit",
+        "test:functional": "phpunit --colors=always ./tests/Functional",
+        "test:unit:coverage": "phpunit --coverage-text --colors=never ./tests/Unit"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,

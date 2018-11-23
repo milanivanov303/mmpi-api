@@ -4,12 +4,12 @@ namespace App\Modules\Hashes\Services;
 
 use App\Models\EnumValue;
 
-class DescriptionParser
+class DescriptionParserService
 {
     const TTS_KEYS_KEY     = 'cvs_tag_tts_key';
     const FUNC_CHANGES_KEY = 'cvs_tag_func_changes';
     const TECH_CHANGES_KEY = 'cvs_tag_tech_changes';
-    const MERGES_KEY       = 'cvs_tag_merge';
+    const MERGE_KEY        = 'cvs_tag_merge';
     const DEPENDENCIES_KEY = 'cvs_tag_dependencies';
     const TESTS_KEY        = 'cvs_tag_test';
     const SUBJECTS_KEY     = 'cvs_tag_subject';
@@ -22,7 +22,7 @@ class DescriptionParser
      *
      * @var string
      */
-    protected $description;
+    protected $description = null;
 
     /**
      * Parsed tags data
@@ -43,12 +43,36 @@ class DescriptionParser
      *
      * @param string $description
      */
-    public function __construct(string $description)
+    public function __construct(string $description = null)
+    {
+        $this->setKeys();
+
+        if ($description) {
+            $this->description = $description;
+            $this->parse();
+        }
+    }
+
+    /**
+     * Set description
+     *
+     * @param string $description
+     * @return $this
+     */
+    public function setDescription(string $description)
     {
         $this->description = $description;
+        return $this;
+    }
 
-        $this->setKeys();
-        $this->parse();
+    /**
+     * Get description
+     *
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
     }
 
     /**
@@ -78,7 +102,7 @@ class DescriptionParser
     /**
      * Parse description
      */
-    protected function parse()
+    public function parse()
     {
         // add tag_end, before every tag, so we can split by it
         foreach ($this->keys as $key => $pattern) {
@@ -87,17 +111,19 @@ class DescriptionParser
             }, $this->description);
         }
 
-        $lines = array_filter(
+        // split description by tag_end and remove empty elements
+        $tags = array_filter(
             array_map(
                 'trim',
                 explode(self::TAG_END, $this->description)
             )
         );
 
-        foreach ($lines as $line) {
+        // loop tags and put them in correct section by matching defined patterns
+        foreach ($tags as $tag) {
             foreach ($this->keys as $key => $pattern) {
-                if (preg_match($pattern, $line)) {
-                    $this->addTagData($key, $line);
+                if (preg_match($pattern, $tag)) {
+                    $this->addTagData($key, $tag);
                 }
             }
         }
@@ -131,7 +157,7 @@ class DescriptionParser
         return array_filter(
             array_map(
                 'trim',
-                preg_split('/(,)|(\n)|(;)/', $data)
+                preg_split('/[\n,;]/', $data, -1, PREG_SPLIT_NO_EMPTY)
             )
         );
     }
@@ -144,6 +170,16 @@ class DescriptionParser
     public function hasTags()
     {
         return count($this->tags) > 0;
+    }
+
+    /**
+     * Check if there are no tags for this description
+     *
+     * @return bool
+     */
+    public function hasNoTags()
+    {
+        return !$this->hasTags();
     }
 
     /**
@@ -189,11 +225,11 @@ class DescriptionParser
     /**
      * Get merges
      *
-     * @return array|
+     * @return string
      */
-    public function getMerges()
+    public function getMerge()
     {
-        return $this->getData(static::MERGES_KEY);
+        return $this->getData(static::MERGE_KEY);
     }
 
     /**
