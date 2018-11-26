@@ -2,20 +2,13 @@
 
 namespace App\Modules\Hashes\Services;
 
-use App\Models\EnumValue;
+//use App\Models\EnumValue;
 use App\Models\ImxTable;
 use App\Models\Source;
-use Illuminate\Support\Facades\DB;
 
 class DependencyService
 {
     const TAG_REV_NUM_KEY = 'cvs_tag_rev_num';
-
-    const REV_KEYWORDS = [
-        'revision',
-        'version',
-        '>='
-    ];
 
     /**
      * @var string
@@ -69,7 +62,7 @@ class DependencyService
 
         $this->name     = $this->pathinfo['basename'];
         $this->type     = $this->getType();
-        $this->revision = $this->getRevision($data);
+        $this->revision = $this->getRevision();
         $this->path     = $this->getPath();
     }
 
@@ -110,7 +103,7 @@ class DependencyService
      *
      * @return null|string
      */
-    public function getType()
+    protected function getType()
     {
         if (array_key_exists('extension', $this->pathinfo)) {
             switch ($this->pathinfo['extension']) {
@@ -147,10 +140,11 @@ class DependencyService
     protected function isTableName()
     {
         // check in local tables list
-        $table = ImxTable
+        $table = app(ImxTable::class)
                     ::where('table_name', $this->getTableName())
                     ->where('column_name', $this->getColumnName())
                     ->first();
+
         if ($table) {
             $this->depId = $table->id;
             return true;
@@ -190,7 +184,10 @@ class DependencyService
      */
     protected function getPath()
     {
-        $source = Source::where('source_name', $this->name)->withRevision($this->revision)->first();
+        $source = app(Source::class)
+                    ::where('source_name', $this->name)
+                    ->withRevision($this->revision)
+                    ->first();
 
         if ($source) {
             $this->depId = $source->source_id;

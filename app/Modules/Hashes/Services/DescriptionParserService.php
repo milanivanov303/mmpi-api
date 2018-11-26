@@ -3,6 +3,7 @@
 namespace App\Modules\Hashes\Services;
 
 use App\Models\EnumValue;
+use Illuminate\Support\Facades\DB;
 
 class DescriptionParserService
 {
@@ -43,26 +44,12 @@ class DescriptionParserService
      *
      * @param string $description
      */
-    public function __construct(string $description = null)
+    public function __construct(string $description)
     {
         $this->setKeys();
 
-        if ($description) {
-            $this->description = $description;
-            $this->parse();
-        }
-    }
-
-    /**
-     * Set description
-     *
-     * @param string $description
-     * @return $this
-     */
-    public function setDescription(string $description)
-    {
         $this->description = $description;
-        return $this;
+        $this->parse();
     }
 
     /**
@@ -81,6 +68,8 @@ class DescriptionParserService
      */
     protected function setKeys()
     {
+        DB::table('aaa');
+
         $enums = EnumValue::where('type', 'cvs_log_tags_stack')->get(['key', 'extra_property']);
 
         foreach ($enums as $enum) {
@@ -102,7 +91,7 @@ class DescriptionParserService
     /**
      * Parse description
      */
-    public function parse()
+    protected function parse()
     {
         // add tag_end, before every tag, so we can split by it
         foreach ($this->keys as $key => $pattern) {
@@ -205,7 +194,7 @@ class DescriptionParserService
     /**
      * Get functional changes
      *
-     * @return array
+     * @return string
      */
     public function getFuncChanges()
     {
@@ -215,7 +204,7 @@ class DescriptionParserService
     /**
      * Get technical changes
      *
-     * @return array
+     * @return string
      */
     public function getTechChanges()
     {
@@ -223,7 +212,7 @@ class DescriptionParserService
     }
 
     /**
-     * Get merges
+     * Get merge
      *
      * @return string
      */
@@ -253,11 +242,11 @@ class DescriptionParserService
     }
 
     /**
-     * Get subjects
+     * Get subject
      *
-     * @return array
+     * @return string
      */
-    public function getSubjects()
+    public function getSubject()
     {
         return $this->getData(static::SUBJECTS_KEY);
     }
