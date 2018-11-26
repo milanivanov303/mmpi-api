@@ -68,8 +68,6 @@ class DescriptionParserService
      */
     protected function setKeys()
     {
-        DB::table('aaa');
-
         $enums = EnumValue::where('type', 'cvs_log_tags_stack')->get(['key', 'extra_property']);
 
         foreach ($enums as $enum) {
