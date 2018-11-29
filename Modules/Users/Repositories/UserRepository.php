@@ -2,8 +2,8 @@
 
 namespace Modules\Users\Repositories;
 
-use Modules\Core\Repositories\AbstractRepository;
-use Modules\Core\Repositories\RepositoryInterface;
+use Core\Repositories\AbstractRepository;
+use Core\Repositories\RepositoryInterface;
 use App\Models\User;
 
 class UserRepository extends AbstractRepository implements RepositoryInterface

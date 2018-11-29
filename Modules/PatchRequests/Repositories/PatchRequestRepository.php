@@ -2,9 +2,9 @@
 
 namespace Modules\PatchRequests\Repositories;
 
-use Modules\Core\Repositories\RepositoryInterface;
-use Modules\Core\Repositories\AbstractRepository;
-use Modules\Core\Models\Model;
+use Core\Repositories\RepositoryInterface;
+use Core\Repositories\AbstractRepository;
+use Core\Models\Model;
 use Modules\PatchRequests\Models\PatchRequest;
 use Modules\Issues\Models\Issue;
 use Modules\DeliveryChains\Models\DeliveryChain;

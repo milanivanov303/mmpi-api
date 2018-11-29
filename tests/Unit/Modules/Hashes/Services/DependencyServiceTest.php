@@ -3,7 +3,7 @@
 use Modules\Hashes\Services\DependencyService;
 use App\Models\ImxTable;
 use App\Models\Source;
-use Modules\Core\Models\Model;
+use Core\Models\Model;
 
 class DependencyServiceTest extends TestCase
 {

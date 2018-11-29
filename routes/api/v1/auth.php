@@ -2,7 +2,7 @@
 
 $router->group([
     'prefix' => '',
-    'namespace' => '\Modules\Core\Http\Controllers'
+    'namespace' => '\Core\Http\Controllers'
 ], function () use ($router) {
 
     $router->post('auth', [

@@ -2,7 +2,7 @@
 
 namespace Modules\Hashes\Models;
 
-use Modules\Core\Models\Model;
+use Core\Models\Model;
 use App\Models\User;
 
 class HashCommit extends Model

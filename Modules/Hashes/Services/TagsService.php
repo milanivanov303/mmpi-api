@@ -4,7 +4,7 @@ namespace Modules\Hashes\Services;
 
 use App\Models\CommitMerge;
 use App\Models\Dependency;
-use Modules\Core\Models\Model;
+use Core\Models\Model;
 use App\Models\EnumValue;
 use App\Models\SourceRevCvsTag;
 use App\Models\SourceRevTtsKey;

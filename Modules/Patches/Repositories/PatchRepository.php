@@ -2,8 +2,8 @@
 
 namespace Modules\Patches\Repositories;
 
-use Modules\Core\Repositories\AbstractRepository;
-use Modules\Core\Repositories\RepositoryInterface;
+use Core\Repositories\AbstractRepository;
+use Core\Repositories\RepositoryInterface;
 use Modules\Patches\Models\Patch;
 
 class PatchRepository extends AbstractRepository implements RepositoryInterface

@@ -2,8 +2,8 @@
 
 namespace Modules\Projects\Repositories;
 
-use Modules\Core\Repositories\AbstractRepository;
-use Modules\Core\Repositories\RepositoryInterface;
+use Core\Repositories\AbstractRepository;
+use Core\Repositories\RepositoryInterface;
 use Modules\Projects\Models\Project;
 
 class ProjectRepository extends AbstractRepository implements RepositoryInterface

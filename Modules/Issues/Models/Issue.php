@@ -2,7 +2,7 @@
 
 namespace Modules\Issues\Models;
 
-use Modules\Core\Models\Model;
+use Core\Models\Model;
 use Modules\Projects\Models\Project;
 use Modules\Instances\Models\Instance;
 

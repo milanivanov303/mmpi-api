@@ -2,8 +2,8 @@
 
 namespace Modules\Modifications\Repositories;
 
-use Modules\Core\Repositories\AbstractRepository;
-use Modules\Core\Repositories\RepositoryInterface;
+use Core\Repositories\AbstractRepository;
+use Core\Repositories\RepositoryInterface;
 use Modules\Modifications\Models\Modification;
 
 class ModificationRepository extends AbstractRepository implements RepositoryInterface

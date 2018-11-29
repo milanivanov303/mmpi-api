@@ -2,8 +2,8 @@
 
 namespace Modules\Instances\Repositories;
 
-use Modules\Core\Repositories\AbstractRepository;
-use Modules\Core\Repositories\RepositoryInterface;
+use Core\Repositories\AbstractRepository;
+use Core\Repositories\RepositoryInterface;
 use Modules\Instances\Models\Instance;
 
 class InstanceRepository extends AbstractRepository implements RepositoryInterface
