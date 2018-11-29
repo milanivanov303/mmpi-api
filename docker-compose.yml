@@ -9,7 +9,6 @@ services:
             - 8111:80
         volumes:
             - .:/var/www
-            - ./storage/logs:/var/www/logs
         depends_on:
             - mysql
         networks:
