@@ -15,8 +15,8 @@ class IssuesTest extends RestTestCase
     {
         $faker = Faker\Factory::create();
 
-        $instance = \App\Modules\Instances\Models\Instance::inRandomOrder()->first();
-        $project  = \App\Modules\Projects\Models\Project::inRandomOrder()->first();
+        $instance = \Modules\Instances\Models\Instance::inRandomOrder()->first();
+        $project  = \Modules\Projects\Models\Project::inRandomOrder()->first();
 
         return [
             'subject'           => $faker->realText(),

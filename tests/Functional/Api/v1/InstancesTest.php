@@ -2,8 +2,8 @@
 
 use App\Models\User;
 use App\Models\EnumValue;
-use App\Modules\DeliveryChains\Models\DeliveryChainType;
-use App\Modules\Instances\Models\InstanceType;
+use Modules\DeliveryChains\Models\DeliveryChainType;
+use Modules\Instances\Models\InstanceType;
 
 class InstancesTest extends RestTestCase
 {

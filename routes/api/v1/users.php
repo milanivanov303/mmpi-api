@@ -2,7 +2,7 @@
 
 $router->group([
     'prefix' => 'users',
-    'namespace' => '\App\Modules\Users\Controllers'
+    'namespace' => '\Modules\Users\Http\Controllers'
 ], function () use ($router) {
     $router->get('', [
         'as'          => 'users.list',

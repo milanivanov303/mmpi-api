@@ -2,7 +2,7 @@
 
 $router->group([
     'prefix' => 'modifications',
-    'namespace' => '\App\Modules\Modifications\Controllers'
+    'namespace' => '\Modules\Modifications\Http\Controllers'
 ], function () use ($router) {
     $router->get('', [
         'as'          => 'modifications.list',

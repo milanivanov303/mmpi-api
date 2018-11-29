@@ -2,7 +2,7 @@
 
 $router->group([
     'prefix' => 'instances',
-    'namespace' => '\App\Modules\Instances\Controllers'
+    'namespace' => '\Modules\Instances\Http\Controllers'
 ], function () use ($router) {
     $router->get('', [
         'as'          => 'instances.list',

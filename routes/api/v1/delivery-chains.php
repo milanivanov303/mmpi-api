@@ -2,7 +2,7 @@
 
 $router->group([
     'prefix' => 'delivery-chains',
-    'namespace' => '\App\Modules\DeliveryChains\Controllers'
+    'namespace' => '\Modules\DeliveryChains\Http\Controllers'
 ], function () use ($router) {
     $router->get('', [
         'as'          => 'delivery-chains.list',

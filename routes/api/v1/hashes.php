@@ -2,7 +2,7 @@
 
 $router->group([
     'prefix' => 'hashes',
-    'namespace' => '\App\Modules\Hashes\Controllers'
+    'namespace' => '\Modules\Hashes\Http\Controllers'
 ], function () use ($router) {
     $router->get('', [
         'as'          => 'hashes.list',

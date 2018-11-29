@@ -2,7 +2,7 @@
 
 $router->group([
     'prefix' => 'projects',
-    'namespace' => '\App\Modules\Projects\Controllers'
+    'namespace' => '\Modules\Projects\Http\Controllers'
 ], function () use ($router) {
     $router->get('', [
         'as'          => 'projects.list',

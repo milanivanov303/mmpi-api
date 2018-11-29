@@ -1,7 +1,7 @@
 <?php
 
 use App\Models\EnumValue;
-use App\Modules\DeliveryChains\Models\DeliveryChainType;
+use Modules\DeliveryChains\Models\DeliveryChainType;
 
 class DeliveryChainsTest extends RestTestCase
 {

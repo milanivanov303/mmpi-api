@@ -2,7 +2,7 @@
 
 $router->group([
     'prefix' => 'issues',
-    'namespace' => '\App\Modules\Issues\Controllers'
+    'namespace' => '\Modules\Issues\Http\Controllers'
 ], function () use ($router) {
     $router->get('', [
         'as'          => 'issues.list',

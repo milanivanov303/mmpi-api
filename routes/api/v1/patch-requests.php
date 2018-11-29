@@ -2,7 +2,7 @@
 
 $router->group([
     'prefix' => 'patch-requests',
-    'namespace' => '\App\Modules\PatchRequests\Controllers'
+    'namespace' => '\Modules\PatchRequests\Http\Controllers'
 ], function () use ($router) {
     $router->get('', [
         'as'          => 'patch-requests.list',
