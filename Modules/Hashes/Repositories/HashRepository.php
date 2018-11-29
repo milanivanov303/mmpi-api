@@ -4,8 +4,8 @@ namespace Modules\Hashes\Repositories;
 
 use Modules\Hashes\Jobs\ProcessTags;
 use Modules\Hashes\Models\HashCommit;
-use App\Repositories\RepositoryInterface;
-use App\Repositories\AbstractRepository;
+use Modules\Core\Repositories\RepositoryInterface;
+use Modules\Core\Repositories\AbstractRepository;
 use Modules\Hashes\Models\HashChain;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;

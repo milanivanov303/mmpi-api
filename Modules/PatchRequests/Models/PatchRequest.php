@@ -2,7 +2,7 @@
 
 namespace Modules\PatchRequests\Models;
 
-use App\Models\Model;
+use Modules\Core\Models\Model;
 use Modules\Issues\Models\Issue;
 use Modules\Modifications\Models\Modification;
 use Modules\DeliveryChains\Models\DeliveryChain;

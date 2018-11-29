@@ -2,7 +2,7 @@
 
 namespace Modules\Patches\Models;
 
-use App\Models\Model;
+use Modules\Core\Models\Model;
 
 class PatchGroup extends Model
 {

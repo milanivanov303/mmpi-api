@@ -2,8 +2,8 @@
 
 namespace Modules\Issues\Repositories;
 
-use App\Repositories\RepositoryInterface;
-use App\Repositories\AbstractRepository;
+use Modules\Core\Repositories\RepositoryInterface;
+use Modules\Core\Repositories\AbstractRepository;
 use Modules\Issues\Models\Issue;
 
 class IssueRepository extends AbstractRepository implements RepositoryInterface

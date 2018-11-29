@@ -2,7 +2,7 @@
 
 namespace Modules\Instances\Models;
 
-use App\Models\Model;
+use Modules\Core\Models\Model;
 use App\Models\EnumValue;
 use Modules\DeliveryChains\Models\DeliveryChainType;
 

@@ -2,7 +2,7 @@
 
 namespace Modules\Modifications\Models;
 
-use App\Models\Model;
+use Modules\Core\Models\Model;
 use Modules\Issues\Models\Issue;
 use Modules\Instances\Models\Instance;
 use Modules\DeliveryChains\Models\DeliveryChain;

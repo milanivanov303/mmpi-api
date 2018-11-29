@@ -81,16 +81,6 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     }
 
     /**
-     * Hash user password
-     *
-     * @param $value
-     */
-    public function setPasswordAttribute($value)
-    {
-        $this->attributes['password'] = password_hash($value, PASSWORD_DEFAULT);
-    }
-
-    /**
      * Get user department.
      */
     public function department()

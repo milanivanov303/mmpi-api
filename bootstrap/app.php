@@ -62,14 +62,14 @@ $app->singleton(
 */
 
 $app->middleware([
-    App\Http\Middleware\HttpLogger::class,
-    App\Http\Middleware\DbLogger::class,
-    App\Http\Middleware\Cors::class
+    Modules\Core\Http\Middleware\HttpLogger::class,
+    Modules\Core\Http\Middleware\DbLogger::class,
+    Modules\Core\Http\Middleware\Cors::class
 ]);
 
 $app->routeMiddleware([
-    'auth'           => App\Http\Middleware\Authenticate::class,
-    'json-validator' => App\Http\Middleware\JsonValidator::class
+    'auth'           => Modules\Core\Http\Middleware\Authenticate::class,
+    'json-validator' => Modules\Core\Http\Middleware\JsonValidator::class
 ]);
 
 /*

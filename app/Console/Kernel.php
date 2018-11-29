@@ -13,7 +13,7 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        Commands\Openapi\Generate::class
+        \Modules\Core\Console\Commands\Openapi\Generate ::class
     ];
 
     /**

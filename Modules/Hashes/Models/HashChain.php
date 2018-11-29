@@ -2,7 +2,7 @@
 
 namespace Modules\Hashes\Models;
 
-use App\Models\Model;
+use Modules\Core\Models\Model;
 
 class HashChain extends Model
 {

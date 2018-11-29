@@ -2,7 +2,7 @@
 
 namespace Modules\DeliveryChains\Models;
 
-use App\Models\Model;
+use Modules\Core\Models\Model;
 use App\Models\EnumValue;
 
 class DeliveryChain extends Model

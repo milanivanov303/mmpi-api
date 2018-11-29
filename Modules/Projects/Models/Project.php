@@ -2,7 +2,7 @@
 
 namespace Modules\Projects\Models;
 
-use App\Models\Model;
+use Modules\Core\Models\Model;
 use App\Models\User;
 use App\Models\EnumValue;
 

@@ -2,8 +2,8 @@
 
 namespace Modules\DeliveryChains\Repositories;
 
-use App\Repositories\AbstractRepository;
-use App\Repositories\RepositoryInterface;
+use Modules\Core\Repositories\AbstractRepository;
+use Modules\Core\Repositories\RepositoryInterface;
 use Modules\DeliveryChains\Models\DeliveryChain;
 
 class DeliveryChainRepository extends AbstractRepository implements RepositoryInterface
