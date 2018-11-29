@@ -91,7 +91,7 @@ class HashCommit extends Model
      */
     public function chains()
     {
-        return $this->hasMany(HashCommitToChain::class, 'hash_commit_id');
+        return $this->belongsToMany(HashChain::class, 'hash_commit_to_chains');
     }
 
     /**
@@ -129,10 +129,7 @@ class HashCommit extends Model
 
         // convert chains relations to simple array with names
         if ($this->isVisible('chains') && array_key_exists('chains', $array)) {
-            $array['chains'] = array_column(
-                array_column($array['chains'], 'chain'),
-                'chain_name'
-            );
+            $array['chains'] = array_column($array['chains'], 'chain_name');
         }
 
         // set committed_by to owner username

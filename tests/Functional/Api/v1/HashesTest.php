@@ -36,7 +36,6 @@ class HashesTest extends RestTestCase
         return [
             'branch'       => 'default',
             'chains'       => [
-                'bcol_imx_v9_rel',
                 'bcol_imx_v9_rel'
             ],
             'description'  => 'IXDEV-1650 e_honor_param backend\n\nadd MOLO as mvn profile',

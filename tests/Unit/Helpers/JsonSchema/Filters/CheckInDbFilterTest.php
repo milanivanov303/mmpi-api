@@ -7,6 +7,9 @@ use App\Models\Model;
 
 class CheckInDbFilterTest extends TestCase
 {
+    /**
+     * @var CheckInDbFilter
+     */
     protected $filter;
 
     public function setUp()
@@ -16,7 +19,7 @@ class CheckInDbFilterTest extends TestCase
         $this->filter = new CheckInDbFilter();
 
         // Mock Request
-        app()->bind(\Illuminate\Http\Request::class, function () {
+        $this->app->bind(\Illuminate\Http\Request::class, function () {
             $mock = \Mockery::mock(\Illuminate\Http\Request::class)->makePartial();
             $mock->shouldReceive('method')->once()->andReturn('PUT');
             return $mock;

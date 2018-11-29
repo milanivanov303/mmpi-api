@@ -100,7 +100,7 @@ class ModelFilter
     {
         // Get operator from parameter value if exists
         $operator = current(explode(' ', $value));
-        if (preg_match('/$' . implode('|', $this->operators) . '/', $operator)) {
+        if (preg_match('/^' . implode('|', $this->operators) . '/', $operator)) {
             return $operator;
         }
 
