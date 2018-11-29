@@ -28,8 +28,8 @@ class Ldap
     /**
      * Authenticate user by sAMAccountName
      *
-     * @param $username
-     * @param $password
+     * @param string $username
+     * @param string $password
      *
      * @return User|null
      *
@@ -37,14 +37,14 @@ class Ldap
      * @throws \Adldap\Auth\PasswordRequiredException
      * @throws \Adldap\Auth\UsernameRequiredException
      */
-    public function auth($username, $password)
+    public function auth(string $username, string $password) : ?User
     {
         $provider = $this->adldap->connect();
 
         $user = $provider->search()->where('sAMAccountName', '=', $username)->first();
 
         if ($user && $provider->auth()->attempt($user->getDistinguishedName(), $password)) {
-            return User::where('username', $username)->first();
+            return User::where('username', $username)->active()->first();
         }
 
         return null;

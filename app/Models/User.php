@@ -121,4 +121,9 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     {
         return $this->belongsTo(User::class, 'deputy_id');
     }
+
+    public function scopeActive($query)
+    {
+        return $query->where('status', 1);
+    }
 }
