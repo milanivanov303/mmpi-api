@@ -35,6 +35,16 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     ];
 
     /**
+     * Check if user is super admin
+     *
+     * @return bool
+     */
+    public function isSuperAdmin()
+    {
+        return false;
+    }
+
+    /**
      * Define filters for this model
      *
      * @return array
@@ -112,6 +122,12 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         return $this->belongsTo(User::class, 'deputy_id');
     }
 
+    /**
+     * Get only active users
+     *
+     * @param $query
+     * @return mixed
+     */
     public function scopeActive($query)
     {
         return $query->where('status', 1);

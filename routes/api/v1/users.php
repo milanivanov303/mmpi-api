@@ -1,8 +1,9 @@
 <?php
 
 $router->group([
-    'prefix' => 'users',
-    'namespace' => '\Modules\Users\Http\Controllers'
+    'prefix'     => 'users',
+    'namespace'  => '\Modules\Users\Http\Controllers',
+    'middleware' => ['can:read,App\Models\User']
 ], function () use ($router) {
     $router->get('', [
         'as'          => 'users.list',

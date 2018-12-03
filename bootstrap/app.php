@@ -69,7 +69,8 @@ $app->middleware([
 
 $app->routeMiddleware([
     'auth'           => Core\Http\Middleware\Authenticate::class,
-    'json-validator' => Core\Http\Middleware\JsonValidator::class
+    'json-validator' => Core\Http\Middleware\JsonValidator::class,
+    'can'            => \Illuminate\Auth\Middleware\Authorize::class
 ]);
 
 /*

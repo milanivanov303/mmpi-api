@@ -27,7 +27,7 @@ services:
         networks:
             - local
         environment:
-            XDEBUG_CONFIG: remote_host=10.8.5.73
+            XDEBUG_CONFIG: remote_host=10.8.5.71
 
     mysql:
         build: docker/mysql
