@@ -4,7 +4,6 @@ services:
 
     nginx:
         build: docker/nginx
-        container_name: mmpi-api_nginx
         ports:
             - ${PORT}:80
         volumes:
@@ -16,7 +15,6 @@ services:
 
     php:
         build: docker/php
-        container_name: mmpi-api_php
         expose:
             - 9000
         volumes:
@@ -31,7 +29,6 @@ services:
 
     mysql:
         build: docker/mysql
-        container_name: mmpi-api_mysql
         environment:
             - MYSQL_DATABASE=mmpi
             - MYSQL_USER=mmpi
@@ -40,6 +37,11 @@ services:
             - MYSQL_ROOT_HOST=%
         volumes:
             - ./db/mysql:/var/lib/mysql
+        networks:
+            - local
+
+    elastic:
+        build: docker/elastic
         networks:
             - local
 
