@@ -34,4 +34,11 @@ $router->group([
             'security' => []
         ]
     ]);
+
+    $router->post('auth/refresh', [
+        'as'          => 'auth.refresh',
+        'schema'      => '/api/v1/auth.json',
+        'description' => 'Refresh JWT',
+        'uses'        => 'AuthController@refresh'
+    ]);
 });

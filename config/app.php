@@ -11,9 +11,10 @@ return [
     |
     */
     'jwt' => [
-        'secret_key' => env('JWT_SECRET_KEY', '66859BB88A7AD5214DF71CDCFA27DFF2EFCC80A81E9BA5FA0'),
-        'algorithm'  => env('JWT_ALGORITHM', 'HS256'),
-        'exp'        => env('JWT_EXP', '+1 day')
+        'secret_key'  => env('JWT_SECRET_KEY', '66859BB88A7AD5214DF71CDCFA27DFF2EFCC80A81E9BA5FA0'),
+        'algorithm'   => env('JWT_ALGORITHM', 'HS256'),
+        'exp'         => env('JWT_EXP', '+1 hour'),
+        'refresh_exp' => env('JWT_REFRESH_EXP', '+1 day')
     ],
 
     /*

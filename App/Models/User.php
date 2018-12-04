@@ -45,6 +45,17 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     }
 
     /**
+     * Get user by email
+     *
+     * @param string $email
+     * @return User|null
+     */
+    public static function getUserByEmail(string $email) : ?self
+    {
+        return self::where('email', $email)->active()->first();
+    }
+
+    /**
      * Define filters for this model
      *
      * @return array
