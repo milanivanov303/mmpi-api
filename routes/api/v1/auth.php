@@ -1,11 +1,11 @@
 <?php
 
 $router->group([
-    'prefix' => '',
+    'prefix' => 'auth',
     'namespace' => '\Core\Http\Controllers'
 ], function () use ($router) {
 
-    $router->post('auth', [
+    $router->post('', [
         'as'          => 'auth',
         'schema'      => '/api/v1/auth.json',
         'description' => 'Authenticate and get JWT',
@@ -35,9 +35,9 @@ $router->group([
         ]
     ]);
 
-    $router->post('auth/refresh', [
+    $router->post('refresh', [
         'as'          => 'auth.refresh',
-        'schema'      => '/api/v1/auth.json',
+        'schema'      => '/api/v1/auth-refresh.json',
         'description' => 'Refresh JWT',
         'uses'        => 'AuthController@refresh'
     ]);
