@@ -36,7 +36,7 @@ then
 
     if [ $EXIT_CODE == 0 ]; then
         printf "\n"
-        echo "App running on port: $PORT"
+        echo "App running on port: $WEB_SERVER_PORT"
     fi
 fi
 

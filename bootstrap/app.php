@@ -70,7 +70,8 @@ $app->middleware([
 $app->routeMiddleware([
     'auth'           => Core\Http\Middleware\Authenticate::class,
     'json-validator' => Core\Http\Middleware\JsonValidator::class,
-    'can'            => \Illuminate\Auth\Middleware\Authorize::class
+    'can'            => \Illuminate\Auth\Middleware\Authorize::class,
+    'auditing'       => Core\Http\Middleware\AuditingLogger::class
 ]);
 
 /*
@@ -85,7 +86,7 @@ $app->routeMiddleware([
 */
 
 $app->register(App\Providers\AuthServiceProvider::class);
-//$app->register(App\Providers\AppServiceProvider::class);
+$app->register(App\Providers\AppServiceProvider::class);
 //$app->register(App\Providers\EventServiceProvider::class);
 //$app->register(Illuminate\Redis\RedisServiceProvider::class);
 
