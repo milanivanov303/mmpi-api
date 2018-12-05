@@ -17,13 +17,13 @@
         "in": "header",
         "name": "X-AUTH-TOKEN",
         "type": "apiKey",
-        "description": "Make auth request first and get JWT to use here"
+        "description": "Make <a href=\"#operation/auth.login\">auth.login</a> request first and get JWT to use here"
       },
       "bearerAuth": {
         "type": "http",
         "scheme": "bearer",
         "bearerFormat": "JWT",
-        "description": "Make auth request first and get JWT to use here"
+        "description": "Make <a href=\"#operation/auth.login\">auth.login</a> request first and get JWT to use here"
       }
     },
     "parameters": {

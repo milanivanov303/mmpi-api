@@ -5,11 +5,12 @@ $router->group([
     'namespace' => '\Core\Http\Controllers'
 ], function () use ($router) {
 
-    $router->post('', [
-        'as'          => 'auth',
-        'schema'      => '/api/v1/auth.json',
+    $router->post('/login', [
+        'as'          => 'auth.login',
+        'schema'      => '/api/v1/login.json',
         'description' => 'Authenticate and get JWT',
-        'uses'        => 'AuthController@auth',
+        'uses'        => 'AuthController@login',
+        'tags'        => ['auth'],
         'openapi'     => [
             'responses' => [
                 '200' => [
@@ -20,7 +21,13 @@ $router->group([
                                 'type' => 'object',
                                 'properties' => [
                                     'token' => [
-                                        'type' => 'string'
+                                        'type' => 'string',
+                                        'description' => 'Use this token to make requests to the api'
+                                    ],
+                                    'refresh_token' => [
+                                        'type' => 'string',
+                                        'description' => 'Has longer live and can be used to get new 
+                                                          token without sending user and password over the network'
                                     ]
                                 ]
                             ]
@@ -35,10 +42,35 @@ $router->group([
         ]
     ]);
 
-    $router->post('refresh', [
+    $router->post('/refresh', [
         'as'          => 'auth.refresh',
-        'schema'      => '/api/v1/auth-refresh.json',
+        'schema'      => '/api/v1/refresh.json',
         'description' => 'Refresh JWT',
-        'uses'        => 'AuthController@refresh'
+        'uses'        => 'AuthController@refresh',
+        'tags'        => ['auth'],
+        'openapi'     => [
+            'responses' => [
+                '200' => [
+                    'description' => '',
+                    'content' => [
+                        'application/json' => [
+                            'schema' => [
+                                'type' => 'object',
+                                'properties' => [
+                                    'token' => [
+                                        'type' => 'string',
+                                        'description' => 'Use this token to make requests to the api'
+                                    ],
+                                ]
+                            ]
+                        ]
+                    ]
+                ],
+                '401' => [
+                    '$ref' => '#/components/responses/Unauthorized'
+                ]
+            ],
+            'security' => []
+        ]
     ]);
 });
