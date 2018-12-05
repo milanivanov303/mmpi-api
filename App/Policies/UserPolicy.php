@@ -7,7 +7,7 @@ use App\Models\User;
 class UserPolicy extends \Core\Policies\Policy
 {
     /**
-     * Determine if the given post can be updated by the user.
+     * Determine if user can read users.
      *
      * @param  User  $user
      * @return bool

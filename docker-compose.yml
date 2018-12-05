@@ -42,6 +42,8 @@ services:
 
     elastic:
         build: docker/elastic
+        ports:
+            - 9200:9200
         networks:
             - local
 
