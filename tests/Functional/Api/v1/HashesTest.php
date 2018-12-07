@@ -58,9 +58,10 @@ class HashesTest extends RestTestCase
     /**
      * Get request invalid data
      *
+     * @param array $data
      * @return array
      */
-    protected function getInvalidData($data)
+    protected function getInvalidData(array $data)
     {
         // Set invalid parameters
         $data['owner'] = 'INVALID_OWNER';
@@ -75,9 +76,10 @@ class HashesTest extends RestTestCase
     /**
      * Get request update data
      *
+     * @param array $data
      * @return array
      */
-    protected function getUpdateData($data)
+    protected function getUpdateData(array $data)
     {
         // Change parameters
         $data['description'] = 'UPDATED_DESCRIPTION';

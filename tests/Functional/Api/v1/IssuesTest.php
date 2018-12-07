@@ -34,9 +34,10 @@ class IssuesTest extends RestTestCase
     /**
      * Get request invalid data
      *
+     * @param array $data
      * @return array
      */
-    protected function getInvalidData($data)
+    protected function getInvalidData(array $data)
     {
         // Set invalid parameters
         $data['project']      = 'INVALID_PROJECT';
@@ -51,9 +52,10 @@ class IssuesTest extends RestTestCase
     /**
      * Get request update data
      *
+     * @param array $data
      * @return array
      */
-    protected function getUpdateData($data)
+    protected function getUpdateData(array $data)
     {
         // Change parameters
         $data['subject'] = 'UPDATED_SUBJECT';

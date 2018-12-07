@@ -3,7 +3,6 @@
 namespace Modules\Hashes\Services;
 
 use App\Models\EnumValue;
-use Illuminate\Support\Facades\DB;
 
 class DescriptionParserService
 {
@@ -68,7 +67,9 @@ class DescriptionParserService
      */
     protected function setKeys()
     {
-        $enums = EnumValue::where('type', 'cvs_log_tags_stack')->get(['key', 'extra_property']);
+        $enums = app(EnumValue::class)
+                    ::where('type', 'cvs_log_tags_stack')
+                    ->get(['key', 'extra_property']);
 
         foreach ($enums as $enum) {
             $this->keys[$enum->key] = $enum->extra_property;

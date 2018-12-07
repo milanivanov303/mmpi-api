@@ -101,6 +101,21 @@ class DependencyServiceTest extends TestCase
 
         $this->app->instance(ImxTable::class, $imxTableMock);
 
+        // Mock Source
+        $sourceMock = Mockery::mock(Source::class);
+        $sourceMock
+            ->shouldReceive('where')
+            ->andReturn(
+                Mockery::mock([
+                    'withRevision' => Mockery::mock([
+                        'first' => null
+                    ])
+                ])
+            )
+            ->once();
+
+        $this->app->instance(Source::class, $sourceMock);
+
         $dependencyService = new DependencyService($table);
 
         $this->assertEquals($table, $dependencyService->name);

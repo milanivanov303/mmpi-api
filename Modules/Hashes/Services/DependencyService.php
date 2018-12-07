@@ -63,7 +63,10 @@ class DependencyService
         $this->name     = $this->pathinfo['basename'];
         $this->type     = $this->getType();
         $this->revision = $this->getRevision();
-        $this->path     = $this->getPath();
+
+        if ($this->type !== 'table') {
+            $this->path = $this->getPath();
+        }
     }
 
     /**

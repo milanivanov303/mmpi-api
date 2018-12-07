@@ -38,9 +38,10 @@ class DeliveryChainsTest extends RestTestCase
     /**
      * Get request invalid data
      *
+     * @param array $data
      * @return array
      */
-    protected function getInvalidData($data)
+    protected function getInvalidData(array $data)
     {
         $faker = Faker\Factory::create();
 
@@ -56,9 +57,10 @@ class DeliveryChainsTest extends RestTestCase
     /**
      * Get request update data
      *
+     * @param array $data
      * @return array
      */
-    protected function getUpdateData($data)
+    protected function getUpdateData(array $data)
     {
         // Change parameters
         $data['patch_directory_name'] = 'UPDATED_PATH';

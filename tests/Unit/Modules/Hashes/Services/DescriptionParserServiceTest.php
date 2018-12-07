@@ -2,8 +2,39 @@
 
 use Modules\Hashes\Services\DescriptionParserService;
 
+use App\Models\EnumValue;
+use Core\Models\Model;
+
 class DescriptionParserServiceTest extends TestCase
 {
+    public function setUp() {
+        parent::setUp();
+
+        // Mock EnumValue
+        // This is not very good as expressions can be changed in DB and not in the test!!!
+        $enumValueMock = Mockery::mock(EnumValue::class);
+        $enumValueMock
+            ->shouldReceive('where')
+            ->andReturn(
+                 Mockery::mock([
+                    'get' => [
+                        (new Model)->forceFill(['key' => 'cvs_tag_dependencies', 'extra_property' => '/DEPENDENCIES(\*)?:/']),
+                        (new Model)->forceFill(['key' => 'cvs_tag_func_changes', 'extra_property' => '/FUNC[_|" "|-]{1}CHANGES(\*)?:/']),
+                        (new Model)->forceFill(['key' => 'cvs_tag_merge', 'extra_property' => '/MERGE:/']),
+                        (new Model)->forceFill(['key' => 'cvs_tag_oth_deps', 'extra_property' => '/OTH DEPS:/']),
+                        (new Model)->forceFill(['key' => 'cvs_tag_rev_num', 'extra_property' => '/^[0-9]+[.][0-9]+([.](1|[012468]+)[.][0-9]+)*\s-\s/m']),
+                        (new Model)->forceFill(['key' => 'cvs_tag_subject', 'extra_property' => '/SUBJECT:/i']),
+                        (new Model)->forceFill(['key' => 'cvs_tag_tech_changes', 'extra_property' => '/TECH[_|" "|-]{1}CHANGES(\*)?:/']),
+                        (new Model)->forceFill(['key' => 'cvs_tag_test', 'extra_property' => '/TESTS(\*)?:/']),
+                        (new Model)->forceFill(['key' => 'cvs_tag_tts_key', 'extra_property' => '/TTS[_|" "|-]{1}(KEY|Key)(\*)?:/'])
+                    ]
+                 ])
+            )
+            ->once();
+
+        $this->app->instance(EnumValue::class, $enumValueMock);
+    }
+
     public function test_can_parse_description()
     {
         $parser = new DescriptionParserService('

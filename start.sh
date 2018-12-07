@@ -39,5 +39,3 @@ then
         echo "App running on port: $WEB_SERVER_PORT"
     fi
 fi
-
-
