@@ -44,18 +44,18 @@ class TagsService
      */
     protected function saveTag(string $key, string $comment)
     {
-        $cvsTag     = EnumValue::where('key', $key)->select('id')->first();
-        $revLogType = EnumValue::where('key', $this->hashCommit->repo_module)->select('id')->first();
+        $cvsTagId     = app(EnumValue::class)::where('key', $key)->value('id');
+        $revLogTypeId = app(EnumValue::class)::where('key', $this->hashCommit->repo_module)->value('id');
 
-        if (is_null($cvsTag) || is_null($revLogType)) {
+        if (is_null($cvsTagId) || is_null($revLogTypeId)) {
             return false;
         }
 
         $sourceRevCvsTag = new SourceRevCvsTag([
             'source_rev_id'   => $this->hashCommit->id,
-            'cvs_tag_enum_id' => $cvsTag->id,
+            'cvs_tag_enum_id' => $cvsTagId,
             'cvs_tag_comment' => $comment,
-            'rev_log_type_id' => $revLogType->id
+            'rev_log_type_id' => $revLogTypeId
         ]);
 
         if ($sourceRevCvsTag->save()) {
@@ -114,11 +114,13 @@ class TagsService
                 continue;
             }
 
+            $depTypeId = $dependencyService->type === 'table' ? 'table' : 'source';
+
             $dependencyModel = new Dependency([
                 'rev_id'      => $sourceRevTagId,
                 'rev_type_id' => 'hash',
                 'dep_id'      => $dependencyService->depId,
-                'dep_type_id' => $dependencyService->type === 'table' ? 'table' : 'source',
+                'dep_type_id' => $depTypeId,
                 'functional'  => 0,
                 'comment'     => 'auto-records-for-hash-commits',
                 'added_by'    => 0, // this is mmpi_auto
@@ -135,11 +137,9 @@ class TagsService
     }
 
     /**
-     * Save merges
-     *
-     * @param $sourceRevTagId
+     * Save merge
      */
-    protected function saveMerges($sourceRevTagId)
+    protected function saveMerge()
     {
         $merge = $this->parser->getMerge();
 
@@ -148,14 +148,15 @@ class TagsService
             return;
         }
 
-        // TODO: Do not hard-code this if possible!
         // I have taken this from ivasilev's code. Not sure if it is correct like this!
-        $commitLogType = EnumValue::where('type', 'revision_log_type')->where('key', 'imx_be')->select('id')->first();
+        $commitLogTypeId = app(EnumValue::class)::where('type', 'revision_log_type')
+                            ->where('key', $this->hashCommit->repo_module)
+                            ->value('id');
 
         $commitMerge = new CommitMerge([
-            'commit_log_type_id' => $commitLogType->id,
-            'commit_id'          => $this->hashCommit->id,
-            'merge_commit'       => $merge
+            'commit_log_type_id' => $commitLogTypeId,
+            'commit_id' => $this->hashCommit->id,
+            'merge_commit' => $merge
         ]);
 
         if ($commitMerge->save()) {
@@ -166,8 +167,34 @@ class TagsService
         Log::channel('tags')->warning("Commit merge '{$merge}' was not saved");
     }
 
+    /**
+     * Clear old tags before inserting new
+     */
+    protected function clearTags()
+    {
+        $revLogTypeId = app(EnumValue::class)::where('key', $this->hashCommit->repo_module)->value('id');
+
+        $sourceRevCvsTagIds = app(SourceRevCvsTag::class)
+            ::where('source_rev_id', $this->hashCommit->id)
+            ->where('rev_log_type_id', $revLogTypeId)
+            ->pluck('id')
+            ->toArray();
+
+        app(SourceRevTtsKey::class)::whereIn('source_rev_tag_id', $sourceRevCvsTagIds)->delete();
+        app(Dependency::class)::whereIn('rev_id', $sourceRevCvsTagIds)->delete();
+        app(CommitMerge::class)::where('commit_id', $this->hashCommit->id)->delete();
+        app(SourceRevCvsTag::class)::where('source_rev_id', $this->hashCommit->id)->delete();
+    }
+
+    /**
+     * Save
+     *
+     * @return bool
+     */
     public function save()
     {
+        $this->clearTags();
+
         if ($this->parser->hasNoTags()) {
             Log::channel('tags')->info("No tags detected");
             return true;
@@ -184,7 +211,7 @@ class TagsService
                         $this->saveDependencies($sourceRevCvsTag->id);
                         break;
                     case $this->parser::MERGE_KEY:
-                        $this->saveMerges($sourceRevCvsTag->id);
+                        $this->saveMerge();
                         break;
                 }
             }

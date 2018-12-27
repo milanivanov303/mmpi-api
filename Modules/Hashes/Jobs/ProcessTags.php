@@ -15,17 +15,20 @@ class ProcessTags implements ShouldQueue
 {
     use InteractsWithQueue, Queueable, SerializesModels;
 
-    protected $model;
+    /**
+     * @var HashCommit
+     */
+    protected $hashCommit;
 
     /**
      * Create a new job instance.
      *
-     * @param HashCommit $model
+     * @param HashCommit $hashCommit
      * @return void
      */
-    public function __construct(HashCommit $model)
+    public function __construct(HashCommit $hashCommit)
     {
-        $this->model = $model;
+        $this->hashCommit = $hashCommit;
     }
 
     /**
@@ -35,12 +38,12 @@ class ProcessTags implements ShouldQueue
      */
     public function handle()
     {
-        Log::channel('tags')->info("Start processing tags for hash '{$this->model->id}'");
-        Log::channel('tags')->info("Description '{$this->model->commit_description}'");
+        Log::channel('tags')->info("Start processing tags for hash '{$this->hashCommit->id}'");
+        Log::channel('tags')->info("Description '{$this->hashCommit->commit_description}'");
 
-        $parser = new DescriptionParserService($this->model->commit_description);
+        $parser = new DescriptionParserService($this->hashCommit->commit_description);
 
-        $tags = new TagsService($this->model, $parser);
+        $tags = new TagsService($this->hashCommit, $parser);
         $tags->save();
 
         Log::channel('tags')->info("End" . PHP_EOL);

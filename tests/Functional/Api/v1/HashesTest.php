@@ -38,7 +38,14 @@ class HashesTest extends RestTestCase
             'chains'       => [
                 'bcol_imx_v9_rel'
             ],
-            'description'  => 'IXDEV-1650 e_honor_param backend\n\nadd MOLO as mvn profile',
+            'description'  => '
+                TTS KEY*:      IXDEV-7266
+                               IXDEV-7290
+                FUNC CHANGES*: Add fix of generation of suffix for adresse and tty
+                TECH CHANGES*: Add check on sessions with same adresse
+                MERGE:         c00be5a14a4c6b69af8f45b7e3390187c7da822a
+                DEPENDENCIES:  G_BU, G_INDIVIDU, EXT_SYS_INTERVENANTS
+            ',
             'files'        => [
                 'etc/configs/MOLOTCWALLET/imx_backend.properties',
                 'etc/configs/MOLOTCWALLET/imx_backend.xml',
@@ -85,5 +92,34 @@ class HashesTest extends RestTestCase
         $data['description'] = 'UPDATED_DESCRIPTION';
 
         return $data;
+    }
+
+    /**
+     * Test creation
+     *
+     * @return void
+     */
+    public function testCreate()
+    {
+        $data = $this->getData();
+        $data = $this->create($data);
+
+        $this->seeInDatabase($this->table, [
+            $this->primaryKey => $this->getPrimaryKeyValue($data)
+        ]);
+
+        // count saved chains in db
+        $count = $this->app->make('db')->table('hash_commit_to_chains')->where([
+            'hash_commit_id'  => $data['id'],
+        ])->count();
+
+        $this->assertEquals(1, $count);
+
+        // count saved files in db
+        $count = $this->app->make('db')->table('hash_commit_files')->where([
+            'hash_commit_id'  => $data['id'],
+        ])->count();
+
+        $this->assertEquals(5, $count);
     }
 }
