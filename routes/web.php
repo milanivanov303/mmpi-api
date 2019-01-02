@@ -19,7 +19,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
         // Auth
         require 'api/v1/auth.php';
 
-        $router->group(['middleware' => ['auth', 'json-validator']], function () use ($router) {
+        $router->group(['middleware' => ['auth', 'json-validator', 'audit']], function () use ($router) {
 
             // Users
             require 'api/v1/users.php';
