@@ -26,6 +26,7 @@ services:
             - local
         environment:
             XDEBUG_CONFIG: remote_host=${XDEBUG_REMOTE_HOST}
+            PHP_IDE_CONFIG: serverName=${XDEBUG_SERVER_NAME}
 
     mysql:
         build: docker/mysql
