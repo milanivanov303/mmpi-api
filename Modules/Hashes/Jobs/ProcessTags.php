@@ -52,12 +52,14 @@ class ProcessTags implements ShouldQueue
     /**
      * The job failed to process.
      *
-     * @param \Exception  $exception
+     * @param \Exception  $e
      * @return void
      */
-    public function failed(\Exception $exception)
+    public function failed(\Exception $e)
     {
+        Log::channel('tags')->warning($e->getMessage());
+
         // Send user notification of failure, etc...
-        var_dump($exception->getMessage());
+        //var_dump($e->getMessage());
     }
 }
