@@ -7,7 +7,7 @@ $router->group([
 
     $router->post('/login', [
         'as'          => 'auth.login',
-        'schema'      => '/api/v1/login.json',
+        'schema'      => '/api/v1/auth/login.json',
         'description' => 'Authenticate and get JWT',
         'uses'        => 'AuthController@login',
         'tags'        => ['auth'],
@@ -44,7 +44,7 @@ $router->group([
 
     $router->post('/refresh', [
         'as'          => 'auth.refresh',
-        'schema'      => '/api/v1/refresh.json',
+        'schema'      => '/api/v1/auth/refresh.json',
         'description' => 'Refresh JWT',
         'uses'        => 'AuthController@refresh',
         'tags'        => ['auth'],
