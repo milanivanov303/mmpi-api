@@ -3,7 +3,7 @@
 # load configuration
 . ./.env
 
-if [ "$1" == "--help" ]
+if [[ "$1" == "--help" ]]
 then
     echo "Start the application using Docker
 
@@ -13,15 +13,14 @@ SCRIPT PARAMETERS
 
 ENV CONFIGS
 
-NGINX config dynamically loaded from ./docker/ndinx/default.conf
+NGINX config dynamically loaded from ./docker/nginx/default.conf
 PHP config dynamically loaded from   ./docker/php/php.ini
 MySQL config dynamically loaded from ./docker/mysql/my.cnf
-
 "
     exit
 fi
 
-if [ -f docker-compose.yml ]
+if [[ -f docker-compose.yml ]]
 then
     echo "Stopping already running containers"
     docker-compose down
@@ -34,8 +33,8 @@ then
 
     printf "\n"
 
-    if [ $EXIT_CODE == 0 ]; then
+    if [[ ${EXIT_CODE} == 0 ]]; then
         printf "\n"
-        echo "App running on port: $WEB_SERVER_PORT"
+        echo "App running on port: ${WEB_SERVER_PORT}"
     fi
 fi

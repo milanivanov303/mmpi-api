@@ -4,7 +4,7 @@ FROM php:7.2-fpm-alpine
 
 RUN apk update
 
-# Install mysql php driver
+# Install mysql php pdo driver
 RUN docker-php-ext-install pdo_mysql
 
 # Install ldap
@@ -19,8 +19,14 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
     && php -r "unlink('composer-setup.php');"
 
 # Install xdebug
-RUN apk add --no-cache $PHPIZE_DEPS \
+RUN apk add $PHPIZE_DEPS \
     && pecl install xdebug \
     && echo "zend_extension=$(find /usr/local/lib/php/extensions/ -name xdebug.so)" > /usr/local/etc/php/conf.d/xdebug.ini \
     && echo "xdebug.remote_enable=On" >> /usr/local/etc/php/conf.d/xdebug.ini \
     && echo "xdebug.remote_autostart=On" >> /usr/local/etc/php/conf.d/xdebug.ini
+
+# Create a group and user
+RUN addgroup -S app && adduser -S app -G app
+
+# Tell docker that all future commands should run as the `app` user
+USER app
