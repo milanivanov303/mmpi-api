@@ -177,16 +177,16 @@
         },
         {
             "name": "elasticsearch/elasticsearch",
-            "version": "v6.0.1",
+            "version": "v6.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/elastic/elasticsearch-php.git",
-                "reference": "b8e3bc9d1fc54d6a18692df0b74956efe7fe241a"
+                "reference": "b237a37b2cdf23a5a17fd3576cdea771394ad00d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elastic/elasticsearch-php/zipball/b8e3bc9d1fc54d6a18692df0b74956efe7fe241a",
-                "reference": "b8e3bc9d1fc54d6a18692df0b74956efe7fe241a",
+                "url": "https://api.github.com/repos/elastic/elasticsearch-php/zipball/b237a37b2cdf23a5a17fd3576cdea771394ad00d",
+                "reference": "b237a37b2cdf23a5a17fd3576cdea771394ad00d",
                 "shasum": ""
             },
             "require": {
@@ -230,7 +230,7 @@
                 "elasticsearch",
                 "search"
             ],
-            "time": "2017-12-05T14:15:58+00:00"
+            "time": "2019-01-08T18:53:46+00:00"
         },
         {
             "name": "firebase/php-jwt",
