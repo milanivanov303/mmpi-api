@@ -35,26 +35,22 @@ class IssueRepository extends AbstractRepository implements RepositoryInterface
     }
 
     /**
-     * Save issue
+     * Fill model attributes
      *
      * @param array $data
-     * @return Issue
-     *
-     * @throws \Throwable
      */
-    protected function save($data)
+    protected function fillModel(array $data)
     {
-        $this->model->fill($data);
+        parent::fillModel($data);
 
         $this->model->project()->associate($data['project']['id']);
+
         $this->model->devInstance()->associate(
             isset($data['dev_instance']) ? $data['dev_instance']['id'] : null
         );
 
-        $this->model->saveOrFail();
-
-        $this->model->load($this->getWith());
-
-        return $this->model;
+        $this->model->parentIssue()->associate(
+            isset($data['parent_issue']) ? $data['parent_issue']['id'] : null
+        );
     }
 }

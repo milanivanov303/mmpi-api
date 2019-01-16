@@ -4,11 +4,6 @@
     "type": "object",
     "description": "Issue object",
     "additionalProperties": false,
-    "required": [
-        "tts_id",
-        "jiraissue_id",
-        "project"
-    ],
     "properties": {
         "id": {
             "type": "integer"

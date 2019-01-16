@@ -25,7 +25,7 @@ $router->group([
     $router->put('/{tts_id:[A-Z-0-9]+}', [
         'as'          => 'issues.update',
         'description' => 'Update issue',
-        'schema'      => '/api/v1/issues/create.json',
+        'schema'      => '/api/v1/issues/update.json',
         'uses'        => 'IssuesController@update'
     ]);
     $router->delete('/{tts_id:[A-Z-0-9]+}', [
