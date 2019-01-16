@@ -43,14 +43,20 @@ class IssueRepository extends AbstractRepository implements RepositoryInterface
     {
         parent::fillModel($data);
 
-        $this->model->project()->associate($data['project']['id']);
+        if (array_key_exists('project', $data)) {
+            $this->model->project()->associate($data['project']['id']);
+        }
 
-        $this->model->devInstance()->associate(
-            isset($data['dev_instance']) ? $data['dev_instance']['id'] : null
-        );
+        if (array_key_exists('dev_instance', $data)) {
+            $this->model->devInstance()->associate(
+                is_null($data['dev_instance']) ? null : $data['dev_instance']['id']
+            );
+        }
 
-        $this->model->parentIssue()->associate(
-            isset($data['parent_issue']) ? $data['parent_issue']['id'] : null
-        );
+        if (array_key_exists('dev_instance', $data)) {
+            $this->model->parentIssue()->associate(
+                is_null($data['parent_issue']) ? null : $data['parent_issue']['id']
+            );
+        }
     }
 }
