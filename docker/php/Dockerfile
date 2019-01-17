@@ -4,6 +4,8 @@ FROM php:7.2-fpm-alpine
 
 RUN apk update
 
+RUN apk add git
+
 # Install mysql php pdo driver
 RUN docker-php-ext-install pdo_mysql
 
