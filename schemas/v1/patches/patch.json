@@ -1,0 +1,93 @@
+{
+    "$id": "Patch",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "description": "Patch object",
+    "additionalProperties": false,
+    "properties": {
+        "id": {
+            "type": "integer"
+        },
+        "patch_request": {
+            "$ref": "/v1/patch-requests/patch-request.json"
+        },
+        "delivery_chain": {
+            "$ref": "/v1/delivery-chains/delivery-chain.json"
+        },
+        "patch_group": {
+            "oneOf": [
+                {"$ref": "/v1/patches/patch-group.json"},
+                {"type": "null"}
+            ]
+        },
+        "dlv_file_name": {
+            "type": "string"
+        },
+        "dlv_file_checksum": {
+            "type": ["string", "null"]
+        },
+        "dlv_file_size": {
+            "type": ["string", "null"]
+        },
+        "dlv_file_path": {
+            "type": ["string", "null"]
+        },
+        "dlv_test_instance": {
+            "type": ["string", "null"]
+        },
+        "dlv_exec_time": {
+            "type": ["string", "null"]
+        },
+        "dlv_includes_ddl": {
+            "type": ["boolean", "integer"]
+        },
+        "dlv_includes_dml": {
+            "type": ["boolean", "integer"]
+        },
+        "dlv_includes_se": {
+            "type": ["boolean", "integer"]
+        },
+        "dlv_stop_app": {
+            "type": ["boolean", "integer"]
+        },
+        "dlv_stop_listings": {
+            "type": ["boolean", "integer"]
+        },
+        "dlv_stop_imxtel": {
+            "type": ["boolean", "integer"]
+        },
+        "install_sh_version": {
+            "type": ["string", "null"]
+        },
+        "comm_status": {
+            "type": ["string", "null"]
+        },
+        "functiona_test": {
+            "type": ["string", "null"]
+        },
+        "checked_by": {
+            "oneOf": [
+                {"$ref": "/v1/user.json"},
+                {"type": "null"}
+            ]
+        },
+        "checked_on": {
+            "type": ["string", "null"]
+        },
+        "verified_by": {
+            "oneOf": [
+                {"$ref": "/v1/user.json"},
+                {"type": "null"}
+            ]
+        },
+        "verified_on": {
+            "type": ["string", "null"]
+        },
+        "migr_sequence_N": {
+            "type": "string"
+        },
+        "project": {
+            "$ref": "/v1/projects/project.json"
+        }
+    }
+}

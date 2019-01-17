@@ -2,7 +2,7 @@
 
 class IssuesTest extends RestTestCase
 {
-    protected $uri        = 'api/v1/issues';
+    protected $uri        = 'v1/issues';
     protected $table      = 'issues';
     protected $primaryKey = 'tts_id';
 

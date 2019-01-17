@@ -1,0 +1,44 @@
+{
+    "$id": "DeliveryChain",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "description": "Delivery Chain object",
+    "additionalProperties": false,
+    "required": [
+        "type",
+        "dlvry_type",
+        "status"
+    ],
+    "properties": {
+        "id": {
+            "type": "integer"
+        },
+        "title": {
+            "type": "string"
+        },
+        "type": {
+            "$ref": "/v1/delivery-chains/delivery-chain-type.json"
+        },
+        "dlvry_type": {
+            "$ref": "/v1/enum-value.json"
+        },
+        "status": {
+            "$ref": "/v1/enum-value.json"
+        },
+        "patch_directory_name": {
+            "type": ["string", "null"]
+        },
+        "dc_version": {
+            "oneOf": [
+                {"$ref": "/v1/enum-value.json"},
+                {"type": "null"}
+            ]
+        },
+        "dc_role": {
+            "oneOf": [
+                {"$ref": "/v1/enum-value.json"},
+                {"type": "null"}
+            ]
+        }
+    }
+}

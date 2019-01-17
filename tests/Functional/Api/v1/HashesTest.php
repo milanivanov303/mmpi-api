@@ -4,7 +4,7 @@ use App\Models\User;
 
 class HashesTest extends RestTestCase
 {
-    protected $uri              = 'api/v1/hashes';
+    protected $uri              = 'v1/hashes';
     protected $table            = 'hash_commits';
     protected $primaryKey       = 'hash_rev';
     protected $primaryKeyMapped = 'rev';

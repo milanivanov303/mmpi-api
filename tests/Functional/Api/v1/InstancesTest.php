@@ -7,7 +7,7 @@ use Modules\Instances\Models\InstanceType;
 
 class InstancesTest extends RestTestCase
 {
-    protected $uri        = 'api/v1/instances';
+    protected $uri        = 'v1/instances';
     protected $table      = 'instances';
     protected $primaryKey = 'id';
 

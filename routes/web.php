@@ -10,43 +10,39 @@
 |
 */
 
-// API
-$router->group(['prefix' => 'api'], function () use ($router) {
+// v1
+$router->group(['prefix' => 'v1'], function () use ($router) {
 
-    // v1
-    $router->group(['prefix' => 'v1'], function () use ($router) {
+    // Auth
+    require 'v1/auth.php';
 
-        // Auth
-        require 'api/v1/auth.php';
+    $router->group(['middleware' => ['auth', 'json-validator', 'audit']], function () use ($router) {
 
-        $router->group(['middleware' => ['auth', 'json-validator', 'audit']], function () use ($router) {
+        // Users
+        require 'v1/users.php';
 
-            // Users
-            require 'api/v1/users.php';
+        // Hashes
+        require 'v1/hashes.php';
 
-            // Hashes
-            require 'api/v1/hashes.php';
+        // Issues
+        require 'v1/issues.php';
 
-            // Issues
-            require 'api/v1/issues.php';
+        // Projects
+        require 'v1/projects.php';
 
-            // Projects
-            require 'api/v1/projects.php';
+        // Instances
+        require 'v1/instances.php';
 
-            // Instances
-            require 'api/v1/instances.php';
+        // Delivery chains
+        require 'v1/delivery-chains.php';
 
-            // Delivery chains
-            require 'api/v1/delivery-chains.php';
+        // Modifications
+        require 'v1/modifications.php';
 
-            // Modifications
-            require 'api/v1/modifications.php';
+        // Patch Requests
+        require 'v1/patch-requests.php';
 
-            // Patch Requests
-            require 'api/v1/patch-requests.php';
-
-            // Patches
-            require 'api/v1/patches.php';
-        });
+        // Patches
+        require 'v1/patches.php';
     });
 });

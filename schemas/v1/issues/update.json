@@ -1,0 +1,24 @@
+{
+    "$id": "UpdateIssue",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "description": "Issue object",
+    "allOf": [
+        {"$ref": "/v1/issues/issue.json"},
+        {"$ref": "/v1/issues/filters.json"},
+        {
+            "properties": {
+                "parent_issue": {
+                    "$filters": {
+                        "$func": "checkIssueModifications"
+                    },
+                    "$messages": {
+                        "$filters": {
+                            "checkIssueModifications": "Issue parent could not be changed, because there are modifications added to patch request"
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

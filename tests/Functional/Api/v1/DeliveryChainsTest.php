@@ -5,7 +5,7 @@ use Modules\DeliveryChains\Models\DeliveryChainType;
 
 class DeliveryChainsTest extends RestTestCase
 {
-    protected $uri        = 'api/v1/delivery-chains';
+    protected $uri        = 'v1/delivery-chains';
     protected $table      = 'delivery_chains';
     protected $primaryKey = 'title';
 

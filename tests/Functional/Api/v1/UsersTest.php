@@ -6,7 +6,7 @@ use App\Models\AccessGroup;
 
 class UsersTest extends RestTestCase
 {
-    protected $uri        = 'api/v1/users';
+    protected $uri        = 'v1/users';
     protected $table      = 'users';
     protected $primaryKey = 'username';
 

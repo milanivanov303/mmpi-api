@@ -1,0 +1,93 @@
+{
+    "$id": "User",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "description": "User object",
+    "properties": {
+        "name": {
+            "type": "string",
+            "description": "User full name",
+            "example": "John Doe",
+            "maxLength": 256
+        },
+        "username": {
+            "type": "string",
+            "description": "Username",
+            "example": "jdoe",
+            "maxLength": 50
+        },
+        "email": {
+            "type": "string",
+            "description": "User email",
+            "example": "jdoe@codix.fr",
+            "maxLength": 50
+        },
+        "password": {
+          "type": "string"
+        },
+        "sid": {
+            "type": "string",
+            "maxLength": 60
+        },
+        "sidfr": {
+            "type": ["string", "null"],
+            "maxLength": 60
+        },
+        "uidnumber": {
+            "type": ["integer", "null"]
+        },
+        "status": {
+            "type": "integer"
+        },
+        "department": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "src_dlv_by_revision": {
+                    "type": "integer"
+                },
+                "department_type": {
+                    "oneOf": [
+                        {
+                            "$ref": "/v1/enum-value.json"
+                        },
+                        {"type": "null"}
+                    ]
+                },
+                "status": {
+                    "type": "integer"
+                }
+            },
+            "description": "User department",
+            "example": "Enterprise Applications"
+        },
+        "access_group": {
+            "type": "object",
+            "description": "User access group",
+            "example": "developers"
+        },
+        "manager": {
+            "oneOf": [
+                {
+                    "$ref": "/v1/user.json",
+                    "description": "Manager"
+                },
+                {"type": "null"}
+            ]
+        },
+        "deputy": {
+            "oneOf": [
+                {
+                    "$ref": "/v1/user.json",
+                    "description": "Deputy"
+                },
+                {"type": "null"}
+            ]
+        }
+    }
+}

@@ -7,8 +7,8 @@
   },
   "servers": [
     {
-      "url": "https:\/\/asparuh.codixfr.private:4681\/mmpi-api\/api\/v1\/",
-      "description": "Development server"
+      "url": "https:\/\/api-mmpi.codixfr.private\/v1\/",
+      "description": "Production server"
     }
   ],
   "components": {
