@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "22fd9774f47c52a6606c259309e33b6f",
+    "content-hash": "1d1f5a0b46669cd799858aabcef95997",
     "packages": [
         {
             "name": "adldap2/adldap2",
@@ -61,11 +61,11 @@
         },
         {
             "name": "codix/api-core",
-            "version": "1.0.0",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "http://rhodecode.codixfr.private/Enterprise-Apps/api-core",
-                "reference": "26f03c2d1f7ed05e3e4ff2af2dd8a9baec8bd3bc"
+                "reference": "0ca0da7068b79f82d3ea84a92d2e32b79a9359b2"
             },
             "require": {
                 "adldap2/adldap2": "^9.1",
@@ -93,7 +93,7 @@
                     "email": "yarnaudov@codix.bg"
                 }
             ],
-            "time": "2019-01-17T14:51:08+00:00"
+            "time": "2019-01-18T07:17:42+00:00"
         },
         {
             "name": "doctrine/inflector",
