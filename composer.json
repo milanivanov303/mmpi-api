@@ -9,6 +9,10 @@
         {
             "type": "vcs",
             "url":  "http://rhodecode.codixfr.private/Enterprise-Apps/api-core"
+        },
+        {
+            "type": "vcs",
+            "url":  "http://rhodecode.codixfr.private/Enterprise-Apps/forks/json-schema"
         }
     ],
     "require": {
