@@ -4,9 +4,9 @@ namespace Modules\Hashes\Repositories;
 
 use Modules\Hashes\Jobs\ProcessTags;
 use Modules\Hashes\Models\HashCommit;
+use Modules\Hashes\Models\HashChain;
 use Core\Repositories\RepositoryInterface;
 use Core\Repositories\AbstractRepository;
-use Modules\Hashes\Models\HashChain;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 
@@ -43,14 +43,16 @@ class HashRepository extends AbstractRepository implements RepositoryInterface
     /**
      * Delete record
      *
-     * @param type $id
+     * @param mixed $id
      */
     public function delete($id)
     {
         DB::transaction(function () use ($id) {
             $this->model = $this->find($id);
+
             $this->model->files()->delete();
-            $this->model->chains()->delete();
+            $this->model->chains()->sync([]);
+
             $this->model->delete();
         });
     }
