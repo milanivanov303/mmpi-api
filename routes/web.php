@@ -13,9 +13,6 @@
 // v1
 $router->group(['prefix' => 'v1'], function () use ($router) {
 
-    // Auth
-    require 'v1/auth.php';
-
     $router->group(['middleware' => ['auth', 'json-validator', 'audit']], function () use ($router) {
 
         // Users

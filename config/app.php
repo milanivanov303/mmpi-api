@@ -10,10 +10,8 @@ return [
     |
     */
     'jwt' => [
-        'secret_key'  => env('JWT_SECRET_KEY', 'I6NTEyLCJuYW1lIjoiWW9yZGFuICBBcm5hdWRvdiIsInVzZXJuY1ZG9'),
-        'algorithm'   => env('JWT_ALGORITHM', 'HS256'),
-        'exp'         => env('JWT_EXP', '+1 hour'),
-        'refresh_exp' => env('JWT_REFRESH_EXP', '+1 day')
+        'secret_keys_dir' => env('JWT_SECRET_KEYS_DIR', 'ssh'),
+        'algorithms'      => explode(',', env('JWT_ALGORITHMS', 'RS256'))
     ],
 
     /*
