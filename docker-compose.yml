@@ -39,11 +39,11 @@ services:
             - local
 
     elastic:
-        build: docker/elastic
+        build: docker/elasticsearch
         ports:
             - ${ELASTIC_SERVER_PORT}:9200
         volumes:
-            - ./storage/db/elasticsearch/data:/usr/share/elasticsearch/data
+            - ./storage/db/elasticsearch:/usr/share/elasticsearch/data
         networks:
             - local
 
