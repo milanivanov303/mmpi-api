@@ -2,5 +2,4 @@
 vendor
 db/mysql
 .idea
-storage
 public/openapi.json
