@@ -1,0 +1,64 @@
+<?php
+
+namespace Modules\JsonRPC\Procedures;
+
+use JiraRestApi\Issue\IssueService;
+use JiraRestApi\Issue\IssueField;
+use JiraRestApi\JiraException;
+
+class HeadMergeRequest
+{
+    public function process(string $ttsKey)
+    {
+        try {
+            $issueService = new IssueService();
+
+            $queryParam = [
+                'fields' => [  // default: '*all'
+                    'summary',
+                    'comment',
+                ],
+                'expand' => [
+                    'renderedFields',
+                    'names',
+                    'schema',
+                    'transitions',
+                    'operations',
+                    'editmeta',
+                    'changelog',
+                ]
+            ];
+
+            $issue = $issueService->get('PRT-167', $queryParam);
+
+            var_dump($issue->fields);
+        } catch (JiraException $e) {
+            print("Error Occured! " . $e->getMessage());
+        }
+        //$this->createJiraIssue();
+        return $ttsKey;
+    }
+
+    protected function createJiraIssue()
+    {
+        try {
+            $issueField = new IssueField();
+
+            $issueField->setProjectKey("FIRS")
+                ->setSummary("test create issue from mmpi jsonrpc api")
+                ->setAssigneeName("yarnaudov")
+                ->setIssueType("Internal")
+                ->setDescription("Full description for issue");
+
+            $issueService = new IssueService();
+
+            $result = $issueService->create($issueField);
+
+            var_dump($result);
+        } catch (JiraException $e) {
+            var_dump($e->getMessage());
+        } catch (\Exception $e) {
+            var_dump($e->getMessage());
+        }
+    }
+}

@@ -27,7 +27,9 @@
         "laravel/lumen-framework": "5.7.*",
         "vlucas/phpdotenv": "~2.2",
         "codix/api-core": "^1.1",
-        "league/flysystem": "^1.0"
+        "league/flysystem": "^1.0",
+        "fguillot/json-rpc": "^1.2",
+        "lesstif/php-jira-rest-client": "^1.35"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

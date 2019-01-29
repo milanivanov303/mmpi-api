@@ -15,6 +15,9 @@ $router->group(['prefix' => 'v1'], function () use ($router) {
 
     $router->group(['middleware' => ['auth', 'json-validator', 'audit']], function () use ($router) {
 
+        // Json RPC
+        require 'v1/jsonrpc.php';
+
         // Users
         require 'v1/users.php';
 
