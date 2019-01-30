@@ -61,11 +61,11 @@
         },
         {
             "name": "codix/api-core",
-            "version": "1.1.5",
+            "version": "1.1.6",
             "source": {
                 "type": "git",
                 "url": "http://rhodecode.codixfr.private/Enterprise-Apps/api-core",
-                "reference": "7f55faae0d28c6c7d712f80e9663e39372556081"
+                "reference": "101675c9c5266a709f5c0e34c2aa923546c562f6"
             },
             "require": {
                 "adldap2/adldap2": "^9.1",
@@ -93,7 +93,7 @@
                     "email": "yarnaudov@codix.bg"
                 }
             ],
-            "time": "2019-01-24T14:33:06+00:00"
+            "time": "2019-01-30T12:52:27+00:00"
         },
         {
             "name": "doctrine/inflector",
