@@ -10,31 +10,6 @@ class HeadMergeRequest
 {
     public function process(string $ttsKey)
     {
-        try {
-            $issueService = new IssueService();
-
-            $queryParam = [
-                'fields' => [  // default: '*all'
-                    'summary',
-                    'comment',
-                ],
-                'expand' => [
-                    'renderedFields',
-                    'names',
-                    'schema',
-                    'transitions',
-                    'operations',
-                    'editmeta',
-                    'changelog',
-                ]
-            ];
-
-            $issue = $issueService->get('PRT-167', $queryParam);
-
-            var_dump($issue->fields);
-        } catch (JiraException $e) {
-            print("Error Occured! " . $e->getMessage());
-        }
         //$this->createJiraIssue();
         return $ttsKey;
     }

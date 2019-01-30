@@ -7,23 +7,31 @@
   },
   "servers": [
     {
+      "url": "https:\/\/api-mmpi-dev.codixfr.private\/v1\/",
+      "description": "Development server"
+    },
+    {
+      "url": "https:\/\/api-mmpi-int.codixfr.private\/v1\/",
+      "description": "Integration server"
+    },
+    {
       "url": "https:\/\/api-mmpi.codixfr.private\/v1\/",
       "description": "Production server"
     }
   ],
   "components": {
     "securitySchemes": {
-      "xAuthToken": {
-        "in": "header",
-        "name": "X-AUTH-TOKEN",
-        "type": "apiKey",
-        "description": "Make <a href=\"#operation/auth.login\">auth.login</a> request first and get JWT to use here"
-      },
       "bearerAuth": {
         "type": "http",
         "scheme": "bearer",
         "bearerFormat": "JWT",
-        "description": "Make <a href=\"#operation/auth.login\">auth.login</a> request first and get JWT to use here"
+        "description": "Make <b>auth.token</b> request to SSO service first and get JWT to use here"
+      },
+      "xAuthToken": {
+        "in": "header",
+        "name": "X-AUTH-TOKEN",
+        "type": "apiKey",
+        "description": "Make <b>auth.token</b> request to SSO service first and get JWT to use here"
       }
     },
     "parameters": {
