@@ -2,7 +2,7 @@
 
 $router->group([
     'prefix' => 'jsonrpc',
-    'namespace' => '\Modules\JsonRPC\Http\Controllers'
+    'namespace' => '\Modules\JsonRpc\Http\Controllers'
 ], function () use ($router) {
     $router->post('', [
         'as'          => 'jsonrpc',

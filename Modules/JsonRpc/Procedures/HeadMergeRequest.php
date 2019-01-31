@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\JsonRPC\Procedures;
+namespace Modules\JsonRpc\Procedures;
 
 use JiraRestApi\Issue\IssueService;
 use JiraRestApi\Issue\IssueField;
