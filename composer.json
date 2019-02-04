@@ -8,11 +8,11 @@
     "repositories": [
         {
             "type": "vcs",
-            "url":  "http://rhodecode.codixfr.private/Enterprise-Apps/api-core"
+            "url":  "http://rhode.codixfr.private/Enterprise-Apps/api-core"
         },
         {
             "type": "vcs",
-            "url":  "http://rhodecode.codixfr.private/Enterprise-Apps/forks/json-schema"
+            "url":  "http://rhode.codixfr.private/Enterprise-Apps/forks/json-schema"
         }
     ],
     "require": {
