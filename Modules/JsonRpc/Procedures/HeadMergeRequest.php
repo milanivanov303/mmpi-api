@@ -3,6 +3,8 @@
 namespace Modules\JsonRpc\Procedures;
 
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use JiraRestApi\Issue\IssueService;
 use JiraRestApi\Issue\IssueField;
 use Modules\Modifications\Models\Modification;
@@ -17,25 +19,30 @@ class HeadMergeRequest
      */
     public function process(string $ttsId)
     {
-        $sources = $this->getSources($ttsId);
+        $data = json_decode(json_encode($this->getData($ttsId)), JSON_OBJECT_AS_ARRAY);
+
+        $data = collect($data)->groupBy('username');
 
         $output = [];
-        foreach ($sources as $source) {
-            try {
-                $issue = $this->createIssue($source);
+        foreach ($data as $username => $sources) {
+            $modifications = $sources->pluck('modif_id')->all();
 
-                $modification = Modification::find($source->modif_id);
-                $modification->requested_head_merge = 1;
-                $modification->saveOrFail();
+            try {
+                $issue = $this->createIssue($ttsId, $username, $sources);
+
+                Modification::whereIn('id', $modifications)
+                    ->update(['requested_head_merge' => 1]);
 
                 $output[] = [
-                    'modification_id' => $source->modif_id,
-                    'issue'           => $issue
+                    'modifications' => $modifications,
+                    'issue'         => $issue
                 ];
             } catch (\Exception $e) {
+                Log::error($e->getMessage());
+
                 $output[] = [
-                    'modification_id' => $source->modif_id,
-                    'error'           => $e->getMessage()
+                    'modifications' => $modifications,
+                    'error'         => $e->getMessage()
                 ];
             }
         }
@@ -44,29 +51,20 @@ class HeadMergeRequest
     }
 
     /**
-     * Get sources
+     * Get data
      *
      * @param string $ttsId
      * @return array
      */
-    protected function getSources(string $ttsId) : array
+    protected function getData(string $ttsId) : array
     {
         return DB::select(
             "
-            SELECT I.id,
-               I.tts_id,
+            SELECT
+               U.username,
                M.id AS modif_id,
                M.name AS source_file,
-               U.username,
-               S.source_id,
-               SR.rev_id,
-               SR.revision,
-               CM.commit_id,
-               CM.merge_commit,
-               BSR.rev_id AS backport_rev_id,
-               BSR.revision AS backport_revision,
-               MSR.rev_id AS merged_in_rev_id,
-               MSR.revision AS merged_in_revision
+               SR.revision
             FROM issues I
             JOIN modifications M ON I.id=M.issue_id
             JOIN users U ON IFNULL(M.updated_by_id, M.created_by_id)=U.id
@@ -94,28 +92,56 @@ class HeadMergeRequest
     /**
      * Get issue data
      *
-     * @param \stdClass $source
+     * @param string $ttsId
+     * @param string $username
+     * @param Collection $sources
+     *
      * @return IssueField
      */
-    protected function getIssue(\stdClass $source)
+    protected function getIssue(string $ttsId, string $username, Collection $sources) : IssueField
     {
         $issueField = new IssueField();
 
+        // Get sources list
+        $sources = implode(
+            PHP_EOL,
+            $sources->map(function ($item) {
+                return "{$item['source_file']} - {$item['revision']}";
+            })->all()
+        );
+
         $issueField
-            ->setProjectKey("FIRS")//CVS_Head_Merge
-            ->setSummary("Commit on Head the changes done in {$source->tts_id}")
-            ->setAssigneeName($source->username)
-            ->setIssueType("Internal") //Short Task
-            //->setPriorityName('Major')
+            ->setProjectKey(current(explode('-', $ttsId)))
+            ->setSummary("Commit on Head the changes done in {$ttsId}")
+            ->setAssigneeName($username)
+            ->setIssueType('Short Task')
+            ->setPriorityName('Normal')
             ->setDescription("
-                The test of task '{$source->tts_id}' is completed OK. Please commit your changes in the HEAD revision.
+                The test of task {$ttsId} is completed OK. Please commit your changes in the HEAD revision.
                 
-                *Source:* {$source->source_file}
-                *Revision:* {$source->revision}
-                *Merge Commit:* {$source->merge_commit}
-                *Backport Revision:* {$source->backport_revision}
-                *Merged In Revision:* {$source->merged_in_revision}
+                *Sources:* 
+                {$sources}
             ");
+
+        // Set specification
+        $issueField->addCustomField('customfield_10140', 'n/a');
+
+        // Set sub-project
+        $issueField->addCustomField('customfield_10123', 'n/a');
+
+        // Set Milestone
+        $issueField->addCustomField('customfield_10530', ['value' => 'Installation']);
+
+        // Set DDCA
+        try {
+            $today = new \DateTime();
+            $issueField->addCustomField(
+                'customfield_10606',
+                $today->modify('+5 day')->format('Y-m-d')
+            );
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+        }
 
         return $issueField;
     }
@@ -123,16 +149,25 @@ class HeadMergeRequest
     /**
      * Create issues - batch
      *
-     * @param \stdClass $source
+     * @param string $ttsId
+     * @param string $username
+     * @param Collection $sources
+     *
      * @return mixed
      *
      * @throws \Exception
      */
-    protected function createIssue(\stdClass $source)
+    protected function createIssue(string $ttsId, string $username, Collection $sources)
     {
-        $issue = $this->getIssue($source);
+        $issue = $this->getIssue($ttsId, $username, $sources);
 
         $issueService = new IssueService();
-        return $issueService->create($issue);
+        $newIssue = $issueService->create($issue);
+
+        // Update reporter so we have in history initial reporter
+        $issue->setReporterName($username);
+        $issueService->update($newIssue->key, $issue);
+
+        return $newIssue;
     }
 }
