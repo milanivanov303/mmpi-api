@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1be0c3a71fe5c6c80b213ca9cecf06c4",
+    "content-hash": "ac6c7f7680601c8f6be73a7e9f62ca51",
     "packages": [
         {
             "name": "adldap2/adldap2",
@@ -64,7 +64,7 @@
             "version": "1.1.6",
             "source": {
                 "type": "git",
-                "url": "http://rhodecode.codixfr.private/Enterprise-Apps/api-core",
+                "url": "http://rhode.codixfr.private/Enterprise-Apps/api-core",
                 "reference": "101675c9c5266a709f5c0e34c2aa923546c562f6"
             },
             "require": {
@@ -1737,17 +1737,11 @@
         },
         {
             "name": "lesstif/php-jira-rest-client",
-            "version": "1.35.0",
+            "version": "1.35.2",
             "source": {
                 "type": "git",
-                "url": "https://github.com/lesstif/php-jira-rest-client.git",
-                "reference": "45987fd5b66e80cfb64d94955f478136d03eb597"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/lesstif/php-jira-rest-client/zipball/45987fd5b66e80cfb64d94955f478136d03eb597",
-                "reference": "45987fd5b66e80cfb64d94955f478136d03eb597",
-                "shasum": ""
+                "url": "http://rhode.codixfr.private/Enterprise-Apps/forks/php-jira-rest-client",
+                "reference": "b94db73670b684effc8fafda1a61322cb61ffe73"
             },
             "require": {
                 "ext-curl": "*",
@@ -1775,7 +1769,6 @@
                     "JiraRestApi\\": "src"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "Apache-2.0"
             ],
@@ -1793,7 +1786,7 @@
                 "jira-rest",
                 "rest"
             ],
-            "time": "2019-01-07T15:34:05+00:00"
+            "time": "2019-02-27T13:31:17+00:00"
         },
         {
             "name": "monolog/monolog",
@@ -2085,7 +2078,7 @@
             "version": "1.0.15",
             "source": {
                 "type": "git",
-                "url": "http://rhodecode.codixfr.private/Enterprise-Apps/forks/json-schema",
+                "url": "http://rhode.codixfr.private/Enterprise-Apps/forks/json-schema",
                 "reference": "4b9d74cffe154250bd1898a41d173c70205129c6"
             },
             "require": {

@@ -2,12 +2,12 @@
 
 namespace Modules\JsonRpc\Procedures;
 
+use App\Models\SourceRevision;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use JiraRestApi\Issue\IssueService;
 use JiraRestApi\Issue\IssueField;
-use Modules\Modifications\Models\Modification;
 
 class HeadMergeRequest
 {
@@ -25,24 +25,24 @@ class HeadMergeRequest
 
         $output = [];
         foreach ($data as $username => $sources) {
-            $modifications = $sources->pluck('modif_id')->all();
+            $revisions = $sources->pluck('rev_id')->all();
 
             try {
                 $issue = $this->createIssue($ttsId, $username, $sources);
 
-                Modification::whereIn('id', $modifications)
+                SourceRevision::whereIn('rev_id', $revisions)
                     ->update(['requested_head_merge' => 1]);
 
                 $output[] = [
-                    'modifications' => $modifications,
-                    'issue'         => $issue
+                    'revisions' => $revisions,
+                    'issue'     => $issue
                 ];
             } catch (\Exception $e) {
                 Log::error($e->getMessage());
 
                 $output[] = [
-                    'modifications' => $modifications,
-                    'error'         => $e->getMessage()
+                    'revisions' => $revisions,
+                    'error'     => $e->getMessage()
                 ];
             }
         }
@@ -62,7 +62,7 @@ class HeadMergeRequest
             "
             SELECT
                U.username,
-               M.id AS modif_id,
+               SR.rev_id,
                M.name AS source_file,
                SR.revision
             FROM issues I
@@ -80,7 +80,7 @@ class HeadMergeRequest
             WHERE 
                 I.tts_id=?
                 AND M.type_id='source'
-                AND (M.requested_head_merge IS NULL OR M.requested_head_merge<>1)
+                AND (SR.requested_head_merge IS NULL OR SR.requested_head_merge<>1)
                 AND M.version LIKE '%.%.%'
                 AND MSR.rev_id IS NULL
                 AND BSR.rev_id IS NULL
@@ -164,7 +164,7 @@ class HeadMergeRequest
         $issueService = new IssueService();
         $newIssue = $issueService->create($issue);
 
-        // Update reporter so we have in history initial reporter
+        // Update reporter so we have initial reporter in history
         $issue->setReporterName($username);
         $issueService->update($newIssue->key, $issue);
 

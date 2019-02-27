@@ -13,6 +13,10 @@
         {
             "type": "vcs",
             "url":  "http://rhode.codixfr.private/Enterprise-Apps/forks/json-schema"
+        },
+        {
+            "type": "vcs",
+            "url":  "http://rhode.codixfr.private/Enterprise-Apps/forks/php-jira-rest-client"
         }
     ],
     "require": {
