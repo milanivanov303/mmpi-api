@@ -2075,11 +2075,11 @@
         },
         {
             "name": "opis/json-schema",
-            "version": "1.0.15",
+            "version": "1.0.16",
             "source": {
                 "type": "git",
                 "url": "http://rhode.codixfr.private/Enterprise-Apps/forks/json-schema",
-                "reference": "4b9d74cffe154250bd1898a41d173c70205129c6"
+                "reference": "548614894a80e69634bf91ed8a13a1ebb9f1176a"
             },
             "require": {
                 "php": ">=7.0"
@@ -2131,7 +2131,7 @@
                 "validation",
                 "validator"
             ],
-            "time": "2019-01-18T09:35:59+00:00"
+            "time": "2019-03-07T15:36:05+00:00"
         },
         {
             "name": "psr/container",
