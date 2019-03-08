@@ -41,5 +41,8 @@ $router->group(['prefix' => 'v1'], function () use ($router) {
 
         // Patches
         require 'v1/patches.php';
+
+        // Json RPC. All nasty stuff goes here
+        require 'v1/jsonrpc.php';
     });
 });

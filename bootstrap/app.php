@@ -85,11 +85,10 @@ $app->routeMiddleware([
 |
 */
 
-$app->register(App\Providers\AuthServiceProvider::class);
 $app->register(Core\Providers\CoreServiceProvider::class);
+$app->register(App\Providers\AuthServiceProvider::class);
 $app->register(Modules\Issues\Providers\IssuesServiceProvider::class);
-//$app->register(App\Providers\EventServiceProvider::class);
-//$app->register(Illuminate\Redis\RedisServiceProvider::class);
+$app->register(Modules\JsonRpc\Providers\JsonRpcServiceProvider::class);
 
 /*
 |--------------------------------------------------------------------------

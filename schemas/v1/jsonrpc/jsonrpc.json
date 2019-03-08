@@ -1,0 +1,32 @@
+{
+    "$id": "JsonRpc",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "description": "JSON RPC object",
+    "required": [
+        "jsonrpc",
+        "method",
+        "id"
+    ],
+    "properties": {
+        "jsonrpc": {
+            "type": "string",
+            "description": "JSON RPC version",
+            "example": "2.0"
+        },
+        "method": {
+            "type": "string",
+            "description": "Procedure name",
+            "enum": ["head_merge_request"]
+        },
+        "params": {
+            "type": ["array", "object"],
+            "description": "Parameters for the procedure"
+        },
+        "id": {
+            "type": "string",
+            "description": "Unique id of the request. It is used for batch requests",
+            "example": "1"
+        }
+    }
+}
