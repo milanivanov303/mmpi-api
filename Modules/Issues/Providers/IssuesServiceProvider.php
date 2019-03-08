@@ -20,7 +20,7 @@ class IssuesServiceProvider extends ServiceProvider
         $filters = $validator->getFilters();
 
         $filters->add("object", "checkIssueParent", new CheckParentFilter);
-        $filters->add("null", "checkIssueParent", new CheckParentFilter);
+
         $filters->add("object", "checkIssueModifications", new CheckModificationsFilter);
         $filters->add("null", "checkIssueModifications", new CheckModificationsFilter);
 
