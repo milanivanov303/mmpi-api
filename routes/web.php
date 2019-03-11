@@ -42,6 +42,9 @@ $router->group(['prefix' => 'v1'], function () use ($router) {
         // Patches
         require 'v1/patches.php';
 
+        // IMX certificates
+        require 'v1/certificates.php';
+
         // Json RPC. All nasty stuff goes here
         require 'v1/jsonrpc.php';
     });
