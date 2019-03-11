@@ -2,7 +2,6 @@
 
 namespace Modules\Issues\Repositories;
 
-use App\Models\Model;
 use Core\Repositories\RepositoryInterface;
 use Core\Repositories\AbstractRepository;
 use Modules\Instances\Models\Instance;
@@ -60,7 +59,7 @@ class IssueRepository extends AbstractRepository implements RepositoryInterface
 
         if (array_key_exists('parent_issue', $data)) {
             $this->model->parentIssue()->associate(
-                app(Issue::class)->getModelId($data['parent_issue'], 'tts_id')
+                app(Issue::class)->getModelId($data['parent_issue'], ['tts_id', 'jiraissue_id'])
             );
         }
     }
