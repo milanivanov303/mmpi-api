@@ -2,9 +2,12 @@
 
 namespace Modules\Issues\Repositories;
 
+use App\Models\Model;
 use Core\Repositories\RepositoryInterface;
 use Core\Repositories\AbstractRepository;
+use Modules\Instances\Models\Instance;
 use Modules\Issues\Models\Issue;
+use Modules\Projects\Models\Project;
 
 class IssueRepository extends AbstractRepository implements RepositoryInterface
 {
@@ -44,18 +47,20 @@ class IssueRepository extends AbstractRepository implements RepositoryInterface
         parent::fillModel($data);
 
         if (array_key_exists('project', $data)) {
-            $this->model->project()->associate($data['project']['id']);
-        }
-
-        if (array_key_exists('dev_instance', $data)) {
-            $this->model->devInstance()->associate(
-                is_null($data['dev_instance']) ? null : $data['dev_instance']['id']
+            $this->model->project()->associate(
+                app(Project::class)->getModelId($data['project'], 'name')
             );
         }
 
         if (array_key_exists('dev_instance', $data)) {
+            $this->model->devInstance()->associate(
+                app(Instance::class)->getModelId($data['dev_instance'], 'name')
+            );
+        }
+
+        if (array_key_exists('parent_issue', $data)) {
             $this->model->parentIssue()->associate(
-                is_null($data['parent_issue']) ? null : $data['parent_issue']['id']
+                app(Issue::class)->getModelId($data['parent_issue'], 'tts_id')
             );
         }
     }

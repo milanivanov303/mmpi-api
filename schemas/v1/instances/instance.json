@@ -4,14 +4,6 @@
     "type": "object",
     "description": "Instance object",
     "additionalProperties": false,
-    "required": [
-        "name",
-        "owner",
-        "status",
-        "timezone",
-        "host",
-        "environment_type"
-    ],
     "properties": {
         "id": {
             "type": "integer"

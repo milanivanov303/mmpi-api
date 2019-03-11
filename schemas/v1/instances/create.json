@@ -4,6 +4,16 @@
     "type": "object",
     "description": "Instance object",
     "allOf": [
-        {"$ref": "/v1/instances/instance.json"}
+        {"$ref": "/v1/instances/instance.json"},
+        {
+            "required": [
+                "name",
+                "owner",
+                "status",
+                "timezone",
+                "host",
+                "environment_type"
+            ]
+        }
     ]
 }

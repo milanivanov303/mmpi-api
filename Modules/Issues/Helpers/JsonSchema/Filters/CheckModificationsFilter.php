@@ -18,7 +18,7 @@ class CheckModificationsFilter implements IFilter
     public function validate($value, array $args): bool
     {
         $issue         = $this->getIssue();
-        $parentIssueId = is_null($value) ? null : $value->id;
+        $parentIssueId = app(Issue::class)->getModelId((array) $value, 'tts_id');
 
         // check if there are modifications for this issue attached to patch request
         if ($issue && $issue->parent_issue_id !== $parentIssueId) {

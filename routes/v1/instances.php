@@ -25,7 +25,7 @@ $router->group([
     $router->put('/{id}', [
         'as'          => 'instances.update',
         'description' => 'Update instance',
-        'schema'      => '/v1/instances/create.json',
+        'schema'      => '/v1/instances/update.json',
         'uses'        => 'InstancesController@update'
     ]);
     $router->delete('/{id}', [

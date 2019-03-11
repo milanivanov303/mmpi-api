@@ -16,10 +16,11 @@ class CheckParentFilter implements IFilter
      */
     public function validate($value, array $args): bool
     {
-        $parent = app(Issue::class)->where('tts_id', $value->tts_id)->first();
+        $issueId = app(Issue::class)->getModelId((array) $value, 'tts_id');
+        $issue   = app(Issue::class)->find($issueId);
 
         // check if parent issue has parent We do not allow multi level nesting
-        if ($parent && $parent->parent_issue_id) {
+        if ($issue && $issue->parent_issue_id) {
             return false;
         }
 
