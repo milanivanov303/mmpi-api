@@ -16,4 +16,21 @@ $router->group([
         'description' => 'Get single projects',
         'uses'        => 'ProjectsController@getOne'
     ]);
+    $router->post('', [
+        'as'          => 'projects.create',
+        'schema'      => '/v1/projects/create.json',
+        'description' => 'Create new project',
+        'uses'        => 'ProjectsController@create'
+    ]);
+    $router->put('/{name}', [
+        'as'          => 'projects.update',
+        'description' => 'Update project',
+        'schema'      => '/v1/projects/update.json',
+        'uses'        => 'ProjectsController@update'
+    ]);
+    $router->delete('/{name}', [
+        'as'          => 'projects.delete',
+        'description' => 'Delete project',
+        'uses'        => 'ProjectsController@delete'
+    ]);
 });

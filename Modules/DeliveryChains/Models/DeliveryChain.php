@@ -26,7 +26,8 @@ class DeliveryChain extends Model
      * @var array
      */
     protected $hidden = [
-        'type_id'
+        'type_id',
+        'pivot'
     ];
 
     /**

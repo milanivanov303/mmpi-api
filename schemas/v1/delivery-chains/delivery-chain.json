@@ -4,11 +4,6 @@
     "type": "object",
     "description": "Delivery Chain object",
     "additionalProperties": false,
-    "required": [
-        "type",
-        "dlvry_type",
-        "status"
-    ],
     "properties": {
         "id": {
             "type": "integer"

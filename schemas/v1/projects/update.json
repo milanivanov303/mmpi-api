@@ -1,0 +1,10 @@
+{
+    "$id": "CreateProject",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "description": "Project object",
+    "allOf": [
+        {"$ref": "/v1/projects/project.json"},
+        {"$ref": "/v1/projects/filters.json"}
+    ]
+}

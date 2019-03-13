@@ -12,43 +12,43 @@
             "type": "string",
             "description": "Project name",
             "maxLength": 128,
-            "example": "ABSA",
-            "$filters": {
-                "$func": "checkInDb",
-                "$vars": {
-                    "rule": "exists:projects,name"
-                }
-            },
-            "$messages": {
-                "$filters": "Project with this name does not exist"
-            }
+            "example": "ABSA"
         },
         "clnt_cvs_dir": {
-            "type": ["string", "null"]
+            "type": ["string", "null"],
+            "maxLength": 32
         },
         "pnp_type": {
-            "type": ["string", "null"]
+            "type": ["string", "null"],
+            "maxLength": 32
         },
         "clnt_code": {
-            "type": ["string", "null"]
+            "type": ["string", "null"],
+            "maxLength": 16
         },
         "clnt_code2": {
-            "type": ["string", "null"]
+            "type": ["string", "null"],
+            "maxLength": 16
         },
         "src_prefix": {
-            "type": ["string", "null"]
+            "type": ["string", "null"],
+            "maxLength": 8
         },
         "src_prefix2": {
-            "type": ["string", "null"]
+            "type": ["string", "null"],
+            "maxLength": 8
         },
         "src_itf_prefix": {
-            "type": ["string", "null"]
+            "type": ["string", "null"],
+            "maxLength": 8
         },
         "getdcli": {
-            "type": ["string", "null"]
+            "type": ["string", "null"],
+            "maxLength": 16
         },
         "getdcli2": {
-            "type": ["string", "null"]
+            "type": ["string", "null"],
+            "maxLength": 16
         },
         "activity": {
             "oneOf": [
@@ -60,10 +60,15 @@
             "type": ["string", "null"]
         },
         "activite_sdr": {
-            "type": "string"
+            "type": "string",
+            "enum": [
+                "o",
+                "n"
+            ]
         },
         "imx_formstag": {
-            "type": ["string", "null"]
+            "type": ["string", "null"],
+            "maxLength": 16
         },
         "forms_lng_dlvry": {
             "type": "integer"
@@ -75,7 +80,8 @@
             "type": "integer"
         },
         "display_name": {
-            "type": "string"
+            "type": "string",
+            "maxLength": 128
         },
         "group": {
             "oneOf": [
@@ -126,10 +132,12 @@
             ]
         },
         "sla_from": {
-            "type": ["string", "null"]
+            "type": ["string", "null"],
+            "format": "time"
         },
         "sla_to": {
-            "type": ["string", "null"]
+            "type": ["string", "null"],
+            "format": "time"
         },
         "modified_by": {
             "oneOf": [
@@ -138,7 +146,16 @@
             ]
         },
         "type_business": {
-            "type": ["string", "null"]
+            "oneOf": [
+                {"$ref": "/v1/enum-value.json"},
+                {"type": "null"}
+            ]
+        },
+        "delivery_chains": {
+            "type": "array",
+            "items": {
+                "$ref": "/v1/delivery-chains/delivery-chain.json"
+            }
         }
     }
 }

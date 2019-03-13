@@ -5,6 +5,7 @@ namespace Modules\Projects\Models;
 use Core\Models\Model;
 use App\Models\User;
 use App\Models\EnumValue;
+use Modules\DeliveryChains\Models\DeliveryChain;
 
 class Project extends Model
 {
@@ -15,6 +16,7 @@ class Project extends Model
      */
     protected $with = [
         'modifiedBy',
+        'typeBusiness',
         'activity',
         'group',
         'country',
@@ -23,7 +25,8 @@ class Project extends Model
         'seMntdByClnt',
         'tlMntdByClnt',
         'njschMntdByClnt',
-        'transMntdByClnt'
+        'transMntdByClnt',
+        'deliveryChains'
     ];
 
     /**
@@ -74,11 +77,37 @@ class Project extends Model
     ];
 
     /**
+     * Define filters for this model
+     *
+     * @return array
+     */
+    public function filters(): array
+    {
+        return [
+            'delivery_chains_type' => function ($builder, $value, $operator) {
+                return $builder->whereHas('deliveryChains', function ($query) use ($value, $operator) {
+                    $query->whereHas('type', function ($query) use ($value, $operator) {
+                        $query->where('type', $operator, $value);
+                    });
+                });
+            }
+        ];
+    }
+
+    /**
      * Get modifiedBy
      */
     public function modifiedBy()
     {
         return $this->belongsTo(User::class, 'modified_by_id');
+    }
+
+    /**
+     * Get type_business
+     */
+    public function typeBusiness()
+    {
+        return $this->belongsTo(EnumValue::class, 'type_business')->minimal();
     }
 
     /**
@@ -151,5 +180,13 @@ class Project extends Model
     public function transMntdByClnt()
     {
         return $this->belongsTo(EnumValue::class, 'trans_mntd_by_clnt_id')->minimal();
+    }
+
+    /**
+     * Get delivery_chains
+     */
+    public function deliveryChains()
+    {
+        return $this->belongsToMany(DeliveryChain::class, 'project_to_delivery_chain');
     }
 }

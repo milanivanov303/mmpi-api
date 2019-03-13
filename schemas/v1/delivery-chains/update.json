@@ -1,0 +1,10 @@
+{
+    "$id": "UpdateDeliveryChain",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "description": "Delivery Chain object",
+    "allOf": [
+        {"$ref": "/v1/delivery-chains/delivery-chain.json"},
+        {"$ref": "/v1/delivery-chains/filters.json"}
+    ]
+}

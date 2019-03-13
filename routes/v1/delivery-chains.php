@@ -25,7 +25,7 @@ $router->group([
     $router->put('/{title}', [
         'as'          => 'delivery-chains.update',
         'description' => 'Update delivery chain',
-        'schema'      => '/v1/delivery-chains/create.json',
+        'schema'      => '/v1/delivery-chains/update.json',
         'uses'        => 'DeliveryChainsController@update'
     ]);
     $router->delete('/{title}', [
