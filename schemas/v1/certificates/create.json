@@ -1,0 +1,17 @@
+{
+    "$id": "CreateCertificate",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "description": "Certificate object",
+    "allOf": [
+        {"$ref": "/v1/certificates/certificate.json"},
+        {
+            "required": [
+                "hash",
+                "organization_name",
+                "valid_from",
+                "valid_to"
+            ]
+        }
+    ]
+}

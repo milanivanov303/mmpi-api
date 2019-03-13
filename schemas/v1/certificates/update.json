@@ -1,0 +1,9 @@
+{
+    "$id": "UpdateCertificate",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "description": "Certificate object",
+    "allOf": [
+        {"$ref": "/v1/certificates/certificate.json"}
+    ]
+}
