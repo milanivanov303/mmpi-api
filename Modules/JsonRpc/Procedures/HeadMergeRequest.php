@@ -12,14 +12,32 @@ use JiraRestApi\Issue\IssueField;
 class HeadMergeRequest
 {
     /**
+     * tts_id of issue that was closed
+     *
+     * @var string
+     */
+    protected $ttsId;
+
+    /**
+     * Project key to create head merge issues in
+     *
+     * @var string
+     */
+    protected $devProjectKey;
+
+    /**
      * Process procedure
      *
      * @param string $ttsId
+     * @param string $devProjectKey
      * @return mixed
      */
-    public function process(string $ttsId)
+    public function process(string $ttsId, string $devProjectKey)
     {
-        $data = json_decode(json_encode($this->getData($ttsId)), JSON_OBJECT_AS_ARRAY);
+        $this->ttsId         = $ttsId;
+        $this->devProjectKey = $devProjectKey;
+
+        $data = json_decode(json_encode($this->getData()), JSON_OBJECT_AS_ARRAY);
 
         $data = collect($data)->groupBy('username');
 
@@ -28,7 +46,7 @@ class HeadMergeRequest
             $revisions = $sources->pluck('rev_id')->all();
 
             try {
-                $issue = $this->createIssue($ttsId, $username, $sources);
+                $issue = $this->createIssue($username, $sources);
 
                 SourceRevision::whereIn('rev_id', $revisions)
                     ->update(['requested_head_merge' => 1]);
@@ -53,10 +71,9 @@ class HeadMergeRequest
     /**
      * Get data
      *
-     * @param string $ttsId
      * @return array
      */
-    protected function getData(string $ttsId) : array
+    protected function getData() : array
     {
         return DB::select(
             "
@@ -85,20 +102,19 @@ class HeadMergeRequest
                 AND MSR.rev_id IS NULL
                 AND BSR.rev_id IS NULL
             ",
-            [$ttsId]
+            [$this->ttsId]
         );
     }
 
     /**
      * Get issue data
      *
-     * @param string $ttsId
      * @param string $username
      * @param Collection $sources
      *
      * @return IssueField
      */
-    protected function getIssue(string $ttsId, string $username, Collection $sources) : IssueField
+    protected function getIssue(string $username, Collection $sources) : IssueField
     {
         $issueField = new IssueField();
 
@@ -111,13 +127,13 @@ class HeadMergeRequest
         );
 
         $issueField
-            ->setProjectKey(current(explode('-', $ttsId)))
-            ->setSummary("Commit on Head the changes done in {$ttsId}")
+            ->setProjectKey($this->devProjectKey)
+            ->setSummary("Commit on Head the changes done in {$this->ttsId}")
             ->setAssigneeName($username)
             ->setIssueType('Short Task')
             ->setPriorityName('Normal')
             ->setDescription("
-                The test of task {$ttsId} is completed OK. Please commit your changes in the HEAD revision.
+                The test of task {$this->ttsId} is completed OK. Please commit your changes in the HEAD revision.
                 
                 *Sources:* 
                 {$sources}
@@ -149,7 +165,6 @@ class HeadMergeRequest
     /**
      * Create issues - batch
      *
-     * @param string $ttsId
      * @param string $username
      * @param Collection $sources
      *
@@ -157,9 +172,9 @@ class HeadMergeRequest
      *
      * @throws \Exception
      */
-    protected function createIssue(string $ttsId, string $username, Collection $sources)
+    protected function createIssue(string $username, Collection $sources)
     {
-        $issue = $this->getIssue($ttsId, $username, $sources);
+        $issue = $this->getIssue($username, $sources);
 
         $issueService = new IssueService();
         $newIssue = $issueService->create($issue);
