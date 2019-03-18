@@ -1,0 +1,21 @@
+{
+    "$id": "CreateInstallation",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "description": "Installation object",
+    "allOf": [
+        {"$ref": "/v1/installations/installation.json"},
+        {
+            "required": [
+                "patch_id",
+                "instance_id",
+                "installed_on",
+                "status_id",
+                "err_output",
+                "log_file",
+                "timezone_converted",
+                "duration"
+            ]
+        }
+    ]
+}
