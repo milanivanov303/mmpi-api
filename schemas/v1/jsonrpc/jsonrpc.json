@@ -17,7 +17,10 @@
         "method": {
             "type": "string",
             "description": "Procedure name",
-            "enum": ["head_merge_request"]
+            "enum": [
+                "head_merge_request",
+                "run_cppcheck"
+            ]
         },
         "params": {
             "type": ["array", "object"],
