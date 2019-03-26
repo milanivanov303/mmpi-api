@@ -63,6 +63,49 @@ class Modification extends Model
     ];
 
     /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'name',
+        'namesake',
+        'run_repack',
+        'prev_version',
+        'version',
+        'revision_converted',
+        'contents',
+        'comments',
+        'checksum',
+        'size',
+        'est_run_time',
+        'permissions',
+        'backup_orig_data',
+        'backup_type',
+        'backup_where_clause',
+        'trig_status',
+        'seq_table_name',
+        'seq_column_name',
+        'header_only',
+        'title',
+        'maven_repository',
+        'deployment_path',
+        'check_exit_status',
+        'target_schema',
+        'check_status',
+        'check_msg',
+        'checked_on',
+        'active',
+        'visible',
+        'locked',
+        'is_buggy',
+        'marked_buggy_by',
+        'marked_buggy_on',
+        'bad_content_confirmed',
+        'branch'
+    ];
+
+    /**
      * Get issue
      */
     public function issue()
@@ -75,7 +118,7 @@ class Modification extends Model
      */
     public function createdBy()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'created_by_id');
     }
 
     /**
