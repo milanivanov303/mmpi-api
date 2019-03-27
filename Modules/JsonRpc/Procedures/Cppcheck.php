@@ -2,7 +2,6 @@
 
 namespace Modules\JsonRpc\Procedures;
 
-use Illuminate\Log\Logger;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Modules\Projects\Models\Project;
@@ -18,26 +17,27 @@ class Cppcheck
     protected $tempDirectoryName;
 
     /**
-     * CVS checkout command
+     * CVS command
      *
      * @var string
      */
-    protected $cvsCheckoutCmd = "cvs -s CVSRMT=YES -d :pserver:%s:@cvs.codixfr.private:/app/cvs/repo checkout";
+    protected $cvsCmd = "cvs -s CVSRMT=YES -d :pserver:%s:@cvs.codixfr.private:/app/cvs/repo";
 
     /**
      * cppcheck command
      *
      * @var string
      */
-    protected $cppCheckCmd = ". /enterprise/.custom_profile && cppcheck -q -DSYSTEME_64 -DSYSTEME_LINUX -I client-h/client.h";
+    protected $cppcheckCmd =
+        ". /enterprise/.custom_profile && cppcheck -q -DSYSTEME_64 -DSYSTEME_LINUX -I client-h/client.h";
 
     /**
      * Cppcheck constructor
      */
     public function __construct()
     {
-        // add logged in user in cvs command
-        $this->cvsCheckoutCmd = sprintf($this->cvsCheckoutCmd, 'iivanova'/*Auth::user()->getUsername()*/);
+        // run CVS command with logged in user
+        $this->cvsCmd = sprintf($this->cvsCmd, Auth::user()->getUsername());
     }
 
     /**
@@ -115,7 +115,7 @@ class Cppcheck
      */
     protected function checkoutSource(array $source)
     {
-        $result = $this->exec("{$this->cvsCheckoutCmd}  -r {$source['version']} \"{$source['name']}\"");
+        $result = $this->exec("{$this->cvsCmd} checkout -r {$source['version']} \"{$source['name']}\"");
 
         if ($result['exit_code'] || preg_match('/checkout: warning: new-born/', $result['output'])) {
             Log::error("Could not checkout source \"{$source['name']} - {$source['version']}\"");
@@ -133,7 +133,7 @@ class Cppcheck
      */
     protected function checkoutClientH(string $clntCvsDir)
     {
-        $result = $this->exec("{$this->cvsCheckoutCmd}  -d client-h \"imxclt/{$clntCvsDir}/include/client.h\"");
+        $result = $this->exec("{$this->cvsCmd} checkout -d client-h \"imxclt/{$clntCvsDir}/include/client.h\"");
 
         if ($result['exit_code']) {
             Log::error("Could not checkout client.h \"{$clntCvsDir}\"");
@@ -151,7 +151,7 @@ class Cppcheck
      */
     protected function runCppcheck(string $sourceName)
     {
-        $result = $this->exec(". /enterprise/.custom_profile && cppcheck -q -DSYSTEME_64 -DSYSTEME_LINUX -Iclient-h/client.h {$sourceName}");
+        $result = $this->exec("{$this->cppcheckCmd} {$sourceName}");
 
         if ($result['exit_code'] || preg_match('/(error)/', $result['output'])) {
             throw new \Exception($result['output'], 4);
@@ -169,7 +169,7 @@ class Cppcheck
         $directory = storage_path('app/' . $this->tempDirectoryName);
         $cmd       = "cd {$directory} && {$cmd} 2>&1";
 
-        Log::info("Run \"{$cmd}\"");
+        Log::info("exec \"{$cmd}\"");
 
         exec($cmd, $output, $exit_code);
 

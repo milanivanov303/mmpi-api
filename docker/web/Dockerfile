@@ -35,18 +35,4 @@ RUN cd ${HOME}/services/build \
     && make PREFIX=${HOME}/services/built/cppcheck-1.80 CFGDIR=${HOME}/services/built/cppcheck-1.80/cfg HAVE_RULES=yes \
     && make install PREFIX=${HOME}/services/built/cppcheck-1.80 CFGDIR=${HOME}/services/built/cppcheck-1.80/cfg
 
-# Add in .custom_profile
-RUN echo $'\n\
-#=================  cppcheck  ===============#\n\
-export CPPCHECKVERSION="cppcheck-1.80"\n\
-[[ -z ${CPPCHECKVERSION} ]] && CPPCHECK_HOME="" || CPPCHECK_HOME=${HOME}/services/built/${CPPCHECKVERSION}\n\
- if [[ -d ${CPPCHECK_HOME} ]]\n\
-  then\n\
-   export CPPCHECK_HOME\n\
-   export CPPCHECK_BIN=${CPPCHECK_HOME}/bin\n\
- fi\n\
-[[ -d ${CPPCHECK_BIN} ]] && export PATH=${CPPCHECK_BIN}:${PATH};\n\
-#===========================================#\n\
-' >> ${HOME}/.custom_profile
-
 USER root
