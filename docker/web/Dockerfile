@@ -6,7 +6,7 @@ ARG PHP_IDE_CONFIG
 ENV TERM=vt100
 
 # Install cvs
-RUN yum -y install cvs
+RUN echo "10.8.7.31 backup2" >> /etc/hosts && yum -y install cvs
 
 USER enterprise
 
