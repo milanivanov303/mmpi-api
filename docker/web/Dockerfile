@@ -5,8 +5,11 @@ ARG PHP_IDE_CONFIG
 # Set terminal
 ENV TERM=vt100
 
+# add backup2 to hosts file
+RUN echo "192.9.202.186 backup2" >> /etc/hosts
+
 # Install cvs
-RUN echo "10.8.7.31 backup2" >> /etc/hosts && yum -y install cvs
+RUN yum -y install cvs
 
 USER enterprise
 
