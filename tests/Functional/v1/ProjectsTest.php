@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\User;
 use App\Models\EnumValue;
 use Modules\DeliveryChains\Models\DeliveryChain;
 
@@ -19,7 +18,6 @@ class ProjectsTest extends RestTestCase
     {
         $faker = Faker\Factory::create();
 
-        $modifiedBy       = User::inRandomOrder()->active()->first();
         $typeBusiness     = EnumValue::where('type', 'type_business')->inRandomOrder()->minimal()->first();
         $group            = EnumValue::where('type', 'project_groups')->inRandomOrder()->minimal()->first();
         $country          = EnumValue::where('type', 'country')->inRandomOrder()->minimal()->first();
@@ -51,7 +49,6 @@ class ProjectsTest extends RestTestCase
             'sla_from'           => $faker->time(),
             'sla_to'             => $faker->time(),
             'type_business'      => $typeBusiness->toArray(),
-            'modified_by'        => $modifiedBy->toArray(),
             'group'              => $group->toArray(),
             'country'            => $country->toArray(),
             'communication_lng'  => $communicationLng->toArray(),

@@ -55,7 +55,12 @@ abstract class RestTestCase extends TestCase
      */
     protected function getChangedProperties($validData, $invalidData)
     {
-        $diff = array_diff(array_dot($validData), array_dot($invalidData));
+        // Flatten data and filter empty elements
+        // Empty arrays are not flatten for some reason and array_diff will fail for non string elements!
+        $validData = array_filter(array_dot($validData));
+        $invalidData = array_filter(array_dot($invalidData));
+
+        $diff = array_diff($validData, $invalidData);
 
         $properties = [];
         foreach ($diff as $key => $value) {

@@ -7,6 +7,7 @@ use App\Models\User;
 use Core\Models\Model;
 use Core\Repositories\AbstractRepository;
 use Core\Repositories\RepositoryInterface;
+use Illuminate\Support\Facades\Auth;
 use Modules\DeliveryChains\Models\DeliveryChain;
 use Modules\Projects\Models\Project;
 
@@ -38,11 +39,7 @@ class ProjectRepository extends AbstractRepository implements RepositoryInterfac
     {
         parent::fillModel($data);
 
-        if (array_key_exists('modified_by', $data)) {
-            $this->model->modifiedBy()->associate(
-                app(User::class)->getModelId($data['modified_by'], 'username')
-            );
-        }
+        $this->model->modifiedBy()->associate(Auth::user());
 
         if (array_key_exists('type_business', $data)) {
             $this->model->typeBusiness()->associate(
