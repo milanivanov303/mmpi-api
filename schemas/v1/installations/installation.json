@@ -8,18 +8,18 @@
         "id": {
             "type": "integer"
         },
-        "patch_id": {
+        "patch": {
             "$ref": "/v1/patches/patch.json"
         },
-        "instance_id": {
+        "instance": {
             "$ref": "/v1/instances/instance.json"
         },
         "installed_on": {
             "type": "string",
             "format": "datetime"
         },
-        "status_id": {
-            "type": "integer"
+        "status": {
+            "$ref": "/v1/enum-value.json"
         },
         "duration": {
             "type": "string",

@@ -33,6 +33,22 @@ class Installation extends Model
     ];
 
     /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'patch_id',
+        'instance_id',
+        'installed_on',
+        'status_id',
+        'err_output',
+        'duration',
+        'log_file',
+        'timezone_converted'
+    ];
+
+    /**
      * Define filters for this model
      *
      * @return array

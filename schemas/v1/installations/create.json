@@ -7,14 +7,11 @@
         {"$ref": "/v1/installations/installation.json"},
         {
             "required": [
-                "patch_id",
-                "instance_id",
+                "patch",
+                "instance",
                 "installed_on",
-                "status_id",
-                "err_output",
-                "log_file",
-                "timezone_converted",
-                "duration"
+                "status",
+                "timezone_converted"
             ]
         }
     ]

@@ -2,8 +2,6 @@
 
 namespace Modules\Installations\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
 use Modules\Installations\Repositories\InstallationRepository;
 

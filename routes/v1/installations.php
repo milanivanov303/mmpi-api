@@ -16,21 +16,21 @@ $router->group([
         'description' => 'Get single installation',
         'uses'        => 'InstallationsController@getOne'
     ]);
-    $router->post('', [
-        'as'          => 'installations.create',
-        'schema'      => '/v1/installations/create.json',
-        'description' => 'Create new instance',
-        'uses'        => 'InstallationsController@create'
-    ]);
-    $router->put('/{id}', [
-        'as'          => 'installations.update',
-        'description' => 'Update installation',
-        'schema'      => '/v1/installations/update.json',
-        'uses'        => 'InstallationsController@update'
-    ]);
-    $router->delete('/{id}', [
-        'as'          => 'installations.delete',
-        'description' => 'Delete installation',
-        'uses'        => 'InstallationsController@delete'
-    ]);
+    // $router->post('', [
+    //     'as'          => 'installations.create',
+    //     'schema'      => '/v1/installations/create.json',
+    //     'description' => 'Create new instance',
+    //     'uses'        => 'InstallationsController@create'
+    // ]);
+    // $router->put('/{id}', [
+    //     'as'          => 'installations.update',
+    //     'description' => 'Update installation',
+    //     'schema'      => '/v1/installations/update.json',
+    //     'uses'        => 'InstallationsController@update'
+    // ]);
+    // $router->delete('/{id}', [
+    //     'as'          => 'installations.delete',
+    //     'description' => 'Delete installation',
+    //     'uses'        => 'InstallationsController@delete'
+    // ]);
 });
