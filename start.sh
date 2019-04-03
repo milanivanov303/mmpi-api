@@ -5,36 +5,37 @@
 
 if [[ "$1" == "--help" ]]
 then
-    echo "Start the application using Docker
+    echo "Start the application using Docker compose
 
 SCRIPT PARAMETERS
 
     N/A
-
-ENV CONFIGS
-
-NGINX config dynamically loaded from ./docker/nginx/default.conf
-PHP config dynamically loaded from   ./docker/php/php.ini
-MySQL config dynamically loaded from ./docker/mysql/my.cnf
 "
     exit
 fi
 
-if [[ -f docker-compose.yml ]]
-then
-    echo "Stopping already running containers"
-    docker-compose down
+# Try to load env configuration
+DOCKER_COMPOSE_FILE="docker/docker-compose-${APP_ENV}.yml"
+if [[ ! -f $DOCKER_COMPOSE_FILE ]]; then
+    DOCKER_COMPOSE_FILE="docker/docker-compose.yml"
+fi
 
+if [[ ! -f $DOCKER_COMPOSE_FILE ]]; then
+    echo "Could not find docker-compose configuration file in docker directory"
+fi
+
+echo "Stopping already running containers"
+docker-compose -f $DOCKER_COMPOSE_FILE down
+
+printf "\n"
+
+echo "Starting containers ..."
+docker-compose -f $DOCKER_COMPOSE_FILE up --build -d
+EXIT_CODE=$?
+
+printf "\n"
+
+if [[ ${EXIT_CODE} -eq 0 ]]; then
     printf "\n"
-
-    echo "Starting containers ..."
-    docker-compose up --build -d
-    EXIT_CODE=$?
-
-    printf "\n"
-
-    if [[ ${EXIT_CODE} == 0 ]]; then
-        printf "\n"
-        echo "App running on port: ${WEB_SERVER_PORT}"
-    fi
+    echo "App running on port: ${WEB_CONTAINER_HTTP_PORT:-80}"
 fi

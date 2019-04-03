@@ -53,7 +53,7 @@ class IssueRepository extends AbstractRepository implements RepositoryInterface
 
         if (array_key_exists('dev_instance', $data)) {
             $this->model->devInstance()->associate(
-                app(Instance::class)->getModelId($data['dev_instance'], 'name')
+                $data['dev_instance']["id"] ?? null
             );
         }
 
