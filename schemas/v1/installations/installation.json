@@ -1,0 +1,35 @@
+{
+    "$id": "Installation",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "description": "Installation object",
+    "additionalProperties": false,
+    "properties": {
+        "id": {
+            "type": "integer"
+        },
+        "patch": {
+            "$ref": "/v1/patches/patch.json"
+        },
+        "instance": {
+            "$ref": "/v1/instances/instance.json"
+        },
+        "installed_on": {
+            "type": "string",
+            "format": "datetime"
+        },
+        "status": {
+            "$ref": "/v1/enum-value.json"
+        },
+        "duration": {
+            "type": "string",
+            "format": "time"
+        },
+        "log_file": {
+            "type": ["string", "null"]
+        },
+        "timezone_converted": {
+            "type": "integer"
+        }
+    }
+}

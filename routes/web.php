@@ -36,6 +36,9 @@ $router->group(['prefix' => 'v1'], function () use ($router) {
         // Instances
         require 'v1/instances.php';
 
+        // Installations
+        require 'v1/installations.php';
+
         // Delivery chains
         require 'v1/delivery-chains.php';
 
