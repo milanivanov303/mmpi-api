@@ -189,4 +189,9 @@ class Project extends Model
     {
         return $this->belongsToMany(DeliveryChain::class, 'project_to_delivery_chain');
     }
+
+    public function roles()
+    {
+        return $this->hasMany(ProjectRole::class);
+    }
 }
