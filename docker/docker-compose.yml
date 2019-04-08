@@ -7,6 +7,8 @@ services:
         container_name: ${WEB_CONTAINER_NAME:-api-mmpi}-${APP_ENV}
         build:
             context: web
+            args:
+                BACKUP2_IP_ARG: 192.9.202.186
         stdin_open: true
         ports:
             - ${WEB_CONTAINER_IP}:${WEB_CONTAINER_SSH_PORT:-22}:22
