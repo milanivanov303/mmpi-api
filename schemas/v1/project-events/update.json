@@ -1,0 +1,9 @@
+{
+    "$id": "CreateCreateProjectEvent",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "description": "Project Event object",
+    "allOf": [
+        {"$ref": "/v1/project-events/project-event.json"}
+    ]
+}
