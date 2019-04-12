@@ -1,7 +1,6 @@
 <?php
 
 use App\Models\EnumValue;
-use App\Models\User;
 use Modules\ProjectEvents\Models\ProjectEvent;
 
 class ProjectEventsTest extends RestTestCase
@@ -19,20 +18,17 @@ class ProjectEventsTest extends RestTestCase
     {
         $faker = Faker\Factory::create();
 
-        $project              = \Modules\Projects\Models\Project::inRandomOrder()->first();
-        $user                 = User::inRandomOrder()->first();
-        $projectEventType     = EnumValue::where('type', 'project_event_type')->inRandomOrder()->minimal()->first();
-        $projectEventStatus   = EnumValue::where('type', 'project_event_status')->inRandomOrder()->minimal()->first();
+        $project            = \Modules\Projects\Models\Project::inRandomOrder()->first();
+        $projectEventType   = EnumValue::where('type', 'project_event_type')->inRandomOrder()->minimal()->first();
+        $projectEventStatus = EnumValue::where('type', 'project_event_status')->inRandomOrder()->minimal()->first();
 
         return [
             'project'              => $project->toArray(),
             'project_event_type'   => $projectEventType->toArray(),
-            'event_start_date'        => $faker->date('Y-m-d H:i:s'),
-            'event_end_date'          => $faker->date('Y-m-d H:i:s'),
-            'made_by'                 => $user->toArray(),
-            'made_on'                 => $faker->date('Y-m-d H:i:s'),
-            'description'             => null,
-            'project_event_status'    => $projectEventStatus->toArray()
+            'event_start_date'     => $faker->date('Y-m-d'),
+            'event_end_date'       => $faker->date('Y-m-d'),
+            'description'          => $faker->text(59),
+            'project_event_status' => $projectEventStatus->toArray()
         ];
     }
 
@@ -65,39 +61,12 @@ class ProjectEventsTest extends RestTestCase
     {
         $faker = Faker\Factory::create();
         // Change parameters
-        $data['event_start_date'] = $faker->date('Y-m-d H:i:s');
+
+        //Remove date as it is overwritten on each request
+        unset($data['made_on']);
+        $data['event_start_date'] = $faker->date('Y-m-d');
 
         return $data;
-    }
-
-    /**
-    * Test creation
-    *
-    * @return void
-    */
-    public function testCreate()
-    {
-        $this->assertEquals(true, true);
-    }
-
-    /**
-     * Test creation with wrong data
-     *
-     * @return void
-     */
-    public function testCreateWithInvalidData()
-    {
-        $this->assertEquals(true, true);
-    }
-
-    /**
-     * Test update
-     *
-     * @return void
-     */
-    public function testUpdate()
-    {
-        $this->assertEquals(true, true);
     }
 
     /**
@@ -108,20 +77,5 @@ class ProjectEventsTest extends RestTestCase
     public function testDelete()
     {
         $this->assertEquals(true, true);
-    }
-
-    /**
-     * Test get single
-     *
-     * @return void
-     */
-    public function testGet()
-    {
-        $data = ProjectEvent::inRandomOrder()->first()->toArray();
-
-        $this
-            ->get( $this->uri . '/' . $this->getPrimaryKeyValue($data))
-            ->seeJson($data)
-            ->assertResponseOk();
     }
 }

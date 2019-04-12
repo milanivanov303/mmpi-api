@@ -12,10 +12,7 @@
             "$ref": "/v1/projects/project.json"
         },
         "made_by": {
-            "oneOf": [
-                {"$ref": "/v1/user.json"},
-                {"type": "null"}
-            ]
+            "$ref": "/v1/user.json"
         },
         "made_on": {
             "type": "string",
@@ -31,10 +28,12 @@
             "type": ["string", "null"]
         },
         "event_start_date": {
-            "type": ["string", "null"]
+            "type": ["string", "null"],
+            "format": "date"
         },
         "event_end_date": {
-            "type": ["string", "null"]
+            "type": ["string", "null"],
+            "format": "date"
         }
     }
 }

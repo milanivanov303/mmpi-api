@@ -62,7 +62,7 @@ class ProjectEvent extends Model
                     $query->where('key', $operator, $value);
                 });
             },
-            'project_event_type_id' => function ($builder, $value, $operator) {
+            'project_event_type' => function ($builder, $value, $operator) {
                 return $builder->whereHas('projectEventType', function ($query) use ($value, $operator) {
                     $query->where('key', $operator, $value);
                 });

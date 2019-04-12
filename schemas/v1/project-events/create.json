@@ -9,8 +9,6 @@
             "required": [
                 "project",
                 "project_event_type",
-                "made_by",
-                "made_on",
                 "project_event_status"
             ]
         }

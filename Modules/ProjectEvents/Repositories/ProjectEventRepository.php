@@ -2,11 +2,12 @@
 
 namespace Modules\ProjectEvents\Repositories;
 
+use Carbon\Carbon;
 use Core\Repositories\AbstractRepository;
 use Core\Repositories\RepositoryInterface;
+use Illuminate\Support\Facades\Auth;
 use Modules\ProjectEvents\Models\ProjectEvent;
 use Modules\Projects\Models\Project;
-use App\Models\User;
 use App\Models\EnumValue;
 
 class ProjectEventRepository extends AbstractRepository implements RepositoryInterface
@@ -27,20 +28,18 @@ class ProjectEventRepository extends AbstractRepository implements RepositoryInt
 
         if (array_key_exists('project', $data)) {
             $this->model->project()->associate(
-                app(Project::class)->getModelId($data['project'], 'project_id')
+                app(Project::class)->getModelId($data['project'], 'name')
             );
         }
 
-        if (array_key_exists('made_by', $data)) {
-            $this->model->madeBy()->associate(
-                app(User::class)->getModelId($data['made_by'], 'id')
-            );
-        }
+        $this->model->madeBy()->associate(Auth::user());
+
+        $this->model->made_on = Carbon::now()->format('Y-m-d H:i:s');
 
         if (array_key_exists('project_event_type', $data)) {
             $this->model->projectEventType()->associate(
                 app(EnumValue::class)
-                    ->getModelId($data['project_event_type'], 'key', ['type' =>'project_event_type_id'])
+                    ->getModelId($data['project_event_type'], 'key', ['type' =>'project_event_type'])
             );
         }
 
