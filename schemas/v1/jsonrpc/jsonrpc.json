@@ -19,7 +19,8 @@
             "description": "Procedure name",
             "enum": [
                 "head_merge_request",
-                "run_cppcheck"
+                "run_cppcheck",
+                "insert_hash"
             ]
         },
         "params": {
