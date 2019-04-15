@@ -43,7 +43,7 @@ class ProjectEventsTest extends RestTestCase
         $faker = Faker\Factory::create();
 
         // Set invalid parameters
-        $data['project_event_type_id'] = $faker->randomNumber();
+        $data['project_event_type'] = $faker->randomNumber();
 
         // remove required parameters
         unset($data['project']);
