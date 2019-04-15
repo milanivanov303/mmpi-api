@@ -45,6 +45,16 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     }
 
     /**
+     * Get id
+     *
+     * @return string
+     */
+    public function getId() : string
+    {
+        return $this->id;
+    }
+
+    /**
      * Get name
      *
      * @return string
@@ -94,6 +104,17 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     public static function getByUsername(string $username) : ?self
     {
         return self::where('username', $username)->active()->first();
+    }
+
+    /**
+     * Get user by sid
+     *
+     * @param string $sid
+     * @return User|null
+     */
+    public static function getBySid(string $sid) : ?self
+    {
+        return self::where('sidfr', $sid)->first();
     }
 
     /**
