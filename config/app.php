@@ -10,8 +10,8 @@ return [
     |
     */
     'jwt' => [
-        'secret_keys_dir' => env('JWT_SECRET_KEYS_DIR', 'ssh'),
-        'algorithms'      => explode(',', env('JWT_ALGORITHMS', 'RS256'))
+        'public_key' => env('JWT_PUBLIC_KEY', 'ssh/id_rsa.pub'),
+        'algorithms' => explode(',', env('JWT_ALGORITHMS', 'RS256'))
     ],
 
     /*
@@ -46,5 +46,13 @@ return [
 
     'elastic' => [
         'hosts' => explode(',', env('ELASTIC_HOSTS'))
+    ],
+
+    'users_sync_mail' => env('USERS_SYNC_MAIL', 'phpid@codix.bg'),
+
+    'user-management' => [
+        'url'      => env('USER_MANAGEMENT_URL'),
+        'username' => env('USER_MANAGEMENT_USERNAME'),
+        'password' => env('USER_MANAGEMENT_PASSWORD')
     ]
 ];

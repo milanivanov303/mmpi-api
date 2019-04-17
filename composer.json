@@ -12,6 +12,10 @@
         },
         {
             "type": "vcs",
+            "url":  "http://rhode.codixfr.private/Enterprise-Apps/api-sdk"
+        },
+        {
+            "type": "vcs",
             "url":  "http://rhode.codixfr.private/Enterprise-Apps/forks/json-schema"
         },
         {
@@ -30,7 +34,7 @@
         "ext-pdo_mysql": "*",
         "laravel/lumen-framework": "5.7.*",
         "vlucas/phpdotenv": "~2.2",
-        "codix/api-core": "^1.1",
+        "codix/api-core": "^1.2",
         "league/flysystem": "^1.0",
         "fguillot/json-rpc": "^1.2",
         "lesstif/php-jira-rest-client": "^1.35",
