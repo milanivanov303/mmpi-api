@@ -16,12 +16,7 @@
         },
         "method": {
             "type": "string",
-            "description": "Procedure name",
-            "enum": [
-                "head_merge_request",
-                "run_cppcheck",
-                "insert_hash"
-            ]
+            "description": "Procedure name"
         },
         "params": {
             "type": ["array", "object"],

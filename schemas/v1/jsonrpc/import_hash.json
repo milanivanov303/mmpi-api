@@ -1,0 +1,34 @@
+{
+    "$id": "ImportHash",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "description": "JSON RPC Import Hash object",
+    "allOf": [
+        {"$ref": "/v1/jsonrpc/jsonrpc.json"},
+        {
+            "required": [
+                "params"
+            ],
+            "properties": {
+                "method": {
+                    "enum": ["import_hash"]
+                },
+                "params": {
+                    "type": "object",
+                    "properties": {
+                        "module": {
+                            "type": "string",
+                            "description": "Repository module as defined in MMPI",
+                            "example": "imx_be"
+                        },
+                        "rev": {
+                            "type": "string",
+                            "description": "Repository hash to import",
+                            "example": "891b688fe1a49c5383de94c26717c8c3b7c47ab48"
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}
