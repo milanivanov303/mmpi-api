@@ -76,6 +76,10 @@ class ProjectEventsTest extends RestTestCase
      */
     public function testDelete()
     {
-        $this->assertEquals(true, true);
+        $data = $this->getData();
+
+        $this
+            ->json('DELETE', $this->uri . '/' . $this->getPrimaryKeyValue($data))
+            ->assertResponseStatus(405);
     }
 }
