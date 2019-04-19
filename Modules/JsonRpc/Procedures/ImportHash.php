@@ -3,9 +3,11 @@
 namespace Modules\JsonRpc\Procedures;
 
 use App\Models\EnumValue;
-use Core\Helpers\SSH;
+use Core\Helpers\SSH2;
+use Illuminate\Http\Request;
+use Illuminate\Routing\Route;
 
-class InsertHash
+class ImportHash
 {
     /**
      * Process procedure
@@ -15,16 +17,36 @@ class InsertHash
      *
      * @throws \Exception
      */
-    public function insert(string $rev, string $module)
+    public function import(string $rev, string $module)
     {
         $repository = EnumValue::where('type', 'repository_type')->where('key', $module)->first();
 
         if ($repository) {
-            $this->hg($rev, $repository);
+            if ($repository->subtype === 'repo_hg') {
+                $hash = $this->hg($rev, $repository);
+            }
+
+            if ($repository->subtype === 'repo_git') {
+                // get git rev info
+            }
+
+            // import hash
+            if ($hash) {
+                // Make use of hashes routes
+                $response = app()->handle(
+                    app('request')->create('v1/hashes', 'POST', $hash)
+                );
+
+                if ($response->isSuccessful()) {
+                    return $response;
+                }
+            }
         }
     }
 
     /**
+     * Get hg data
+     *
      * @param string $rev
      * @param EnumValue $repository
      * @return array
@@ -32,7 +54,7 @@ class InsertHash
      */
     protected function hg(string $rev, EnumValue $repository)
     {
-        $ssh2 = new SSH(parse_url($repository->url, PHP_URL_HOST));
+        $ssh2 = new SSH2(parse_url($repository->url, PHP_URL_HOST));
 
         // login to server
         if (!$ssh2->login('yarnaudov', 'ND2700k$1')) {
@@ -46,13 +68,14 @@ class InsertHash
         $hash = $ssh2->exec('hg log --rev ' . $rev . ' --template \'
                 \{
                     "branch": "{ifeq(branch, "default", "default", "{branch}")}",
-                    "rev": "{node}",
+                    "merge_branch": "{revset("parents(%d)", rev) % "{ifeq(branch, "default", "default", "{branch}")}"}",
+                    "hash_rev": "{node}",
+                    "rev": "{rev}",
+                    "version": "{tags}",
                     "description": {desc | json},
                     "parents": "{parents}",
-                    "merge_branch": "{revset("parents(%d)", rev) % "{ifeq(branch, "default", "default", "{branch}")}"}",
+                    "commited_by": {"username": "{author|user}"},
                     "timestamp": "{date}",
-                    "owner": "{author|user}",
-                    "tag": "{tags}"
                 }
                 \'');
 

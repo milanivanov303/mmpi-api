@@ -14,7 +14,15 @@ class HashCommitFile extends Model
      * @var array
      */
     protected $fillable = [
-        'hash_commit_id',
         'file_name'
+    ];
+
+    /**
+     * The attributes that will be hidden in output json
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'hash_commit_id'
     ];
 }

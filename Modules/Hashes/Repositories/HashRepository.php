@@ -24,11 +24,7 @@ class HashRepository extends AbstractRepository implements RepositoryInterface
      *
      * @var array
      */
-    protected $with = [
-        'files',
-        'chains',
-        'owner'
-    ];
+    protected $with = [];
 
     /**
      * HashRepository constructor
@@ -48,12 +44,12 @@ class HashRepository extends AbstractRepository implements RepositoryInterface
     public function delete($id)
     {
         DB::transaction(function () use ($id) {
-            $this->model = $this->find($id);
+            $model = $this->find($id);
 
-            $this->model->files()->delete();
-            $this->model->chains()->sync([]);
+            $model->files()->delete();
+            $model->chains()->sync([]);
 
-            $this->model->delete();
+            $model->delete();
         });
     }
 
@@ -65,7 +61,7 @@ class HashRepository extends AbstractRepository implements RepositoryInterface
      */
     protected function save($data)
     {
-        $this->model->fill($data);
+        $this->fillModel($data);
 
         DB::transaction(function () use ($data) {
             $this->model->saveOrFail();
@@ -80,7 +76,7 @@ class HashRepository extends AbstractRepository implements RepositoryInterface
             $this->saveTags();
         });
 
-        $this->model->load($this->with);
+        $this->model->load($this->getWith());
 
         return $this->model;
     }

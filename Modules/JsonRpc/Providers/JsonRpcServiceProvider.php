@@ -6,7 +6,7 @@ use Illuminate\Support\ServiceProvider;
 use JsonRPC\Server;
 use Modules\JsonRpc\Procedures\HeadMergeRequest;
 use Modules\JsonRpc\Procedures\Cppcheck;
-use Modules\JsonRpc\Procedures\InsertHash;
+use Modules\JsonRpc\Procedures\ImportHash;
 
 class JsonRpcServiceProvider extends ServiceProvider
 {
@@ -23,7 +23,7 @@ class JsonRpcServiceProvider extends ServiceProvider
             $server->getProcedureHandler()
                 ->withClassAndMethod('head_merge_request', new HeadMergeRequest, 'process')
                 ->withClassAndMethod('run_cppcheck', new Cppcheck, 'run')
-                ->withClassAndMethod('insert_hash', new InsertHash, 'insert');
+                ->withClassAndMethod('import_hash', new ImportHash, 'import');
 
             return $server;
         });

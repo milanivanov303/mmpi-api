@@ -1,0 +1,46 @@
+{
+    "$id": "HashFilters",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+        "committed_by": {
+            "properties": {
+                "id": {
+                    "$filters": {
+                        "$func": "checkInDb",
+                        "$vars": {
+                            "rule": "exists:users,id"
+                        }
+                    },
+                    "$messages": {
+                        "$filters": "User does not exist"
+                    }
+                },
+                "username": {
+                    "$filters": {
+                        "$func": "checkInDb",
+                        "$vars": {
+                            "rule": "exists:users,username"
+                        }
+                    },
+                    "$messages": {
+                        "$filters": "User does not exist"
+                    }
+                }
+            }
+        },
+        "revision": {
+            "pattern": "^[0-9a-z]*$",
+            "$filters": {
+                "$func": "checkInDb",
+                "$vars": {
+                    "rule": "unique:hash_commits,hash_rev"
+                }
+            },
+            "$messages": {
+                "pattern": "Revision can content only numbers and lowercase letters",
+                "$filters": "Revision is already registered"
+            }
+        }
+    }
+}
