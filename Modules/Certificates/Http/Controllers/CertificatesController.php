@@ -10,11 +10,11 @@ class CertificatesController extends Controller
     /**
      * Create a new controller certificates.
      *
-     * @param CertificateRepository $model
+     * @param CertificateRepository $repository
      * @return void
      */
-    public function __construct(CertificateRepository $model)
+    public function __construct(CertificateRepository $repository)
     {
-        $this->model = $model;
+        $this->repository = $repository;
     }
 }

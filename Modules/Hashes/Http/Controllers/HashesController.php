@@ -16,11 +16,11 @@ class HashesController extends Controller
     /**
      * Create a new controller instance.
      *
-     * @param HashRepository $model
+     * @param HashRepository $repository
      * @return void
      */
-    public function __construct(HashRepository $model)
+    public function __construct(HashRepository $repository)
     {
-        $this->model = $model;
+        $this->repository = $repository;
     }
 }

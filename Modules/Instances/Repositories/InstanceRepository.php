@@ -2,8 +2,10 @@
 
 namespace Modules\Instances\Repositories;
 
+use App\Models\EnumValue;
 use Core\Repositories\AbstractRepository;
 use Core\Repositories\RepositoryInterface;
+use Modules\DeliveryChains\Models\DeliveryChainType;
 use Modules\Instances\Models\Instance;
 
 class InstanceRepository extends AbstractRepository implements RepositoryInterface
@@ -19,28 +21,67 @@ class InstanceRepository extends AbstractRepository implements RepositoryInterfa
     }
 
     /**
-     * Save Instance
+     * Define filters for this model
+     *
+     * @return array
+     */
+    public function filters(): array
+    {
+        return [
+            'owner' => function ($builder, $value, $operator) {
+                return $builder->whereHas('owner', function ($query) use ($value, $operator) {
+                    $query->where('key', $operator, $value);
+                });
+            },
+            'status' => function ($builder, $value, $operator) {
+                return $builder->whereHas('status', function ($query) use ($value, $operator) {
+                    $query->where('key', $operator, $value);
+                });
+            },
+            'environment_type' => function ($builder, $value, $operator) {
+                return $builder->whereHas('environmentType', function ($query) use ($value, $operator) {
+                    $query->where('type', $operator, $value);
+                });
+            },
+            'instance_type' => function ($builder, $value, $operator) {
+                return $builder->whereHas('instanceType', function ($query) use ($value, $operator) {
+                    $query->where('id', $operator, $value);
+                });
+            },
+        ];
+    }
+
+    /**
+     * Fill model attributes
      *
      * @param array $data
-     * @return Instance
-     *
-     * @throws \Throwable
      */
-    protected function save($data)
+    protected function fillModel(array $data)
     {
-        $this->model->fill($data);
+        parent::fillModel($data);
 
-        $this->model->owner()->associate($data['owner']['id']);
-        $this->model->status()->associate($data['status']['id']);
-        $this->model->environmentType()->associate($data['environment_type']['id']);
-        $this->model->instanceType()->associate(
-            isset($data['instance_type']) ? $data['instance_type']['id'] : null
-        );
+        if (array_key_exists('owner', $data)) {
+            $this->model->owner()->associate(
+                app(EnumValue::class)
+                    ->getModelId($data['owner'], 'key', ['type' => 'instances_owner'])
+            );
+        }
 
-        $this->model->saveOrFail();
+        if (array_key_exists('owner', $data)) {
+            $this->model->status()->associate(
+                app(EnumValue::class)
+                    ->getModelId($data['status'], 'key', ['type' => 'active_inactive'])
+            );
+        }
 
-        $this->model->load($this->getWith());
+        if (array_key_exists('environment_type', $data)) {
+            $this->model->environmentType()->associate(
+                app(DeliveryChainType::class)->getModelId($data['environment_type'], 'title')
+            );
+        }
 
-        return $this->model;
+        if (array_key_exists('instance_type', $data)) {
+            $this->model->instanceType()->associate($data['instance_type']['id'] ?? null);
+        }
     }
 }

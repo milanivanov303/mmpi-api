@@ -12,11 +12,11 @@ class IssuesController extends Controller
     /**
      * Create a new controller instance.
      *
-     * @param IssueRepository $model
+     * @param IssueRepository $repository
      * @return void
      */
-    public function __construct(IssueRepository $model)
+    public function __construct(IssueRepository $repository)
     {
-        $this->model = $model;
+        $this->repository = $repository;
     }
 }

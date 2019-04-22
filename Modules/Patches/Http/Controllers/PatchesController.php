@@ -12,11 +12,11 @@ class PatchesController extends Controller
     /**
      * Create a new controller instance.
      *
-     * @param PatchRepository $model
+     * @param PatchRepository $repository
      * @return void
      */
-    public function __construct(PatchRepository $model)
+    public function __construct(PatchRepository $repository)
     {
-        $this->model = $model;
+        $this->repository = $repository;
     }
 }
