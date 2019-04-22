@@ -30,7 +30,7 @@ docker-compose -f $DOCKER_COMPOSE_FILE down
 printf "\n"
 
 echo "Starting containers ..."
-docker-compose -f $DOCKER_COMPOSE_FILE up --build --detach --force-recreate
+docker-compose -f $DOCKER_COMPOSE_FILE up --build --detach
 EXIT_CODE=$?
 
 printf "\n"

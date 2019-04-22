@@ -33,6 +33,9 @@ $router->group(['prefix' => 'v1'], function () use ($router) {
         // Projects
         require 'v1/projects.php';
 
+        // Project events
+        require 'v1/project-events.php';
+
         // Instances
         require 'v1/instances.php';
 
