@@ -34,7 +34,18 @@ $router->group([
         'schema'      => '/v1/enum-values/update.json',
         'uses'        => 'EnumValuesController@update'
     ]);
+    $router->put('/{key}/{type}', [
+        'as'          => 'enum-values.update',
+        'description' => 'Update enum values',
+        'schema'      => '/v1/enum-values/update.json',
+        'uses'        => 'EnumValuesController@update'
+    ]);
     $router->delete('/{id}', [
+        'as'          => 'enum-values.delete',
+        'description' => 'Delete project',
+        'uses'        => 'EnumValuesController@delete'
+    ]);
+    $router->delete('/{key}/{type}', [
         'as'          => 'enum-values.delete',
         'description' => 'Delete project',
         'uses'        => 'EnumValuesController@delete'
