@@ -35,6 +35,5 @@ class EnumValueRepository extends AbstractRepository implements RepositoryInterf
         $this->model->changedBy()->associate(Auth::user());
 
         $this->model->changed_on = Carbon::now()->format('Y-m-d H:i:s');
-
     }
 }
