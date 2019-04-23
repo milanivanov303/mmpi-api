@@ -2,10 +2,43 @@
 
 namespace App\Models;
 
+use App\Models\User;
+
 class EnumValue extends Model
 {
-    public function scopeMinimal($query)
+    /**
+     * The relations to eager load on every query.
+     *
+     * @var array
+     */
+    protected $with = [
+        'changedBy'
+    ];
+    
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'type',
+        'subtype',
+        'key',
+        'value',
+        'description',
+        'url',
+        'active',
+        'sortindex',
+        'extra_property',
+        'changed_on',
+        'changed_by'
+    ];
+    
+    /**
+     * Get changedBy
+     */
+    public function changedBy()
     {
-        return $query->select(['id', 'key', 'value']);
+        return $this->belongsTo(User::class, 'changed_by');
     }
 }

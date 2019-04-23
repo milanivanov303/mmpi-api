@@ -131,7 +131,7 @@ class Modification extends Model
      */
     public function actionType()
     {
-        return $this->belongsTo(EnumValue::class, 'action_type')->minimal();
+        return $this->belongsTo(EnumValue::class, 'action_type');
     }
 
     /**
@@ -139,7 +139,7 @@ class Modification extends Model
      */
     public function backupType()
     {
-        return $this->belongsTo(EnumValue::class, 'backup_type')->minimal();
+        return $this->belongsTo(EnumValue::class, 'backup_type');
     }
 
     /**
@@ -147,7 +147,7 @@ class Modification extends Model
      */
     public function checkMsg()
     {
-        return $this->belongsTo(EnumValue::class, 'check_msg')->minimal();
+        return $this->belongsTo(EnumValue::class, 'check_msg');
     }
 
     /**
@@ -155,7 +155,7 @@ class Modification extends Model
      */
     public function checkStatus()
     {
-        return $this->belongsTo(EnumValue::class, 'check_status')->minimal();
+        return $this->belongsTo(EnumValue::class, 'check_status');
     }
 
     /**
@@ -163,7 +163,7 @@ class Modification extends Model
      */
     public function deploymentPrefix()
     {
-        return $this->belongsTo(EnumValue::class, 'deployment_prefix_id')->minimal();
+        return $this->belongsTo(EnumValue::class, 'deployment_prefix_id');
     }
 
     /**
@@ -171,7 +171,7 @@ class Modification extends Model
      */
     public function instanceStatus()
     {
-        return $this->belongsTo(EnumValue::class, 'instance_status')->minimal();
+        return $this->belongsTo(EnumValue::class, 'instance_status');
     }
 
     /**
@@ -179,7 +179,7 @@ class Modification extends Model
      */
     public function path()
     {
-        return $this->belongsTo(EnumValue::class, 'path_id')->minimal();
+        return $this->belongsTo(EnumValue::class, 'path_id');
     }
 
     /**
@@ -196,7 +196,7 @@ class Modification extends Model
      */
     public function subtype()
     {
-        return $this->belongsTo(EnumValue::class, 'subtype_id')->minimal();
+        return $this->belongsTo(EnumValue::class, 'subtype_id');
     }
 
     /**
@@ -204,7 +204,7 @@ class Modification extends Model
     */
     public function tablespace()
     {
-        return $this->belongsTo(EnumValue::class, 'tablespace_id')->minimal();
+        return $this->belongsTo(EnumValue::class, 'tablespace_id');
     }
 
     /**
@@ -212,7 +212,7 @@ class Modification extends Model
     */
     public function trigStatus()
     {
-        return $this->belongsTo(EnumValue::class, 'trig_status')->minimal();
+        return $this->belongsTo(EnumValue::class, 'trig_status');
     }
 
     /**

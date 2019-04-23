@@ -53,7 +53,7 @@ class DeliveryChain extends Model
      */
     public function dlvryType()
     {
-        return $this->belongsTo(EnumValue::class, 'dlvry_type')->minimal();
+        return $this->belongsTo(EnumValue::class, 'dlvry_type');
     }
 
     /**
@@ -61,7 +61,7 @@ class DeliveryChain extends Model
      */
     public function status()
     {
-        return $this->belongsTo(EnumValue::class, 'status')->minimal();
+        return $this->belongsTo(EnumValue::class, 'status');
     }
 
     /**
@@ -69,7 +69,7 @@ class DeliveryChain extends Model
      */
     public function dcVersion()
     {
-        return $this->belongsTo(EnumValue::class, 'dc_version')->minimal();
+        return $this->belongsTo(EnumValue::class, 'dc_version');
     }
 
     /**
@@ -77,6 +77,6 @@ class DeliveryChain extends Model
      */
     public function dcRole()
     {
-        return $this->belongsTo(EnumValue::class, 'dc_role')->minimal();
+        return $this->belongsTo(EnumValue::class, 'dc_role');
     }
 }

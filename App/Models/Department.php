@@ -49,6 +49,6 @@ class Department extends Model
      */
     public function departmentType()
     {
-        return $this->belongsTo(EnumValue::class, 'department_type')->minimal();
+        return $this->belongsTo(EnumValue::class, 'department_type');
     }
 }

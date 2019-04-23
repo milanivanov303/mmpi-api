@@ -26,10 +26,10 @@
             "type": ["string", "null"]
         },
         "owner": {
-            "$ref": "/v1/enum-value.json"
+            "$ref": "/v1/enum-values/enum-value.json"
         },
         "status": {
-            "$ref": "/v1/enum-value.json"
+            "$ref": "/v1/enum-values/enum-value.json"
         },
         "timezone": {
             "type": "string"

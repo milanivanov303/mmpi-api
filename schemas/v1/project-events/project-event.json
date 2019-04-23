@@ -19,10 +19,10 @@
             "format": "datetime"
         },
         "project_event_status": {
-            "$ref": "/v1/enum-value.json"
+            "$ref": "/v1/enum-values/enum-value.json"
         },
         "project_event_type": {
-            "$ref": "/v1/enum-value.json"
+            "$ref": "/v1/enum-values/enum-value.json"
         },
         "description": {
             "type": ["string", "null"]

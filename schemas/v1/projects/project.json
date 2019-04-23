@@ -52,7 +52,7 @@
         },
         "activity": {
             "oneOf": [
-                {"$ref": "/v1/enum-value.json"},
+                {"$ref": "/v1/enum-values/enum-value.json"},
                 {"type": "null"}
             ]
         },
@@ -85,49 +85,49 @@
         },
         "group": {
             "oneOf": [
-                {"$ref": "/v1/enum-value.json"},
+                {"$ref": "/v1/enum-values/enum-value.json"},
                 {"type": "null"}
             ]
         },
         "country": {
             "oneOf": [
-                {"$ref": "/v1/enum-value.json"},
+                {"$ref": "/v1/enum-values/enum-value.json"},
                 {"type": "null"}
             ]
         },
         "communication_lng": {
             "oneOf": [
-                {"$ref": "/v1/enum-value.json"},
+                {"$ref": "/v1/enum-values/enum-value.json"},
                 {"type": "null"}
             ]
         },
         "delivery_method": {
             "oneOf": [
-                {"$ref": "/v1/enum-value.json"},
+                {"$ref": "/v1/enum-values/enum-value.json"},
                 {"type": "null"}
             ]
         },
         "se_mntd_by_clnt": {
             "oneOf": [
-                {"$ref": "/v1/enum-value.json"},
+                {"$ref": "/v1/enum-values/enum-value.json"},
                 {"type": "null"}
             ]
         },
         "tl_mntd_by_clnt": {
             "oneOf": [
-                {"$ref": "/v1/enum-value.json"},
+                {"$ref": "/v1/enum-values/enum-value.json"},
                 {"type": "null"}
             ]
         },
         "njsch_mntd_by_clnt": {
             "oneOf": [
-                {"$ref": "/v1/enum-value.json"},
+                {"$ref": "/v1/enum-values/enum-value.json"},
                 {"type": "null"}
             ]
         },
         "trans_mntd_by_clnt": {
             "oneOf": [
-                {"$ref": "/v1/enum-value.json"},
+                {"$ref": "/v1/enum-values/enum-value.json"},
                 {"type": "null"}
             ]
         },
@@ -147,7 +147,7 @@
         },
         "type_business": {
             "oneOf": [
-                {"$ref": "/v1/enum-value.json"},
+                {"$ref": "/v1/enum-values/enum-value.json"},
                 {"type": "null"}
             ]
         },

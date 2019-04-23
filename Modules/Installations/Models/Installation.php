@@ -69,6 +69,6 @@ class Installation extends Model
      */
     public function status()
     {
-        return $this->belongsTo(EnumValue::class, 'status_id')->minimal();
+        return $this->belongsTo(EnumValue::class, 'status_id');
     }
 }

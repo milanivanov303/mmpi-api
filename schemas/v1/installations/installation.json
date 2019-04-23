@@ -19,7 +19,7 @@
             "format": "datetime"
         },
         "status": {
-            "$ref": "/v1/enum-value.json"
+            "$ref": "/v1/enum-values/enum-value.json"
         },
         "duration": {
             "type": "string",
