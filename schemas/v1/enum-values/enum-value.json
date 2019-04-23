@@ -1,0 +1,51 @@
+{
+    "$id": "EnumValue",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "description": "Enum Value object",
+    "additionalProperties": false,
+    "properties": {
+        "id": {
+            "type": "integer"
+        },
+        "type": {
+            "type": "string"
+        },
+        "key": {
+            "type": "string"
+        },
+        "subtype": {
+            "type": ["string", "null"]
+        },
+        "value": {
+            "type": "string"
+        },
+        "description": {
+            "type": ["string", "null"]
+        },
+        "url": {
+            "type": ["string", "null"]
+        },
+        "active": {
+            "type": "integer"
+        },
+        "sortindex": {
+            "type": "integer"
+        },
+        "extra_property": {            
+            "oneOf": [
+                {"type": "string"},
+                {"type": "null"}
+            ]
+        },
+        "changed_on": {
+            "type": ["string", "null"]
+        },
+        "changed_by": {
+           "oneOf": [
+                {"$ref": "/v1/user.json"},
+                {"type": "null"}
+            ]
+        }
+    }
+}
