@@ -20,8 +20,8 @@ class InstancesTest extends RestTestCase
     {
         $faker = Faker\Factory::create();
 
-        $owner           = EnumValue::where('type', 'instances_owner')->inRandomOrder()->minimal()->first();
-        $status          = EnumValue::where('type', 'active_inactive')->inRandomOrder()->minimal()->first();
+        $owner           = EnumValue::where('type', 'instances_owner')->inRandomOrder()->first();
+        $status          = EnumValue::where('type', 'active_inactive')->inRandomOrder()->first();
         $environmentType = DeliveryChainType::inRandomOrder()->first();
         $instanceType    = InstanceType::inRandomOrder()->first();
 

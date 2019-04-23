@@ -30,6 +30,9 @@ $router->group(['prefix' => 'v1'], function () use ($router) {
         // Issues
         require 'v1/issues.php';
 
+        // Enum values
+        require 'v1/enum-values.php';
+
         // Projects
         require 'v1/projects.php';
 

@@ -15,23 +15,23 @@
             "$ref": "/v1/delivery-chains/delivery-chain-type.json"
         },
         "dlvry_type": {
-            "$ref": "/v1/enum-value.json"
+            "$ref": "/v1/enum-values/enum-value.json"
         },
         "status": {
-            "$ref": "/v1/enum-value.json"
+            "$ref": "/v1/enum-values/enum-value.json"
         },
         "patch_directory_name": {
             "type": ["string", "null"]
         },
         "dc_version": {
             "oneOf": [
-                {"$ref": "/v1/enum-value.json"},
+                {"$ref": "/v1/enum-values/enum-value.json"},
                 {"type": "null"}
             ]
         },
         "dc_role": {
             "oneOf": [
-                {"$ref": "/v1/enum-value.json"},
+                {"$ref": "/v1/enum-values/enum-value.json"},
                 {"type": "null"}
             ]
         }

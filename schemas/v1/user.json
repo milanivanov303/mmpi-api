@@ -54,7 +54,7 @@
                 "department_type": {
                     "oneOf": [
                         {
-                            "$ref": "/v1/enum-value.json"
+                            "$ref": "/v1/enum-values/enum-value.json"
                         },
                         {"type": "null"}
                     ]

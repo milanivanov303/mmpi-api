@@ -1,12 +1,10 @@
 <?php
 
-use App\Models\EnumValue;
-
 class EnumValuesTest extends RestTestCase
 {
     protected $uri        = 'v1/enum-values';
     protected $table      = 'enum_values';
-    protected $primaryKey = 'key';
+    protected $primaryKey = 'id';
 
     /**
      * Get request data
@@ -15,12 +13,15 @@ class EnumValuesTest extends RestTestCase
      */
     protected function getData()
     {
-        $type = EnumValue::where('type', 'project_event_type')->inRandomOrder()->minimal()->first();
-        $key  = EnumValue::where('key', 'idwg')->inRandomOrder()->minimal()->first();
-        
+        $faker = Faker\Factory::create();
+
         return [
-            'type' => $type->toArray(),
-            'key'  => $key->toArray()
+            'type'        => $faker->text(5),
+            'key'         => $faker->text(5),
+            'value'       => $faker->text(5),
+            'description' => $faker->text(15),           
+            'sortindex'   => $faker->numberBetween(900, 950),
+            'active'      => 1,       
         ];
     }
 
@@ -32,6 +33,14 @@ class EnumValuesTest extends RestTestCase
      */
     protected function getInvalidData(array $data)
     {
+        $faker = Faker\Factory::create();
+
+        // Set invalid parameters
+        $data['key'] = $faker->randomNumber();
+
+        // remove required parameters
+        unset($data['type']);
+
         return $data;
     }
 
@@ -43,47 +52,14 @@ class EnumValuesTest extends RestTestCase
      */
     protected function getUpdateData(array $data)
     {
+        $faker = Faker\Factory::create();
+        // Change parameters
+
+        //Remove date as it is overwritten on each request
+        unset($data['changed_on']);
+        $data['value'] = $faker->text(5);
+
         return $data;
-    }
-
-    /**
-    * Test creation
-    *
-    * @return void
-    */
-    public function testCreate()
-    {
-        $this->assertEquals(true, true);
-    }
-
-    /**
-     * Test creation with wrong data
-     *
-     * @return void
-     */
-    public function testCreateWithInvalidData()
-    {
-        $this->assertEquals(true, true);
-    }
-
-    /**
-     * Test update
-     *
-     * @return void
-     */
-    public function testUpdate()
-    {
-        $this->assertEquals(true, true);
-    }
-
-    /**
-     * Test delete single
-     *
-     * @return void
-     */
-    public function testDelete()
-    {
-        $this->assertEquals(true, true);
     }
 
     /**
@@ -93,7 +69,7 @@ class EnumValuesTest extends RestTestCase
      */
     public function testGet()
     {
-        $data = EnumValue::where('key', 'idwg')->inRandomOrder()->minimal()->first();
+        $data = App\Models\EnumValue::where('key', 'idwg')->inRandomOrder()->first();
         $type = 'project_event_type';
         $key  = 'idwg';
 

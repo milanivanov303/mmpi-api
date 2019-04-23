@@ -10,11 +10,11 @@ class EnumValuesController extends Controller
     /**
      * Create a new controller instance.
      *
-     * @param EnumValueRepository $model
+     * @param EnumValueRepository $repository
      * @return void
      */
-    public function __construct(EnumValueRepository $model)
+    public function __construct(EnumValueRepository $repository)
     {
-        $this->model = $model;
+        $this->repository = $repository;
     }
 }
