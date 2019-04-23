@@ -14,16 +14,7 @@ class EnumValue extends Model
     protected $with = [
         'changedBy'
     ];
-
-    /**
-     * The attributes that will be hidden in output json
-     *
-     * @var array
-     */
-    protected $hidden = [
-        'changed_by'
-    ];
-
+    
     /**
      * The attributes that are mass assignable.
      *
