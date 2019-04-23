@@ -1,7 +1,6 @@
 <?php
 
 use App\Models\EnumValue;
-use Modules\ProjectEvents\Models\ProjectEvent;
 
 class ProjectEventsTest extends RestTestCase
 {
@@ -67,15 +66,5 @@ class ProjectEventsTest extends RestTestCase
         $data['event_start_date'] = $faker->date('Y-m-d');
 
         return $data;
-    }
-
-    /**
-     * Test delete single
-     *
-     * @return void
-     */
-    public function testDelete()
-    {
-        $this->assertEquals(true, true);
     }
 }

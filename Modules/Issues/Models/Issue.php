@@ -48,58 +48,6 @@ class Issue extends Model
     ];
 
     /**
-     * Define filters for this model
-     *
-     * @return array
-     */
-    public function filters(): array
-    {
-        return [
-            'subject' => function ($builder, $value) {
-                if (strpos($value, '%') === false) {
-                    $value = "{$value}%";
-                }
-                return $builder->where('subject', 'like', $value);
-            },
-            'project' => function ($builder, $value, $operator) {
-                return $builder->whereHas('project', function ($query) use ($value, $operator) {
-                    $query->where('name', $operator, $value);
-                });
-            },
-            'parent_issue' => function ($builder, $value, $operator) {
-                return $builder->whereHas('parentIssue', function ($query) use ($value, $operator) {
-                    $query->where('tts_id', $operator, $value);
-                });
-            },
-            'createdOnFrom' => function ($builder, $value) {
-                return $builder->whereRaw("DATE(created_on) >= ?", $value);
-            },
-            'createdOnTo' => function ($builder, $value) {
-                return $builder->whereRaw("DATE(created_on) <= ?", $value);
-            }
-        ];
-    }
-
-    /**
-     * Define order by for this model
-     *
-     * @return array
-     */
-    public function orderBy(): array
-    {
-        return [
-            'project' => function ($model, $order_dir) {
-                return $model->select('issues.*')->join('projects', 'projects.id', '=', 'issues.project_id')
-                             ->orderBy('projects.name', $order_dir);
-            },
-            'parent_issue' => function ($model, $order_dir) {
-                return $model->select('issues.*')->join('issues AS parent', 'parent.id', '=', 'issues.parent_issue_id')
-                             ->orderBy('parent.tts_id', $order_dir);
-            }
-        ];
-    }
-
-    /**
      * Get issue project
      */
     public function project()

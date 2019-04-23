@@ -12,11 +12,11 @@ class ProjectsController extends Controller
     /**
      * Create a new controller instance.
      *
-     * @param ProjectRepository $model
+     * @param ProjectRepository $repository
      * @return void
      */
-    public function __construct(ProjectRepository $model)
+    public function __construct(ProjectRepository $repository)
     {
-        $this->model = $model;
+        $this->repository = $repository;
     }
 }

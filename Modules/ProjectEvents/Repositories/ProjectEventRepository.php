@@ -22,6 +22,32 @@ class ProjectEventRepository extends AbstractRepository implements RepositoryInt
         $this->model = $model;
     }
 
+    /**
+     * Define filters for this model
+     *
+     * @return array
+     */
+    public function filters(): array
+    {
+        return [
+            'project' => function ($builder, $value, $operator) {
+                return $builder->whereHas('project', function ($query) use ($value, $operator) {
+                    $query->where('name', $operator, $value);
+                });
+            },
+            'project_event_status' => function ($builder, $value, $operator) {
+                return $builder->whereHas('projectEventStatus', function ($query) use ($value, $operator) {
+                    $query->where('key', $operator, $value);
+                });
+            },
+            'project_event_type' => function ($builder, $value, $operator) {
+                return $builder->whereHas('projectEventType', function ($query) use ($value, $operator) {
+                    $query->where('key', $operator, $value);
+                });
+            }
+        ];
+    }
+
     protected function fillModel(array $data)
     {
         parent::fillModel($data);

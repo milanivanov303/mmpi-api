@@ -21,6 +21,22 @@ class InstallationRepository extends AbstractRepository implements RepositoryInt
         $this->model = $model;
     }
 
+    /**
+     * Define filters for this model
+     *
+     * @return array
+     */
+    public function filters(): array
+    {
+        return [
+            'status' => function ($builder, $value, $operator) {
+                return $builder->whereHas('status', function ($query) use ($value, $operator) {
+                    $query->where('key', $operator, $value);
+                });
+            }
+        ];
+    }
+
     protected function fillModel(array $data)
     {
         parent::fillModel($data);

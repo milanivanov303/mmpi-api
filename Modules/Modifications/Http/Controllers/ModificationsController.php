@@ -10,11 +10,11 @@ class ModificationsController extends Controller
     /**
      * Create a new controller instance.
      *
-     * @param ModificationRepository $model
+     * @param ModificationRepository $repository
      * @return void
      */
-    public function __construct(ModificationRepository $model)
+    public function __construct(ModificationRepository $repository)
     {
-        $this->model = $model;
+        $this->repository = $repository;
     }
 }
