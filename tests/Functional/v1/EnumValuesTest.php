@@ -69,12 +69,10 @@ class EnumValuesTest extends RestTestCase
      */
     public function testGet()
     {
-        $data = App\Models\EnumValue::where('key', 'idwg')->inRandomOrder()->first();
-        $type = 'project_event_type';
-        $key  = 'idwg';
+        $data = App\Models\EnumValue::inRandomOrder()->first();
 
         $this
-            ->get( $this->uri . '/' .  $type . '/' . $key)
+            ->get( $this->uri . '/' .  $data->type . '/' . $data->key)
             ->seeJson($data->toArray())
             ->assertResponseOk();
     }

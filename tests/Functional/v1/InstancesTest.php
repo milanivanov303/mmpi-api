@@ -28,16 +28,16 @@ class InstancesTest extends RestTestCase
         return [
             'name'                      => 'CVS',
             'play_as_demo'              => 'n',
-            'owner'                     => $owner,
-            'status'                    => $status,
+            'owner'                     => $owner->toArray(),
+            'status'                    => $status->toArray(),
             'timezone'                  => 'Europe/Sofia',
             'host'                      => $faker->word(),
             'user'                      => $faker->username(),
             'db_user'                   => $faker->username(),
             'tns_name'                  => '',
             'has_patch_install_in_init' => 0,
-            'instance_type'             => $instanceType,
-            'environment_type'          => $environmentType
+            'instance_type'             => $instanceType->toArray(),
+            'environment_type'          => $environmentType->toArray()
         ];
     }
 
