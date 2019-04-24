@@ -18,11 +18,11 @@ class InstanceDowntimesTest extends RestTestCase
         $instance = \Modules\Instances\Models\Instance::inRandomOrder()->first();
 
         return [
-            'instance'           => $instance->toArray(),
-            'start_datetime'     => $faker->date('Y-m-d H:i:s'),
-            'end_datetime'       => $faker->date('Y-m-d H:i:s'),
-            'status'             => (int)$faker->boolean(),
-            'description'        => $faker->text(60)
+            'instance'       => $instance->toArray(),
+            'start_datetime' => $faker->date('Y-m-d H:i:s'),
+            'end_datetime'   => $faker->date('Y-m-d H:i:s'),
+            'status'         => (int)$faker->boolean(),
+            'description'    => $faker->text(60)
         ];
     }
 

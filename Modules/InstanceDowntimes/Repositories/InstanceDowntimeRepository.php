@@ -50,6 +50,5 @@ class InstanceDowntimeRepository extends AbstractRepository implements Repositor
         $this->model->madeBy()->associate(Auth::user());
 
         $this->model->made_on = Carbon::now()->format('Y-m-d H:i:s');
-
     }
 }
