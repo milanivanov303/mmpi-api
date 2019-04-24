@@ -15,7 +15,6 @@ class HashCommit extends Model
     protected $mapping = [
         'repo_branch'        => 'branch',
         'commit_description' => 'description',
-        'repo_merge_branch'  => 'merge_branch',
         'repo_module'        => 'module',
         'committed_by'       => 'owner',
         'hash_rev'           => 'rev'
@@ -29,7 +28,7 @@ class HashCommit extends Model
     protected $fillable = [
         'repo_branch',
         'commit_description',
-        'repo_merge_branch',
+        'merge_branch',
         'repo_module',
         'committed_by',
         'repo_path',
