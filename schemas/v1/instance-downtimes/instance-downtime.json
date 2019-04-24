@@ -1,0 +1,36 @@
+{
+    "$id": "InstanceDowntime",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "description": "Instance downtime object",
+    "additionalProperties": false,
+    "properties": {
+        "id": {
+            "type": "integer"
+        },
+        "instance": {
+            "$ref": "/v1/instances/instance.json"
+        },
+        "start_datetime": {
+            "type": "string",
+            "format": "datetime"
+        },
+        "end_datetime": {
+            "type": "string",
+            "format": "datetime"
+        },
+        "made_by": {
+            "$ref": "/v1/user.json"
+        },
+        "made_on": {
+            "type": "string",
+            "format": "datetime"
+        },
+        "status":{
+            "type": "integer"
+        },
+        "description":{
+            "type": ["string", "null"]
+        }
+    }
+}

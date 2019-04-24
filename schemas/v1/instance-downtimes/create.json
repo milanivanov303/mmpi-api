@@ -1,0 +1,14 @@
+{
+    "$id": "InstanceDowntime",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "description": "Instance downtime object",
+    "allOf": [
+        {"$ref": "/v1/instance-downtimes/instance-downtime.json"},
+        {
+            "required": [
+                "instance"
+            ]
+        }
+    ]
+}
