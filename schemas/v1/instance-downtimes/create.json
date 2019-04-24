@@ -7,7 +7,9 @@
         {"$ref": "/v1/instance-downtimes/instance-downtime.json"},
         {
             "required": [
-                "instance"
+                "instance",
+                "start_datetime",
+                "end_datetime"
             ]
         }
     ]

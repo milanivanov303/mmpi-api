@@ -1,6 +1,6 @@
 <?php
 
-class InstanceSowntimesTest extends RestTestCase
+class InstanceDowntimesTest extends RestTestCase
 {
     protected $uri        = 'v1/instance-downtimes';
     protected $table      = 'instance_downtimes';
