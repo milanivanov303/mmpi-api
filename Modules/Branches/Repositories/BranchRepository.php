@@ -42,7 +42,6 @@ class BranchRepository extends AbstractRepository implements RepositoryInterface
         parent::fillModel($data);
 
         if (array_key_exists('repo_type', $data)) {
-            
             $this->model->repoType()->associate(
                 app(EnumValue::class)->getModelId($data['repo_type'], 'key', ['type' => 'repository_type'])
             );
