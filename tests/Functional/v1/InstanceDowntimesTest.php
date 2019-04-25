@@ -51,10 +51,11 @@ class InstanceDowntimesTest extends RestTestCase
     protected function getUpdateData(array $data)
     {
         $faker = Faker\Factory::create();
-        // Change parameters
-
+        
         //Remove date as it is overwritten on each request
         unset($data['made_on']);
+
+        // Change parameters
         $data['start_datetime'] = $faker->date('Y-m-d H:i:s');
 
         return $data;

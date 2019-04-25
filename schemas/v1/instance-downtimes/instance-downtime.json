@@ -19,7 +19,7 @@
         "end_datetime": {
             "type": "string",
             "format": "datetime",
-            "description": "'End datetime for the instance downtime"
+            "description": "End datetime for the instance downtime"
         },
         "made_by": {
             "$ref": "/v1/user.json",
