@@ -1,0 +1,9 @@
+{
+    "$id": "UpdateBranch",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "description": "Branch object",
+    "allOf": [
+        {"$ref": "/v1/branches/branch.json"}
+    ]
+}
