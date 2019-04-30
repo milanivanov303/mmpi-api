@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\User;
+
 class EnumValuesTest extends RestTestCase
 {
     protected $uri        = 'v1/enum-values';
@@ -53,12 +55,16 @@ class EnumValuesTest extends RestTestCase
     protected function getUpdateData(array $data)
     {
         $faker = Faker\Factory::create();
+
         // Change parameters
+        $data['value'] = $faker->text(5);
 
         //Remove date as it is overwritten on each request
         unset($data['changed_on']);
-        $data['value'] = $faker->text(5);
 
+        //Unset user as it is overwritten on each request
+        unset($data['changed_by']);
+        
         return $data;
     }
 

@@ -9,43 +9,64 @@
             "type": "integer"
         },
         "type": {
-            "type": "string"
-        },
-        "key": {
-            "type": "string"
+            "type": "string",
+            "maxLength": 64
         },
         "subtype": {
-            "type": ["string", "null"]
+            "type": ["string", "null"],
+            "maxLength": 25,
+            "default": "null"
+        },
+        "key": {
+            "type": "string",
+            "maxLength": 64
         },
         "value": {
-            "type": "string"
+            "type": "string",
+            "maxLength": 512
         },
         "description": {
             "type": ["string", "null"]
         },
         "url": {
-            "type": ["string", "null"]
+            "type": ["string", "null"],
+            "maxLength": 256,
+            "default": "null"
         },
         "active": {
-            "type": "integer"
+            "type": "integer",
+            "enum": [1, 0]
         },
         "sortindex": {
             "type": "integer"
         },
         "extra_property": {            
             "oneOf": [
-                {"type": "string"},
-                {"type": "null"}
-            ]
+                {
+                    "type": "string",
+                    "maxLength": 512
+                },
+                {
+                    "type": "null"
+                }
+            ],
+            "default": "null"
         },
         "changed_on": {
-            "type": ["string", "null"]
+            "type": "string",
+            "format": "datetime"
         },
         "changed_by": {
            "oneOf": [
-                {"$ref": "/v1/user.json"},
-                {"type": "null"}
-            ]
+                {
+                    "$ref": "/v1/user.json"
+                },
+                {
+                    "type": "null"
+                }
+            ],
+            "default": "null",
+            "description": "The user who inserted or updated the record"
         }
     }
 }
