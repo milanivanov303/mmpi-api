@@ -53,8 +53,7 @@
             "default": "null"
         },
         "changed_on": {
-            "type": "string",
-            "format": "datetime"
+            "type": "string"
         },
         "changed_by": {
            "oneOf": [

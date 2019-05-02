@@ -61,9 +61,6 @@ class EnumValuesTest extends RestTestCase
 
         //Remove date as it is overwritten on each request
         unset($data['changed_on']);
-
-        //Unset user as it is overwritten on each request
-        unset($data['changed_by']);
         
         return $data;
     }
