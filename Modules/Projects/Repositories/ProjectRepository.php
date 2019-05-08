@@ -31,6 +31,24 @@ class ProjectRepository extends AbstractRepository implements RepositoryInterfac
     }
 
     /**
+     * Define filters for this model
+     *
+     * @return array
+     */
+    public function filters(): array
+    {
+        return [
+            'delivery_chains_type' => function ($builder, $value, $operator) {
+                return $builder->whereHas('deliveryChains', function ($query) use ($value, $operator) {
+                    $query->whereHas('type', function ($query) use ($value, $operator) {
+                        $query->where('type', $operator, $value);
+                    });
+                });
+            }
+        ];
+    }
+
+    /**
      * Fill model attributes
      *
      * @param array $data

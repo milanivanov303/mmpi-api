@@ -37,6 +37,46 @@ class HashRepository extends AbstractRepository implements RepositoryInterface
     }
 
     /**
+     * Define filters for this model
+     *
+     * @return array
+     */
+    public function filters(): array
+    {
+        return [
+            'committed_by' => function ($model, $value, $operator) {
+                return $model->whereHas('owner', function ($query) use ($value, $operator) {
+                    $query->where('username', $operator, $value);
+                });
+            },
+            'files' => function ($model, $value) {
+                return $model->whereHas('files', function ($query) use ($value) {
+                    $query->where('file_name', 'like', "%{$value}%");
+                });
+            },
+            'chains' => function ($model, $value) {
+                return $model->whereHas('chains', function ($query) use ($value) {
+                    $query->whereHas('chain', function ($query) use ($value) {
+                        $query->where('chain_name', 'like', "%{$value}%");
+                    });
+                });
+            }
+        ];
+    }
+
+    /**
+     * Define order by for this model
+     *
+     * @return array
+     */
+    public function orderBy(): array
+    {
+        return [
+
+        ];
+    }
+
+    /**
      * Delete record
      *
      * @param mixed $id

@@ -9,7 +9,8 @@
             "type": "integer"
         },
         "title": {
-            "type": "string"
+            "type": "string",
+            "maxLength": 32
         }
     }
 }

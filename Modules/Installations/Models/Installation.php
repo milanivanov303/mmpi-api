@@ -49,22 +49,6 @@ class Installation extends Model
     ];
 
     /**
-     * Define filters for this model
-     *
-     * @return array
-     */
-    public function filters(): array
-    {
-        return [
-            'status' => function ($builder, $value, $operator) {
-                return $builder->whereHas('status', function ($query) use ($value, $operator) {
-                    $query->where('key', $operator, $value);
-                });
-            }
-        ];
-    }
-
-    /**
      * Get instances
      */
     public function instance()
@@ -85,6 +69,6 @@ class Installation extends Model
      */
     public function status()
     {
-        return $this->belongsTo(EnumValue::class, 'status_id')->minimal();
+        return $this->belongsTo(EnumValue::class, 'status_id');
     }
 }

@@ -1,0 +1,43 @@
+{
+    "$id": "InstanceDowntime",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "description": "Instance downtime object",
+    "additionalProperties": false,
+    "properties": {
+        "id": {
+            "type": "integer"
+        },
+        "instance": {
+            "$ref": "/v1/instances/instance.json"
+        },
+        "start_datetime": {
+            "type": "string",
+            "format": "datetime",
+            "description": "Start datetime for the instance downtime"
+        },
+        "end_datetime": {
+            "type": "string",
+            "format": "datetime",
+            "description": "End datetime for the instance downtime"
+        },
+        "made_by": {
+            "$ref": "/v1/user.json",
+            "description": "The id of the user who inserted or updated the record"
+        },
+        "made_on": {
+            "type": "string",
+            "format": "datetime",
+            "description": "When was the record inserted or updated"
+        },
+        "status":{
+            "type": "integer",
+            "enum": [1, 0],
+            "default": 1,
+            "description": "Status of the record. 1 - Valid, 0 - Not Valid(Canceled/Expired)"
+        },
+        "description":{
+            "type": ["string", "null"]
+        }
+    }
+}

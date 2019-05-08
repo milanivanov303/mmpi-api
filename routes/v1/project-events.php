@@ -28,4 +28,9 @@ $router->group([
         'schema'      => '/v1/project-events/update.json',
         'uses'        => 'ProjectEventsController@update'
     ]);
+    $router->delete('/{id}', [
+        'as'          => 'project-events.delete',
+        'description' => 'Delete project events',
+        'uses'        => 'ProjectEventsController@delete'
+    ]);
 });

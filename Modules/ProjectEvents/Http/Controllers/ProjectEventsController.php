@@ -10,11 +10,11 @@ class ProjectEventsController extends Controller
     /**
      * Create a new controller instance.
      *
-     * @param ProjectEventRepository $model
+     * @param ProjectEventRepository $repository
      * @return void
      */
-    public function __construct(ProjectEventRepository $model)
+    public function __construct(ProjectEventRepository $repository)
     {
-        $this->model = $model;
+        $this->repository = $repository;
     }
 }
