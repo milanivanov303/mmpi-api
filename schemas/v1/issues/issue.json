@@ -32,29 +32,39 @@
             "oneOf": [
                 {"$ref": "/v1/issues/issue.json"},
                 {"type": "null"}
-            ]
+            ],
+            "description": "If the task is sub-task, the column contains the id of the master task"
         },
         "revision": {
             "type": ["string", "null"],
             "description": "",
-            "maxLength": 16
+            "maxLength": 16,
+            "default": "null"
         },
         "dev_instance": {
-            "$ref": "/v1/instances/instance.json"
+            "oneOf": [
+                {"$ref": "/v1/instances/instance.json"},
+                {"type": "null"}
+            ],
+            "default": "null"
+            
         },
         "priority": {
             "type": "string",
             "description": "Issue priority",
             "maxLength": 20,
-            "example": "Critical"
+            "example": "Critical",
+            "default": "Not defined"
         },
         "jira_admin_status": {
             "type": "string",
             "description": "Issue priority",
-            "enum": ["ok", "migr", "herrors", "moved", "deleted"]
+            "enum": ["ok", "migr", "herrors", "moved", "deleted"],
+            "default": "ok"
         },
         "created_on": {
             "type": "string",
+            "format": "datetime",
             "description": "Date issue was imported in MMPI"
         }
     }

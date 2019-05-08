@@ -22,7 +22,7 @@ $router->group([
                                         '$ref' => '#/components/schemas/JsonRpc/properties/jsonrpc'
                                     ],
                                     'result' => [
-                                        'type' => 'mixed',
+                                        'type' => 'string',
                                         'description' => 'Procedure call result'
                                     ],
                                     'id' => [

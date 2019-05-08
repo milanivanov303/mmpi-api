@@ -11,12 +11,12 @@ $router->group([
         'uses'        => 'EnumValuesController@getMany'
     ]);
     $router->get('/{id}', [
-        'as'          => 'enum-values.one',
+        'as'          => 'enum-values.one.id',
         'schema'      => '/v1/enum-values/enum-value.json',
         'description' => 'Get enum values',
         'uses'        => 'EnumValuesController@getOne'
     ]);
-    $router->get('/{key}/{type}', [
+    $router->get('/{type}/{key}', [
         'as'          => 'enum-values.one',
         'schema'      => '/v1/enum-values/enum-value.json',
         'description' => 'Get enum values',
@@ -29,23 +29,23 @@ $router->group([
         'uses'        => 'EnumValuesController@create'
     ]);
     $router->put('/{id}', [
-        'as'          => 'enum-values.update',
+        'as'          => 'enum-values.update.id',
         'description' => 'Update enum values',
         'schema'      => '/v1/enum-values/update.json',
         'uses'        => 'EnumValuesController@update'
     ]);
-    $router->put('/{key}/{type}', [
+    $router->put('/{type}/{key}', [
         'as'          => 'enum-values.update',
         'description' => 'Update enum values',
         'schema'      => '/v1/enum-values/update.json',
         'uses'        => 'EnumValuesController@update'
     ]);
     $router->delete('/{id}', [
-        'as'          => 'enum-values.delete',
+        'as'          => 'enum-values.delete.id',
         'description' => 'Delete project',
         'uses'        => 'EnumValuesController@delete'
     ]);
-    $router->delete('/{key}/{type}', [
+    $router->delete('/{type}/{key}', [
         'as'          => 'enum-values.delete',
         'description' => 'Delete project',
         'uses'        => 'EnumValuesController@delete'

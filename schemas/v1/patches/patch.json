@@ -11,6 +11,9 @@
         "patch_request": {
             "$ref": "/v1/patch-requests/patch-request.json"
         },
+        "project": {
+            "$ref": "/v1/projects/project.json"
+        },
         "delivery_chain": {
             "$ref": "/v1/delivery-chains/delivery-chain.json"
         },
@@ -18,76 +21,135 @@
             "oneOf": [
                 {"$ref": "/v1/patches/patch-group.json"},
                 {"type": "null"}
-            ]
+            ],
+            "default": "null"
         },
         "dlv_file_name": {
-            "type": "string"
+            "type": "string",
+            "maxLength": 64,
+            "description": "File name of patch archive"
         },
         "dlv_file_checksum": {
-            "type": ["string", "null"]
+            "type": ["string", "null"],
+            "maxLength": 64,
+            "default": "null",
+            "description": "Checksum string of patch archive"
         },
         "dlv_file_size": {
-            "type": ["string", "null"]
+            "type": ["number", "null"],
+            "default": "null",
+            "description": "'Size (in Bytes) of patch archive"
         },
         "dlv_file_path": {
-            "type": ["string", "null"]
+            "type": ["string", "null"],
+            "maxLength": 512,
+            "default": "null",
+            "description": "Path to patch archive on test instance"
         },
         "dlv_test_instance": {
-            "type": ["string", "null"]
+            "oneOf": [
+                {
+                    "$ref": "/v1/instances/instance.json"
+                },
+                {
+                    "type": "null"
+                }
+            ],
+            "default": "null",
+            "description": "On which instance patch execution was tested"
         },
         "dlv_exec_time": {
-            "type": ["string", "null"]
+            "type": ["string", "null"],
+            "format": "time",
+            "default": "null",
+            "description": "The time for which the patch executed on the test instance"
         },
         "dlv_includes_ddl": {
-            "type": ["boolean", "integer"]
+            "type": ["integer", "null"],
+            "enum": [0, 1],
+            "default": "null",
+            "description": "Whether or not patch includes DDL statements"
         },
         "dlv_includes_dml": {
-            "type": ["boolean", "integer"]
+            "type": ["integer", "null"],
+            "enum": [0, 1],
+            "default": "null",
+            "description": "Whether or not patch includes DML statements"
         },
         "dlv_includes_se": {
-            "type": ["boolean", "integer"]
+            "type": ["integer", "null"],
+            "enum": [0, 1],
+            "default": "null",
+            "description": "Whether or not patch includes SE"
         },
         "dlv_stop_app": {
-            "type": ["boolean", "integer"]
+            "type": "integer",
+            "enum": [0, 1],
+            "default": 0,
+            "description": "Whether or not patch requires stop of the application"
         },
         "dlv_stop_listings": {
-            "type": ["boolean", "integer"]
+            "type": "integer",
+            "enum": [0, 1],
+            "default": 0,
+            "description": "Whether or not patch requires stop of listings"
         },
         "dlv_stop_imxtel": {
-            "type": ["boolean", "integer"]
+            "type": "integer",
+            "enum": [0, 1],
+            "default": 0,
+            "description": "Whether or not patch requires stop of iMX Telephony"
         },
         "install_sh_version": {
-            "type": ["string", "null"]
+            "type": ["integer", "null"],
+            "default": "null"
         },
         "comm_status": {
-            "type": ["string", "null"]
+            "type": ["string", "null"],
+            "maxLength": 256,
+            "default": "null",
+            "description": "Communication status"
         },
         "functiona_test": {
-            "type": ["string", "null"]
+            "type": ["string", "null"],
+            "maxLength": 2000,
+            "default": "null"
         },
         "checked_by": {
             "oneOf": [
                 {"$ref": "/v1/user.json"},
                 {"type": "null"}
-            ]
+            ],
+            "default": "null",
+            "description": "Technically checked by"
         },
         "checked_on": {
-            "type": ["string", "null"]
+            "type": ["string", "null"],
+            "format": "datetime",
+            "default": "null"
         },
         "verified_by": {
             "oneOf": [
                 {"$ref": "/v1/user.json"},
                 {"type": "null"}
-            ]
+            ],
+            "default": "null",
+            "description": "QA verificaty by"
         },
         "verified_on": {
-            "type": ["string", "null"]
+            "type": ["string", "null"],
+            "format": "datetime",
+            "default": "null"
         },
         "migr_sequence_N": {
-            "type": "string"
+            "type": ["number", "null"],
+            "default": "null"
         },
-        "project": {
-            "$ref": "/v1/projects/project.json"
+        "uninstall": {
+            "type": "integer",
+            "enum": [0, 1],
+            "default": 0,
+            "description": "Value 1 - if patch can be uninstalled, 0 -if patch cannot be uninstalled"
         }
     }
 }

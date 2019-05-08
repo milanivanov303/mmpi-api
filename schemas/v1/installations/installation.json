@@ -19,17 +19,24 @@
             "format": "datetime"
         },
         "status": {
-            "$ref": "/v1/enum-values/enum-value.json"
+            "$ref": "/v1/enum-values/enum-value.json",
+            "description": "Register for patch installations on instances"
         },
         "duration": {
-            "type": "string",
-            "format": "time"
+            "type": ["string", "null"],
+            "format": "time",
+            "default": "null"
         },
         "log_file": {
-            "type": ["string", "null"]
+            "type": ["string", "null"],
+            "maxLength": 256,
+            "default": "null",
+            "description": "Absolute path to the log file from the installation in the file system of the the instance"
         },
         "timezone_converted": {
-            "type": "integer"
+            "type": "integer",
+            "enum": [1, 0],
+            "default": 0
         }
     }
 }
