@@ -65,5 +65,8 @@ $router->group(['prefix' => 'v1'], function () use ($router) {
 
         // Instance downtimes
         require 'v1/instance-downtimes.php';
+
+        // Hash branches
+        require 'v1/branches.php';
     });
 });
