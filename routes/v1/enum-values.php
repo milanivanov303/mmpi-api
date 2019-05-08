@@ -10,7 +10,7 @@ $router->group([
         'description' => 'Get enum values',
         'uses'        => 'EnumValuesController@getMany'
     ]);
-    $router->get('/{id:[0-9]*}', [
+    $router->get('/{id}', [
         'as'          => 'enum-values.one.id',
         'schema'      => '/v1/enum-values/enum-value.json',
         'description' => 'Get enum values',
