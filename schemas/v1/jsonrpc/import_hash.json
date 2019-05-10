@@ -16,12 +16,12 @@
                 "params": {
                     "type": "object",
                     "properties": {
-                        "module": {
+                        "repo_type": {
                             "type": "string",
                             "description": "Repository module as defined in MMPI",
                             "example": "imx_be"
                         },
-                        "rev": {
+                        "hash": {
                             "type": "string",
                             "description": "Repository hash to import",
                             "example": "891b688fe1a49c5383de94c26717c8c3b7c47ab48"

@@ -1,24 +1,14 @@
 <?php
 
+use App\Models\EnumValue;
 use App\Models\User;
+use Modules\Hashes\Models\HashBranch;
 
 class HashesTest extends RestTestCase
 {
-    protected $uri              = 'v1/hashes';
-    protected $table            = 'hash_commits';
-    protected $primaryKey       = 'hash_rev';
-    protected $primaryKeyMapped = 'rev';
-
-    /**
-     * Get primary key value
-     *
-     * @param array $data
-     * @return mixed
-     */
-    protected function getPrimaryKeyValue($data)
-    {
-        return $data['rev'];
-    }
+    protected $uri        = 'v1/hashes';
+    protected $table      = 'hash_commits';
+    protected $primaryKey = 'hash_rev';
 
     /**
      * Get request data
@@ -28,16 +18,16 @@ class HashesTest extends RestTestCase
     protected function getData()
     {
         try {
-            $rev = bin2hex(random_bytes(10));
+            $hashRev = bin2hex(random_bytes(10));
+            $rev = random_int(1, 1000);
         } catch (\Exception $exception) {}
 
-        $user = User::inRandomOrder()->active()->first();
+        $user     = User::inRandomOrder()->active()->first();
+        $repoType = EnumValue::where('type', 'repository_type')->inRandomOrder()->first();
+        $branch   = HashBranch::where('repo_type_id', $repoType->id)->inRandomOrder()->first();
 
         return [
-            'branch'       => 'default',
-            'chains'       => [
-                'bcol_imx_v9_rel'
-            ],
+            'branch'       => $branch->toArray(),
             'description'  => '
                 TTS KEY*:      IXDEV-7266
                                IXDEV-7290
@@ -47,18 +37,18 @@ class HashesTest extends RestTestCase
                 DEPENDENCIES:  G_BU, G_INDIVIDU, EXT_SYS_INTERVENANTS
             ',
             'files'        => [
-                'etc/configs/MOLOTCWALLET/imx_backend.properties',
-                'etc/configs/MOLOTCWALLET/imx_backend.xml',
-                'etc/configs/MOLOTCWALLET/wallet/cwallet.sso',
-                'etc/configs/MOLOTCWALLET/wallet/tnsnames.ora',
-                'pom.xml'
+                ['name' => 'etc/configs/MOLOTCWALLET/imx_backend.properties'],
+                ['name' => 'etc/configs/MOLOTCWALLET/imx_backend.xml'],
+                ['name' => 'etc/configs/MOLOTCWALLET/wallet/cwallet.sso'],
+                ['name' => 'etc/configs/MOLOTCWALLET/wallet/tnsnames.ora'],
+                ['name' => 'pom.xml']
              ],
             'merge_branch' => '_DEV_IXDEV-1763 e_honor_param backend',
-            'module'       => 'imx_be',
-            'owner'        => $user->username,
-            'repo_path'    => '/extranet/hg/v9_be',
-            'repo_url'     => 'http://lemon.codixfr.private:6002/v9_be',
-            'rev'          => $rev
+            'repo_type'    => $repoType->toArray(),
+            'committed_by' => $user->toArray(),
+            'hash_rev'     => $hashRev,
+            'rev'          => $rev,
+            'version'      => 'v1.2.3'
         ];
     }
 
@@ -71,11 +61,11 @@ class HashesTest extends RestTestCase
     protected function getInvalidData(array $data)
     {
         // Set invalid parameters
-        $data['owner'] = 'INVALID_OWNER';
-        $data['rev']   = 'INVALID_REV';
+        $data['committed_by'] = 'INVALID_OWNER';
+        $data['rev']          = 'INVALID_REV';
 
         // remove required parameters
-        unset($data['branch']);
+        unset($data['repo_type']);
 
         return $data;
     }
@@ -88,38 +78,12 @@ class HashesTest extends RestTestCase
      */
     protected function getUpdateData(array $data)
     {
+        //Remove date as it is overwritten on each request
+        unset($data['made_on']);
+
         // Change parameters
         $data['description'] = 'UPDATED_DESCRIPTION';
 
         return $data;
-    }
-
-    /**
-     * Test creation
-     *
-     * @return void
-     */
-    public function testCreate()
-    {
-        $data = $this->getData();
-        $data = $this->create($data);
-
-        $this->seeInDatabase($this->table, [
-            $this->primaryKey => $this->getPrimaryKeyValue($data)
-        ]);
-
-        // count saved chains in db
-        $count = $this->app->make('db')->table('hash_commit_to_chains')->where([
-            'hash_commit_id'  => $data['id'],
-        ])->count();
-
-        $this->assertEquals(1, $count);
-
-        // count saved files in db
-        $count = $this->app->make('db')->table('hash_commit_files')->where([
-            'hash_commit_id'  => $data['id'],
-        ])->count();
-
-        $this->assertEquals(5, $count);
     }
 }

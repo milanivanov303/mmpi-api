@@ -9,9 +9,10 @@
         {
             "required": [
                 "branch",
-                "commited_by",
+                "committed_by",
                 "rev",
-                "hash_rev"
+                "hash_rev",
+                "repo_type"
             ]
         }
     ]

@@ -8,13 +8,11 @@
         "id": {
             "type": "integer"
         },
-        "module": {
-            "$ref": "/v1/enum-value.json"
+        "repo_type": {
+            "$ref": "/v1/enum-values/enum-value.json"
         },
         "branch": {
-            "type": "string",
-            "description": "Branch name",
-            "example": "default"
+            "$ref": "/v1/hashes/branch.json"
         },
         "merge_branch": {
             "type": "string",
@@ -27,9 +25,9 @@
             "example": "891b688fe1a49c5383de94c26717c8c3b7c47ab48"
         },
         "rev": {
-            "type": ["string", "null"],
+            "type": ["integer", "null"],
             "description": "Version control system revision number",
-            "example": "123"
+            "example": 123
         },
         "version": {
             "type": ["string", "null"],
@@ -49,18 +47,19 @@
         "files": {
             "type": "array",
             "description": "List with changed files in this revision",
-            "example": [
-                "BundlesResourceTest.java",
-                "ITitleDao.java"
-            ],
             "items": {
-                "type": "string"
+                "$ref": "/v1/hashes/file.json"
             }
         },
-        "timestamp": {
-            "type": "string",
+        "repo_timestamp": {
+            "type": ["string", "null"],
             "format": "datetime",
             "description": "Timestamp when commit was made"
+        },
+        "made_on": {
+            "type": "string",
+            "format": "datetime",
+            "description": "Timestamp of the record"
         }
     }
 }

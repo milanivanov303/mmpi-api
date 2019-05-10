@@ -14,8 +14,7 @@ class HashCommit extends Model
      * @var array
      */
     protected $mapping = [
-        'commit_description' => 'description',
-        'repo_branch'        => 'branch'
+        'commit_description' => 'description'
     ];
 
     /**
@@ -24,7 +23,8 @@ class HashCommit extends Model
      * @var array
      */
     protected $with = [
-        'module',
+        'repoType',
+        'branch',
         'files',
         'committedBy'
     ];
@@ -35,13 +35,14 @@ class HashCommit extends Model
      * @var array
      */
     protected $fillable = [
-        "branch",
-        "merge_branch",
-        "hash_rev",
-        "rev",
-        "version",
-        "description",
-        "timestamp"
+        'rev',
+        'hash_rev',
+        'committed_by',
+        'merge_branch',
+        'repo_timestamp',
+        'version',
+        'commit_description',
+        'made_on'
     ];
 
     /**
@@ -50,55 +51,24 @@ class HashCommit extends Model
      * @var array
      */
     protected $hidden = [
-        'module_id'
+        'repo_type_id',
+        'branch_id'
     ];
 
     /**
-     * Define filters for this model
-     *
-     * @return array
+     * Get user for the hash.
      */
-    public function filters(): array
+    public function repoType()
     {
-        return [
-            'committed_by' => function ($model, $value, $operator) {
-                return $model->whereHas('owner', function ($query) use ($value, $operator) {
-                    $query->where('username', $operator, $value);
-                });
-            },
-            'files' => function ($model, $value) {
-                return $model->whereHas('files', function ($query) use ($value) {
-                    $query->where('file_name', 'like', "%{$value}%");
-                });
-            },
-            'chains' => function ($model, $value) {
-                return $model->whereHas('chains', function ($query) use ($value) {
-                    $query->whereHas('chain', function ($query) use ($value) {
-                        $query->where('chain_name', 'like', "%{$value}%");
-                    });
-                });
-            }
-        ];
-    }
-
-    /**
-     * Define order by for this model
-     *
-     * @return array
-     */
-    public function orderBy(): array
-    {
-        return [
-
-        ];
+        return $this->belongsTo(EnumValue::class, 'repo_type_id');
     }
 
     /**
      * Get user for the hash.
      */
-    public function module()
+    public function branch()
     {
-        return $this->belongsTo(EnumValue::class, 'module_id');
+        return $this->belongsTo(HashBranch::class, 'branch_id');
     }
 
     /**
@@ -115,16 +85,5 @@ class HashCommit extends Model
     public function committedBy()
     {
         return $this->belongsTo(User::class, 'committed_by');
-    }
-
-    /**
-     * Set committed by attribute
-     *
-     * @param string $value
-     */
-    public function setCommittedByAttribute($value)
-    {
-        $user = User::where('username', $value)->first();
-        $this->attributes['committed_by'] = $user->id;
     }
 }

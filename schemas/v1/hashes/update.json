@@ -4,7 +4,7 @@
     "type": "object",
     "description": "Hash object",
     "allOf": [
-        {"$ref": "/v1/hashes/update.json"},
+        {"$ref": "/v1/hashes/hash.json"},
         {"$ref": "/v1/hashes/filters.json"}
     ]
 }

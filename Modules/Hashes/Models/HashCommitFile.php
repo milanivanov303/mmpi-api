@@ -6,8 +6,15 @@ use Core\Models\Model;
 
 class HashCommitFile extends Model
 {
+    /**
+     * Array with mapped attributes for conversion
+     *
+     * @var array
+     */
+    protected $mapping = [
+        'file_name' => 'name'
+    ];
 
-    
     /**
      * The attributes that are mass assignable.
      *
@@ -23,6 +30,7 @@ class HashCommitFile extends Model
      * @var array
      */
     protected $hidden = [
+        'id',
         'hash_commit_id'
     ];
 }

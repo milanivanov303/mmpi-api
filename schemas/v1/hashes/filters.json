@@ -13,7 +13,7 @@
                         }
                     },
                     "$messages": {
-                        "$filters": "User does not exist"
+                        "$filters": "User with this id does not exist"
                     }
                 },
                 "username": {
@@ -24,12 +24,12 @@
                         }
                     },
                     "$messages": {
-                        "$filters": "User does not exist"
+                        "$filters": "User with this username does not exist"
                     }
                 }
             }
         },
-        "revision": {
+        "hash_rev": {
             "pattern": "^[0-9a-z]*$",
             "$filters": {
                 "$func": "checkInDb",
@@ -40,6 +40,43 @@
             "$messages": {
                 "pattern": "Revision can content only numbers and lowercase letters",
                 "$filters": "Revision is already registered"
+            }
+        },
+        "repo_type": {
+            "properties": {
+                "id": {
+                    "$filters": {
+                        "$func": "checkInDb",
+                        "$vars": {
+                            "rule": "exists:enum_values,id,type,repository_type"
+                        }
+                    },
+                    "$messages": {
+                        "$filters": "Repo type with this id does not exist for type repository_type"
+                    }
+                },
+                "key": {
+                    "$filters": {
+                        "$func": "checkInDb",
+                        "$vars": {
+                            "rule": "exists:enum_values,key,type,repository_type"
+                        }
+                    },
+                    "$messages": {
+                        "$filters": "Repo type with this key does not exist for type repository_type"
+                    }
+                }
+            }
+        },
+        "branch": {
+            "$filters": {
+                "$func": "checkHashBranch",
+                "$vars": {
+                    "$ref": "/"
+                }
+            },
+            "$messages": {
+                "$filters": "Branch does not exist for given repo_type"
             }
         }
     }
