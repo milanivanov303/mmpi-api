@@ -4,6 +4,8 @@ namespace Modules\DeliveryChains\Models;
 
 use Core\Models\Model;
 use App\Models\EnumValue;
+use Modules\Instances\Models\Instance;
+use Modules\Projects\Models\Project;
 
 class DeliveryChain extends Model
 {
@@ -17,7 +19,9 @@ class DeliveryChain extends Model
         'dlvryType',
         'status',
         'dcVersion',
-        'dcRole'
+        'dcRole',
+        'projects',
+        'instances'
     ];
 
     /**
@@ -78,5 +82,21 @@ class DeliveryChain extends Model
     public function dcRole()
     {
         return $this->belongsTo(EnumValue::class, 'dc_role');
+    }
+
+    /**
+     * Get projects
+     */
+    public function projects()
+    {
+        return $this->belongsToMany(Project::class, 'project_to_delivery_chain')->without('deliveryChains');
+    }
+
+    /**
+     * Get instances
+     */
+    public function instances()
+    {
+        return $this->belongsToMany(Instance::class, 'instance_to_delivery_chain')->without('deliveryChains');
     }
 }

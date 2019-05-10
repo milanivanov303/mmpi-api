@@ -5,6 +5,7 @@ namespace Modules\Instances\Models;
 use Core\Models\Model;
 use App\Models\EnumValue;
 use Modules\DeliveryChains\Models\DeliveryChainType;
+use Modules\DeliveryChains\Models\DeliveryChain;
 
 class Instance extends Model
 {
@@ -17,7 +18,8 @@ class Instance extends Model
         'owner',
         'instanceType',
         'status',
-        'environmentType'
+        'environmentType',
+        'deliveryChains'
     ];
 
     /**
@@ -80,5 +82,13 @@ class Instance extends Model
     public function status()
     {
         return $this->belongsTo(EnumValue::class, 'status');
+    }
+
+    /**
+     * Get delivery_chains
+     */
+    public function deliveryChains()
+    {
+        return $this->belongsToMany(DeliveryChain::class, 'instance_to_delivery_chain')->without('instances');
     }
 }

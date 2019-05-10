@@ -169,6 +169,6 @@ class Project extends Model
      */
     public function deliveryChains()
     {
-        return $this->belongsToMany(DeliveryChain::class, 'project_to_delivery_chain');
+        return $this->belongsToMany(DeliveryChain::class, 'project_to_delivery_chain')->without('projects');
     }
 }
