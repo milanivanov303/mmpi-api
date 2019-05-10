@@ -89,7 +89,7 @@ class Project extends Model
      */
     public function typeBusiness()
     {
-        return $this->belongsTo(EnumValue::class, 'type_business');
+        return $this->belongsTo(EnumValue::class, 'type_business')->minimal();
     }
 
     /**
@@ -97,7 +97,7 @@ class Project extends Model
      */
     public function activity()
     {
-        return $this->belongsTo(EnumValue::class, 'activity');
+        return $this->belongsTo(EnumValue::class, 'activity')->minimal();
     }
 
     /**
@@ -105,7 +105,7 @@ class Project extends Model
      */
     public function group()
     {
-        return $this->belongsTo(EnumValue::class, 'group_id');
+        return $this->belongsTo(EnumValue::class, 'group_id')->minimal();
     }
 
     /**
@@ -113,7 +113,7 @@ class Project extends Model
      */
     public function country()
     {
-        return $this->belongsTo(EnumValue::class, 'country_id');
+        return $this->belongsTo(EnumValue::class, 'country_id')->minimal();
     }
 
     /**
@@ -121,7 +121,7 @@ class Project extends Model
      */
     public function communicationLng()
     {
-        return $this->belongsTo(EnumValue::class, 'communication_lng_id');
+        return $this->belongsTo(EnumValue::class, 'communication_lng_id')->minimal();
     }
 
     /**
@@ -129,7 +129,7 @@ class Project extends Model
      */
     public function deliveryMethod()
     {
-        return $this->belongsTo(EnumValue::class, 'delivery_method_id');
+        return $this->belongsTo(EnumValue::class, 'delivery_method_id')->minimal();
     }
 
     /**
@@ -137,7 +137,7 @@ class Project extends Model
      */
     public function seMntdByClnt()
     {
-        return $this->belongsTo(EnumValue::class, 'se_mntd_by_clnt_id');
+        return $this->belongsTo(EnumValue::class, 'se_mntd_by_clnt_id')->minimal();
     }
 
     /**
@@ -145,7 +145,7 @@ class Project extends Model
      */
     public function tlMntdByClnt()
     {
-        return $this->belongsTo(EnumValue::class, 'tl_mntd_by_clnt_id');
+        return $this->belongsTo(EnumValue::class, 'tl_mntd_by_clnt_id')->minimal();
     }
 
     /**
@@ -153,7 +153,7 @@ class Project extends Model
      */
     public function njschMntdByClnt()
     {
-        return $this->belongsTo(EnumValue::class, 'njsch_mntd_by_clnt_id');
+        return $this->belongsTo(EnumValue::class, 'njsch_mntd_by_clnt_id')->minimal();
     }
 
     /**
@@ -161,7 +161,7 @@ class Project extends Model
      */
     public function transMntdByClnt()
     {
-        return $this->belongsTo(EnumValue::class, 'trans_mntd_by_clnt_id');
+        return $this->belongsTo(EnumValue::class, 'trans_mntd_by_clnt_id')->minimal();
     }
 
     /**

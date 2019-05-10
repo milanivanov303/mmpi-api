@@ -53,7 +53,7 @@ class Branch extends Model
      */
     public function repoType()
     {
-        return $this->belongsTo(EnumValue::class, 'repo_type_id');
+        return $this->belongsTo(EnumValue::class, 'repo_type_id')->minimal();
     }
 
     /**

@@ -18,8 +18,8 @@ class ProjectEventsTest extends RestTestCase
         $faker = Faker\Factory::create();
 
         $project            = \Modules\Projects\Models\Project::inRandomOrder()->first();
-        $projectEventType   = EnumValue::where('type', 'project_event_type')->inRandomOrder()->first();
-        $projectEventStatus = EnumValue::where('type', 'project_event_status')->inRandomOrder()->first();
+        $projectEventType   = EnumValue::where('type', 'project_event_type')->minimal()->inRandomOrder()->first();
+        $projectEventStatus = EnumValue::where('type', 'project_event_status')->minimal()->inRandomOrder()->first();
 
         return [
             'project'              => $project->toArray(),

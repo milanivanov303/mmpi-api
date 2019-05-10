@@ -7,15 +7,6 @@ use App\Models\User;
 class EnumValue extends Model
 {
     /**
-     * The relations to eager load on every query.
-     *
-     * @var array
-     */
-    protected $with = [
-        'changedBy'
-    ];
-    
-    /**
      * The attributes that are mass assignable.
      *
      * @var array
@@ -40,5 +31,13 @@ class EnumValue extends Model
     public function changedBy()
     {
         return $this->belongsTo(User::class, 'changed_by');
+    }
+
+    /**
+     * Get specific enum value properties
+     */
+    public function scopeMinimal($query)
+    {
+        return $query->select(['id', 'type', 'subtype', 'key', 'value']);
     }
 }

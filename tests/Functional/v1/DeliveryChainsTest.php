@@ -18,10 +18,10 @@ class DeliveryChainsTest extends RestTestCase
     {
         $faker = Faker\Factory::create();
 
-        $dlvryType = EnumValue::where('type', 'dc_dlvry_type')->inRandomOrder()->first();
-        $status    = EnumValue::where('type', 'active_inactive')->inRandomOrder()->first();
-        $dcVersion = EnumValue::where('type', 'delivery_chain_version')->inRandomOrder()->first();
-        $dcRole    = EnumValue::where('type', 'delivery_chain_role')->inRandomOrder()->first();
+        $dlvryType = EnumValue::where('type', 'dc_dlvry_type')->minimal()->inRandomOrder()->first();
+        $status    = EnumValue::where('type', 'active_inactive')->minimal()->inRandomOrder()->first();
+        $dcVersion = EnumValue::where('type', 'delivery_chain_version')->minimal()->inRandomOrder()->first();
+        $dcRole    = EnumValue::where('type', 'delivery_chain_role')->minimal()->inRandomOrder()->first();
         $type      = DeliveryChainType::inRandomOrder()->first();
 
         return [
