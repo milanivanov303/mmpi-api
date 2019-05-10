@@ -81,7 +81,7 @@ class Project extends Model
      */
     public function modifiedBy()
     {
-        return $this->belongsTo(User::class, 'modified_by_id');
+        return $this->belongsTo(User::class, 'modified_by_id')->minimal();
     }
 
     /**

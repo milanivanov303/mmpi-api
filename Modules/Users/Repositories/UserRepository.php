@@ -22,7 +22,9 @@ class UserRepository extends AbstractRepository implements RepositoryInterface
      */
     protected $with = [
         'manager',
-        'deputy'
+        'deputy',
+        'department',
+        'accessGroup'
     ];
 
     /**

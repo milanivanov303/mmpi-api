@@ -1,0 +1,23 @@
+{
+    "$id": "UserMinimal",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "description": "User minimal object",
+    "properties": {
+        "id": {
+            "$ref": "/v1/user.json#/properties/id"
+        },
+        "name": {
+            "$ref": "/v1/user.json#/properties/name"
+        },
+        "username": {
+            "$ref": "/v1/user.json#/properties/username"
+        },
+        "email": {
+            "$ref": "/v1/user.json#/properties/email"
+        },
+        "status": {
+            "$ref": "/v1/user.json#/properties/status"
+        }
+    }
+}

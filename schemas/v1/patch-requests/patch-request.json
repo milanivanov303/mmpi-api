@@ -80,7 +80,7 @@
         "greenlighted_by": {
             "oneOf": [
                 {
-                    "$ref": "/v1/user.json"
+                    "$ref": "/v1/user-minimal.json"
                 },
                 {
                     "type": "null"

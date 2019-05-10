@@ -4,6 +4,9 @@
     "type": "object",
     "description": "User object",
     "properties": {
+        "id": {
+            "type": "integer"
+        },
         "name": {
             "type": "string",
             "description": "User full name",

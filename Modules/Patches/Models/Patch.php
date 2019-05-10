@@ -73,7 +73,7 @@ class Patch extends Model
      */
     public function checkedBy()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class)->minimal();
     }
 
     /**
@@ -81,6 +81,6 @@ class Patch extends Model
      */
     public function verifiedBy()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class)->minimal();
     }
 }

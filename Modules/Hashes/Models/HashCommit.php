@@ -58,7 +58,7 @@ class HashCommit extends Model
      */
     public function owner()
     {
-        return $this->belongsTo(User::class, 'committed_by');
+        return $this->belongsTo(User::class, 'committed_by')->minimal();
     }
 
     /**
