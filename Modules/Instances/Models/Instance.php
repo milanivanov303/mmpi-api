@@ -29,7 +29,8 @@ class Instance extends Model
      */
     protected $hidden = [
         'instance_type_id',
-        'environment_type_id'
+        'environment_type_id',
+        'pivot'
     ];
 
     /**

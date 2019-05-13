@@ -43,7 +43,8 @@ class Project extends Model
         'se_mntd_by_clnt_id',
         'tl_mntd_by_clnt_id',
         'njsch_mntd_by_clnt_id',
-        'trans_mntd_by_clnt_id'
+        'trans_mntd_by_clnt_id',
+        'pivot'
     ];
 
     /**

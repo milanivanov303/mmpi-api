@@ -5,6 +5,8 @@ namespace Modules\DeliveryChains\Repositories;
 use Core\Repositories\AbstractRepository;
 use Core\Repositories\RepositoryInterface;
 use Modules\DeliveryChains\Models\DeliveryChain;
+use Modules\Projects\Models\Project;
+use Modules\Instances\Models\Instance;
 
 class DeliveryChainRepository extends AbstractRepository implements RepositoryInterface
 {
@@ -117,8 +119,44 @@ class DeliveryChainRepository extends AbstractRepository implements RepositoryIn
         $this->model->dcRole()->associate(isset($data['dc_role']) ? $data['dc_role']['id'] : null);
 
         $this->model->fill($data)->saveOrFail();
+
+        if (array_key_exists('projects', $data)) {
+            $projects = [];
+            foreach ($data['projects'] as $project) {
+                $projects[] = app(Project::class)->getModelId($project, 'name');
+            }
+            
+            $this->model->projects()->sync($projects);
+        }
+
+        if (array_key_exists('instances', $data)) {
+            $instances = [];
+            foreach ($data['instances'] as $instance) {
+                $instances[] = app(Instance::class)->getModelId($instance, 'id');
+            }
+            
+            $this->model->instances()->sync($instances);
+        }
+
         $this->model->load($this->getWith());
 
         return $this->model;
+    }
+
+    /**
+     * Delete record
+     *
+     * @param mixed $id
+     * @return boolean
+     *
+     * @throws \Exception
+     */
+    public function delete($id)
+    {
+        $model = $this->find($id);
+        $model->projects()->sync([]);
+        $model->instances()->sync([]);
+
+        return $model->delete();
     }
 }
