@@ -12,7 +12,7 @@
             "$ref": "/v1/projects/project.json"
         },
         "project_event_type": {
-            "$ref": "/v1/enum-values/enum-value.json"
+            "$ref": "/v1/enum-values/enum-value-minimal.json"
         },
         "event_start_date": {
             "type": ["string", "null"],
@@ -39,7 +39,7 @@
             "type": ["string", "null"]
         },
         "project_event_status": {
-            "$ref": "/v1/enum-values/enum-value.json",
+            "$ref": "/v1/enum-values/enum-value-minimal.json",
             "description": "The status of the event - Active/Archived. References enum_values of type project_event_status"
         }
     }

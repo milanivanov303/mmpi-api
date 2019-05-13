@@ -70,7 +70,7 @@ class ProjectEvent extends Model
      */
     public function projectEventStatus()
     {
-        return $this->belongsTo(EnumValue::class, 'project_event_status');
+        return $this->belongsTo(EnumValue::class, 'project_event_status')->minimal();
     }
 
     /**
@@ -78,6 +78,6 @@ class ProjectEvent extends Model
      */
     public function projectEventType()
     {
-        return $this->belongsTo(EnumValue::class, 'project_event_type_id');
+        return $this->belongsTo(EnumValue::class, 'project_event_type_id')->minimal();
     }
 }

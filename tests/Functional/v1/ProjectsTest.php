@@ -18,13 +18,13 @@ class ProjectsTest extends RestTestCase
     {
         $faker = Faker\Factory::create();
 
-        $typeBusiness     = EnumValue::where('type', 'type_business')->inRandomOrder()->first();
-        $group            = EnumValue::where('type', 'project_groups')->inRandomOrder()->first();
-        $country          = EnumValue::where('type', 'country')->inRandomOrder()->first();
-        $communicationLng = EnumValue::where('type', 'communication_language')->inRandomOrder()->first();
-        $deliveryMethod   = EnumValue::where('type', 'delivery_method')->inRandomOrder()->first();
-        $seMntdByClnt     = EnumValue::where('type', 'project_specific_feature')->inRandomOrder()->first();
-        $tlMntdByClnt     = EnumValue::where('type', 'project_specific_feature')->inRandomOrder()->first();
+        $typeBusiness     = EnumValue::where('type', 'type_business')->minimal()->inRandomOrder()->first();
+        $group            = EnumValue::where('type', 'project_groups')->minimal()->inRandomOrder()->first();
+        $country          = EnumValue::where('type', 'country')->minimal()->inRandomOrder()->first();
+        $communicationLng = EnumValue::where('type', 'communication_language')->minimal()->inRandomOrder()->first();
+        $deliveryMethod   = EnumValue::where('type', 'delivery_method')->minimal()->inRandomOrder()->first();
+        $seMntdByClnt     = EnumValue::where('type', 'project_specific_feature')->minimal()->inRandomOrder()->first();
+        $tlMntdByClnt     = EnumValue::where('type', 'project_specific_feature')->minimal()->inRandomOrder()->first();
         $deliveryChains   = DeliveryChain::inRandomOrder()->limit(3)->get();
 
         return [

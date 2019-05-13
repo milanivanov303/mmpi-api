@@ -30,10 +30,10 @@
             "default": "n"
         },
         "owner": {
-            "$ref": "/v1/enum-values/enum-value.json"
+            "$ref": "/v1/enum-values/enum-value-minimal.json"
         },
         "status": {
-            "$ref": "/v1/enum-values/enum-value.json"
+            "$ref": "/v1/enum-values/enum-value-minimal.json"
         },
         "timezone": {
             "type": "string",

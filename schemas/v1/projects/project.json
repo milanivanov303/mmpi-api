@@ -70,7 +70,7 @@
         },
         "activity": {
             "oneOf": [
-                {"$ref": "/v1/enum-values/enum-value.json"},
+                {"$ref": "/v1/enum-values/enum-value-minimal.json"},
                 {"type": "null"}
             ],
             "default": "null",
@@ -130,7 +130,7 @@
         },
         "country": {
             "oneOf": [
-                {"$ref": "/v1/enum-values/enum-value.json"},
+                {"$ref": "/v1/enum-values/enum-value-minimal.json"},
                 {"type": "null"}
             ],
             "default": "null",
@@ -138,7 +138,7 @@
         },
         "communication_lng": {
             "oneOf": [
-                {"$ref": "/v1/enum-values/enum-value.json"},
+                {"$ref": "/v1/enum-values/enum-value-minimal.json"},
                 {"type": "null"}
             ],
             "default": "null",
@@ -146,7 +146,7 @@
         },
         "delivery_method": {
             "oneOf": [
-                {"$ref": "/v1/enum-values/enum-value.json"},
+                {"$ref": "/v1/enum-values/enum-value-minimal.json"},
                 {"type": "null"}
             ],
             "default": "null",
@@ -154,7 +154,7 @@
         },
         "se_mntd_by_clnt": {
             "oneOf": [
-                {"$ref": "/v1/enum-values/enum-value.json"},
+                {"$ref": "/v1/enum-values/enum-value-minimal.json"},
                 {"type": "null"}
             ],
             "default": "null",
@@ -162,7 +162,7 @@
         },
         "tl_mntd_by_clnt": {
             "oneOf": [
-                {"$ref": "/v1/enum-values/enum-value.json"},
+                {"$ref": "/v1/enum-values/enum-value-minimal.json"},
                 {"type": "null"}
             ],
             "default": "null",
@@ -170,7 +170,7 @@
         },
         "njsch_mntd_by_clnt": {
             "oneOf": [
-                {"$ref": "/v1/enum-values/enum-value.json"},
+                {"$ref": "/v1/enum-values/enum-value-minimal.json"},
                 {"type": "null"}
             ],
             "default": "null",
@@ -178,7 +178,7 @@
         },
         "trans_mntd_by_clnt": {
             "oneOf": [
-                {"$ref": "/v1/enum-values/enum-value.json"},
+                {"$ref": "/v1/enum-values/enum-value-minimal.json"},
                 {"type": "null"}
             ],
             "default": "null",
@@ -204,7 +204,7 @@
         },
         "type_business": {
             "oneOf": [
-                {"$ref": "/v1/enum-values/enum-value.json"},
+                {"$ref": "/v1/enum-values/enum-value-minimal.json"},
                 {"type": "null"}
             ]
         },

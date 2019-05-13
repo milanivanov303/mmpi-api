@@ -14,7 +14,7 @@
             "description": "Name of the branch"
         },
         "repo_type": {
-            "$ref": "/v1/enum-values/enum-value.json",
+            "$ref": "/v1/enum-values/enum-value-minimal.json",
             "description": "Repository id from enum_values tables of type repository_type"
         },
         "description": {

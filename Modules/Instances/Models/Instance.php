@@ -55,7 +55,7 @@ class Instance extends Model
      */
     public function owner()
     {
-        return $this->belongsTo(EnumValue::class, 'owner');
+        return $this->belongsTo(EnumValue::class, 'owner')->minimal();
     }
 
     /**
@@ -79,6 +79,6 @@ class Instance extends Model
      */
     public function status()
     {
-        return $this->belongsTo(EnumValue::class, 'status');
+        return $this->belongsTo(EnumValue::class, 'status')->minimal();
     }
 }
