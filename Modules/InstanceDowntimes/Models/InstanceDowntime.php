@@ -55,6 +55,6 @@ class InstanceDowntime extends Model
      */
     public function madeBy()
     {
-        return $this->belongsTo(User::class, 'made_by');
+        return $this->belongsTo(User::class, 'made_by')->minimal();
     }
 }

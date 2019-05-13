@@ -12,16 +12,6 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     use Authenticatable, Authorizable;
 
     /**
-     * The relations to eager load on every query.
-     *
-     * @var array
-     */
-    protected $with = [
-        'department',
-        'accessGroup'
-    ];
-
-    /**
      * The attributes excluded from the model's JSON form.
      *
      * @var array
@@ -158,5 +148,10 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     public function scopeActive($query)
     {
         return $query->where('status', 1);
+    }
+
+    public function scopeMinimal($query)
+    {
+        return $query->select(['id', 'name', 'username', 'email', 'status']);
     }
 }

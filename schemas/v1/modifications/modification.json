@@ -282,7 +282,7 @@
         "locked_by_id": {
             "oneOf": [
                 {
-                    "$ref": "/v1/user.json"
+                    "$ref": "/v1/user-minimal.json"
                 },
                 {
                     "type": "null"
@@ -295,7 +295,7 @@
             "format": "datetime"
         },
         "created_by": {
-            "$ref": "/v1/user.json"
+            "$ref": "/v1/user-minimal.json"
         },
         "updated_on": {
             "type": ["string", "null"],
@@ -305,7 +305,7 @@
         "updated_by_id": {
             "oneOf": [
                 {
-                    "$ref": "/v1/user.json"
+                    "$ref": "/v1/user-minimal.json"
                 },
                 {
                     "type": "null"
@@ -339,7 +339,7 @@
         "copied_by_user_id": {
             "oneOf": [
                     {
-                        "$ref": "/v1/user.json"
+                        "$ref": "/v1/user-minimal.json"
                     },
                     {
                           "type": "null"
@@ -357,7 +357,7 @@
         "marked_buggy_by": {
             "oneOf": [
                 {
-                    "$ref": "/v1/user.json"
+                    "$ref": "/v1/user-minimal.json"
                 },
                 {
                     "type": "null"

@@ -28,7 +28,7 @@
         "made_by": {
             "oneOf": [
                 {
-                    "$ref": "/v1/user.json",
+                    "$ref": "/v1/user-minimal.json",
                     "description": "Id of the User who created the record"
                 },
                 {"type": "null"}

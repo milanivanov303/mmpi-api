@@ -22,7 +22,7 @@
             "description": "End datetime for the instance downtime"
         },
         "made_by": {
-            "$ref": "/v1/user.json",
+            "$ref": "/v1/user-minimal.json",
             "description": "The id of the user who inserted or updated the record"
         },
         "made_on": {

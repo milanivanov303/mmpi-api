@@ -75,7 +75,7 @@ class Modification extends Model
      */
     public function createdBy()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class)->minimal();
     }
 
     /**
@@ -83,7 +83,7 @@ class Modification extends Model
      */
     public function lockedBy()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class)->minimal();
     }
 
     /**
@@ -91,7 +91,7 @@ class Modification extends Model
      */
     public function markedBuggyBy()
     {
-        return $this->belongsTo(User::class, 'marked_buggy_by');
+        return $this->belongsTo(User::class, 'marked_buggy_by')->minimal();
     }
 
     /**
@@ -99,7 +99,7 @@ class Modification extends Model
      */
     public function updatedBy()
     {
-        return $this->belongsTo(User::class, 'updated_by_id');
+        return $this->belongsTo(User::class, 'updated_by_id')->minimal();
     }
 
     /**
@@ -115,7 +115,7 @@ class Modification extends Model
      */
     public function copiedByUser()
     {
-        return $this->belongsTo(User::class, 'copied_by_user_id');
+        return $this->belongsTo(User::class, 'copied_by_user_id')->minimal();
     }
 
     /**
