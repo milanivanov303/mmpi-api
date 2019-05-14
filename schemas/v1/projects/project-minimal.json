@@ -1,0 +1,15 @@
+{
+    "$id": "ProjectMinimal",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "description": "Project minimal object",
+    "additionalProperties": true,
+    "properties": {
+        "id": {
+            "$ref": "/v1/projects/project.json#/properties/id"
+        },
+        "name": {
+            "$ref": "/v1/projects/project.json#/properties/name"
+        }
+    }
+}

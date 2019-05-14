@@ -25,8 +25,8 @@ class DeliveryChainsTest extends RestTestCase
         $dcVersion = EnumValue::where('type', 'delivery_chain_version')->inRandomOrder()->first();
         $dcRole    = EnumValue::where('type', 'delivery_chain_role')->inRandomOrder()->first();
         $type      = DeliveryChainType::inRandomOrder()->first();
-        $projects  = Project::without('deliveryChains')->inRandomOrder()->limit(3)->get();
-        $instances = Instance::without('deliveryChains')->inRandomOrder()->limit(3)->get();
+        $projects  = Project::minimal()->inRandomOrder()->limit(3)->get();
+        $instances = Instance::with('instanceType')->minimal()->inRandomOrder()->limit(3)->get();
 
         return [
             'title'                => $faker->word(),

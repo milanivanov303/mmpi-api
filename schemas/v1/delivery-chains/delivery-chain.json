@@ -51,13 +51,13 @@
         "projects": {
             "type": "array",
             "items": {
-                "$ref": "/v1/projects/project.json"
+                "$ref": "/v1/projects/project-minimal.json"
             }
         },
         "instances": {
             "type": "array",
             "items": {
-                "$ref": "/v1/instances/instance.json"
+                "$ref": "/v1/instances/instance-minimal.json"
             }
         }
     }

@@ -25,7 +25,7 @@ class InstancesTest extends RestTestCase
         $status          = EnumValue::where('type', 'active_inactive')->inRandomOrder()->first();
         $environmentType = DeliveryChainType::inRandomOrder()->first();
         $instanceType    = InstanceType::inRandomOrder()->first();
-        $deliveryChains  = DeliveryChain::without('instances')->inRandomOrder()->limit(3)->get();
+        $deliveryChains  = DeliveryChain::without('instances')->active()->inRandomOrder()->limit(3)->get();
 
         return [
             'name'                      => 'CVS',

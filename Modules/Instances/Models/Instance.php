@@ -10,19 +10,6 @@ use Modules\DeliveryChains\Models\DeliveryChain;
 class Instance extends Model
 {
     /**
-     * The relations to eager load on every query.
-     *
-     * @var array
-     */
-    protected $with = [
-        'owner',
-        'instanceType',
-        'status',
-        'environmentType',
-        'deliveryChains'
-    ];
-
-    /**
      * The attributes that will be hidden in output json
      *
      * @var array
@@ -90,6 +77,14 @@ class Instance extends Model
      */
     public function deliveryChains()
     {
-        return $this->belongsToMany(DeliveryChain::class, 'instance_to_delivery_chain')->without('instances');
+        return $this->belongsToMany(DeliveryChain::class, 'instance_to_delivery_chain')->without('instances')->active();
+    }
+
+    /**
+     * Get active instances with specific properties
+     */
+    public function scopeMinimal($query)
+    {
+        return $query->select(['instances.id', 'name', 'instance_type_id'])->join('enum_values as status', 'status.id', '=', 'instances.status')->where('status.key', '=', 'active');
     }
 }

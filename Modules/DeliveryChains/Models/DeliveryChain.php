@@ -89,7 +89,7 @@ class DeliveryChain extends Model
      */
     public function projects()
     {
-        return $this->belongsToMany(Project::class, 'project_to_delivery_chain')->without('deliveryChains');
+        return $this->belongsToMany(Project::class, 'project_to_delivery_chain')->minimal();
     }
 
     /**
@@ -97,6 +97,16 @@ class DeliveryChain extends Model
      */
     public function instances()
     {
-        return $this->belongsToMany(Instance::class, 'instance_to_delivery_chain')->without('deliveryChains');
+        return $this->belongsToMany(Instance::class, 'instance_to_delivery_chain')->with('instanceType')->minimal();
+    }
+
+    /**
+     * Get active delivery_chains
+     */
+    public function scopeActive($query)
+    {
+        return $query
+                ->join('enum_values as status', 'status.id', '=', 'delivery_chains.status')
+                ->where('status.key', '=', 'active');
     }
 }

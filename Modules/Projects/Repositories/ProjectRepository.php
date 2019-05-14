@@ -21,6 +21,26 @@ class ProjectRepository extends AbstractRepository implements RepositoryInterfac
     protected $primaryKey = 'name';
 
     /**
+     * The relations to eager load on every query.
+     *
+     * @var array
+     */
+    protected $with = [
+        'modifiedBy',
+        'typeBusiness',
+        'activity',
+        'group',
+        'country',
+        'communicationLng',
+        'deliveryMethod',
+        'seMntdByClnt',
+        'tlMntdByClnt',
+        'njschMntdByClnt',
+        'transMntdByClnt',
+        'deliveryChains'
+    ];
+
+    /**
      * ProjectRepository constructor
      *
      * @param Project $model

@@ -12,6 +12,19 @@ use Modules\DeliveryChains\Models\DeliveryChain;
 class InstanceRepository extends AbstractRepository implements RepositoryInterface
 {
     /**
+     * The relations to eager load on every query.
+     *
+     * @var array
+     */
+    protected $with = [
+        'owner',
+        'instanceType',
+        'status',
+        'environmentType',
+        'deliveryChains'
+    ];
+
+    /**
      * ProjectRepository constructor
      *
      * @param Instance $model
@@ -93,7 +106,7 @@ class InstanceRepository extends AbstractRepository implements RepositoryInterfa
         }
     }
 
-        /**
+    /**
      * Save record
      *
      * @param array $data

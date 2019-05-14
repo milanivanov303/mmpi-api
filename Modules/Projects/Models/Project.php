@@ -10,26 +10,6 @@ use Modules\DeliveryChains\Models\DeliveryChain;
 class Project extends Model
 {
     /**
-     * The relations to eager load on every query.
-     *
-     * @var array
-     */
-    protected $with = [
-        'modifiedBy',
-        'typeBusiness',
-        'activity',
-        'group',
-        'country',
-        'communicationLng',
-        'deliveryMethod',
-        'seMntdByClnt',
-        'tlMntdByClnt',
-        'njschMntdByClnt',
-        'transMntdByClnt',
-        'deliveryChains'
-    ];
-
-    /**
      * The attributes excluded from the model's JSON form.
      *
      * @var array
@@ -170,6 +150,14 @@ class Project extends Model
      */
     public function deliveryChains()
     {
-        return $this->belongsToMany(DeliveryChain::class, 'project_to_delivery_chain')->without('projects');
+        return $this->belongsToMany(DeliveryChain::class, 'project_to_delivery_chain')->without('projects')->active();
+    }
+
+    /**
+     * Get active projects with specific properties
+     */
+    public function scopeMinimal($query)
+    {
+        return $query->select(['id', 'name'])->where('inactive', '=', '0');
     }
 }

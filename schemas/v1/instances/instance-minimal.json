@@ -1,0 +1,18 @@
+{
+    "$id": "InstanceMinimal",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "description": "Instance minimal object",
+    "additionalProperties": false,
+    "properties": {
+        "id": {
+            "$ref": "/v1/instances/instance.json#/properties/id"
+        },
+        "name": {
+            "$ref": "/v1/instances/instance.json#/properties/name"
+        },
+        "instance_type": {
+            "$ref": "/v1/instances/instance.json#/properties/instance_type"
+        }
+    }
+}
