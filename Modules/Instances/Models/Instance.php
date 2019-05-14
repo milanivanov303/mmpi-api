@@ -85,6 +85,9 @@ class Instance extends Model
      */
     public function scopeMinimal($query)
     {
-        return $query->select(['instances.id', 'name', 'instance_type_id'])->join('enum_values as status', 'status.id', '=', 'instances.status')->where('status.key', '=', 'active');
+        return $query
+                ->select(['instances.id', 'name', 'instance_type_id'])
+                ->join('enum_values as status', 'status.id', '=', 'instances.status')
+                ->where('status.key', '=', 'active');
     }
 }
