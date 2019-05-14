@@ -20,24 +20,24 @@ class InstancesTest extends RestTestCase
     {
         $faker = Faker\Factory::create();
 
-        $owner           = EnumValue::where('type', 'instances_owner')->inRandomOrder()->minimal()->first();
-        $status          = EnumValue::where('type', 'active_inactive')->inRandomOrder()->minimal()->first();
+        $owner           = EnumValue::where('type', 'instances_owner')->minimal()->inRandomOrder()->first();
+        $status          = EnumValue::where('type', 'active_inactive')->minimal()->inRandomOrder()->first();
         $environmentType = DeliveryChainType::inRandomOrder()->first();
         $instanceType    = InstanceType::inRandomOrder()->first();
 
         return [
             'name'                      => 'CVS',
             'play_as_demo'              => 'n',
-            'owner'                     => $owner,
-            'status'                    => $status,
+            'owner'                     => $owner->toArray(),
+            'status'                    => $status->toArray(),
             'timezone'                  => 'Europe/Sofia',
             'host'                      => $faker->word(),
             'user'                      => $faker->username(),
             'db_user'                   => $faker->username(),
             'tns_name'                  => '',
             'has_patch_install_in_init' => 0,
-            'instance_type'             => $instanceType,
-            'environment_type'          => $environmentType
+            'instance_type'             => $instanceType->toArray(),
+            'environment_type'          => $environmentType->toArray()
         ];
     }
 

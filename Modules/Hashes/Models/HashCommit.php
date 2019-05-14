@@ -15,7 +15,6 @@ class HashCommit extends Model
     protected $mapping = [
         'repo_branch'        => 'branch',
         'commit_description' => 'description',
-        'repo_merge_branch'  => 'merge_branch',
         'repo_module'        => 'module',
         'committed_by'       => 'owner',
         'hash_rev'           => 'rev'
@@ -29,7 +28,7 @@ class HashCommit extends Model
     protected $fillable = [
         'repo_branch',
         'commit_description',
-        'repo_merge_branch',
+        'merge_branch',
         'repo_module',
         'committed_by',
         'repo_path',
@@ -37,46 +36,6 @@ class HashCommit extends Model
         'hash_rev',
         'repo_timestamp'
     ];
-
-    /**
-     * Define filters for this model
-     *
-     * @return array
-     */
-    public function filters(): array
-    {
-        return [
-            'committed_by' => function ($model, $value, $operator) {
-                return $model->whereHas('owner', function ($query) use ($value, $operator) {
-                    $query->where('username', $operator, $value);
-                });
-            },
-            'files' => function ($model, $value) {
-                return $model->whereHas('files', function ($query) use ($value) {
-                    $query->where('file_name', 'like', "%{$value}%");
-                });
-            },
-            'chains' => function ($model, $value) {
-                return $model->whereHas('chains', function ($query) use ($value) {
-                    $query->whereHas('chain', function ($query) use ($value) {
-                        $query->where('chain_name', 'like', "%{$value}%");
-                    });
-                });
-            }
-        ];
-    }
-
-    /**
-     * Define order by for this model
-     *
-     * @return array
-     */
-    public function orderBy(): array
-    {
-        return [
-
-        ];
-    }
 
     /**
      * Get the files for the hash.
@@ -99,7 +58,7 @@ class HashCommit extends Model
      */
     public function owner()
     {
-        return $this->belongsTo(User::class, 'committed_by');
+        return $this->belongsTo(User::class, 'committed_by')->minimal();
     }
 
     /**

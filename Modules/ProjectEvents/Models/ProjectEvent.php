@@ -50,32 +50,6 @@ class ProjectEvent extends Model
     ];
 
     /**
-     * Define filters for this model
-     *
-     * @return array
-     */
-    public function filters(): array
-    {
-        return [
-            'project' => function ($builder, $value, $operator) {
-                return $builder->whereHas('project', function ($query) use ($value, $operator) {
-                    $query->where('name', $operator, $value);
-                });
-            },
-            'project_event_status' => function ($builder, $value, $operator) {
-                return $builder->whereHas('projectEventStatus', function ($query) use ($value, $operator) {
-                    $query->where('key', $operator, $value);
-                });
-            },
-            'project_event_type' => function ($builder, $value, $operator) {
-                return $builder->whereHas('projectEventType', function ($query) use ($value, $operator) {
-                    $query->where('key', $operator, $value);
-                });
-            }
-        ];
-    }
-
-    /**
      * Get projects
      */
     public function project()
@@ -88,7 +62,7 @@ class ProjectEvent extends Model
      */
     public function madeBy()
     {
-        return $this->belongsTo(User::class, 'made_by');
+        return $this->belongsTo(User::class, 'made_by')->minimal();
     }
 
     /**

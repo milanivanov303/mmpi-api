@@ -8,6 +8,7 @@
         {"$ref": "/v1/delivery-chains/filters.json"},
         {
             "required": [
+                "title",
                 "type",
                 "dlvry_type",
                 "status"

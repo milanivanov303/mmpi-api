@@ -1,7 +1,6 @@
 <?php
 
 use App\Models\EnumValue;
-use Modules\ProjectEvents\Models\ProjectEvent;
 
 class ProjectEventsTest extends RestTestCase
 {
@@ -19,8 +18,8 @@ class ProjectEventsTest extends RestTestCase
         $faker = Faker\Factory::create();
 
         $project            = \Modules\Projects\Models\Project::inRandomOrder()->first();
-        $projectEventType   = EnumValue::where('type', 'project_event_type')->inRandomOrder()->minimal()->first();
-        $projectEventStatus = EnumValue::where('type', 'project_event_status')->inRandomOrder()->minimal()->first();
+        $projectEventType   = EnumValue::where('type', 'project_event_type')->minimal()->inRandomOrder()->first();
+        $projectEventStatus = EnumValue::where('type', 'project_event_status')->minimal()->inRandomOrder()->first();
 
         return [
             'project'              => $project->toArray(),
@@ -67,15 +66,5 @@ class ProjectEventsTest extends RestTestCase
         $data['event_start_date'] = $faker->date('Y-m-d');
 
         return $data;
-    }
-
-    /**
-     * Test delete single
-     *
-     * @return void
-     */
-    public function testDelete()
-    {
-        $this->assertEquals(true, true);
     }
 }

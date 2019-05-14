@@ -10,11 +10,11 @@ class InstallationsController extends Controller
     /**
      * Create a new controller instance.
      *
-     * @param InstallationRepository $model
+     * @param InstallationRepository $repository
      * @return void
      */
-    public function __construct(InstallationRepository $model)
+    public function __construct(InstallationRepository $repository)
     {
-        $this->model = $model;
+        $this->repository = $repository;
     }
 }

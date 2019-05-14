@@ -26,10 +26,83 @@ class DeliveryChainRepository extends AbstractRepository implements RepositoryIn
     }
 
     /**
+     * Define filters for this model
+     *
+     * @return array
+     */
+    public function filters(): array
+    {
+        return [
+            'type' => function ($builder, $value, $operator) {
+                return $builder->whereHas('type', function ($query) use ($value, $operator) {
+                    $query->where('type', $operator, $value);
+                });
+            },
+            'status' => function ($builder, $value, $operator) {
+                return $builder->whereHas('status', function ($query) use ($value, $operator) {
+                    $query->where('key', $operator, $value);
+                });
+            },
+            'dlvry_type' => function ($builder, $value, $operator) {
+                return $builder->whereHas('dlvryType', function ($query) use ($value, $operator) {
+                    $query->where('key', $operator, $value);
+                });
+            },
+            'dc_version' => function ($builder, $value, $operator) {
+                return $builder->whereHas('dcVersion', function ($query) use ($value, $operator) {
+                    $query->where('key', $operator, $value);
+                });
+            },
+            'dc_role' => function ($builder, $value, $operator) {
+                return $builder->whereHas('dcRole', function ($query) use ($value, $operator) {
+                    $query->where('key', $operator, $value);
+                });
+            }
+        ];
+    }
+
+    /**
+     * Define order by for this model
+     *
+     * @return array
+     */
+    public function orderBy(): array
+    {
+        return [
+            'type' => function ($model, $order_dir) {
+                return $model->select('delivery_chains.*')
+                    ->join('delivery_chain_types', 'delivery_chain_types.id', '=', 'delivery_chains.type_id')
+                    ->orderBy('delivery_chain_types.type', $order_dir);
+            },
+            'status' => function ($model, $order_dir) {
+                return $model->select('delivery_chains.*')
+                    ->join('enum_values', 'enum_values.id', '=', 'delivery_chains.status')
+                    ->orderBy('enum_values.key', $order_dir);
+            },
+            'dlvry_type' => function ($model, $order_dir) {
+                return $model->select('delivery_chains.*')
+                    ->join('enum_values', 'enum_values.id', '=', 'delivery_chains.dlvry_type')
+                    ->orderBy('enum_values.key', $order_dir);
+            },
+            'dc_version' => function ($model, $order_dir) {
+                return $model->select('delivery_chains.*')
+                    ->join('enum_values', 'enum_values.id', '=', 'delivery_chains.dc_version')
+                    ->orderBy('enum_values.key', $order_dir);
+            },
+            'dc_role' => function ($model, $order_dir) {
+                return $model->select('delivery_chains.*')
+                    ->join('enum_values', 'enum_values.id', '=', 'delivery_chains.dc_role')
+                    ->orderBy('enum_values.key', $order_dir);
+            },
+        ];
+    }
+
+    /**
      * Save record
      *
      * @param array $data
      * @return Model
+     * @throws \Throwable
      */
     protected function save($data)
     {

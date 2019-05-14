@@ -12,59 +12,106 @@
         "id": {
             "type": "integer"
         },
+        "issue": {
+            "$ref": "/v1/issues/issue.json"
+        },
         "number":  {
             "type": "integer"
         },
         "migrated_id": {
-            "type": "integer"
+            "type": ["integer", "null"]
         },
         "migr_src_email_request": {
-            "type": "string"
+            "type": ["string", "null"]
         },
         "migr_src_email_request_files": {
-            "type": "string"
+            "type": ["string", "null"],
+            "maxLength": 512,
+            "default": "null"
         },
         "when_to_install_string": {
-            "type": ["integer", "null"]
+            "oneOf": [
+                {
+                    "$ref": "/v1/enum-values/enum-value-minimal.json"
+                },
+                {
+                    "type": "null"
+                }
+            ],
+            "default": "null"
         },
         "when_to_install_datetime": {
-            "type": ["integer", "null"]
+            "type": ["string", "null"],
+            "format": "datetime",
+            "default": "null"
         },
         "delivery_chain": {
             "$ref": "/v1/delivery-chains/delivery-chain.json"
         },
         "call_back_tech_valid": {
-            "type": "integer"
+            "type": "integer",
+            "enum": [0, 1]
         },
         "notes": {
             "type": ["string", "null"]
         },
         "comm_status": {
-            "type": ["string", "null"]
+            "type": ["string", "null"],
+            "maxLength": 256,
+            "default": "null",
+            "description": "Communication status"
         },
         "greenlight_status": {
-            "type": ["string", "null"]
+            "oneOf": [
+                {
+                    "$ref": "/v1/enum-values/enum-value-minimal.json"
+                },
+                {
+                    "type": "null"
+                }
+            ],
+            "default": "null"
         },
         "greenlighted_on": {
-            "type": ["string", "null"]
+            "type": ["string", "null"],
+            "format": "datetime",
+            "default": "null"
         },
         "greenlighted_by": {
-            "type": ["string", "null"]
+            "oneOf": [
+                {
+                    "$ref": "/v1/user-minimal.json"
+                },
+                {
+                    "type": "null"
+                }
+            ],
+            "default": "null"
+
         },
         "customer_infomed": {
-            "type": ["string", "null"]
+            "type": ["integer", "null"],
+            "enum": [0, 1],
+            "default": "null",
+            "description": "Modifications of specifications is communicated to the customer"
         },
         "nr_test": {
-            "type": ["string", "null"]
+            "type": ["integer", "null"],
+            "enum": [0, 1],
+            "default": "null",
+            "description": "Embedded programs in the PR had been validated with NR tests"
         },
         "automated_test": {
-            "type": ["string", "null"]
+            "type": ["integer", "null"],
+            "enum": [0, 1],
+            "default": "null",
+            "description": "If automated test should be excuted after the patches installation"
         },
         "assign_to_planned_ba": {
-            "type": ["string", "null"]
-        },
-        "issue": {
-            "$ref": "/v1/issues/issue.json"
+            "type": ["integer", "null"],
+            "enum": [0, 1],
+            "default": "null",
+            "description": "If the PR issue should be assigned to planned business analyst after the installation"
         },
         "modifications": {
             "type": "array",
