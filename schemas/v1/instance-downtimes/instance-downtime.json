@@ -9,7 +9,7 @@
             "type": "integer"
         },
         "instance": {
-            "$ref": "/v1/instances/instance.json"
+            "$ref": "/v1/instances/instance-minimal.json"
         },
         "start_datetime": {
             "type": "string",

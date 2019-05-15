@@ -15,7 +15,7 @@ class InstanceDowntimesTest extends RestTestCase
     {
         $faker = Faker\Factory::create();
 
-        $instance = \Modules\Instances\Models\Instance::inRandomOrder()->first();
+        $instance = \Modules\Instances\Models\Instance::minimal()->inRandomOrder()->first();
 
         return [
             'instance'       => $instance->toArray(),

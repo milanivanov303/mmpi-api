@@ -9,7 +9,7 @@
             "type": "integer"
         },
         "project": {
-            "$ref": "/v1/projects/project.json"
+            "$ref": "/v1/projects/project-minimal.json"
         },
         "project_event_type": {
             "$ref": "/v1/enum-values/enum-value.json"

@@ -203,7 +203,7 @@
         "instance_id": {
             "oneOf": [
                 {
-                    "$ref": "/v1/instances/instance.json"
+                    "$ref": "/v1/instances/instance-minimal.json"
                 },
                 {
                     "type": "null"

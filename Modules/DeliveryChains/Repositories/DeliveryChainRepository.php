@@ -18,21 +18,6 @@ class DeliveryChainRepository extends AbstractRepository implements RepositoryIn
     protected $primaryKey = 'title';
 
     /**
-     * The relations to eager load on every query.
-     *
-     * @var array
-     */
-    protected $with = [
-        'type',
-        'dlvryType',
-        'status',
-        'dcVersion',
-        'dcRole',
-        'projects',
-        'instances'
-    ];
-
-    /**
      * ProjectRepository constructor
      *
      * @param DeliveryChain $model

@@ -12,7 +12,7 @@
             "$ref": "/v1/patch-requests/patch-request.json"
         },
         "project": {
-            "$ref": "/v1/projects/project.json"
+            "$ref": "/v1/projects/project-minimal.json"
         },
         "delivery_chain": {
             "$ref": "/v1/delivery-chains/delivery-chain.json"
@@ -49,7 +49,7 @@
         "dlv_test_instance": {
             "oneOf": [
                 {
-                    "$ref": "/v1/instances/instance.json"
+                    "$ref": "/v1/instances/instance-minimal.json"
                 },
                 {
                     "type": "null"

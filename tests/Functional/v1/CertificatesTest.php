@@ -15,7 +15,7 @@ class CertificatesTest extends RestTestCase
     {
         $faker = Faker\Factory::create();
 
-        $project  = \Modules\Projects\Models\Project::inRandomOrder()->first();
+        $project  = \Modules\Projects\Models\Project::minimal()->inRandomOrder()->first();
 
         return [
             'project'           => $project->toArray(),

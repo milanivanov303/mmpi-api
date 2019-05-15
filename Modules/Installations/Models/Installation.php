@@ -53,7 +53,7 @@ class Installation extends Model
      */
     public function instance()
     {
-        return $this->belongsTo(Instance::class);
+        return $this->belongsTo(Instance::class)->minimal();
     }
 
     /**

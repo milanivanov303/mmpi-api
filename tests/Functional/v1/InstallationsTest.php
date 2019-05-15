@@ -17,7 +17,7 @@ class InstallationsTest extends RestTestCase
     {
         $faker = Faker\Factory::create();
 
-        $instance = \Modules\Instances\Models\Instance::inRandomOrder()->first();
+        $instance = \Modules\Instances\Models\Instance::minimal()->inRandomOrder()->first();
         $patch  = \Modules\Patches\Models\Patch::inRandomOrder()->first();
 
         return [

@@ -18,9 +18,9 @@ class InstanceRepository extends AbstractRepository implements RepositoryInterfa
      */
     protected $with = [
         'owner',
-        'instanceType',
         'status',
         'environmentType',
+        'instanceType',
         'deliveryChains'
     ];
 
