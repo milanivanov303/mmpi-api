@@ -9,11 +9,7 @@
             "type": "integer"
         },
         "instance": {
-            "allOf": [
-                {
-                    "$ref": "/v1/instances/instance.json"
-                }
-            ]
+            "$ref": "/v1/instances/instance.json"
         },
         "start_datetime": {
             "type": "string",
