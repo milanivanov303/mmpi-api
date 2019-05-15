@@ -8,7 +8,7 @@ use Modules\DeliveryChains\Models\DeliveryChainType;
 use Modules\DeliveryChains\Models\DeliveryChain;
 
 class Instance extends Model
-{   
+{
     /**
      * The attributes that will be hidden in output json
      *
