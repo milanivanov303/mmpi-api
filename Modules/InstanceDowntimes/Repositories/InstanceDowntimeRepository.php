@@ -42,9 +42,7 @@ class InstanceDowntimeRepository extends AbstractRepository implements Repositor
         parent::fillModel($data);
 
         if (array_key_exists('instance', $data)) {
-            $this->model->instance()->associate(
-                app(Instance::class)->getModelId($data['instance'], 'name')
-            );
+            $this->model->instance()->associate($data['instance']['id']);
         }
 
         $this->model->madeBy()->associate(Auth::user());
