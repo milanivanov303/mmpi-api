@@ -10,6 +10,7 @@ use Core\Repositories\RepositoryInterface;
 use Illuminate\Support\Facades\Auth;
 use Modules\DeliveryChains\Models\DeliveryChain;
 use Modules\Projects\Models\Project;
+use Modules\ProjectSpecifics\Models\ProjectSpecific;
 
 class ProjectRepository extends AbstractRepository implements RepositoryInterface
 {
@@ -143,6 +144,15 @@ class ProjectRepository extends AbstractRepository implements RepositoryInterfac
                 $deliveryChains[] = app(DeliveryChain::class)->getModelId($deliveryChain, 'title');
             }
             $this->model->deliveryChains()->sync($deliveryChains);
+        }
+
+        // Make sure the id exists, and enum_values.type = 'project_specifics_feature'
+        if (array_key_exists('project_specifics', $data)) {
+            $projectSpecifics = [];
+            foreach ($data['project_specifics'] as $projectSpecific) {
+                $projectSpecifics[] = ProjectSpecific::find($projectSpecific['id']);
+            }
+            $this->model->projectSpecifics()->saveMany($projectSpecifics);
         }
 
         $this->model->load($this->getWith());

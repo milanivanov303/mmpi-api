@@ -68,5 +68,8 @@ $router->group(['prefix' => 'v1'], function () use ($router) {
 
         // Hash branches
         require 'v1/branches.php';
+
+        // Project specifics
+        require 'v1/project-specifics.php';
     });
 });

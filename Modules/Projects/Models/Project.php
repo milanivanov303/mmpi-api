@@ -6,6 +6,7 @@ use Core\Models\Model;
 use App\Models\User;
 use App\Models\EnumValue;
 use Modules\DeliveryChains\Models\DeliveryChain;
+use Modules\ProjectSpecifics\Models\ProjectSpecific;
 
 class Project extends Model
 {
@@ -26,7 +27,8 @@ class Project extends Model
         'tlMntdByClnt',
         'njschMntdByClnt',
         'transMntdByClnt',
-        'deliveryChains'
+        'deliveryChains',
+        'projectSpecifics'
     ];
 
     /**
@@ -170,5 +172,13 @@ class Project extends Model
     public function deliveryChains()
     {
         return $this->belongsToMany(DeliveryChain::class, 'project_to_delivery_chain');
+    }
+
+    /**
+     * Get project specifics
+     */
+    public function projectSpecifics()
+    {
+        return $this->hasMany(ProjectSpecific::class);
     }
 }
