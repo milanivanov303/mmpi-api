@@ -7,9 +7,20 @@ use Core\Repositories\AbstractRepository;
 use Core\Repositories\RepositoryInterface;
 use Illuminate\Support\Facades\Auth;
 use Modules\ProjectSpecifics\Models\ProjectSpecific;
+use Modules\Projects\Models\Project;
+use App\Models\EnumValue;
 
 class ProjectSpecificRepository extends AbstractRepository implements RepositoryInterface
 {
+    /**
+     * The relations to eager load on every query.
+     *
+     * @var array
+     */
+    protected $with = [
+        'project'
+    ];
+
     /**
      * ProjectSpecificRepository constructor
      *
@@ -34,6 +45,13 @@ class ProjectSpecificRepository extends AbstractRepository implements Repository
     {
         parent::fillModel($data);
 
+        if (array_key_exists('project', $data)) {
+            $this->model->project()->associate(
+                app(Project::class)
+                    ->getModelId($data['project'], 'name')
+            );
+        }
+
         $this->model->madeBy()->associate(Auth::user());
 
         $this->model->made_on = Carbon::now()->format('Y-m-d H:i:s');
@@ -41,7 +59,7 @@ class ProjectSpecificRepository extends AbstractRepository implements Repository
         if (array_key_exists('project_specific_feature', $data)) {
             $this->model->projectSpecificFeature()->associate(
                 app(EnumValue::class)
-                    ->getModelId($data['project_specific_feature'], 'key', ['type' => 'project_specific_feature'])
+                    ->getModelId($data['project_specific_feature'], 'key')
             );
         }
     }

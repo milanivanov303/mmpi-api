@@ -4,6 +4,7 @@
     "type": "object",
     "description": "Project specific object",
     "allOf": [
-        {"$ref": "/v1/project-specifics/project-specific.json"}
+        {"$ref": "/v1/project-specifics/project-specific.json"},
+        {"$ref": "/v1/project-specifics/filters.json"}
     ]
 }

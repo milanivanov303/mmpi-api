@@ -172,6 +172,7 @@ class ProjectRepository extends AbstractRepository implements RepositoryInterfac
     {
         $model = $this->find($id);
         $model->deliveryChains()->sync([]);
+        $model->projectSpecifics()->delete();
 
         return $model->delete();
     }

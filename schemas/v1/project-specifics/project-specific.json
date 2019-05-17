@@ -8,6 +8,9 @@
         "id": {
             "type": "integer"
         },
+        "project": {
+            "$ref": "/v1/projects/project.json"
+        },
         "project_specific_feature": {
             "$ref": "/v1/enum-values/enum-value-minimal.json",
             "description": "The id from table enum_values of the specific feature - enum_values.type=project_specific_feature"

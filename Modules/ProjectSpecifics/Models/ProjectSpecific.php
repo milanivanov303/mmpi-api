@@ -25,7 +25,8 @@ class ProjectSpecific extends Model
      * @var array
      */
     protected $hidden = [
-        'prj_specific_feature_id'
+        'prj_specific_feature_id',
+        'project_id'
     ];
 
     /**
@@ -47,7 +48,7 @@ class ProjectSpecific extends Model
      */
     public function project()
     {
-        return $this->belongsTo(Project::class);
+        return $this->belongsTo(Project::class)->without('projectSpecifics');
     }
 
     /**
