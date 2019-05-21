@@ -4,7 +4,11 @@ namespace Modules\Certificates\Console\Commands;
 
 use Carbon\Carbon;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Mail;
 use Modules\Certificates\Models\Certificate;
+use Modules\Certificates\Services\CheckExpiryService;
+use Modules\Certificates\Mail\CheckExpiryMail;
+use App\Models\User;
 
 /**
  * Generate API documentation
@@ -27,7 +31,6 @@ class CheckExpiry extends Command
      */
     protected $description = "Check if there are certificates expiring soon";
 
-
     /**
      * Execute the console command.
      *
@@ -36,25 +39,27 @@ class CheckExpiry extends Command
     public function handle()
     {
 
-        $date = Carbon::now()
-            ->addYears(2)
-            ->addMonth(6)
-            ->addDays(30);
+        $date = Carbon::now()->subDays(30);
 
-        $certificates = Certificate::where('valid_to', '<', $date->format('Y-m-d'))->get();
+        $certificates = Certificate::whereDate('valid_to', '=', $date->format('Y-m-d'))->get();
 
         foreach ($certificates as $certificate) {
             $roles = $certificate->project->roles();
 
-            $coordinator = $this->getProjectCoordinator($roles);
-            $director    = $this->getProjectDirector($roles);
+            $coordinators = $this->getProjectCoordinators($roles);
+            $directors    = $this->getProjectDirectors($roles);
 
-            if ($coordinator) {
-                //send mail
+            if ($coordinators) {
+                foreach ($coordinators as $coordinator) {
+                    $user = $coordinator->user;
+
+                    $data = $this->getData($user, $certificate);
+                    $this->sendEmail($data);
+                }
             }
 
-            if ($director) {
-                //send mail
+            if ($directors) {
+                $this->sendEmail($directors, $certificate);
             }
         }
     }
@@ -63,29 +68,51 @@ class CheckExpiry extends Command
      * @param $roles
      * @return |null
      */
-    protected function getProjectCoordinator($roles)
+    protected function getProjectCoordinators($roles)
     {
-        $coordinator = $roles->where('role_id', 'pc')->first();
+        $coordinators = $roles->where('role_id', 'pc')->get();
 
-        if ($coordinator) {
-            return $coordinator->user;
+        if ($coordinators) {
+            return $coordinators;
         }
 
         return null;
     }
 
-    protected function getProjectDirector($roles)
+    /**
+     * @param User $user
+     * @param Certificate $certificate
+     */
+    protected function getData($user, $certificate)
     {
-        $director = $roles->where('role_id', 'pm')->first();
+        $valideTo = Carbon::parse($certificate->valid_to)->format('Y-m-d');
 
-        if ($director) {
-            return $director->user;
+        $data = [
+                'user_name'    => $user->name,
+                'project_name' => $certificate->project->name,
+                'valid_to'     => $valideTo
+                ];
+
+        return $data;
+    }
+
+    protected function sendEmail($data)
+    {
+        Mail::to('eseimenova@codix.bg')->send(new CheckExpiryMail($data));
+    }
+
+    protected function getProjectDirectors($roles)
+    {
+        $directors = $roles->where('role_id', 'pm')->first();
+
+        if ($directors) {
+            return $directors;
         }
 
-        $director = $roles->where('role_id', 'dpm')->first();
+        $directors = $roles->where('role_id', 'dpm')->first();
 
-        if ($director) {
-            return $director->user;
+        if ($directors) {
+            return $directors->user;
         }
 
         return null;
