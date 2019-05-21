@@ -4,6 +4,9 @@
     "type": "object",
     "description": "User object",
     "properties": {
+        "id": {
+            "type": "integer"
+        },
         "name": {
             "type": "string",
             "description": "User full name",
@@ -54,7 +57,7 @@
                 "department_type": {
                     "oneOf": [
                         {
-                            "$ref": "/v1/enum-value.json"
+                            "$ref": "/v1/enum-values/enum-value-minimal.json"
                         },
                         {"type": "null"}
                     ]

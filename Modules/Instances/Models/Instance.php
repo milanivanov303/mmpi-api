@@ -51,49 +51,6 @@ class Instance extends Model
     ];
 
     /**
-     * Define filters for this model
-     *
-     * @return array
-     */
-    public function filters(): array
-    {
-        return [
-            'owner' => function ($builder, $value, $operator) {
-                return $builder->whereHas('owner', function ($query) use ($value, $operator) {
-                    $query->where('key', $operator, $value);
-                });
-            },
-            'status' => function ($builder, $value, $operator) {
-                return $builder->whereHas('status', function ($query) use ($value, $operator) {
-                    $query->where('key', $operator, $value);
-                });
-            },
-            'environment_type' => function ($builder, $value, $operator) {
-                return $builder->whereHas('environmentType', function ($query) use ($value, $operator) {
-                    $query->where('type', $operator, $value);
-                });
-            },
-            'instance_type' => function ($builder, $value, $operator) {
-                return $builder->whereHas('instanceType', function ($query) use ($value, $operator) {
-                    $query->where('id', $operator, $value);
-                });
-            },
-        ];
-    }
-
-    /**
-     * Define order by for this model
-     *
-     * @return array
-     */
-    public function orderBy(): array
-    {
-        return [
-
-        ];
-    }
-
-    /**
      * Get owner
      */
     public function owner()

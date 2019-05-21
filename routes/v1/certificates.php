@@ -6,13 +6,13 @@ $router->group([
 ], function () use ($router) {
     $router->get('', [
         'as'          => 'certificates.list',
-        'schema'      => '/v1/certificates/instance.json',
+        'schema'      => '/v1/certificates/certificate.json',
         'description' => 'Get certificates list',
         'uses'        => 'CertificatesController@getMany'
     ]);
     $router->get('/{id}', [
         'as'          => 'certificates.one',
-        'schema'      => '/v1/certificates/instance.json',
+        'schema'      => '/v1/certificates/certificate.json',
         'description' => 'Get single certificate',
         'uses'        => 'CertificatesController@getOne'
     ]);

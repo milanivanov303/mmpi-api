@@ -16,138 +16,195 @@
         },
         "clnt_cvs_dir": {
             "type": ["string", "null"],
-            "maxLength": 32
+            "maxLength": 32,
+            "default": "null",
+            "description": "Client directory in CVS for specific headers, build and other scripts"
         },
         "pnp_type": {
             "type": ["string", "null"],
-            "maxLength": 32
+            "maxLength": 32,
+            "default": "null",
+            "description": "Plug and Play project type"
         },
         "clnt_code": {
             "type": ["string", "null"],
-            "maxLength": 16
+            "maxLength": 16,
+            "default": "null",
+            "description": "Client code (macro) for specific modifications in [Pro*]C/C++ sources"
         },
         "clnt_code2": {
             "type": ["string", "null"],
-            "maxLength": 16
+            "maxLength": 16,
+            "default": "null",
+            "description": "Alternate client code (macro) for specific modifications in [Pro*]C/C++ sources"
         },
         "src_prefix": {
             "type": ["string", "null"],
-            "maxLength": 8
+            "maxLength": 8,
+            "default": "null",
+            "description": "Sources prefix"
         },
         "src_prefix2": {
             "type": ["string", "null"],
-            "maxLength": 8
+            "maxLength": 8,
+            "default": "null",
+            "description": "Alternate sources prefix"
         },
         "src_itf_prefix": {
             "type": ["string", "null"],
-            "maxLength": 8
+            "maxLength": 8,
+            "default": "null",
+            "description": "Interface sources prefix"
         },
         "getdcli": {
             "type": ["string", "null"],
-            "maxLength": 16
+            "maxLength": 16,
+            "default": "null",
+            "description": "The value from g_etude.getdcli"
         },
         "getdcli2": {
             "type": ["string", "null"],
-            "maxLength": 16
+            "maxLength": 16,
+            "default": "null",
+            "description": "The value from g_etude.getdcli2"
         },
         "activity": {
             "oneOf": [
-                {"$ref": "/v1/enum-value.json"},
+                {"$ref": "/v1/enum-values/enum-value-minimal.json"},
                 {"type": "null"}
-            ]
+            ],
+            "default": "null",
+            "description": "Client activity (linked to the value in g_etude.activite)"
         },
         "activite_gpc": {
-            "type": ["string", "null"]
+            "type": ["string", "null"],
+            "default": "null",
+            "description": "Activité Gestion Pour Compte (the value from g_etude.activite_gpc)"
         },
         "activite_sdr": {
             "type": "string",
             "enum": [
                 "o",
                 "n"
-            ]
+            ],
+            "default": "o",
+            "description": "Societe de recouvrement"
         },
         "imx_formstag": {
             "type": ["string", "null"],
-            "maxLength": 16
+            "maxLength": 16,
+            "default": "null",
+            "description": "Gives the value of $IMX_FORMSTAG environtment variable"
         },
         "forms_lng_dlvry": {
-            "type": "integer"
+            "type": "integer",
+            "enum": [0, 1],
+            "default": 0,
+            "description": "Flag determining whether to enforce delivery of translations together with forms"
         },
         "uses_transl_upd": {
-            "type": "integer"
+            "type": "integer",
+            "enum": [0, 1],
+            "default": 0,
+            "description": "Flag determining whether the client uses translations update"
         },
         "inactive": {
-            "type": "integer"
+            "type": "integer",
+            "enum": [0, 1],
+            "default": 0,
+            "description": "Flag determining whether the project is inactive"
         },
         "display_name": {
-            "type": "string",
-            "maxLength": 128
+            "type": ["string", "null"],
+            "maxLength": 128,
+            "default": "null",
+            "description": "Full project name to be shown"
         },
         "group": {
             "oneOf": [
-                {"$ref": "/v1/enum-value.json"},
+                {"$ref": "/v1/enum-values/enum-value.json"},
                 {"type": "null"}
-            ]
+            ],
+            "default": "null",
+            "description": "enum_value.id of the business group this project is part of"
         },
         "country": {
             "oneOf": [
-                {"$ref": "/v1/enum-value.json"},
+                {"$ref": "/v1/enum-values/enum-value-minimal.json"},
                 {"type": "null"}
-            ]
+            ],
+            "default": "null",
+            "description": "Project country from enum_values"
         },
         "communication_lng": {
             "oneOf": [
-                {"$ref": "/v1/enum-value.json"},
+                {"$ref": "/v1/enum-values/enum-value-minimal.json"},
                 {"type": "null"}
-            ]
+            ],
+            "default": "null",
+            "description": "Communication language for the project from enum_values"
         },
         "delivery_method": {
             "oneOf": [
-                {"$ref": "/v1/enum-value.json"},
+                {"$ref": "/v1/enum-values/enum-value-minimal.json"},
                 {"type": "null"}
-            ]
+            ],
+            "default": "null",
+            "description": "Delivery method for the project from enum_values"
         },
         "se_mntd_by_clnt": {
             "oneOf": [
-                {"$ref": "/v1/enum-value.json"},
+                {"$ref": "/v1/enum-values/enum-value-minimal.json"},
                 {"type": "null"}
-            ]
+            ],
+            "default": "null",
+            "description": "If Expert System is maintained by the client"
         },
         "tl_mntd_by_clnt": {
             "oneOf": [
-                {"$ref": "/v1/enum-value.json"},
+                {"$ref": "/v1/enum-values/enum-value-minimal.json"},
                 {"type": "null"}
-            ]
+            ],
+            "default": "null",
+            "description": "If Text library is maintained by the client"
         },
         "njsch_mntd_by_clnt": {
             "oneOf": [
-                {"$ref": "/v1/enum-value.json"},
+                {"$ref": "/v1/enum-values/enum-value-minimal.json"},
                 {"type": "null"}
-            ]
+            ],
+            "default": "null",
+            "description": "If Night job scheduler is maintained by the client"
         },
         "trans_mntd_by_clnt": {
             "oneOf": [
-                {"$ref": "/v1/enum-value.json"},
+                {"$ref": "/v1/enum-values/enum-value-minimal.json"},
                 {"type": "null"}
-            ]
+            ],
+            "default": "null",
+            "description": "If Translations are maintained by the client"
         },
         "sla_from": {
             "type": ["string", "null"],
-            "format": "time"
+            "format": "time",
+            "default": "null"
         },
         "sla_to": {
             "type": ["string", "null"],
-            "format": "time"
+            "format": "time",
+            "default": "null"
         },
         "modified_by": {
             "oneOf": [
-                {"$ref": "/v1/user.json"},
+                {"$ref": "/v1/user-minimal.json"},
                 {"type": "null"}
-            ]
+            ],
+            "default": "null",
+            "description": "The user id who inserted the record or made the last change"
         },
         "type_business": {
             "oneOf": [
-                {"$ref": "/v1/enum-value.json"},
+                {"$ref": "/v1/enum-values/enum-value-minimal.json"},
                 {"type": "null"}
             ]
         },
@@ -156,6 +213,22 @@
             "items": {
                 "$ref": "/v1/delivery-chains/delivery-chain.json"
             }
+        },
+        "ïntranet_version": {
+            "type": ["integer", "null"],
+            "default": "null",
+            "description": "iMX version for Intranet"
+        },
+        "extranet_version": {
+            "type": ["integer", "null"],
+            "default": "null",
+            "description": "iMX version for Extranet"
+        },
+        "run_cppcheck": {
+            "type": "integer",
+            "enum": [0, 1],
+            "default": 0,
+            "description": "Flag determining whether to run cppcheck on source files modifications for this project. 0 - do not run, 1 - run"
         }
     }
 }

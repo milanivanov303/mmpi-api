@@ -8,11 +8,12 @@ services:
         build:
             context: web
             args:
-                XDEBUG_CONFIG: remote_host=${XDEBUG_REMOTE_HOST}
+                XDEBUG_CONFIG_ARG: remote_host=${XDEBUG_REMOTE_HOST}
                                remote_port=9000
                                remote_enable=On
                                remote_autostart=On
-                PHP_IDE_CONFIG: serverName=${XDEBUG_SERVER_NAME}
+                PHP_IDE_CONFIG_ARG: serverName=${XDEBUG_SERVER_NAME}
+                BACKUP2_IP_ARG: 192.9.202.186
         stdin_open: true
         ports:
             - ${WEB_CONTAINER_IP}:${WEB_CONTAINER_SSH_PORT:-22}:22

@@ -10,11 +10,11 @@ class UsersController extends Controller
     /**
      * Create a new controller instance.
      *
-     * @param UserRepository $model
+     * @param UserRepository $repository
      * @return void
      */
-    public function __construct(UserRepository $model)
+    public function __construct(UserRepository $repository)
     {
-        $this->model = $model;
+        $this->repository = $repository;
     }
 }

@@ -10,11 +10,11 @@ class InstancesController extends Controller
     /**
      * Create a new controller instance.
      *
-     * @param InstanceRepository $model
+     * @param InstanceRepository $repository
      * @return void
      */
-    public function __construct(InstanceRepository $model)
+    public function __construct(InstanceRepository $repository)
     {
-        $this->model = $model;
+        $this->repository = $repository;
     }
 }

@@ -31,7 +31,7 @@ class HashesTest extends RestTestCase
             $rev = bin2hex(random_bytes(10));
         } catch (\Exception $exception) {}
 
-        $user = User::inRandomOrder()->active()->first();
+        $user = User::minimal()->inRandomOrder()->active()->first();
 
         return [
             'branch'       => 'default',

@@ -8,35 +8,75 @@
         "id": {
             "type": "integer"
         },
+        "issue": {
+            "$ref": "/v1/issues/issue.json"
+        },
         "type_id": {
-            "type": "string"
+            "type": "string",
+            "maxLength": 8,
+            "description": "Type of the modification"
         },
         "old_id": {
-            "type": ["integer", "null"]
+            "type": ["integer", "null"],
+            "default": "null",
+            "description": "Identifier in old modification tables (NULL for new modifications)"
         },
         "subtype_id": {
-            "type": ["integer", "null"]
+            "oneOf": [
+                {
+                    "$ref": "/v1/enum-values/enum-value-minimal.json"
+                },
+                {
+                    "type": "null"
+                }
+            ],
+            "default": "null",
+            "description": "Specific type of the modification"
         },
         "path_id": {
-            "type": ["integer", "null"]
+            "oneOf": [
+                {
+                    "$ref": "/v1/enum-values/enum-value-minimal.json"
+                },
+                {
+                    "type": "null"
+                }
+            ],
+            "default": "null",
+            "description": "File path identifier"
         },
         "name": {
-            "type": "string"
+            "type": ["string", "null"],
+            "maxLength": 2500,
+            "default": "null"
         },
         "namesake": {
-            "type": ["string", "null"]
+            "type": ["string", "null"],
+            "maxLength": 2500,
+            "default": "null"
         },
         "run_repack": {
-            "type": ["string", "null"]
+            "type": ["integer", "null"],
+            "enum": [0, 1],
+            "default": "null",
+            "description": "Specify if repack should be done for binaries"
         },
         "prev_version": {
-            "type": ["string", "null"]
+            "type": ["string", "null"],
+            "maxLength": 32,
+            "default": "null",
+            "description": "Previous version"
         },
         "version": {
-            "type": ["string", "null"]
+            "type": ["string", "null"],
+            "maxLength": 32,
+            "default": "null"
         },
         "revision_converted": {
-            "type": ["string", "null"]
+            "type": ["string", "null"],
+            "maxLength": 100,
+            "default": "null",
+            "description": "Converted version string for easier comparison"
         },
         "contents": {
             "type": ["string", "null"]
@@ -45,136 +85,313 @@
             "type": ["string", "null"]
         },
         "checksum": {
-            "type": ["string", "null"]
+            "type": ["string", "null"],
+            "default": "null",
+            "maxLength": 128
         },
         "size": {
-            "type": ["string", "null"]
+            "type": ["integer", "null"],
+            "description": "Size of the modification in bytes"
         },
         "est_run_time": {
-            "type": ["string", "null"]
+            "type": ["string", "null"],
+            "format": "time"
         },
         "tablespace_id": {
-            "type": ["string", "null"]
+            "oneOf": [
+                {
+                    "$ref": "/v1/enum-values/enum-value-minimal.json"
+                },
+                {
+                    "type": "null"
+                }
+            ],
+            "description": "Table space identifier"
         },
         "permissions": {
-            "type": ["string", "null"]
+            "type": ["string", "null"],
+            "maxLength": 12,
+            "default": "null"
         },
         "backup_orig_data": {
-            "type": ["string", "null"]
+            "type": ["integer", "null"],
+            "enum": [0, 1],
+            "default": "null"
         },
         "backup_type": {
-            "type": ["string", "null"]
+            "oneOf": [
+                {
+                    "$ref": "/v1/enum-values/enum-value-minimal.json"
+                },
+                {
+                    "type": "null"
+                }
+            ],
+            "default": "null"
         },
         "backup_where_clause": {
-            "type": ["string", "null"]
+            "type": "string"
         },
         "trig_status": {
-            "type": ["string", "null"]
+            "oneOf": [
+                {
+                    "$ref": "/v1/enum-values/enum-value-minimal.json"
+                },
+                {
+                    "type": "null"
+                }
+            ],
+            "default": "null"
         },
         "seq_table_name": {
-            "type": ["string", "null"]
+            "type": ["string", "null"],
+            "maxLength": 64,
+            "default": "null"
         },
         "seq_column_name": {
-            "type": ["string", "null"]
+            "type": ["string", "null"],
+            "maxLength": 64,
+            "default": "null"
         },
         "header_only": {
-            "type": ["integer", "null"]
+            "type": ["integer", "null"],
+            "enum": [0, 1],
+            "default": "null"
         },
         "action_type": {
-            "type": ["integer", "null"]
+            "oneOf": [
+                {
+                    "$ref": "/v1/enum-values/enum-value-minimal.json"
+                },
+                {
+                    "type": "null"
+                }
+            ],
+            "default": "null"
         },
         "title": {
-            "type": ["string", "null"]
+            "type": ["string", "null"],
+            "maxLength": 256,
+            "default": "null"
         },
         "maven_repository": {
-            "type": ["string", "null"]
+            "type": ["string", "null"],
+            "maxLength": 256,
+            "default": "null"
         },
         "deployment_prefix_id": {
-            "type": ["string", "null"]
+            "oneOf": [
+                {
+                    "$ref": "/v1/enum-values/enum-value-minimal.json"
+                },
+                {
+                    "type": "null"
+                }
+            ],
+            "default": "null"
         },
         "deployment_path": {
-            "type": ["string", "null"]
+            "type": ["string", "null"],
+            "maxLength": 256,
+            "default": "null"
         },
         "check_exit_status": {
-            "type": ["string", "null"]
+            "type": ["integer", "null"],
+            "enum": [0, 1],
+            "default": "null"
         },
         "instance_id": {
-            "type": ["integer", "null"]
+            "oneOf": [
+                {
+                    "$ref": "/v1/instances/instance.json"
+                },
+                {
+                    "type": "null"
+                }
+            ],
+            "default": "null",
+            "description": "Source instance identifier"
         },
         "delivery_chain": {
-            "type": ["object", "null"]
+            "oneOf": [
+                {
+                    "$ref": "/v1/delivery-chains/delivery-chain.json"
+                },
+                {
+                    "type": "null"
+                }
+            ],
+            "default": "null",
+            "description": "The delivery chain for which the modification is added"
         },
         "instance_status": {
-            "type": "integer"
+            "oneOf": [
+                {
+                    "$ref": "/v1/enum-values/enum-value-minimal.json"
+                },
+                {
+                    "type": "null"
+                }
+            ],
+            "default": "null",
+            "description": "Installation instance status"
         },
         "target_schema": {
-            "type": ["integer", "null"]
+            "type": ["integer", "null"],
+            "default": "null"
         },
         "check_status": {
-            "type": ["string", "null"]
+            "oneOf": [
+                {
+                    "$ref": "/v1/enum-values/enum-value-minimal.json"
+                },
+                {
+                    "type": "null"
+                }
+            ],
+            "default": "null"
         },
         "check_msg": {
-            "type": ["string", "null"]
+            "oneOf": [
+                {
+                    "$ref": "/v1/enum-values/enum-value-minimal.json"
+                },
+                {
+                      "type": "null"
+                }
+            ],
+            "default": "null"
         },
         "checked_on": {
-            "type": ["string", "null"]
+            "type": ["string", "null"],
+            "format": "datetime",
+            "default": "null"
         },
         "active": {
-            "type": "integer"
+            "type": "integer",
+            "enum": [0, 1]
         },
         "visible": {
-            "type": "integer"
+            "type": "integer",
+            "enum": [0, 1]
         },
         "locked": {
-            "type": "integer"
+            "type": "integer",
+            "enum": [0, 1]
         },
         "locked_by_id": {
-            "type": ["string", "null"]
+            "oneOf": [
+                {
+                    "$ref": "/v1/user-minimal.json"
+                },
+                {
+                    "type": "null"
+                }
+            ],
+            "default": "null"
         },
         "created_on": {
-            "type": ["string", "null"]
+            "type": "string",
+            "format": "datetime"
         },
         "created_by": {
-            "$ref": "/v1/user.json"
+            "$ref": "/v1/user-minimal.json"
         },
         "updated_on": {
-            "type": ["string", "null"]
+            "type": ["string", "null"],
+            "format": "datetime",
+            "default": "null"
         },
         "updated_by_id": {
-            "type": ["string", "null"]
+            "oneOf": [
+                {
+                    "$ref": "/v1/user-minimal.json"
+                },
+                {
+                    "type": "null"
+                }
+            ],
+            "default": "null",
+            "description": "'Modifications register"
         },
         "copied_from_id": {
-            "type": ["string", "null"]
+            "oneOf": [
+                {
+                    "$ref": "/v1/modifications/modification.json"
+                },
+                {
+                    "type": "null"
+                }
+            ],
+            "default": "null"
         },
         "copied_from_pr_id": {
-            "type": ["string", "null"]
+            "oneOf": [
+                {
+                    "$ref": "/v1/patch-requests/patch-request.json"
+                },
+                {
+                    "type": "null"
+                }
+            ],
+            "default": "null"
         },
         "copied_by_user_id": {
-            "type": ["string", "null"]
+            "oneOf": [
+                    {
+                        "$ref": "/v1/user-minimal.json"
+                    },
+                    {
+                          "type": "null"
+                    }
+            ],
+            "default": "null",
+            "description": "The id of the user who copied the modification"
         },
         "is_buggy": {
-            "type": ["string", "null"]
+            "type": ["integer", "null"],
+            "enum": [0, 1],
+            "default": "null",
+            "description": "Identifies the moddification as \"buggy\""
         },
         "marked_buggy_by": {
-            "type": ["string", "null"]
+            "oneOf": [
+                {
+                    "$ref": "/v1/user-minimal.json"
+                },
+                {
+                    "type": "null"
+                }
+            ],
+            "default": "null"
         },
         "marked_buggy_on": {
-            "type": ["string", "null"]
+            "type": ["string", "null"],
+            "format": "datetime",
+            "default": "null"
         },
         "bad_content_confirmed": {
-            "type": ["string", "null"]
+            "type": ["integer", "null"],
+            "enum": [0, 1],
+            "default": "null",
+            "description": "When temporary source contains dangerous words and is confirmed by the developer 1 - confirmed, 0/NULL - not used risky words or not confirmed"
         },
         "creator": {
-            "oneOf": [
-                {"$ref": "/v1/user.json"},
-                {"type": "null"}
-            ]
+            "type": ["string", "null"],
+            "maxLength": 100,
+            "default": "null"
         },
         "branch": {
-            "type": ["string", "null"]
+            "type": ["integer", "null"],
+            "enum": [0, 1],
+            "default": "null",
+            "description": "Not NULL if it is a branch revision"
         },
-        "issue": {
-            "$ref": "/v1/issues/issue.json"
+        "cppcheck_executed_on": {
+            "type": ["string", "null"],
+            "format": "datetime",
+            "default": "null",
+            "description": "When ccpcheck was executed for the source modification"
         }
     }
 }

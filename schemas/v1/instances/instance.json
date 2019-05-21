@@ -9,7 +9,8 @@
             "type": "integer"
         },
         "name": {
-            "type": "string"
+            "type": "string",
+            "maxLength": 128
         },
         "instance_type": {
             "type": "object",
@@ -20,37 +21,52 @@
                 "title": {
                     "type": "string"
                 }
-            }
+            },
+            "description": "iMX instances register"
         },
         "play_as_demo": {
-            "type": ["string", "null"]
+            "type": "string",
+            "enum": ["y", "n"],
+            "default": "n"
         },
         "owner": {
-            "$ref": "/v1/enum-value.json"
+            "$ref": "/v1/enum-values/enum-value-minimal.json"
         },
         "status": {
-            "$ref": "/v1/enum-value.json"
+            "$ref": "/v1/enum-values/enum-value-minimal.json"
         },
         "timezone": {
-            "type": "string"
+            "type": "string",
+            "maxLength": 64
         },
         "host": {
-            "type": "string"
+            "type": "string",
+            "maxLength": 128
         },
         "user": {
-            "type": ["string", "null"]
+            "type": ["string", "null"],
+            "maxLength": 32,
+            "default": "null"
         },
         "db_user": {
-            "type": ["string", "null"]
+            "type": ["string", "null"],
+            "maxLength": 32,
+            "default": "null"
         },
         "tns_name": {
-            "type": ["string", "null"]
+            "type": ["string", "null"],
+            "maxLength": 64,
+            "default": "null"
         },
         "has_patch_install_in_init": {
-            "type": "integer"
+            "type": "integer",
+            "enum": [1, 0],
+            "default": 0,
+            "description": "Defines whether the instance has patches installation into instance intialization process"
         },
         "environment_type": {
-            "$ref": "/v1/delivery-chains/delivery-chain-type.json"
+            "$ref": "/v1/delivery-chains/delivery-chain-type.json",
+            "description": "Environment type associated with delivery_chain_types"
         }
     }
 }

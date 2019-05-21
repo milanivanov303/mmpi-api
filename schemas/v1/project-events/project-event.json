@@ -1,0 +1,46 @@
+{
+    "$id": "ProjectEvent",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "description": "Project event object",
+    "additionalProperties": false,
+    "properties": {
+        "id": {
+            "type": "integer"
+        },
+        "project": {
+            "$ref": "/v1/projects/project.json"
+        },
+        "project_event_type": {
+            "$ref": "/v1/enum-values/enum-value-minimal.json"
+        },
+        "event_start_date": {
+            "type": ["string", "null"],
+            "format": "date",
+            "default": "null",
+            "description": "Start date for the event"
+        },
+        "event_end_date": {
+            "type": ["string", "null"],
+            "format": "date",
+            "default": "null",
+            "description": "End date for the event"
+        },
+        "made_by": {
+            "$ref": "/v1/user-minimal.json",
+            "description": "The id of the user who inserted or updated the record"
+        },
+        "made_on": {
+            "type": "string",
+            "format": "datetime",
+            "description": "When was the record inserted or updated"
+        },
+        "description": {
+            "type": ["string", "null"]
+        },
+        "project_event_status": {
+            "$ref": "/v1/enum-values/enum-value-minimal.json",
+            "description": "The status of the event - Active/Archived. References enum_values of type project_event_status"
+        }
+    }
+}
