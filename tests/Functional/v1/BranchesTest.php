@@ -8,6 +8,10 @@ class BranchesTest extends RestTestCase
     protected $table      = 'hash_branches';
     protected $primaryKey = 'id';
 
+    protected $with = [
+        'repo_type'
+    ];
+
     /**
      * Get request data
      *
@@ -17,7 +21,7 @@ class BranchesTest extends RestTestCase
     {
         $faker = Faker\Factory::create();
 
-        $repoType = EnumValue::where('type', 'repository_type')->minimal()->inRandomOrder()->first();
+        $repoType = EnumValue::where('type', 'repository_type')->inRandomOrder()->first();
         
         return [
             'name'               => $faker->text(200),

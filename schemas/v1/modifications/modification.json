@@ -24,7 +24,7 @@
         "subtype_id": {
             "oneOf": [
                 {
-                    "$ref": "/v1/enum-values/enum-value-minimal.json"
+                    "$ref": "/v1/enum-values/enum-value.json"
                 },
                 {
                     "type": "null"
@@ -36,7 +36,7 @@
         "path_id": {
             "oneOf": [
                 {
-                    "$ref": "/v1/enum-values/enum-value-minimal.json"
+                    "$ref": "/v1/enum-values/enum-value.json"
                 },
                 {
                     "type": "null"
@@ -100,7 +100,7 @@
         "tablespace_id": {
             "oneOf": [
                 {
-                    "$ref": "/v1/enum-values/enum-value-minimal.json"
+                    "$ref": "/v1/enum-values/enum-value.json"
                 },
                 {
                     "type": "null"
@@ -121,7 +121,7 @@
         "backup_type": {
             "oneOf": [
                 {
-                    "$ref": "/v1/enum-values/enum-value-minimal.json"
+                    "$ref": "/v1/enum-values/enum-value.json"
                 },
                 {
                     "type": "null"
@@ -135,7 +135,7 @@
         "trig_status": {
             "oneOf": [
                 {
-                    "$ref": "/v1/enum-values/enum-value-minimal.json"
+                    "$ref": "/v1/enum-values/enum-value.json"
                 },
                 {
                     "type": "null"
@@ -161,7 +161,7 @@
         "action_type": {
             "oneOf": [
                 {
-                    "$ref": "/v1/enum-values/enum-value-minimal.json"
+                    "$ref": "/v1/enum-values/enum-value.json"
                 },
                 {
                     "type": "null"
@@ -182,7 +182,7 @@
         "deployment_prefix_id": {
             "oneOf": [
                 {
-                    "$ref": "/v1/enum-values/enum-value-minimal.json"
+                    "$ref": "/v1/enum-values/enum-value.json"
                 },
                 {
                     "type": "null"
@@ -227,7 +227,7 @@
         "instance_status": {
             "oneOf": [
                 {
-                    "$ref": "/v1/enum-values/enum-value-minimal.json"
+                    "$ref": "/v1/enum-values/enum-value.json"
                 },
                 {
                     "type": "null"
@@ -243,7 +243,7 @@
         "check_status": {
             "oneOf": [
                 {
-                    "$ref": "/v1/enum-values/enum-value-minimal.json"
+                    "$ref": "/v1/enum-values/enum-value.json"
                 },
                 {
                     "type": "null"
@@ -254,7 +254,7 @@
         "check_msg": {
             "oneOf": [
                 {
-                    "$ref": "/v1/enum-values/enum-value-minimal.json"
+                    "$ref": "/v1/enum-values/enum-value.json"
                 },
                 {
                       "type": "null"
@@ -282,7 +282,7 @@
         "locked_by_id": {
             "oneOf": [
                 {
-                    "$ref": "/v1/user-minimal.json"
+                    "$ref": "/v1/user.json"
                 },
                 {
                     "type": "null"
@@ -295,7 +295,7 @@
             "format": "datetime"
         },
         "created_by": {
-            "$ref": "/v1/user-minimal.json"
+            "$ref": "/v1/user.json"
         },
         "updated_on": {
             "type": ["string", "null"],
@@ -305,7 +305,7 @@
         "updated_by_id": {
             "oneOf": [
                 {
-                    "$ref": "/v1/user-minimal.json"
+                    "$ref": "/v1/user.json"
                 },
                 {
                     "type": "null"
@@ -339,7 +339,7 @@
         "copied_by_user_id": {
             "oneOf": [
                     {
-                        "$ref": "/v1/user-minimal.json"
+                        "$ref": "/v1/user.json"
                     },
                     {
                           "type": "null"
@@ -357,7 +357,7 @@
         "marked_buggy_by": {
             "oneOf": [
                 {
-                    "$ref": "/v1/user-minimal.json"
+                    "$ref": "/v1/user.json"
                 },
                 {
                     "type": "null"

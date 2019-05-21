@@ -12,7 +12,7 @@
             "$ref": "/v1/projects/project.json"
         },
         "project_event_type": {
-            "$ref": "/v1/enum-values/enum-value-minimal.json"
+            "$ref": "/v1/enum-values/enum-value.json"
         },
         "event_start_date": {
             "type": ["string", "null"],
@@ -27,7 +27,7 @@
             "description": "End date for the event"
         },
         "made_by": {
-            "$ref": "/v1/user-minimal.json",
+            "$ref": "/v1/user.json",
             "description": "The id of the user who inserted or updated the record"
         },
         "made_on": {
@@ -39,7 +39,7 @@
             "type": ["string", "null"]
         },
         "project_event_status": {
-            "$ref": "/v1/enum-values/enum-value-minimal.json",
+            "$ref": "/v1/enum-values/enum-value.json",
             "description": "The status of the event - Active/Archived. References enum_values of type project_event_status"
         }
     }

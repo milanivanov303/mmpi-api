@@ -13,34 +13,6 @@ use App\Models\DbSchema;
 class Modification extends Model
 {
     /**
-     * The relations to eager load on every query.
-     *
-     * @var array
-     */
-    protected $with = [
-        'issue',
-        'createdBy',
-        'lockedBy',
-        'markedBuggyBy',
-        'deliveryChain',
-        'copiedByUser',
-        'instance',
-        'actionType',
-        'backupType',
-        'checkMsg',
-        'checkStatus',
-        'deploymentPrefix',
-        'instanceStatus',
-        'path',
-        'targetSchema',
-        'subtype',
-        'tablespace',
-        'updatedBy',
-        'trigStatus',
-        'type'
-    ];
-
-    /**
      * The attributes that will be hidden in output json
      *
      * @var array
@@ -65,47 +37,47 @@ class Modification extends Model
     /**
      * Get issue
      */
-    public function issue()
+    protected function issue()
     {
-        return $this->belongsTo(Issue::class)->with(['project', 'devInstance']);
+        return $this->belongsTo(Issue::class);
     }
 
     /**
      * Get created by
      */
-    public function createdBy()
+    protected function createdBy()
     {
-        return $this->belongsTo(User::class)->minimal();
+        return $this->belongsTo(User::class);
     }
 
     /**
      * Get locked by
      */
-    public function lockedBy()
+    protected function lockedBy()
     {
-        return $this->belongsTo(User::class)->minimal();
+        return $this->belongsTo(User::class);
     }
 
     /**
      * Get marked buggy by
      */
-    public function markedBuggyBy()
+    protected function markedBuggyBy()
     {
-        return $this->belongsTo(User::class, 'marked_buggy_by')->minimal();
+        return $this->belongsTo(User::class, 'marked_buggy_by');
     }
 
     /**
      * Get updated by
      */
-    public function updatedBy()
+    protected function updatedBy()
     {
-        return $this->belongsTo(User::class, 'updated_by_id')->minimal();
+        return $this->belongsTo(User::class, 'updated_by_id');
     }
 
     /**
      * Get delivery chain
      */
-    public function deliveryChain()
+    protected function deliveryChain()
     {
         return $this->belongsTo(DeliveryChain::class);
     }
@@ -113,15 +85,15 @@ class Modification extends Model
     /**
      * Get copied by user
      */
-    public function copiedByUser()
+    protected function copiedByUser()
     {
-        return $this->belongsTo(User::class, 'copied_by_user_id')->minimal();
+        return $this->belongsTo(User::class, 'copied_by_user_id');
     }
 
     /**
      * Get instance
      */
-    public function instance()
+    protected function instance()
     {
         return $this->belongsTo(Instance::class);
     }
@@ -129,63 +101,63 @@ class Modification extends Model
     /**
      * Get action type
      */
-    public function actionType()
+    protected function actionType()
     {
-        return $this->belongsTo(EnumValue::class, 'action_type')->minimal();
+        return $this->belongsTo(EnumValue::class, 'action_type');
     }
 
     /**
      * Get backup type
      */
-    public function backupType()
+    protected function backupType()
     {
-        return $this->belongsTo(EnumValue::class, 'backup_type')->minimal();
+        return $this->belongsTo(EnumValue::class, 'backup_type');
     }
 
     /**
      * Get check msg
      */
-    public function checkMsg()
+    protected function checkMsg()
     {
-        return $this->belongsTo(EnumValue::class, 'check_msg')->minimal();
+        return $this->belongsTo(EnumValue::class, 'check_msg');
     }
 
     /**
      * Get check status
      */
-    public function checkStatus()
+    protected function checkStatus()
     {
-        return $this->belongsTo(EnumValue::class, 'check_status')->minimal();
+        return $this->belongsTo(EnumValue::class, 'check_status');
     }
 
     /**
      * Get deployment prefix
      */
-    public function deploymentPrefix()
+    protected function deploymentPrefix()
     {
-        return $this->belongsTo(EnumValue::class, 'deployment_prefix_id')->minimal();
+        return $this->belongsTo(EnumValue::class, 'deployment_prefix_id');
     }
 
     /**
      * Get instance status
      */
-    public function instanceStatus()
+    protected function instanceStatus()
     {
-        return $this->belongsTo(EnumValue::class, 'instance_status')->minimal();
+        return $this->belongsTo(EnumValue::class, 'instance_status');
     }
 
     /**
      * Get path
      */
-    public function path()
+    protected function path()
     {
-        return $this->belongsTo(EnumValue::class, 'path_id')->minimal();
+        return $this->belongsTo(EnumValue::class, 'path_id');
     }
 
     /**
      * Get target schema
      */
-    public function targetSchema()
+    protected function targetSchema()
     {
         return $this->belongsTo(DbSchema::class, 'target_schema');
     }
@@ -194,31 +166,31 @@ class Modification extends Model
     /**
      * Get subtype
      */
-    public function subtype()
+    protected function subtype()
     {
-        return $this->belongsTo(EnumValue::class, 'subtype_id')->minimal();
+        return $this->belongsTo(EnumValue::class, 'subtype_id');
     }
 
     /**
     * Get tablespace
     */
-    public function tablespace()
+    protected function tablespace()
     {
-        return $this->belongsTo(EnumValue::class, 'tablespace_id')->minimal();
+        return $this->belongsTo(EnumValue::class, 'tablespace_id');
     }
 
     /**
     * Get trig status
     */
-    public function trigStatus()
+    protected function trigStatus()
     {
-        return $this->belongsTo(EnumValue::class, 'trig_status')->minimal();
+        return $this->belongsTo(EnumValue::class, 'trig_status');
     }
 
     /**
     * Get type
     */
-    public function type()
+    protected function type()
     {
         return $this->belongsTo(ModificationType::class, 'type_id');
     }
