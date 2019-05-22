@@ -18,15 +18,6 @@ class EnumValueRepository extends AbstractRepository implements RepositoryInterf
     protected $primaryKey = ['type', 'key'];
 
     /**
-     * The relations to eager load on every query.
-     *
-     * @var array
-     */
-    protected $with = [
-        'changedBy'
-    ];
-
-    /**
      * EnumValueRepository constructor
      *
      * @param EnumValue $model

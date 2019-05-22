@@ -15,14 +15,12 @@ class EnumValuesTest extends RestTestCase
      */
     protected function getData()
     {
-        $faker = Faker\Factory::create();
-
         return [
-            'type'        => $faker->text(5),
-            'key'         => $faker->text(5),
-            'value'       => $faker->text(5),
-            'description' => $faker->text(15),           
-            'sortindex'   => $faker->numberBetween(900, 950),
+            'type'        => $this->faker()->text(5),
+            'key'         => $this->faker()->text(5),
+            'value'       => $this->faker()->text(5),
+            'description' => $this->faker()->text(15),           
+            'sortindex'   => $this->faker()->numberBetween(900, 950),
             'active'      => 1,       
         ];
     }
@@ -35,10 +33,8 @@ class EnumValuesTest extends RestTestCase
      */
     protected function getInvalidData(array $data)
     {
-        $faker = Faker\Factory::create();
-
         // Set invalid parameters
-        $data['key'] = $faker->randomNumber();
+        $data['key'] = $this->faker()->randomNumber();
 
         // remove required parameters
         unset($data['type']);
@@ -54,10 +50,8 @@ class EnumValuesTest extends RestTestCase
      */
     protected function getUpdateData(array $data)
     {
-        $faker = Faker\Factory::create();
-
         // Change parameters
-        $data['value'] = $faker->text(5);
+        $data['value'] = $this->faker()->text(5);
 
         //Remove date as it is overwritten on each request
         unset($data['changed_on']);

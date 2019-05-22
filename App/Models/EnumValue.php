@@ -2,10 +2,17 @@
 
 namespace App\Models;
 
-use App\Models\User;
-
 class EnumValue extends Model
 {
+    /**
+     * The attributes that will be hidden in output json
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'changed_by'
+    ];
+
     /**
      * The attributes that are mass assignable.
      *
@@ -28,16 +35,8 @@ class EnumValue extends Model
     /**
      * Get changedBy
      */
-    public function changedBy()
+    protected function changedBy()
     {
-        return $this->belongsTo(User::class, 'changed_by')->minimal();
-    }
-
-    /**
-     * Get specific enum value properties
-     */
-    public function scopeMinimal($query)
-    {
-        return $query->select(['id', 'type', 'subtype', 'key', 'value']);
+        return $this->belongsTo(User::class, 'changed_by');
     }
 }

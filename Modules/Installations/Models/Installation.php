@@ -11,17 +11,6 @@ use Modules\Patches\Models\Patch;
 class Installation extends Model
 {
     /**
-     * The relations to eager load on every query.
-     *
-     * @var array
-     */
-    protected $with = [
-        'instance',
-        'patch',
-        'status'
-    ];
-
-    /**
      * The attributes that will be hidden in output json
      *
      * @var array
@@ -51,7 +40,7 @@ class Installation extends Model
     /**
      * Get instances
      */
-    public function instance()
+    protected function instance()
     {
         return $this->belongsTo(Instance::class);
     }
@@ -59,7 +48,7 @@ class Installation extends Model
     /**
      * Get patch
      */
-    public function patch()
+    protected function patch()
     {
         return $this->belongsTo(Patch::class);
     }
@@ -67,8 +56,8 @@ class Installation extends Model
     /**
      * Get status
      */
-    public function status()
+    protected function status()
     {
-        return $this->belongsTo(EnumValue::class, 'status_id')->minimal();
+        return $this->belongsTo(EnumValue::class, 'status_id');
     }
 }
