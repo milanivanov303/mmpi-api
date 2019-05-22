@@ -10,6 +10,13 @@ class HashesTest extends RestTestCase
     protected $table      = 'hash_commits';
     protected $primaryKey = 'hash_rev';
 
+    protected $with = [
+        'branch',
+        'repo_type',
+        'committed_by',
+        'files'
+    ];
+
     /**
      * Get request data
      *
@@ -19,7 +26,7 @@ class HashesTest extends RestTestCase
     {
         try {
             $hashRev = bin2hex(random_bytes(10));
-            $rev = random_int(1, 1000);
+            $rev     = random_int(1, 1000);
         } catch (\Exception $exception) {}
 
         $user     = User::inRandomOrder()->active()->first();

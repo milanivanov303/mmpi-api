@@ -22,13 +22,6 @@ class HashRepository extends AbstractRepository implements RepositoryInterface
     protected $primaryKey = 'hash_rev';
 
     /**
-     * The relations to eager load on every query.
-     *
-     * @var array
-     */
-    protected $with = [];
-
-    /**
      * HashRepository constructor
      *
      * @param HashCommit $model

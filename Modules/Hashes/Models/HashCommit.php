@@ -18,15 +18,14 @@ class HashCommit extends Model
     ];
 
     /**
-     * The relations to eager load on every query.
+     * The attributes that will be hidden in output json
      *
      * @var array
      */
-    protected $with = [
-        'repoType',
-        'branch',
-        'files',
-        'committedBy'
+    protected $hidden = [
+        'repo_type_id',
+        'branch_id',
+        'committed_by'
     ];
 
     /**
@@ -43,16 +42,6 @@ class HashCommit extends Model
         'version',
         'commit_description',
         'made_on'
-    ];
-
-    /**
-     * The attributes that will be hidden in output json
-     *
-     * @var array
-     */
-    protected $hidden = [
-        'repo_type_id',
-        'branch_id'
     ];
 
     /**

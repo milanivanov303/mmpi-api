@@ -9,16 +9,6 @@ use Core\Models\Model;
 class HashBranch extends Model
 {
     /**
-     * The relations to eager load on every query.
-     *
-     * @var array
-     */
-    protected $with = [
-        //'repoType',
-        //'madeBy'
-    ];
-
-    /**
      * The attributes that will be hidden in output json
      *
      * @var array
