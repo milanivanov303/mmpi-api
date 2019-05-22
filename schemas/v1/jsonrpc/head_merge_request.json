@@ -1,0 +1,32 @@
+{
+    "$id": "HeadMergeRequest",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "description": "JSON RPC Head Merge Request object",
+    "allOf": [
+        {"$ref": "/v1/jsonrpc/jsonrpc.json"},
+        {
+            "required": [
+                "params"
+            ],
+            "properties": {
+                "method": {
+                    "enum": ["head_merge_request"]
+                },
+                "params": {
+                    "type": "object",
+                    "properties": {
+                        "ttsId": {
+                            "type": "string",
+                            "description": "Ticket id from TTS"
+                        },
+                        "devProjectKey": {
+                            "type": "string",
+                            "description": "Development project key from TTS"
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}
