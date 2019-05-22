@@ -8,25 +8,16 @@ use App\Models\EnumValue;
 class DeliveryChain extends Model
 {
     /**
-     * The relations to eager load on every query.
-     *
-     * @var array
-     */
-    protected $with = [
-        'type',
-        'dlvryType',
-        'status',
-        'dcVersion',
-        'dcRole'
-    ];
-
-    /**
      * The attributes that will be hidden in output json
      *
      * @var array
      */
     protected $hidden = [
         'type_id',
+        'dlvry_type',
+        'status',
+        'dc_version',
+        'dc_role',
         'pivot'
     ];
 
@@ -37,13 +28,17 @@ class DeliveryChain extends Model
      */
     protected $fillable = [
         'title',
-        'patch_directory_name'
+        'patch_directory_name',
+        'dlvry_type',
+        'status',
+        'dc_version',
+        'dc_role'
     ];
 
     /**
      * Get type
      */
-    public function type()
+    protected function type()
     {
         return $this->belongsTo(DeliveryChainType::class, 'type_id');
     }
@@ -51,7 +46,7 @@ class DeliveryChain extends Model
     /**
      * Get dlvry_type
      */
-    public function dlvryType()
+    protected function dlvryType()
     {
         return $this->belongsTo(EnumValue::class, 'dlvry_type');
     }
@@ -59,7 +54,7 @@ class DeliveryChain extends Model
     /**
      * Get status
      */
-    public function status()
+    protected function status()
     {
         return $this->belongsTo(EnumValue::class, 'status');
     }
@@ -67,7 +62,7 @@ class DeliveryChain extends Model
     /**
      * Get dc_version
      */
-    public function dcVersion()
+    protected function dcVersion()
     {
         return $this->belongsTo(EnumValue::class, 'dc_version');
     }
@@ -75,7 +70,7 @@ class DeliveryChain extends Model
     /**
      * Get dc_role
      */
-    public function dcRole()
+    protected function dcRole()
     {
         return $this->belongsTo(EnumValue::class, 'dc_role');
     }

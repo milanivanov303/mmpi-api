@@ -9,6 +9,20 @@ class ProjectsTest extends RestTestCase
     protected $table      = 'projects';
     protected $primaryKey = 'name';
 
+    protected $with = [
+        'type_business',
+        'group',
+        'country',
+        'communication_lng',
+        'delivery_method',
+        'se_mntd_by_clnt',
+        'tl_mntd_by_clnt',
+        'delivery_chains',
+        'njsch_mntd_by_clnt',
+        'trans_mntd_by_clnt',
+        'activity'
+    ];
+
     /**
      * Get request data
      *
@@ -16,8 +30,6 @@ class ProjectsTest extends RestTestCase
      */
     protected function getData()
     {
-        $faker = Faker\Factory::create();
-
         $typeBusiness     = EnumValue::where('type', 'type_business')->inRandomOrder()->first();
         $group            = EnumValue::where('type', 'project_groups')->inRandomOrder()->first();
         $country          = EnumValue::where('type', 'country')->inRandomOrder()->first();
@@ -28,16 +40,16 @@ class ProjectsTest extends RestTestCase
         $deliveryChains   = DeliveryChain::inRandomOrder()->limit(3)->get();
 
         return [
-            'name'               => $faker->text(128),
-            'clnt_cvs_dir'       => $faker->text(32),
-            'pnp_type'           => $faker->text(32),
-            'clnt_code'          => $faker->text(16),
-            'clnt_code2'         => $faker->text(16),
-            'src_prefix'         => $faker->text(8),
+            'name'               => $this->faker()->text(128),
+            'clnt_cvs_dir'       => $this->faker()->text(32),
+            'pnp_type'           => $this->faker()->text(32),
+            'clnt_code'          => $this->faker()->text(16),
+            'clnt_code2'         => $this->faker()->text(16),
+            'src_prefix'         => $this->faker()->text(8),
             'src_prefix2'        => null,
             'src_itf_prefix'     => null,
-            'getdcli'            => $faker->text(16),
-            'getdcli2'           => $faker->text(16),
+            'getdcli'            => $this->faker()->text(16),
+            'getdcli2'           => $this->faker()->text(16),
             'activity'           => null,
             'activite_gpc'       => null,
             'activite_sdr'       => "o",
@@ -45,9 +57,9 @@ class ProjectsTest extends RestTestCase
             'forms_lng_dlvry'    => 1,
             'uses_transl_upd'    => 0,
             'inactive'           => 0,
-            'display_name'       => $faker->text(128),
-            'sla_from'           => $faker->time(),
-            'sla_to'             => $faker->time(),
+            'display_name'       => $this->faker()->text(128),
+            'sla_from'           => $this->faker()->time(),
+            'sla_to'             => $this->faker()->time(),
             'type_business'      => $typeBusiness->toArray(),
             'group'              => $group->toArray(),
             'country'            => $country->toArray(),
@@ -69,10 +81,8 @@ class ProjectsTest extends RestTestCase
      */
     protected function getInvalidData(array $data)
     {
-        $faker = Faker\Factory::create();
-
         // Set invalid parameters
-        $data['country'] = $faker->randomNumber();
+        $data['country'] = $this->faker()->randomNumber();
 
         // remove required parameters
         unset($data['name']);

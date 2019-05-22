@@ -9,22 +9,13 @@ use Modules\Instances\Models\Instance;
 class InstanceDowntime extends Model
 {
     /**
-     * The relations to eager load on every query.
-     *
-     * @var array
-     */
-    protected $with = [
-        'instance',
-        'madeBy'
-    ];
-
-    /**
      * The attributes that will be hidden in output json
      *
      * @var array
      */
     protected $hidden = [
-        'instance_id'
+        'instance_id',
+        'made_by'
     ];
 
     /**
@@ -33,19 +24,17 @@ class InstanceDowntime extends Model
      * @var array
      */
     protected $fillable = [
-        'instance_id',
         'start_datetime',
         'end_datetime',
-        'made_by',
-        'made_on',
         'status',
-        'description'
+        'description',
+        'made_by'
     ];
 
     /**
      * Get instances
      */
-    public function instance()
+    protected function instance()
     {
         return $this->belongsTo(Instance::class);
     }
@@ -53,7 +42,7 @@ class InstanceDowntime extends Model
     /**
      * Get users
      */
-    public function madeBy()
+    protected function madeBy()
     {
         return $this->belongsTo(User::class, 'made_by');
     }

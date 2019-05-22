@@ -16,22 +16,13 @@ class Branch extends Model
     protected $table = "hash_branches";
 
     /**
-     * The relations to eager load on every query.
-     *
-     * @var array
-     */
-    protected $with = [
-        'repoType',
-        'madeBy'
-    ];
-
-    /**
      * The attributes that will be hidden in output json
      *
      * @var array
      */
     protected $hidden = [
-        'repo_type_id'
+        'repo_type_id',
+        'made_by'
     ];
 
     /**
@@ -51,7 +42,7 @@ class Branch extends Model
     /**
      * Get repository type
      */
-    public function repoType()
+    protected function repoType()
     {
         return $this->belongsTo(EnumValue::class, 'repo_type_id');
     }
@@ -59,7 +50,7 @@ class Branch extends Model
     /**
      * Get users
      */
-    public function madeBy()
+    protected function madeBy()
     {
         return $this->belongsTo(User::class, 'made_by');
     }

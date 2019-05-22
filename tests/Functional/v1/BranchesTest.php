@@ -8,6 +8,10 @@ class BranchesTest extends RestTestCase
     protected $table      = 'hash_branches';
     protected $primaryKey = 'id';
 
+    protected $with = [
+        'repo_type'
+    ];
+
     /**
      * Get request data
      *

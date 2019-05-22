@@ -11,11 +11,23 @@ class Source extends Model
      */
     protected $table = 'source';
 
-    public function revisions()
+    /**
+     * Get revisions
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    protected function revisions()
     {
         return $this->hasMany(SourceRevision::class, 'source_id', 'source_id');
     }
 
+    /**
+     * With revision scope
+     *
+     * @param $query
+     * @param $revision
+     * @return mixed
+     */
     public function scopeWithRevision($query, $revision)
     {
         return $query->whereHas('revisions', function ($query) use ($revision) {
