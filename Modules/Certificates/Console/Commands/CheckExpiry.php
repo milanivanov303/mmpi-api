@@ -6,9 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
 use Modules\Certificates\Models\Certificate;
-use Modules\Certificates\Services\CheckExpiryService;
 use Modules\Certificates\Mail\CheckExpiryMail;
-use App\Models\User;
 
 /**
  * Generate API documentation
@@ -38,39 +36,69 @@ class CheckExpiry extends Command
      */
     public function handle()
     {
-
-        $date = Carbon::now()->subDays(30);
-
+        $date = Carbon::now()->subDays(31);
         $certificates = Certificate::whereDate('valid_to', '=', $date->format('Y-m-d'))->get();
 
         foreach ($certificates as $certificate) {
             $roles = $certificate->project->roles();
 
-            $coordinators = $this->getProjectCoordinators($roles);
-            $directors    = $this->getProjectDirectors($roles);
+            $coordinators = $this->getProjectCoordinators(clone $roles);
+            $directors    = $this->getProjectDirectors(clone $roles);
 
-            if ($coordinators) {
-                foreach ($coordinators as $coordinator) {
-                    $user = $coordinator->user;
+            //Check what will happened if $coordinators or $directors is null
+            $data = $this->getData($coordinators, $directors, $certificate);
 
-                    $data = $this->getData($user, $certificate);
-                    $this->sendEmail($data);
-                }
-            }
+            dump($data);
+            exit;
 
-            if ($directors) {
-                $this->sendEmail($directors, $certificate);
-            }
+            //$this->sendEmail($data);
         }
     }
 
     /**
+     * @param array $coordinators
+     * @param array $directors
+     * @param Certificate $certificate
+     */
+    protected function getData($coordinators, $directors, $certificate)
+    {
+        $valideTo = Carbon::parse($certificate->valid_to)->format('Y-m-d');
+
+        // set recipients in To field
+        $to = $coordinators ? $coordinators : $directors;
+
+        // set recipients in Cc field
+        $cc = $coordinators ? $directors : null;
+
+        $data = ['recipients' => [
+                    'to' => $to,
+                    'cc' => $cc
+                ],
+                 'message' => [
+                    'project_name' => $certificate->project->name,
+                    'valid_to'     => $valideTo]
+                ];
+
+        return $data;
+    }
+
+    /**
+     * Send email
+     */
+    protected function sendEmail($data)
+    {
+        // set recipients to App\Mail\Base and improve the html template!!!
+        Mail::send(new CheckExpiryMail($data));
+    }
+
+    /**
+     * Get emails of project coordinators
      * @param $roles
      * @return |null
      */
     protected function getProjectCoordinators($roles)
     {
-        $coordinators = $roles->where('role_id', 'pc')->get();
+        $coordinators = $roles->where('role_id', 'pc')->get()->pluck('user')->pluck('email');
 
         if ($coordinators) {
             return $coordinators;
@@ -80,39 +108,16 @@ class CheckExpiry extends Command
     }
 
     /**
-     * @param User $user
-     * @param Certificate $certificate
+     * Get emails of project directors
+     * @param $roles
+     * @return |null
      */
-    protected function getData($user, $certificate)
-    {
-        $valideTo = Carbon::parse($certificate->valid_to)->format('Y-m-d');
-
-        $data = [
-                'user_name'    => $user->name,
-                'project_name' => $certificate->project->name,
-                'valid_to'     => $valideTo
-                ];
-
-        return $data;
-    }
-
-    protected function sendEmail($data)
-    {
-        Mail::to('eseimenova@codix.bg')->send(new CheckExpiryMail($data));
-    }
-
     protected function getProjectDirectors($roles)
     {
-        $directors = $roles->where('role_id', 'pm')->first();
+        $directors = $roles->where('role_id', 'pm')->get()->pluck('user')->pluck('email');
 
         if ($directors) {
             return $directors;
-        }
-
-        $directors = $roles->where('role_id', 'dpm')->first();
-
-        if ($directors) {
-            return $directors->user;
         }
 
         return null;

@@ -133,4 +133,6 @@ return [
 
     'log_channel' => env('MAIL_LOG_CHANNEL'),
 
+    'recruitment_test_mail' => 'eseimenova@codix.bg'
+
 ];

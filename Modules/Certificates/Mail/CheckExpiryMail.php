@@ -3,10 +3,10 @@
 namespace Modules\Certificates\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Mail\Mailable;
+use App\Mail\Base;
 use Illuminate\Queue\SerializesModels;
 
-class CheckExpiryMail extends Mailable
+class CheckExpiryMail extends Base
 {
     use Queueable, SerializesModels;
 
