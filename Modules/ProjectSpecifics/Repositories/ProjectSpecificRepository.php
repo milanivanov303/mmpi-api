@@ -13,15 +13,6 @@ use App\Models\EnumValue;
 class ProjectSpecificRepository extends AbstractRepository implements RepositoryInterface
 {
     /**
-     * The relations to eager load on every query.
-     *
-     * @var array
-     */
-    protected $with = [
-        'project'
-    ];
-
-    /**
      * ProjectSpecificRepository constructor
      *
      * @param ProjectSpecific $model
@@ -59,7 +50,7 @@ class ProjectSpecificRepository extends AbstractRepository implements Repository
         if (array_key_exists('project_specific_feature', $data)) {
             $this->model->projectSpecificFeature()->associate(
                 app(EnumValue::class)
-                    ->getModelId($data['project_specific_feature'], 'key')
+                    ->getModelId($data['project_specific_feature'], 'key', ['type' => 'project_specific_feature'])
             );
         }
     }

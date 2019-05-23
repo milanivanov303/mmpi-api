@@ -145,14 +145,26 @@ class ProjectRepository extends AbstractRepository implements RepositoryInterfac
             }
             $this->model->deliveryChains()->sync($deliveryChains);
         }
-
-        // Make sure the id exists, and enum_values.type = 'project_specifics_feature'
+        dump($this->model->projectSpecifics()->pluck('comment'));
         if (array_key_exists('project_specifics', $data)) {
             $projectSpecifics = [];
             foreach ($data['project_specifics'] as $projectSpecific) {
-                $projectSpecifics[] = ProjectSpecific::find($projectSpecific['id']);
+                if ($this->model->projectSpecifics()->where('id', $projectSpecific['id'])->count() > 0) {
+                    $id = $projectSpecific['id'];
+                    // unset($projectSpecific['id']);
+
+                    //this used to work but only for update
+                    $this->model->projectSpecifics()->updateOrCreate(
+                        ['id' => $id],
+                        [array_keys($projectSpecific), array_values($projectSpecific)]
+                    );
+                } else {
+                    $projectSpecifics[] = ProjectSpecific::find($projectSpecific['id']);
+                }
             }
             $this->model->projectSpecifics()->saveMany($projectSpecifics);
+            dump($this->model->projectSpecifics()->pluck('comment'));
+            exit;
         }
 
         $this->model->load($this->getWith());

@@ -8,6 +8,12 @@ class ProjectSpecificsTest extends RestTestCase
     protected $table      = 'project_specifics';
     protected $primaryKey = 'id';
 
+    protected $with = [
+        'made_by',
+        'project_specific_feature',
+        'project'
+    ];
+
     /**
      * Get request data
      *
@@ -17,8 +23,8 @@ class ProjectSpecificsTest extends RestTestCase
     {
         $faker = Faker\Factory::create();
 
-        $project                = \Modules\Projects\Models\Project::without('projectSpecifics')->inRandomOrder()->first();
-        $projectSpecificFeature = EnumValue::minimal()->inRandomOrder()->first();
+        $project                = \Modules\Projects\Models\Project::inRandomOrder()->first();
+        $projectSpecificFeature = EnumValue::inRandomOrder()->first();
 
         return [
             'project'                  => $project->toArray(),

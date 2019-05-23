@@ -159,7 +159,7 @@ class Project extends Model
     /**
      * Get project specifics
      */
-    public function projectSpecifics()
+    protected function projectSpecifics()
     {
         return $this->hasMany(ProjectSpecific::class);
     }

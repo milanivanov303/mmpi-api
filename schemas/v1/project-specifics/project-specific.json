@@ -12,7 +12,7 @@
             "$ref": "/v1/projects/project.json"
         },
         "project_specific_feature": {
-            "$ref": "/v1/enum-values/enum-value-minimal.json",
+            "$ref": "/v1/enum-values/enum-value.json",
             "description": "The id from table enum_values of the specific feature - enum_values.type=project_specific_feature"
         },
         "value": {
@@ -27,7 +27,7 @@
             "description": "Column to store characteristic of type date for some project specifics"
         },
         "made_by": {
-            "$ref": "/v1/user-minimal.json",
+            "$ref": "/v1/user.json",
             "description": "The id of the user who inserted or updated the record"
         },
         "made_on": {

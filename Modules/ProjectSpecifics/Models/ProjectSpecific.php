@@ -10,23 +10,14 @@ use Modules\Projects\Models\Project;
 class ProjectSpecific extends Model
 {
     /**
-     * The relations to eager load on every query.
-     *
-     * @var array
-     */
-    protected $with = [
-        'madeBy',
-        'projectSpecificFeature'
-    ];
-
-    /**
      * The attributes that will be hidden in output json
      *
      * @var array
      */
     protected $hidden = [
         'prj_specific_feature_id',
-        'project_id'
+        'project_id',
+        'made_by'
     ];
 
     /**
@@ -46,24 +37,24 @@ class ProjectSpecific extends Model
     /**
      * Get project
      */
-    public function project()
+    protected function project()
     {
-        return $this->belongsTo(Project::class)->without('projectSpecifics');
+        return $this->belongsTo(Project::class);
     }
 
     /**
      * Get user
      */
-    public function madeBy()
+    protected function madeBy()
     {
-        return $this->belongsTo(User::class, 'made_by')->minimal();
+        return $this->belongsTo(User::class, 'made_by');
     }
 
     /**
      * Get project specific features
      */
-    public function projectSpecificFeature()
+    protected function projectSpecificFeature()
     {
-        return $this->belongsTo(EnumValue::class, 'prj_specific_feature_id')->minimal();
+        return $this->belongsTo(EnumValue::class, 'prj_specific_feature_id');
     }
 }
