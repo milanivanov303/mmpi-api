@@ -36,7 +36,7 @@ class CheckExpiry extends Command
      */
     public function handle()
     {
-        $date = Carbon::now()->subDays(31);
+        $date = Carbon::now()->add(\DateInterval::createFromDateString(config('app.certificates.check_expiry')));
         $certificates = Certificate::whereDate('valid_to', '=', $date->format('Y-m-d'))->get();
 
         foreach ($certificates as $certificate) {
@@ -45,13 +45,9 @@ class CheckExpiry extends Command
             $coordinators = $this->getProjectCoordinators(clone $roles);
             $directors    = $this->getProjectDirectors(clone $roles);
 
-            //Check what will happened if $coordinators or $directors is null
-            $data = $this->getData($coordinators, $directors, $certificate);
+            $data = $this->getEmailData($coordinators, $directors, $certificate);
 
-            dump($data);
-            exit;
-
-            //$this->sendEmail($data);
+            Mail::send(new CheckExpiryMail($data));
         }
     }
 
@@ -60,45 +56,36 @@ class CheckExpiry extends Command
      * @param array $directors
      * @param Certificate $certificate
      */
-    protected function getData($coordinators, $directors, $certificate)
+    protected function getEmailData($coordinators, $directors, $certificate)
     {
         $valideTo = Carbon::parse($certificate->valid_to)->format('Y-m-d');
 
-        // set recipients in To field
+        // Set recipients
         $to = $coordinators ? $coordinators : $directors;
-
-        // set recipients in Cc field
         $cc = $coordinators ? $directors : null;
 
-        $data = ['recipients' => [
-                    'to' => $to,
-                    'cc' => $cc
-                ],
-                 'message' => [
-                    'project_name' => $certificate->project->name,
-                    'valid_to'     => $valideTo]
-                ];
+        $data = [
+            'recipients' => [
+                'to' => $to,
+                'cc' => $cc
+            ],
+            'message' => [
+                'project_name' => $certificate->project->name,
+                'valid_to'     => $valideTo
+            ]
+        ];
 
         return $data;
     }
 
     /**
-     * Send email
-     */
-    protected function sendEmail($data)
-    {
-        // set recipients to App\Mail\Base and improve the html template!!!
-        Mail::send(new CheckExpiryMail($data));
-    }
-
-    /**
      * Get emails of project coordinators
      * @param $roles
-     * @return |null
+     * @return array|null
      */
     protected function getProjectCoordinators($roles)
     {
-        $coordinators = $roles->where('role_id', 'pc')->get()->pluck('user')->pluck('email');
+        $coordinators = $roles->where('role_id', 'pc')->get()->pluck('user')->pluck('email')->toArray();
 
         if ($coordinators) {
             return $coordinators;
@@ -110,11 +97,11 @@ class CheckExpiry extends Command
     /**
      * Get emails of project directors
      * @param $roles
-     * @return |null
+     * @return array|null
      */
     protected function getProjectDirectors($roles)
     {
-        $directors = $roles->where('role_id', 'pm')->get()->pluck('user')->pluck('email');
+        $directors = $roles->where('role_id', 'pm')->get()->pluck('user')->pluck('email')->toArray();
 
         if ($directors) {
             return $directors;

@@ -54,5 +54,9 @@ return [
         'url'      => env('USER_MANAGEMENT_URL'),
         'username' => env('USER_MANAGEMENT_USERNAME'),
         'password' => env('USER_MANAGEMENT_PASSWORD')
+    ],
+
+    'certificates' => [
+        'check_expiry' => env('CERTIFICATES_CHECK_EXP', '+30 days')
     ]
 ];

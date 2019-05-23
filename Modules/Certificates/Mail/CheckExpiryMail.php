@@ -35,6 +35,8 @@ class CheckExpiryMail extends Base
      */
     public function build()
     {
-        return $this->view('mails.checkExpiry')->with($this->data);
+        $this->setRecipients($this->data['recipients']['to'], $this->data['recipients']['cc']);
+
+        return $this->view('mails.check-expiry')->with($this->data);
     }
 }
