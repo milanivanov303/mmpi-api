@@ -118,7 +118,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     /**
      * Get user access group.
      */
-    public function accessGroup()
+    protected function accessGroup()
     {
         return $this->belongsTo(AccessGroup::class);
     }
@@ -126,7 +126,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     /**
      * Get user manager.
      */
-    public function manager()
+    protected function manager()
     {
         return $this->belongsTo(User::class, 'manager_id');
     }
@@ -134,7 +134,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     /**
      * Get user deputy.
      */
-    public function deputy()
+    protected function deputy()
     {
         return $this->belongsTo(User::class, 'deputy_id');
     }
@@ -148,10 +148,5 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     public function scopeActive($query)
     {
         return $query->where('status', 1);
-    }
-
-    public function scopeMinimal($query)
-    {
-        return $query->select(['id', 'name', 'username', 'email', 'status']);
     }
 }

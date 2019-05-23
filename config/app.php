@@ -54,5 +54,10 @@ return [
         'url'      => env('USER_MANAGEMENT_URL'),
         'username' => env('USER_MANAGEMENT_USERNAME'),
         'password' => env('USER_MANAGEMENT_PASSWORD')
+    ],
+
+    'repository' => [
+        'username'   => env('REPO_USERNAME'),
+        'public_key' => env('REPO_PUBLIC_KEY', 'ssh/id_rsa_repository')
     ]
 ];

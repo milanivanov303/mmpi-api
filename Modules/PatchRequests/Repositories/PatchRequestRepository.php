@@ -14,25 +14,6 @@ use Illuminate\Support\Facades\DB;
 class PatchRequestRepository extends AbstractRepository implements RepositoryInterface
 {
     /**
-     * Column to use on get/update/delete
-     *
-     * @var string
-     */
-    protected $primaryKey = 'id';
-
-    /**
-     * The relations to eager load on every query.
-     *
-     * @var array
-     */
-    protected $with = [
-        'issue',
-        'modifications',
-        'patches',
-        'deliveryChain'
-    ];
-
-    /**
      * PatchRequestRepository constructor
      *
      * @param PatchRequest $model

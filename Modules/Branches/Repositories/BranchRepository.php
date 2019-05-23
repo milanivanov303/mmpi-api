@@ -37,6 +37,9 @@ class BranchRepository extends AbstractRepository implements RepositoryInterface
         ];
     }
 
+    /**
+     * @inheritDoc
+     */
     protected function fillModel(array $data)
     {
         parent::fillModel($data);

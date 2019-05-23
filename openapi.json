@@ -1,9 +1,9 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "description": "MMPI API",
-    "version": "1",
-    "title": "MMPI API"
+    "title": "MMPI API",
+    "description": "Тhe aim of this project is to make the integration of the MMPI with third systems easier and more flexible \n\n # Note \n\n All relations will not be load by default. You will need to explicitly list what relations to be return using with parameter \n\n ``` {url}?with[]=department&with[]=manager ```",
+    "version": "1"
   },
   "servers": [
     {
@@ -85,19 +85,22 @@
         "name": "fields",
         "in": "query",
         "schema": {
-          "oneOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          ],
-          "description": "Return only listed fields in results",
-          "example": "field1, field2"
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Return only listed fields in results"
+        }
+      },
+      "with": {
+        "name": "with",
+        "in": "query",
+        "schema": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Return relations in results"
         }
       }
     },

@@ -17,17 +17,15 @@ class UsersTest extends RestTestCase
      */
     protected function getData()
     {
-        $faker = Faker\Factory::create();
-
         $department  = Department::inRandomOrder()->first();
         $accessGroup = AccessGroup::inRandomOrder()->first();
 
         return [
-            'name'         => $faker->name(),
-            'username'     => $faker->username(),
-            'email'        => $faker->email(),
-            'sid'          => $faker->word(),
-            'sidfr'        => $faker->word(),
+            'name'         => $this->faker()->name(),
+            'username'     => $this->faker()->username(),
+            'email'        => $this->faker()->email(),
+            'sid'          => $this->faker()->word(),
+            'sidfr'        => $this->faker()->word(),
             'uidnumber'    => null,
             'status'       => 0,
             'manager'      => null,

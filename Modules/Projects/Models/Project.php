@@ -11,33 +11,14 @@ use Modules\ProjectSpecifics\Models\ProjectSpecific;
 class Project extends Model
 {
     /**
-     * The relations to eager load on every query.
-     *
-     * @var array
-     */
-    protected $with = [
-        'modifiedBy',
-        'typeBusiness',
-        'activity',
-        'group',
-        'country',
-        'communicationLng',
-        'deliveryMethod',
-        'seMntdByClnt',
-        'tlMntdByClnt',
-        'njschMntdByClnt',
-        'transMntdByClnt',
-        'deliveryChains',
-        'projectSpecifics'
-    ];
-
-    /**
      * The attributes excluded from the model's JSON form.
      *
      * @var array
      */
     protected $hidden = [
         'modified_by_id',
+        'type_business',
+        'activity',
         'group_id',
         'country_id',
         'communication_lng_id',
@@ -45,7 +26,8 @@ class Project extends Model
         'se_mntd_by_clnt_id',
         'tl_mntd_by_clnt_id',
         'njsch_mntd_by_clnt_id',
-        'trans_mntd_by_clnt_id'
+        'trans_mntd_by_clnt_id',
+        'project_to_delivery_chain'
     ];
 
     /**
@@ -81,95 +63,95 @@ class Project extends Model
     /**
      * Get modifiedBy
      */
-    public function modifiedBy()
+    protected function modifiedBy()
     {
-        return $this->belongsTo(User::class, 'modified_by_id')->minimal();
+        return $this->belongsTo(User::class, 'modified_by_id');
     }
 
     /**
      * Get type_business
      */
-    public function typeBusiness()
+    protected function typeBusiness()
     {
-        return $this->belongsTo(EnumValue::class, 'type_business')->minimal();
+        return $this->belongsTo(EnumValue::class, 'type_business');
     }
 
     /**
      * Get activity
      */
-    public function activity()
+    protected function activity()
     {
-        return $this->belongsTo(EnumValue::class, 'activity')->minimal();
+        return $this->belongsTo(EnumValue::class, 'activity');
     }
 
     /**
      * Get group
      */
-    public function group()
+    protected function group()
     {
-        return $this->belongsTo(EnumValue::class, 'group_id')->minimal();
+        return $this->belongsTo(EnumValue::class, 'group_id');
     }
 
     /**
      * Get group
      */
-    public function country()
+    protected function country()
     {
-        return $this->belongsTo(EnumValue::class, 'country_id')->minimal();
+        return $this->belongsTo(EnumValue::class, 'country_id');
     }
 
     /**
      * Get group
      */
-    public function communicationLng()
+    protected function communicationLng()
     {
-        return $this->belongsTo(EnumValue::class, 'communication_lng_id')->minimal();
+        return $this->belongsTo(EnumValue::class, 'communication_lng_id');
     }
 
     /**
      * Get delivery method
      */
-    public function deliveryMethod()
+    protected function deliveryMethod()
     {
-        return $this->belongsTo(EnumValue::class, 'delivery_method_id')->minimal();
+        return $this->belongsTo(EnumValue::class, 'delivery_method_id');
     }
 
     /**
      * Get se_mntd_by_clnt
      */
-    public function seMntdByClnt()
+    protected function seMntdByClnt()
     {
-        return $this->belongsTo(EnumValue::class, 'se_mntd_by_clnt_id')->minimal();
+        return $this->belongsTo(EnumValue::class, 'se_mntd_by_clnt_id');
     }
 
     /**
      * Get tl_mntd_by_clnt
      */
-    public function tlMntdByClnt()
+    protected function tlMntdByClnt()
     {
-        return $this->belongsTo(EnumValue::class, 'tl_mntd_by_clnt_id')->minimal();
+        return $this->belongsTo(EnumValue::class, 'tl_mntd_by_clnt_id');
     }
 
     /**
      * Get njsch_mntd_by_clnt
      */
-    public function njschMntdByClnt()
+    protected function njschMntdByClnt()
     {
-        return $this->belongsTo(EnumValue::class, 'njsch_mntd_by_clnt_id')->minimal();
+        return $this->belongsTo(EnumValue::class, 'njsch_mntd_by_clnt_id');
     }
 
     /**
      * Get trans_mntd_by_clnt
      */
-    public function transMntdByClnt()
+    protected function transMntdByClnt()
     {
-        return $this->belongsTo(EnumValue::class, 'trans_mntd_by_clnt_id')->minimal();
+        return $this->belongsTo(EnumValue::class, 'trans_mntd_by_clnt_id');
     }
 
     /**
      * Get delivery_chains
      */
-    public function deliveryChains()
+    protected function deliveryChains()
     {
         return $this->belongsToMany(DeliveryChain::class, 'project_to_delivery_chain');
     }

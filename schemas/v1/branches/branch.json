@@ -14,7 +14,7 @@
             "description": "Name of the branch"
         },
         "repo_type": {
-            "$ref": "/v1/enum-values/enum-value-minimal.json",
+            "$ref": "/v1/enum-values/enum-value.json",
             "description": "Repository id from enum_values tables of type repository_type"
         },
         "description": {
@@ -28,7 +28,7 @@
         "made_by": {
             "oneOf": [
                 {
-                    "$ref": "/v1/user-minimal.json",
+                    "$ref": "/v1/user.json",
                     "description": "Id of the User who created the record"
                 },
                 {"type": "null"}

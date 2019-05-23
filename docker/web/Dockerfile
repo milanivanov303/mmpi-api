@@ -1,4 +1,4 @@
-FROM avitohol.codixfr.private:5000/web:20
+FROM avitohol.codixfr.private:5000/web:latest
 ARG XDEBUG_CONFIG_ARG
 ARG PHP_IDE_CONFIG_ARG
 ARG BACKUP2_IP_ARG=10.8.7.31

@@ -16,18 +16,6 @@ class UserRepository extends AbstractRepository implements RepositoryInterface
     protected $primaryKey = 'username';
 
     /**
-     * The relations to eager load on every query.
-     *
-     * @var array
-     */
-    protected $with = [
-        'manager',
-        'deputy',
-        'department',
-        'accessGroup'
-    ];
-
-    /**
      * UserRepository constructor
      *
      * @param User $model
@@ -45,22 +33,22 @@ class UserRepository extends AbstractRepository implements RepositoryInterface
     public function filters(): array
     {
         return [
-            'department_id' => function ($model, $value) {
+            'department' => function ($model, $value) {
                 return $model->whereHas('department', function ($query) use ($value) {
                     $query->where('name', 'like', "%{$value}%");
                 });
             },
-            'manager_id' => function ($model, $value, $operator) {
+            'manager' => function ($model, $value, $operator) {
                 return $model->whereHas('manager', function ($query) use ($value, $operator) {
                     $query->where('username', $operator, $value);
                 });
             },
-            'deputy_id' => function ($model, $value, $operator) {
+            'deputy' => function ($model, $value, $operator) {
                 return $model->whereHas('deputy', function ($query) use ($value, $operator) {
                     $query->where('username', $operator, $value);
                 });
             },
-            'access_group_id' => function ($model, $value, $operator) {
+            'access_group' => function ($model, $value, $operator) {
                 return $model->whereHas('accessGroup', function ($query) use ($value, $operator) {
                     $query->where('name', $operator, $value);
                 });
