@@ -6,7 +6,7 @@ $router->group([
 ], function () use ($router) {
     $router->post('', [
         'as'          => 'jsonrpc',
-        'schema'      => '/v1/jsonrpc/jsonrpc.json',
+        'schema'      => '/v1/jsonrpc/procedures.json',
         'description' => 'JSON RPC',
         'uses'        => 'JsonRpcController@execute',
         'openapi'     => [
@@ -22,7 +22,7 @@ $router->group([
                                         '$ref' => '#/components/schemas/JsonRpc/properties/jsonrpc'
                                     ],
                                     'result' => [
-                                        'type' => 'mixed',
+                                        'type' => 'string',
                                         'description' => 'Procedure call result'
                                     ],
                                     'id' => [

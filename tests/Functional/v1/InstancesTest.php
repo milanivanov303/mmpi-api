@@ -11,6 +11,13 @@ class InstancesTest extends RestTestCase
     protected $table      = 'instances';
     protected $primaryKey = 'id';
 
+    protected $with = [
+        'owner',
+        'status',
+        'environment_type',
+        'instance_type'
+    ];
+
     /**
      * Get request data
      *
@@ -18,26 +25,24 @@ class InstancesTest extends RestTestCase
      */
     protected function getData()
     {
-        $faker = Faker\Factory::create();
-
-        $owner           = EnumValue::where('type', 'instances_owner')->inRandomOrder()->minimal()->first();
-        $status          = EnumValue::where('type', 'active_inactive')->inRandomOrder()->minimal()->first();
+        $owner           = EnumValue::where('type', 'instances_owner')->inRandomOrder()->first();
+        $status          = EnumValue::where('type', 'active_inactive')->inRandomOrder()->first();
         $environmentType = DeliveryChainType::inRandomOrder()->first();
         $instanceType    = InstanceType::inRandomOrder()->first();
 
         return [
             'name'                      => 'CVS',
             'play_as_demo'              => 'n',
-            'owner'                     => $owner,
-            'status'                    => $status,
+            'owner'                     => $owner->toArray(),
+            'status'                    => $status->toArray(),
             'timezone'                  => 'Europe/Sofia',
-            'host'                      => $faker->word(),
-            'user'                      => $faker->username(),
-            'db_user'                   => $faker->username(),
+            'host'                      => $this->faker()->word(),
+            'user'                      => $this->faker()->username(),
+            'db_user'                   => $this->faker()->username(),
             'tns_name'                  => '',
             'has_patch_install_in_init' => 0,
-            'instance_type'             => $instanceType,
-            'environment_type'          => $environmentType
+            'instance_type'             => $instanceType->toArray(),
+            'environment_type'          => $environmentType->toArray()
         ];
     }
 
@@ -49,10 +54,8 @@ class InstancesTest extends RestTestCase
      */
     protected function getInvalidData(array $data)
     {
-        $faker = Faker\Factory::create();
-
         // Set invalid parameters
-        $data['timezone'] = $faker->randomNumber();
+        $data['timezone'] = $this->faker()->randomNumber();
 
         // remove required parameters
         unset($data['name'], $data['owner']);

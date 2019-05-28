@@ -1,0 +1,38 @@
+{
+    "$id": "RunCppcheck",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "description": "JSON RPC Run Cppcheck object",
+    "allOf": [
+        {"$ref": "/v1/jsonrpc/jsonrpc.json"},
+        {
+            "required": [
+                "params"
+            ],
+            "properties": {
+                "method": {
+                    "enum": ["run_cppcheck"]
+                },
+                "params": {
+                    "type": "object",
+                    "properties": {
+                        "project": {
+                            "$ref": "/v1/projects/project.json"
+                        },
+                        "source": {
+                            "type": "object",
+                            "properties": {
+                                "name": {
+                                    "type": "string"
+                                },
+                                "version": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

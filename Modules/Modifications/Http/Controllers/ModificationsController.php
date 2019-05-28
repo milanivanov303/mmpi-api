@@ -17,13 +17,13 @@ class ModificationsController extends Controller
     /**
      * Create a new controller instance.
      *
-     * @param ModificationRepository $model
+     * @param ModificationRepository $repository
      * @return void
      */
-    public function __construct(ModificationRepository $model, Request $request)
+    public function __construct(Request $request, ModificationRepository $repository)
     {
-        $this->model = $model;
-        $this->type  = $request->route()[1]['type'] ?? null;
+        $this->repository = $repository;
+        $this->type       = $request->route()[1]['type'] ?? null;
 
         // set type_id in request
         if ($this->type) {

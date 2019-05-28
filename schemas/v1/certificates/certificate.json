@@ -9,11 +9,21 @@
             "type": "integer"
         },
         "project": {
-            "$ref": "/v1/projects/project.json"
+            "oneOf": [
+                {
+                    "$ref": "/v1/projects/project.json"
+                },
+                {
+                    "type": "null"
+                }
+            ],
+            "default": "null",
+            "description": "Certificates info to be used for alert when they expire"
         },
         "hash": {
             "type": "string",
-            "maxLength": 100
+            "maxLength": 100,
+            "description": "Hash of the certificate"
         },
         "organization_name": {
             "type": "string",

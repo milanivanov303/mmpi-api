@@ -13,28 +13,31 @@
 // v1
 $router->group(['prefix' => 'v1'], function () use ($router) {
 
-    // Routes with no authentication. This should be temporary!!!
-    $router->group(['middleware' => ['json-validator', 'audit']], function () use ($router) {
-        // Hashes
-        require 'v1/hashes.php';
-    });
-
     $router->group(['middleware' => ['auth', 'json-validator', 'audit']], function () use ($router) {
 
         // Users
         require 'v1/users.php';
 
         // Hashes
-        //require 'v1/hashes.php';
+        require 'v1/hashes.php';
 
         // Issues
         require 'v1/issues.php';
 
+        // Enum values
+        require 'v1/enum-values.php';
+
         // Projects
         require 'v1/projects.php';
 
+        // Project events
+        require 'v1/project-events.php';
+
         // Instances
         require 'v1/instances.php';
+
+        // Installations
+        require 'v1/installations.php';
 
         // Delivery chains
         require 'v1/delivery-chains.php';
@@ -53,5 +56,11 @@ $router->group(['prefix' => 'v1'], function () use ($router) {
 
         // Json RPC. All nasty stuff goes here
         require 'v1/jsonrpc.php';
+
+        // Instance downtimes
+        require 'v1/instance-downtimes.php';
+
+        // Hash branches
+        require 'v1/branches.php';
     });
 });

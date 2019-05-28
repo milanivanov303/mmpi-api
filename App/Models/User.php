@@ -12,16 +12,6 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     use Authenticatable, Authorizable;
 
     /**
-     * The relations to eager load on every query.
-     *
-     * @var array
-     */
-    protected $with = [
-        'department',
-        'accessGroup'
-    ];
-
-    /**
      * The attributes excluded from the model's JSON form.
      *
      * @var array
@@ -42,6 +32,16 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     public function isSuperAdmin()
     {
         return false;
+    }
+
+    /**
+     * Get id
+     *
+     * @return string
+     */
+    public function getId() : string
+    {
+        return $this->id;
     }
 
     /**
@@ -97,49 +97,14 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     }
 
     /**
-     * Define filters for this model
+     * Get user by sid
      *
-     * @return array
+     * @param string $sid
+     * @return User|null
      */
-    public function filters(): array
+    public static function getBySid(string $sid) : ?self
     {
-        return [
-            'department_id' => function ($model, $value) {
-                return $model->whereHas('department', function ($query) use ($value) {
-                    $query->where('name', 'like', "%{$value}%");
-                });
-            },
-            'manager_id' => function ($model, $value, $operator) {
-                return $model->whereHas('manager', function ($query) use ($value, $operator) {
-                    $query->where('username', $operator, $value);
-                });
-            },
-            'deputy_id' => function ($model, $value, $operator) {
-                return $model->whereHas('deputy', function ($query) use ($value, $operator) {
-                    $query->where('username', $operator, $value);
-                });
-            },
-            'access_group_id' => function ($model, $value, $operator) {
-                return $model->whereHas('accessGroup', function ($query) use ($value, $operator) {
-                    $query->where('name', $operator, $value);
-                });
-            }
-        ];
-    }
-
-    /**
-     * Define order by for this model
-     *
-     * @return array
-     */
-    public function orderBy(): array
-    {
-        return [
-            'department_id' => function ($model, $order_dir) {
-                return $model->select('users.*')->join('departments', 'departments.id', '=', 'users.department_id')
-                             ->orderBy('departments.name', $order_dir);
-            }
-        ];
+        return self::where('sidfr', $sid)->first();
     }
 
     /**
@@ -153,7 +118,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     /**
      * Get user access group.
      */
-    public function accessGroup()
+    protected function accessGroup()
     {
         return $this->belongsTo(AccessGroup::class);
     }
@@ -161,7 +126,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     /**
      * Get user manager.
      */
-    public function manager()
+    protected function manager()
     {
         return $this->belongsTo(User::class, 'manager_id');
     }
@@ -169,7 +134,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     /**
      * Get user deputy.
      */
-    public function deputy()
+    protected function deputy()
     {
         return $this->belongsTo(User::class, 'deputy_id');
     }

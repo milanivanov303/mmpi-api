@@ -8,25 +8,16 @@ use App\Models\EnumValue;
 class DeliveryChain extends Model
 {
     /**
-     * The relations to eager load on every query.
-     *
-     * @var array
-     */
-    protected $with = [
-        'type',
-        'dlvryType',
-        'status',
-        'dcVersion',
-        'dcRole'
-    ];
-
-    /**
      * The attributes that will be hidden in output json
      *
      * @var array
      */
     protected $hidden = [
         'type_id',
+        'dlvry_type',
+        'status',
+        'dc_version',
+        'dc_role',
         'pivot'
     ];
 
@@ -37,85 +28,17 @@ class DeliveryChain extends Model
      */
     protected $fillable = [
         'title',
-        'patch_directory_name'
+        'patch_directory_name',
+        'dlvry_type',
+        'status',
+        'dc_version',
+        'dc_role'
     ];
-
-    /**
-     * Define filters for this model
-     *
-     * @return array
-     */
-    public function filters(): array
-    {
-        return [
-            'type' => function ($builder, $value, $operator) {
-                return $builder->whereHas('type', function ($query) use ($value, $operator) {
-                    $query->where('type', $operator, $value);
-                });
-            },
-            'status' => function ($builder, $value, $operator) {
-                return $builder->whereHas('status', function ($query) use ($value, $operator) {
-                    $query->where('key', $operator, $value);
-                });
-            },
-            'dlvry_type' => function ($builder, $value, $operator) {
-                return $builder->whereHas('dlvryType', function ($query) use ($value, $operator) {
-                    $query->where('key', $operator, $value);
-                });
-            },
-            'dc_version' => function ($builder, $value, $operator) {
-                return $builder->whereHas('dcVersion', function ($query) use ($value, $operator) {
-                    $query->where('key', $operator, $value);
-                });
-            },
-            'dc_role' => function ($builder, $value, $operator) {
-                return $builder->whereHas('dcRole', function ($query) use ($value, $operator) {
-                    $query->where('key', $operator, $value);
-                });
-            }
-        ];
-    }
-
-    /**
-     * Define order by for this model
-     *
-     * @return array
-     */
-    public function orderBy(): array
-    {
-        return [
-            'type' => function ($model, $order_dir) {
-                return $model->select('delivery_chains.*')
-                             ->join('delivery_chain_types', 'delivery_chain_types.id', '=', 'delivery_chains.type_id')
-                             ->orderBy('delivery_chain_types.type', $order_dir);
-            },
-            'status' => function ($model, $order_dir) {
-                return $model->select('delivery_chains.*')
-                             ->join('enum_values', 'enum_values.id', '=', 'delivery_chains.status')
-                             ->orderBy('enum_values.key', $order_dir);
-            },
-            'dlvry_type' => function ($model, $order_dir) {
-                return $model->select('delivery_chains.*')
-                             ->join('enum_values', 'enum_values.id', '=', 'delivery_chains.dlvry_type')
-                             ->orderBy('enum_values.key', $order_dir);
-            },
-            'dc_version' => function ($model, $order_dir) {
-                return $model->select('delivery_chains.*')
-                             ->join('enum_values', 'enum_values.id', '=', 'delivery_chains.dc_version')
-                             ->orderBy('enum_values.key', $order_dir);
-            },
-            'dc_role' => function ($model, $order_dir) {
-                return $model->select('delivery_chains.*')
-                             ->join('enum_values', 'enum_values.id', '=', 'delivery_chains.dc_role')
-                             ->orderBy('enum_values.key', $order_dir);
-            },
-        ];
-    }
 
     /**
      * Get type
      */
-    public function type()
+    protected function type()
     {
         return $this->belongsTo(DeliveryChainType::class, 'type_id');
     }
@@ -123,32 +46,32 @@ class DeliveryChain extends Model
     /**
      * Get dlvry_type
      */
-    public function dlvryType()
+    protected function dlvryType()
     {
-        return $this->belongsTo(EnumValue::class, 'dlvry_type')->minimal();
+        return $this->belongsTo(EnumValue::class, 'dlvry_type');
     }
 
     /**
      * Get status
      */
-    public function status()
+    protected function status()
     {
-        return $this->belongsTo(EnumValue::class, 'status')->minimal();
+        return $this->belongsTo(EnumValue::class, 'status');
     }
 
     /**
      * Get dc_version
      */
-    public function dcVersion()
+    protected function dcVersion()
     {
-        return $this->belongsTo(EnumValue::class, 'dc_version')->minimal();
+        return $this->belongsTo(EnumValue::class, 'dc_version');
     }
 
     /**
      * Get dc_role
      */
-    public function dcRole()
+    protected function dcRole()
     {
-        return $this->belongsTo(EnumValue::class, 'dc_role')->minimal();
+        return $this->belongsTo(EnumValue::class, 'dc_role');
     }
 }

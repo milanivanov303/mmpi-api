@@ -10,11 +10,11 @@ class DeliveryChainsController extends Controller
     /**
      * Create a new controller instance.
      *
-     * @param DeliveryChainRepository $model
+     * @param DeliveryChainRepository $repository
      * @return void
      */
-    public function __construct(DeliveryChainRepository $model)
+    public function __construct(DeliveryChainRepository $repository)
     {
-        $this->model = $model;
+        $this->repository = $repository;
     }
 }

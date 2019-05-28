@@ -9,31 +9,44 @@
             "type": "integer"
         },
         "title": {
-            "type": "string"
+            "type": "string",
+            "maxLength": 32
         },
         "type": {
             "$ref": "/v1/delivery-chains/delivery-chain-type.json"
         },
         "dlvry_type": {
-            "$ref": "/v1/enum-value.json"
+            "$ref": "/v1/enum-values/enum-value.json",
+            "description": "Delivery type (sources with compilation or binaries)"
         },
         "status": {
-            "$ref": "/v1/enum-value.json"
+            "$ref": "/v1/enum-values/enum-value.json"
         },
         "patch_directory_name": {
-            "type": ["string", "null"]
+            "type": ["string", "null"],
+            "maxLength": 32
         },
         "dc_version": {
             "oneOf": [
-                {"$ref": "/v1/enum-value.json"},
-                {"type": "null"}
-            ]
+                {
+                    "$ref": "/v1/enum-values/enum-value.json"
+                },
+                {
+                    "type": "null"
+                }
+            ],
+            "description": "IMX version"
         },
         "dc_role": {
             "oneOf": [
-                {"$ref": "/v1/enum-value.json"},
-                {"type": "null"}
-            ]
+                {
+                    "$ref": "/v1/enum-values/enum-value.json"
+                },
+                {
+                    "type": "null"
+                }
+            ],
+            "description": "Role of the instance for the delivery process"
         }
     }
 }

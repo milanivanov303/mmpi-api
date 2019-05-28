@@ -9,6 +9,14 @@ class DeliveryChainsTest extends RestTestCase
     protected $table      = 'delivery_chains';
     protected $primaryKey = 'title';
 
+    protected $with = [
+        'dlvry_type',
+        'status',
+        'dc_version',
+        'dc_role',
+        'type'
+    ];
+
     /**
      * Get request data
      *
@@ -16,17 +24,15 @@ class DeliveryChainsTest extends RestTestCase
      */
     protected function getData()
     {
-        $faker = Faker\Factory::create();
-
-        $dlvryType = EnumValue::where('type', 'dc_dlvry_type')->inRandomOrder()->minimal()->first();
-        $status    = EnumValue::where('type', 'active_inactive')->inRandomOrder()->minimal()->first();
-        $dcVersion = EnumValue::where('type', 'delivery_chain_version')->inRandomOrder()->minimal()->first();
-        $dcRole    = EnumValue::where('type', 'delivery_chain_role')->inRandomOrder()->minimal()->first();
+        $dlvryType = EnumValue::where('type', 'dc_dlvry_type')->inRandomOrder()->first();
+        $status    = EnumValue::where('type', 'active_inactive')->inRandomOrder()->first();
+        $dcVersion = EnumValue::where('type', 'delivery_chain_version')->inRandomOrder()->first();
+        $dcRole    = EnumValue::where('type', 'delivery_chain_role')->inRandomOrder()->first();
         $type      = DeliveryChainType::inRandomOrder()->first();
 
         return [
-            'title'                => $faker->word(),
-            'patch_directory_name' => $faker->word(),
+            'title'                => $this->faker()->word(),
+            'patch_directory_name' => $this->faker()->word(),
             'dlvry_type'           => $dlvryType->toArray(),
             'status'               => $status->toArray(),
             'dc_version'           => $dcVersion->toArray(),
@@ -43,10 +49,8 @@ class DeliveryChainsTest extends RestTestCase
      */
     protected function getInvalidData(array $data)
     {
-        $faker = Faker\Factory::create();
-
         // Set invalid parameters
-        $data['patch_directory_name'] = $faker->randomNumber();
+        $data['patch_directory_name'] = $this->faker()->randomNumber();
 
         // remove required parameters
         unset($data['type']);

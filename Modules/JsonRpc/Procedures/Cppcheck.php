@@ -56,7 +56,11 @@ class Cppcheck
         );
 
         if (is_null($project)) {
-            throw new \Exception('Project could not be found!');
+            throw new \Exception('Project could not be found!', 1);
+        }
+
+        if ($project->run_cppcheck !== 1) {
+            throw new \Exception("Project {$project->name} does not support cppcheck!", 2);
         }
 
         $this->createTempDirectory();
@@ -90,7 +94,7 @@ class Cppcheck
         $this->tempDirectoryName = time() . '-' . random_int(1, 100);
         if (Storage::makeDirectory($this->tempDirectoryName) === false) {
             Log::error('Could not create temporary directory');
-            throw new \Exception('Could not create checkout directory', 1);
+            throw new \Exception('Could not create checkout directory', 3);
         }
 
         Log::info('Temporary directory created successfully');
@@ -119,7 +123,7 @@ class Cppcheck
 
         if ($result['exit_code'] || preg_match('/checkout: warning: new-born/', $result['output'])) {
             Log::error("Could not checkout source \"{$source['name']} - {$source['version']}\"");
-            throw new \Exception($result['output'], 2);
+            throw new \Exception($result['output'], 4);
         }
 
         Log::info("Source \"{$source['name']} - {$source['version']}\" checkout successfully");
@@ -137,7 +141,7 @@ class Cppcheck
 
         if ($result['exit_code']) {
             Log::error("Could not checkout client.h \"{$clntCvsDir}\"");
-            throw new \Exception($result['output'], 3);
+            throw new \Exception($result['output'], 5);
         }
 
         Log::info("client.h \"{$clntCvsDir}\" checkout successfully");
@@ -154,7 +158,7 @@ class Cppcheck
         $result = $this->exec("{$this->cppcheckCmd} {$sourceName}");
 
         if ($result['exit_code'] || preg_match('/(error)/', $result['output'])) {
-            throw new \Exception($result['output'], 4);
+            throw new \Exception($result['output'], 6);
         }
     }
 

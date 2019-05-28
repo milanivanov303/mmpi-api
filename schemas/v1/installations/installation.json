@@ -1,0 +1,42 @@
+{
+    "$id": "Installation",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "description": "Installation object",
+    "additionalProperties": false,
+    "properties": {
+        "id": {
+            "type": "integer"
+        },
+        "patch": {
+            "$ref": "/v1/patches/patch.json"
+        },
+        "instance": {
+            "$ref": "/v1/instances/instance.json"
+        },
+        "installed_on": {
+            "type": "string",
+            "format": "datetime"
+        },
+        "status": {
+            "$ref": "/v1/enum-values/enum-value.json",
+            "description": "Register for patch installations on instances"
+        },
+        "duration": {
+            "type": ["string", "null"],
+            "format": "time",
+            "default": "null"
+        },
+        "log_file": {
+            "type": ["string", "null"],
+            "maxLength": 256,
+            "default": "null",
+            "description": "Absolute path to the log file from the installation in the file system of the the instance"
+        },
+        "timezone_converted": {
+            "type": "integer",
+            "enum": [1, 0],
+            "default": 0
+        }
+    }
+}

@@ -15,15 +15,6 @@ class Certificate extends Model
     protected $table = 'imx_certificates';
 
     /**
-     * The relations to eager load on every query.
-     *
-     * @var array
-     */
-    protected $with = [
-        'project'
-    ];
-
-    /**
      * The attributes that are mass assignable.
      *
      * @var array
@@ -45,41 +36,9 @@ class Certificate extends Model
     ];
 
     /**
-     * Define filters for this model
-     *
-     * @return array
-     */
-    public function filters(): array
-    {
-        return [
-            'project' => function ($builder, $value, $operator) {
-                return $builder->whereHas('project', function ($query) use ($value, $operator) {
-                    $query->where('name', $operator, $value);
-                });
-            },
-        ];
-    }
-
-    /**
-     * Define order by for this model
-     *
-     * @return array
-     */
-    public function orderBy(): array
-    {
-        return [
-            'project' => function ($model, $order_dir) {
-                return $model->select("{$this->table}.*")
-                        ->join('projects', 'projects.id', '=', "{$this->table}.project_id")
-                        ->orderBy('projects.name', $order_dir);
-            },
-        ];
-    }
-
-    /**
      * Get owner
      */
-    public function project()
+    protected function project()
     {
         return $this->belongsTo(Project::class);
     }

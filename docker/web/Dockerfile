@@ -1,21 +1,16 @@
 FROM avitohol.codixfr.private:5000/web:latest
-ARG XDEBUG_CONFIG
-ARG PHP_IDE_CONFIG
-
-# Set terminal
-ENV TERM=vt100
-
-# add backup2 to hosts file
-RUN echo "192.9.202.186 backup2" >> /etc/hosts
+ARG XDEBUG_CONFIG_ARG
+ARG PHP_IDE_CONFIG_ARG
+ARG BACKUP2_IP_ARG=10.8.7.31
 
 # Install cvs
-RUN yum -y install cvs
+RUN echo "${BACKUP2_IP_ARG} backup2" >> /etc/hosts && yum -y install cvs
 
 USER enterprise
 
 # Set xdebug environment variables in user enterprise profile
-RUN echo "export XDEBUG_CONFIG=\"$XDEBUG_CONFIG\"" >> ${HOME}/.profile
-RUN echo "export PHP_IDE_CONFIG=\"$PHP_IDE_CONFIG\"" >> ${HOME}/.profile
+RUN [[ ! -z ${XDEBUG_CONFIG_ARG} ]] && echo "export XDEBUG_CONFIG=\"${XDEBUG_CONFIG_ARG}\"" >> ${HOME}/.profile || echo ""
+RUN [[ ! -z ${PHP_IDE_CONFIG_ARG} ]] && echo "export PHP_IDE_CONFIG=\"${PHP_IDE_CONFIG_ARG}\"" >> ${HOME}/.profile || echo ""
 
 # Create built directory if not exists
 RUN mkdir -p ${HOME}/services/built

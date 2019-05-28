@@ -1,0 +1,71 @@
+{
+    "$id": "EnumValue",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "description": "Enum Value object",
+    "additionalProperties": false,
+    "properties": {
+        "id": {
+            "type": "integer"
+        },
+        "type": {
+            "type": "string",
+            "maxLength": 64
+        },
+        "subtype": {
+            "type": ["string", "null"],
+            "maxLength": 25,
+            "default": "null"
+        },
+        "key": {
+            "type": "string",
+            "maxLength": 64
+        },
+        "value": {
+            "type": "string",
+            "maxLength": 512
+        },
+        "description": {
+            "type": ["string", "null"]
+        },
+        "url": {
+            "type": ["string", "null"],
+            "maxLength": 256,
+            "default": "null"
+        },
+        "active": {
+            "type": "integer",
+            "enum": [1, 0]
+        },
+        "sortindex": {
+            "type": "integer"
+        },
+        "extra_property": {            
+            "oneOf": [
+                {
+                    "type": "string",
+                    "maxLength": 512
+                },
+                {
+                    "type": "null"
+                }
+            ],
+            "default": "null"
+        },
+        "changed_on": {
+            "type": "string"
+        },
+        "changed_by": {
+           "oneOf": [
+                {
+                    "$ref": "/v1/user.json"
+                },
+                {
+                    "type": "null"
+                }
+            ],
+            "default": "null",
+            "description": "The user who inserted or updated the record"
+        }
+    }
+}
