@@ -13,6 +13,19 @@ class InstancesTest extends RestTestCase
     protected $primaryKey = 'id';
 
     /**
+     * The relations to eager load on every query.
+     *
+     * @var array
+     */
+    protected $with = [
+        'owner',
+        'status',
+        'environmentType',
+        'instanceType',
+        'deliveryChains'
+    ];
+
+    /**
      * Get request data
      *
      * @return array

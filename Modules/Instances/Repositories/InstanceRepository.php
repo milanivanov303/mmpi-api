@@ -12,19 +12,6 @@ use Modules\DeliveryChains\Models\DeliveryChain;
 class InstanceRepository extends AbstractRepository implements RepositoryInterface
 {
     /**
-     * The relations to eager load on every query.
-     *
-     * @var array
-     */
-    protected $with = [
-        'owner',
-        'status',
-        'environmentType',
-        'instanceType',
-        'deliveryChains'
-    ];
-
-    /**
      * ProjectRepository constructor
      *
      * @param Instance $model

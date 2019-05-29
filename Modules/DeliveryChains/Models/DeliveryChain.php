@@ -10,21 +10,6 @@ use Modules\Projects\Models\Project;
 class DeliveryChain extends Model
 {
     /**
-     * The relations to eager load on every query.
-     *
-     * @var array
-     */
-    protected $with = [
-        'type',
-        'dlvryType',
-        'status',
-        'dcVersion',
-        'dcRole',
-        'instances',
-        'projects'
-    ];
-
-    /**
      * The attributes that will be hidden in output json
      *
      * @var array
@@ -89,7 +74,7 @@ class DeliveryChain extends Model
      */
     public function projects()
     {
-        return $this->belongsToMany(Project::class, 'project_to_delivery_chain')->minimal();
+        return $this->belongsToMany(Project::class, 'project_to_delivery_chain');
     }
 
     /**

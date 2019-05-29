@@ -11,6 +11,21 @@ class DeliveryChainsTest extends RestTestCase
     protected $table      = 'delivery_chains';
     protected $primaryKey = 'title';
 
+     /**
+     * The relations to eager load on every query.
+     *
+     * @var array
+     */
+    protected $with = [
+        'type',
+        'dlvryType',
+        'status',
+        'dcVersion',
+        'dcRole',
+        'instances',
+        'projects'
+    ];
+
     /**
      * Get request data
      *
