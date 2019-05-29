@@ -9,9 +9,4 @@
     <br><br>
     <p>Best Regards</p>
     <p>--------------------------------------</p>
-    <p>
-        <?php if (app('env') !== 'production') {
-                include 'original-recipients.php';
-        }?>
-    </p>
 </div>

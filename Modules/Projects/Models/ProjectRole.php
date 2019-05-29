@@ -15,15 +15,6 @@ class ProjectRole extends Model
     protected $table = 'users_prjs_roles';
 
     /**
-     * The relations to eager load on every query.
-     *
-     * @var array
-     */
-    protected $with = [
-        'user'
-    ];
-
-    /**
      * The attributes excluded from the model's JSON form.
      *
      * @var array

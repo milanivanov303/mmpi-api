@@ -58,5 +58,7 @@ return [
 
     'certificates' => [
         'check_expiry' => env('CERTIFICATES_CHECK_EXP', '+30 days')
-    ]
+    ],
+
+    'test_mails' => explode(',', env('TEST_MAILS', 'phpid@codix.bg')),
 ];

@@ -36,8 +36,8 @@ class CheckExpiry extends Command
      */
     public function handle()
     {
-        $date = Carbon::now()->add(\DateInterval::createFromDateString(config('app.certificates.check_expiry')));
-        $certificates = Certificate::whereDate('valid_to', '=', $date->format('Y-m-d'))->get();
+        $date = Carbon::parse(config('app.certificates.check_expiry'))->format('Y-m-d');
+        $certificates = Certificate::whereDate('valid_to', '=', $date)->get();
 
         foreach ($certificates as $certificate) {
             $roles = $certificate->project->roles();
