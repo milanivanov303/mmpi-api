@@ -11,7 +11,7 @@
         "project": {
             "oneOf": [
                 {
-                    "$ref": "/v1/projects/project-minimal.json"
+                    "$ref": "/v1/projects/project.json"
                 },
                 {
                     "type": "null"

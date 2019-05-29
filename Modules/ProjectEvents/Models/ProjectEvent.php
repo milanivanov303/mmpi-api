@@ -42,7 +42,7 @@ class ProjectEvent extends Model
      */
     protected function project()
     {
-        return $this->belongsTo(Project::class)->minimal();
+        return $this->belongsTo(Project::class);
     }
 
     /**

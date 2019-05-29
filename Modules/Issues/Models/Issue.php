@@ -42,7 +42,7 @@ class Issue extends Model
      */
     protected function project()
     {
-        return $this->belongsTo(Project::class)->minimal();
+        return $this->belongsTo(Project::class);
     }
 
     /**
@@ -50,7 +50,7 @@ class Issue extends Model
      */
     protected function devInstance()
     {
-        return $this->belongsTo(Instance::class, 'dev_instance_id')->minimal();
+        return $this->belongsTo(Instance::class, 'dev_instance_id');
     }
 
     /**

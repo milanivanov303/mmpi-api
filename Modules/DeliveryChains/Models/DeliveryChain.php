@@ -96,7 +96,7 @@ class DeliveryChain extends Model
     /**
      * Get active delivery_chains
      */
-    public function scopeActive($query)
+    protected function scopeActive($query)
     {
         return $query
         ->select([

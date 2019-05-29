@@ -15,7 +15,7 @@
             "example": "FUP - ABSA - new file layout for imx2outpmt and imx2experian"
         },
         "project": {
-            "$ref": "/v1/projects/project-minimal.json"
+            "$ref": "/v1/projects/project.json"
         },
         "tts_id": {
             "type": "string",
@@ -43,7 +43,7 @@
         },
         "dev_instance": {
             "oneOf": [
-                {"$ref": "/v1/instances/instance-minimal.json"},
+                {"$ref": "/v1/instances/instance.json"},
                 {"type": "null"}
             ],
             "default": "null"

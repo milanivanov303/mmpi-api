@@ -36,7 +36,7 @@ class InstanceDowntime extends Model
      */
     protected function instance()
     {
-        return $this->belongsTo(Instance::class)->minimal();
+        return $this->belongsTo(Instance::class);
     }
 
     /**
