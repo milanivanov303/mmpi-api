@@ -45,12 +45,10 @@ class CheckExpiry extends Command
             $coordinators = $this->getProjectCoordinators(clone $roles);
             $directors    = $this->getProjectDirectors(clone $roles);
 
-            $data = $this->getData($certificate);
-
             Mail::
                 to($this->getTo($coordinators, $directors))
                 ->cc($this->getCc($coordinators, $directors))
-                ->send(new CheckExpiryMail($data));
+                ->send(new CheckExpiryMail($this->getData($certificate)));
         }
     }
 
@@ -94,12 +92,10 @@ class CheckExpiry extends Command
     {
         $valideTo = Carbon::parse($certificate->valid_to)->format('Y-m-d');
 
-        $data = [
+        return [
             'project_name' => $certificate->project->name,
             'valid_to'     => $valideTo
         ];
-
-        return $data;
     }
 
     /**
