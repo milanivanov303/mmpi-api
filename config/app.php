@@ -50,8 +50,6 @@ return [
 
     'users_sync_mail' => env('USERS_SYNC_MAIL', 'phpid@codix.bg'),
 
-    'test_mails' => explode(',', env('TEST_MAILS', 'phpid@codix.bg')),
-
     'user-management' => [
         'url'      => env('USER_MANAGEMENT_URL'),
         'username' => env('USER_MANAGEMENT_USERNAME'),

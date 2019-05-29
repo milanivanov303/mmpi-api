@@ -3,10 +3,9 @@
 namespace Modules\Certificates\Mail;
 
 use Illuminate\Bus\Queueable;
-use App\Mail\Base;
 use Illuminate\Queue\SerializesModels;
 
-class CheckExpiryMail extends Base
+class CheckExpiryMail extends \Illuminate\Mail\Mailable
 {
     use Queueable, SerializesModels;
 
@@ -35,8 +34,6 @@ class CheckExpiryMail extends Base
      */
     public function build()
     {
-        $this->setRecipients($this->data['recipients']['to'], $this->data['recipients']['cc']);
-
         return $this->view('mails.check-expiry')->with($this->data);
     }
 }

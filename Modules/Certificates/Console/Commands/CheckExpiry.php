@@ -45,47 +45,54 @@ class CheckExpiry extends Command
             $coordinators = $this->getProjectCoordinators(clone $roles);
             $directors    = $this->getProjectDirectors(clone $roles);
 
-            $data = $this->getEmailData($coordinators, $directors, $certificate);
+            $recipients = $this->getRecipients($coordinators, $directors);
+            $message = $this->getMessage($certificate);
 
-            Mail::send(new CheckExpiryMail($data));
+            Mail::to($recipients['to'])->cc($recipients['cc'])->send(new CheckExpiryMail($message));
         }
     }
 
     /**
      * @param array $coordinators
      * @param array $directors
-     * @param Certificate $certificate
      */
-    protected function getEmailData($coordinators, $directors, $certificate)
+    protected function getRecipients($coordinators, $directors)
     {
-        $valideTo = Carbon::parse($certificate->valid_to)->format('Y-m-d');
-
         // Set recipients
         $to = $coordinators ? $coordinators : $directors;
-        $cc = $coordinators ? $directors : null;
+        $cc = $coordinators ? $directors : [];
 
         $data = [
-            'recipients' => [
-                'to' => $to,
-                'cc' => $cc
-            ],
-            'message' => [
-                'project_name' => $certificate->project->name,
-                'valid_to'     => $valideTo
-            ]
+            'to' => $to,
+            'cc' => $cc
         ];
 
         return $data;
     }
 
     /**
-     * Get emails of project coordinators
+     * @param Certificate $certificate
+     */
+    protected function getMessage($certificate)
+    {
+        $valideTo = Carbon::parse($certificate->valid_to)->format('Y-m-d');
+
+        $data = [
+            'project_name' => $certificate->project->name,
+            'valid_to'     => $valideTo
+        ];
+
+        return $data;
+    }
+
+    /**
+     * Get project coordinators
      * @param $roles
      * @return array|null
      */
     protected function getProjectCoordinators($roles)
     {
-        $coordinators = $roles->where('role_id', 'pc')->get()->pluck('user')->pluck('email')->toArray();
+        $coordinators = $roles->where('role_id', 'pc')->get()->pluck('user')->toArray();
 
         if ($coordinators) {
             return $coordinators;
@@ -95,13 +102,13 @@ class CheckExpiry extends Command
     }
 
     /**
-     * Get emails of project directors
+     * Get project directors
      * @param $roles
      * @return array|null
      */
     protected function getProjectDirectors($roles)
     {
-        $directors = $roles->where('role_id', 'pm')->get()->pluck('user')->pluck('email')->toArray();
+        $directors = $roles->where('role_id', 'pm')->get()->pluck('user')->toArray();
 
         if ($directors) {
             return $directors;
