@@ -75,7 +75,7 @@ $app->middleware([
 $app->routeMiddleware([
     'auth'           => Core\Http\Middleware\Authenticate::class,
     'json-validator' => Core\Http\Middleware\JsonValidator::class,
-    'can'            => \Illuminate\Auth\Middleware\Authorize::class,
+    'can'            => Illuminate\Auth\Middleware\Authorize::class,
     'audit'          => Core\Http\Middleware\AuditLogger::class
 ]);
 
@@ -92,9 +92,11 @@ $app->routeMiddleware([
 
 $app->register(Core\Providers\CoreServiceProvider::class);
 $app->register(App\Providers\AuthServiceProvider::class);
+$app->register(App\Providers\EventServiceProvider::class);
 $app->register(Illuminate\Mail\MailServiceProvider::class);
 $app->register(Modules\Issues\Providers\IssuesServiceProvider::class);
 $app->register(Modules\JsonRpc\Providers\JsonRpcServiceProvider::class);
+$app->register(Modules\Hashes\Providers\HashesServiceProvider::class);
 
 /*
 |--------------------------------------------------------------------------

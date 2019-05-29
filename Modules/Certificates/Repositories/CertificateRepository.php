@@ -44,8 +44,9 @@ class CertificateRepository extends AbstractRepository implements RepositoryInte
     {
         return [
             'project' => function ($model, $order_dir) {
-                return $model->select("{$this->table}.*")
-                    ->join('projects', 'projects.id', '=', "{$this->table}.project_id")
+                $table = $this->model->getTable();
+                return $model->select("{$table}.*")
+                    ->join('projects', 'projects.id', '=', "{$table}.project_id")
                     ->orderBy('projects.name', $order_dir);
             },
         ];

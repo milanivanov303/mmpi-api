@@ -2,9 +2,11 @@
 
 namespace Modules\DeliveryChains\Repositories;
 
+use App\Models\EnumValue;
 use Core\Repositories\AbstractRepository;
 use Core\Repositories\RepositoryInterface;
 use Modules\DeliveryChains\Models\DeliveryChain;
+use Modules\DeliveryChains\Models\DeliveryChainType;
 
 class DeliveryChainRepository extends AbstractRepository implements RepositoryInterface
 {
@@ -98,27 +100,44 @@ class DeliveryChainRepository extends AbstractRepository implements RepositoryIn
     }
 
     /**
-     * Save record
-     *
-     * @param array $data
-     * @return Model
-     * @throws \Throwable
+     * @inheritDoc
      */
-    protected function save($data)
+    protected function fillModel(array $data)
     {
-        $this->model->type()->associate($data['type']['id']);
-        $this->model->dlvryType()->associate($data['dlvry_type']['id']);
+        parent::fillModel($data);
 
-        // seting associate on relations with same name as column fails!!!
-        //$this->model->status()->associate($data['status']['id']);
-        $this->model->status = $data['status']['id'];
+        if (array_key_exists('type', $data)) {
+            $this->model->type()->associate(
+                app(DeliveryChainType::class)->getModelId($data['type'])
+            );
+        }
 
-        $this->model->dcVersion()->associate(isset($data['dc_version']) ? $data['dc_version']['id'] : null);
-        $this->model->dcRole()->associate(isset($data['dc_role']) ? $data['dc_role']['id'] : null);
+        if (array_key_exists('dlvry_type', $data)) {
+            $this->model->dlvryType()->associate(
+                app(EnumValue::class)
+                    ->getModelId($data['dlvry_type'], 'key', ['type' => 'dc_dlvry_type'])
+            );
+        }
 
-        $this->model->fill($data)->saveOrFail();
-        $this->model->load($this->getWith());
+        if (array_key_exists('status', $data)) {
+            $this->model->status()->associate(
+                app(EnumValue::class)
+                    ->getModelId($data['status'], 'key', ['type' => 'active_inactive'])
+            );
+        }
 
-        return $this->model;
+        if (array_key_exists('dc_version', $data)) {
+            $this->model->dcVersion()->associate(
+                app(EnumValue::class)
+                    ->getModelId($data['dc_version'], 'key', ['type' => 'delivery_chain_version'])
+            );
+        }
+
+        if (array_key_exists('dc_role', $data)) {
+            $this->model->dcRole()->associate(
+                app(EnumValue::class)
+                    ->getModelId($data['dc_role'], 'key', ['type' => 'delivery_chain_role'])
+            );
+        }
     }
 }

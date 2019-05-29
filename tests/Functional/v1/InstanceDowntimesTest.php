@@ -1,10 +1,16 @@
 <?php
 
+use Modules\Instances\Models\Instance;
+
 class InstanceDowntimesTest extends RestTestCase
 {
     protected $uri        = 'v1/instance-downtimes';
     protected $table      = 'instance_downtimes';
     protected $primaryKey = 'id';
+
+    protected $with = [
+        'instance'
+    ];
 
     /**
      * Get request data
@@ -13,16 +19,14 @@ class InstanceDowntimesTest extends RestTestCase
      */
     protected function getData()
     {
-        $faker = Faker\Factory::create();
-
-        $instance = \Modules\Instances\Models\Instance::inRandomOrder()->first();
+        $instance = Instance::inRandomOrder()->first();
 
         return [
             'instance'       => $instance->toArray(),
-            'start_datetime' => $faker->date('Y-m-d H:i:s'),
-            'end_datetime'   => $faker->date('Y-m-d H:i:s'),
-            'status'         => $faker->numberBetween(0, 1),
-            'description'    => $faker->text(60)
+            'start_datetime' => $this->faker()->date('Y-m-d H:i:s'),
+            'end_datetime'   => $this->faker()->date('Y-m-d H:i:s'),
+            'status'         => $this->faker()->numberBetween(0, 1),
+            'description'    => $this->faker()->text(60)
         ];
     }
 
@@ -34,8 +38,6 @@ class InstanceDowntimesTest extends RestTestCase
      */
     protected function getInvalidData(array $data)
     {
-        $faker = Faker\Factory::create();
-
         // remove required parameters
         unset($data['instance']);
 
@@ -50,13 +52,8 @@ class InstanceDowntimesTest extends RestTestCase
      */
     protected function getUpdateData(array $data)
     {
-        $faker = Faker\Factory::create();
-        
-        //Remove date as it is overwritten on each request
-        unset($data['made_on']);
-
         // Change parameters
-        $data['start_datetime'] = $faker->date('Y-m-d H:i:s');
+        $data['start_datetime'] = $this->faker()->date('Y-m-d H:i:s');
 
         return $data;
     }

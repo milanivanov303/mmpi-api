@@ -50,6 +50,8 @@ return [
 
     'users_sync_mail' => env('USERS_SYNC_MAIL', 'phpid@codix.bg'),
 
+    'test_mails' => explode(',', env('TEST_MAILS', 'phpid@codix.bg')),
+
     'user-management' => [
         'url'      => env('USER_MANAGEMENT_URL'),
         'username' => env('USER_MANAGEMENT_USERNAME'),
@@ -61,4 +63,9 @@ return [
     ],
 
     'test_mails' => explode(',', env('TEST_MAILS', 'phpid@codix.bg')),
+    
+    'repository' => [
+        'username'   => env('REPO_USERNAME'),
+        'public_key' => env('REPO_PUBLIC_KEY', 'ssh/id_rsa_repository')
+    ]
 ];

@@ -32,7 +32,7 @@
         "when_to_install_string": {
             "oneOf": [
                 {
-                    "$ref": "/v1/enum-values/enum-value-minimal.json"
+                    "$ref": "/v1/enum-values/enum-value.json"
                 },
                 {
                     "type": "null"
@@ -64,7 +64,7 @@
         "greenlight_status": {
             "oneOf": [
                 {
-                    "$ref": "/v1/enum-values/enum-value-minimal.json"
+                    "$ref": "/v1/enum-values/enum-value.json"
                 },
                 {
                     "type": "null"
@@ -80,7 +80,7 @@
         "greenlighted_by": {
             "oneOf": [
                 {
-                    "$ref": "/v1/user-minimal.json"
+                    "$ref": "/v1/user.json"
                 },
                 {
                     "type": "null"
