@@ -145,26 +145,14 @@ class ProjectRepository extends AbstractRepository implements RepositoryInterfac
             }
             $this->model->deliveryChains()->sync($deliveryChains);
         }
-        dump($this->model->projectSpecifics()->pluck('comment'));
-        if (array_key_exists('project_specifics', $data)) {
-            $projectSpecifics = [];
-            foreach ($data['project_specifics'] as $projectSpecific) {
-                if ($this->model->projectSpecifics()->where('id', $projectSpecific['id'])->count() > 0) {
-                    $id = $projectSpecific['id'];
-                    // unset($projectSpecific['id']);
 
-                    //this used to work but only for update
-                    $this->model->projectSpecifics()->updateOrCreate(
-                        ['id' => $id],
-                        [array_keys($projectSpecific), array_values($projectSpecific)]
-                    );
-                } else {
-                    $projectSpecifics[] = ProjectSpecific::find($projectSpecific['id']);
-                }
+        if (array_key_exists('project_specifics', $data)) {
+            foreach ($data['project_specifics'] as $attributes) {
+                $id = array_pull($attributes, 'id');
+                $projectSpecific = ProjectSpecific::find($id);
+                $projectSpecific->fill($attributes);
+                $this->model->projectSpecifics()->save($projectSpecific);
             }
-            $this->model->projectSpecifics()->saveMany($projectSpecifics);
-            dump($this->model->projectSpecifics()->pluck('comment'));
-            exit;
         }
 
         $this->model->load($this->getWith());
