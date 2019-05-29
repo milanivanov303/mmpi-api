@@ -2,19 +2,17 @@
 
 namespace App\Models;
 
-use App\Models\User;
-
 class EnumValue extends Model
 {
     /**
-     * The relations to eager load on every query.
+     * The attributes that will be hidden in output json
      *
      * @var array
      */
-    protected $with = [
-        'changedBy'
+    protected $hidden = [
+        'changed_by'
     ];
-    
+
     /**
      * The attributes that are mass assignable.
      *
@@ -37,7 +35,7 @@ class EnumValue extends Model
     /**
      * Get changedBy
      */
-    public function changedBy()
+    protected function changedBy()
     {
         return $this->belongsTo(User::class, 'changed_by');
     }

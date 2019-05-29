@@ -1,6 +1,8 @@
 <?php
 
 use Modules\Installations\Models\Installation;
+use Modules\Instances\Models\Instance;
+use Modules\Patches\Models\Patch;
 
 class InstallationsTest extends RestTestCase
 {
@@ -15,16 +17,14 @@ class InstallationsTest extends RestTestCase
      */
     protected function getData()
     {
-        $faker = Faker\Factory::create();
-
-        $instance = \Modules\Instances\Models\Instance::minimal()->inRandomOrder()->first();
-        $patch  = \Modules\Patches\Models\Patch::inRandomOrder()->first();
+        $instance = Instance::inRandomOrder()->first();
+        $patch    = Patch::inRandomOrder()->first();
 
         return [
             'patch_id'         => $patch->toArray(),
             'instance_id'      => $instance->toArray(),
-            'installed_on'     => $faker->date('Y-m-d H:i:s'),
-            'status_id'        => $faker->randomElement([46, 47, 48, 45, 49]),
+            'installed_on'     => $this->faker()->date('Y-m-d H:i:s'),
+            'status_id'        => $this->faker()->randomElement([46, 47, 48, 45, 49]),
             'err_output'       => null,
             'duration'         => null,
             'log_file'         => null,

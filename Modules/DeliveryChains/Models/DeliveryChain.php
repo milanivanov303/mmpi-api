@@ -16,6 +16,10 @@ class DeliveryChain extends Model
      */
     protected $hidden = [
         'type_id',
+        'dlvry_type',
+        'status',
+        'dc_version',
+        'dc_role',
         'pivot'
     ];
 
@@ -26,13 +30,17 @@ class DeliveryChain extends Model
      */
     protected $fillable = [
         'title',
-        'patch_directory_name'
+        'patch_directory_name',
+        'dlvry_type',
+        'status',
+        'dc_version',
+        'dc_role'
     ];
 
     /**
      * Get type
      */
-    public function type()
+    protected function type()
     {
         return $this->belongsTo(DeliveryChainType::class, 'type_id');
     }
@@ -40,7 +48,7 @@ class DeliveryChain extends Model
     /**
      * Get dlvry_type
      */
-    public function dlvryType()
+    protected function dlvryType()
     {
         return $this->belongsTo(EnumValue::class, 'dlvry_type');
     }
@@ -48,7 +56,7 @@ class DeliveryChain extends Model
     /**
      * Get status
      */
-    public function status()
+    protected function status()
     {
         return $this->belongsTo(EnumValue::class, 'status');
     }
@@ -56,7 +64,7 @@ class DeliveryChain extends Model
     /**
      * Get dc_version
      */
-    public function dcVersion()
+    protected function dcVersion()
     {
         return $this->belongsTo(EnumValue::class, 'dc_version');
     }
@@ -64,7 +72,7 @@ class DeliveryChain extends Model
     /**
      * Get dc_role
      */
-    public function dcRole()
+    protected function dcRole()
     {
         return $this->belongsTo(EnumValue::class, 'dc_role');
     }
@@ -72,7 +80,7 @@ class DeliveryChain extends Model
     /**
      * Get projects
      */
-    public function projects()
+    protected function projects()
     {
         return $this->belongsToMany(Project::class, 'project_to_delivery_chain');
     }
@@ -80,9 +88,9 @@ class DeliveryChain extends Model
     /**
      * Get instances
      */
-    public function instances()
+    protected function instances()
     {
-        return $this->belongsToMany(Instance::class, 'instance_to_delivery_chain')->with('instanceType')->minimal();
+        return $this->belongsToMany(Instance::class, 'instance_to_delivery_chain');
     }
 
     /**

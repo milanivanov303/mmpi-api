@@ -5,6 +5,7 @@
     "description": "Instance downtime object",
     "allOf": [
         {"$ref": "/v1/instance-downtimes/instance-downtime.json"},
+        {"$ref": "/v1/instance-downtimes/filters.json"},
         {
             "required": [
                 "instance",

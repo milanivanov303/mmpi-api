@@ -10,27 +10,15 @@ use Modules\Projects\Models\Project;
 class ProjectEvent extends Model
 {
     /**
-     * The relations to eager load on every query.
-     *
-     * @var array
-     */
-    protected $with = [
-        'project',
-        'madeBy',
-        'projectEventType',
-        'projectEventStatus'
-    ];
-
-    /**
      * The attributes that will be hidden in output json
      *
      * @var array
      */
     protected $hidden = [
         'project_id',
-        'project_event_type_id',
         'made_by',
-        'project_event_status'
+        'project_event_status',
+        'project_event_type_id'
     ];
 
     /**
@@ -52,7 +40,7 @@ class ProjectEvent extends Model
     /**
      * Get projects
      */
-    public function project()
+    protected function project()
     {
         return $this->belongsTo(Project::class)->minimal();
     }
@@ -60,7 +48,7 @@ class ProjectEvent extends Model
     /**
      * Get users
      */
-    public function madeBy()
+    protected function madeBy()
     {
         return $this->belongsTo(User::class, 'made_by');
     }
@@ -68,7 +56,7 @@ class ProjectEvent extends Model
     /**
      * Get project event status
      */
-    public function projectEventStatus()
+    protected function projectEventStatus()
     {
         return $this->belongsTo(EnumValue::class, 'project_event_status');
     }
@@ -76,7 +64,7 @@ class ProjectEvent extends Model
     /**
      * Get project event type
      */
-    public function projectEventType()
+    protected function projectEventType()
     {
         return $this->belongsTo(EnumValue::class, 'project_event_type_id');
     }

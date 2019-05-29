@@ -12,16 +12,6 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     use Authenticatable, Authorizable;
 
     /**
-     * The relations to eager load on every query.
-     *
-     * @var array
-     */
-    protected $with = [
-        'department',
-        'accessGroup'
-    ];
-
-    /**
      * The attributes excluded from the model's JSON form.
      *
      * @var array
@@ -128,7 +118,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     /**
      * Get user access group.
      */
-    public function accessGroup()
+    protected function accessGroup()
     {
         return $this->belongsTo(AccessGroup::class);
     }
@@ -136,7 +126,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     /**
      * Get user manager.
      */
-    public function manager()
+    protected function manager()
     {
         return $this->belongsTo(User::class, 'manager_id');
     }
@@ -144,7 +134,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     /**
      * Get user deputy.
      */
-    public function deputy()
+    protected function deputy()
     {
         return $this->belongsTo(User::class, 'deputy_id');
     }

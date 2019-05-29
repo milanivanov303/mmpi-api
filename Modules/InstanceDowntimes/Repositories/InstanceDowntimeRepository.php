@@ -43,7 +43,7 @@ class InstanceDowntimeRepository extends AbstractRepository implements Repositor
 
         if (array_key_exists('instance', $data)) {
             $this->model->instance()->associate(
-                app(Instance::class)->getModelId($data['instance'], 'name')
+                app(Instance::class)->getModelId($data['instance'])
             );
         }
 

@@ -9,16 +9,6 @@ use Modules\Instances\Models\Instance;
 class Issue extends Model
 {
     /**
-     * The relations to eager load on every query.
-     *
-     * @var array
-     */
-    protected $with = [
-        'project',
-        'devInstance'
-    ];
-
-    /**
      * The attributes that will be hidden in output json
      *
      * @var array
@@ -50,7 +40,7 @@ class Issue extends Model
     /**
      * Get issue project
      */
-    public function project()
+    protected function project()
     {
         return $this->belongsTo(Project::class)->minimal();
     }
@@ -58,7 +48,7 @@ class Issue extends Model
     /**
      * Get issue dev instance
      */
-    public function devInstance()
+    protected function devInstance()
     {
         return $this->belongsTo(Instance::class, 'dev_instance_id')->minimal();
     }
@@ -66,7 +56,7 @@ class Issue extends Model
     /**
      * Get parent issue
      */
-    public function parentIssue()
+    protected function parentIssue()
     {
         return $this->belongsTo(Issue::class, 'parent_issue_id');
     }

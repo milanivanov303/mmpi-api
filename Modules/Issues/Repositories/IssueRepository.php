@@ -18,15 +18,6 @@ class IssueRepository extends AbstractRepository implements RepositoryInterface
     protected $primaryKey = 'tts_id';
 
     /**
-     * The relations to eager load on every query.
-     *
-     * @var array
-     */
-    protected $with = [
-        'parentIssue'
-    ];
-
-    /**
      * HashRepository constructor
      *
      * @param Issue $model

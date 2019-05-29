@@ -15,7 +15,6 @@ class EnumValueRepository extends AbstractRepository implements RepositoryInterf
      *
      * @var string
      */
- 
     protected $primaryKey = ['type', 'key'];
 
     /**

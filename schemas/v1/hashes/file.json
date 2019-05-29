@@ -1,0 +1,17 @@
+{
+    "$id": "File",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "description": "File object",
+    "additionalProperties": false,
+    "properties": {
+        "id": {
+            "type": "integer"
+        },
+        "name":  {
+            "type": "string",
+            "description": "Name of the file",
+            "example": "BundlesResourceTest.java"
+        }
+    }
+}

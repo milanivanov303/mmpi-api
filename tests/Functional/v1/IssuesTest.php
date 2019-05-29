@@ -1,10 +1,19 @@
 <?php
 
+use Modules\Instances\Models\Instance;
+use Modules\Projects\Models\Project;
+
 class IssuesTest extends RestTestCase
 {
     protected $uri        = 'v1/issues';
     protected $table      = 'issues';
     protected $primaryKey = 'tts_id';
+
+    protected $with = [
+        'project',
+        'dev_instance',
+        'parent_issue'
+    ];
 
     /**
      * Get request data
@@ -13,18 +22,16 @@ class IssuesTest extends RestTestCase
      */
     protected function getData()
     {
-        $faker = Faker\Factory::create();
-
-        $instance = \Modules\Instances\Models\Instance::minimal()->inRandomOrder()->first();
-        $project  = \Modules\Projects\Models\Project::minimal()->inRandomOrder()->first();
+        $instance = Instance::inRandomOrder()->first();
+        $project  = Project::inRandomOrder()->first();
 
         return [
-            'subject'           => $faker->realText(),
+            'subject'           => $this->faker()->realText(),
             'tts_id'            => "TEST-1",
-            'jiraissue_id'      => $faker->numberBetween(),
-            'created_on'        => $faker->date('Y-m-d H:i:s'),
-            'priority'          => $faker->text(10),
-            'jira_admin_status' => $faker->randomElement(["ok", "migr", "herrors", "moved", "deleted"]),
+            'jiraissue_id'      => $this->faker()->numberBetween(),
+            'created_on'        => $this->faker()->date('Y-m-d H:i:s'),
+            'priority'          => $this->faker()->text(10),
+            'jira_admin_status' => $this->faker()->randomElement(["ok", "migr", "herrors", "moved", "deleted"]),
             'project'           => $project->toArray(),
             'dev_instance'      => $instance->toArray(),
             'parent_issue'      => null

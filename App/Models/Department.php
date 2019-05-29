@@ -5,12 +5,12 @@ namespace App\Models;
 class Department extends Model
 {
     /**
-     * The relations to eager load on every query.
+     * The attributes that will be hidden in output json
      *
      * @var array
      */
-    protected $with = [
-        'departmentType'
+    protected $hidden = [
+        'department_type'
     ];
 
     /**
@@ -47,7 +47,7 @@ class Department extends Model
     /**
      * Get departmentType
      */
-    public function departmentType()
+    protected function departmentType()
     {
         return $this->belongsTo(EnumValue::class, 'department_type');
     }

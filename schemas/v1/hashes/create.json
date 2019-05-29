@@ -1,0 +1,19 @@
+{
+    "$id": "CreateHash",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "description": "Hash object",
+    "allOf": [
+        {"$ref": "/v1/hashes/hash.json"},
+        {"$ref": "/v1/hashes/filters.json"},
+        {
+            "required": [
+                "branch",
+                "committed_by",
+                "rev",
+                "hash_rev",
+                "repo_type"
+            ]
+        }
+    ]
+}
