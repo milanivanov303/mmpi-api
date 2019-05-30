@@ -54,4 +54,21 @@ class ProjectSpecificRepository extends AbstractRepository implements Repository
             );
         }
     }
+
+    /**
+     * Delete record
+     *
+     * @param mixed $id
+     * @return boolean
+     *
+     * @throws \Exception
+     */
+    public function delete($id)
+    {
+        $model = $this->find($id);
+        $project = Project::find($model->project->id);
+        $project->projectSpecifics()->get()->forget($id);
+
+        return $model->delete();
+    }
 }
