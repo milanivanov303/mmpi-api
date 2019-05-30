@@ -34,6 +34,6 @@ class CheckExpiryMail extends \Illuminate\Mail\Mailable
      */
     public function build()
     {
-        return $this->view('mails.check-expiry')->with($this->data);
+        return $this->view('mails.check-expiry')->subject($this->data['subject'])->with($this->data);
     }
 }

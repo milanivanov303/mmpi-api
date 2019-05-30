@@ -93,8 +93,13 @@ class CheckExpiry extends Command
         $valideTo = Carbon::parse($certificate->valid_to)->format('Y-m-d');
 
         return [
-            'project_name' => $certificate->project->name,
-            'valid_to'     => $valideTo
+            'subject' =>
+                'MMPI Notification - Certificate Expiry - Project ' . $certificate->project->name,
+            'message' => [
+                'project_name' => $certificate->project->name,
+                'valid_to'     => $valideTo,
+                'hash'         => $certificate->hash
+            ]
         ];
     }
 
