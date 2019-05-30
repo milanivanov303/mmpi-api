@@ -128,7 +128,34 @@ class DeliveryChainRepository extends AbstractRepository implements RepositoryIn
             );
         }
 
-        $this->model->fill($data)->saveOrFail();
+        if (array_key_exists('dc_version', $data)) {
+            $this->model->dcVersion()->associate(
+                app(EnumValue::class)
+                    ->getModelId($data['dc_version'], 'key', ['type' => 'delivery_chain_version'])
+            );
+        }
+
+        if (array_key_exists('dc_role', $data)) {
+            $this->model->dcRole()->associate(
+                app(EnumValue::class)
+                    ->getModelId($data['dc_role'], 'key', ['type' => 'delivery_chain_role'])
+            );
+        }
+    }
+
+    /**
+     * Save record
+     *
+     * @param array $data
+     * @return Model
+     *
+     * @throws \Throwable
+     */
+    protected function save($data)
+    {
+        $this->fillModel($data);
+
+        $this->model->saveOrFail();
 
         if (array_key_exists('projects', $data)) {
             $projects = [];
@@ -149,19 +176,8 @@ class DeliveryChainRepository extends AbstractRepository implements RepositoryIn
         }
 
         $this->model->load($this->getWith());
-        if (array_key_exists('dc_version', $data)) {
-            $this->model->dcVersion()->associate(
-                app(EnumValue::class)
-                    ->getModelId($data['dc_version'], 'key', ['type' => 'delivery_chain_version'])
-            );
-        }
 
-        if (array_key_exists('dc_role', $data)) {
-            $this->model->dcRole()->associate(
-                app(EnumValue::class)
-                    ->getModelId($data['dc_role'], 'key', ['type' => 'delivery_chain_role'])
-            );
-        }
+        return $this->model;
     }
 
     /**
