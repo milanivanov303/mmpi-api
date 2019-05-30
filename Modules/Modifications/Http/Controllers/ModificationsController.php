@@ -3,17 +3,14 @@
 namespace Modules\Modifications\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Model;
 use Illuminate\Http\Request;
+use Modules\Modifications\Models\OperationModification;
+use Modules\Modifications\Models\SourceModification;
 use Modules\Modifications\Repositories\ModificationRepository;
-use Illuminate\Http\Resources\Json\JsonResource;
-use Core\Http\Resources\ResourceModel;
-use Core\Http\Resources\ResourceCollection;
-use Modules\Modifications\Http\Resources\SourceResourceModel;
 
 class ModificationsController extends Controller
 {
-    protected $type;
-
     /**
      * Create a new controller instance.
      *
@@ -23,31 +20,32 @@ class ModificationsController extends Controller
     public function __construct(Request $request, ModificationRepository $repository)
     {
         $this->repository = $repository;
-        $this->type       = $request->route()[1]['type'] ?? null;
 
-        // set type_id in request
-        if ($this->type) {
-            $request->json()->add(['type_id' => $this->type]);
+        $type = $request->route()[1]['type'] ?? null;
+        if ($type) {
+            $model = $this->getModel($type);
+            if ($model) {
+                $repository->setModel($model);
+            }
         }
     }
 
     /**
-     * Get output response
+     * Get model
      *
-     * @param mixed $data
-     *
-     * @return JsonResource
+     * @param string $type
+     * @return Model|null
      */
-    public function output($data)
+    protected function getModel(string $type) : ?Model
     {
-        if ($data instanceof \Core\Models\Model) {
-            if ($this->type === 'source') {
-                return new SourceResourceModel($data);
-            }
-
-            return new ResourceModel($data);
+        if ($type === 'sources') {
+            return new SourceModification();
         }
 
-        return new ResourceCollection($data);
+        if ($type === 'operations') {
+            return new OperationModification();
+        }
+
+        return null;
     }
 }

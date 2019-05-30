@@ -1,0 +1,16 @@
+{
+    "$id": "CreateTemporarySourceModification",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "description": "Temporary Source Modification object",
+    "allOf": [
+        {"$ref": "/v1/modifications/temporary-sources/temporary-source.json"},
+        {
+            "required": [
+                "name",
+                "issue",
+                "path"
+            ]
+        }
+    ]
+}

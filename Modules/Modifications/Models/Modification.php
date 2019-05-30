@@ -2,7 +2,8 @@
 
 namespace Modules\Modifications\Models;
 
-use Core\Models\Model;
+use App\Models\Model;
+use Illuminate\Database\Eloquent\Builder;
 use Modules\Issues\Models\Issue;
 use Modules\Instances\Models\Instance;
 use Modules\DeliveryChains\Models\DeliveryChain;
@@ -12,6 +13,16 @@ use App\Models\DbSchema;
 
 class Modification extends Model
 {
+
+    protected static $type = null;
+
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'modifications';
+
     /**
      * The attributes that will be hidden in output json
      *
@@ -31,7 +42,7 @@ class Modification extends Model
         'subtype_id',
         'tablespace_id',
         'updated_by_id',
-        'type_id'
+        //'type_id'
     ];
 
     /**
@@ -76,6 +87,20 @@ class Modification extends Model
         'bad_content_confirmed',
         'branch'
     ];
+
+    /**
+     * @inheritDoc
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        if (static::$type) {
+            static::addGlobalScope('type', function (Builder $builder) {
+                $builder->where('type_id', static::$type);
+            });
+        }
+    }
 
     /**
      * Get issue

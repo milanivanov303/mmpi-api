@@ -20,6 +20,11 @@ class ModificationRepository extends AbstractRepository implements RepositoryInt
         $this->model = $model;
     }
 
+    public function setModel($model)
+    {
+        $this->model = $model;
+    }
+
     /**
      * Fill model attributes
      *

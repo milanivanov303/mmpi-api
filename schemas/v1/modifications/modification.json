@@ -11,9 +11,8 @@
         "issue": {
             "$ref": "/v1/issues/issue.json"
         },
-        "type_id": {
-            "type": "string",
-            "maxLength": 8,
+        "type": {
+            "$ref": "/v1/enum-values/enum-value.json",
             "description": "Type of the modification"
         },
         "old_id": {

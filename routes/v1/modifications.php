@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Str;
+
 $router->group([
     'prefix' => 'modifications',
     'namespace' => '\Modules\Modifications\Http\Controllers'
@@ -17,33 +19,28 @@ $router->group([
         'uses'        => 'ModificationsController@getOne'
     ]);
 
-    $router->group(['prefix' => 'sources'], function () use ($router) {
-        $router->get('', [
-            'as'          => 'modifications.sources.list',
-            'schema'      => '/v1/modifications/sources/source.json',
-            'description' => 'Get sources modifications list',
-            'uses'        => 'ModificationsController@getMany'
-        ]);
-        $router->get('/{id:[0-9]+}', [
-            'as'          => 'modifications.sources.one',
-            'schema'      => '/v1/modifications/sources/source.json',
-            'description' => 'Get single source modification',
-            'type'        => 'source',
-            'uses'        => 'ModificationsController@getOne'
-        ]);
-        $router->post('', [
-            'as'          => 'modifications.sources.create',
-            'schema'      => '/v1/modifications/sources/create.json',
-            'description' => 'Attach source modification',
-            'type'        => 'source',
-            'uses'        => 'ModificationsController@create'
-        ]);
-        $router->put('{id:[0-9]+}', [
-            'as'          => 'modifications.sources.update',
-            'schema'      => '/v1/modifications/sources/update.json',
-            'description' => 'Update source modification',
-            'type'        => 'source',
-            'uses'        => 'ModificationsController@update'
-        ]);
-    });
+    $types = ['tables', 'se-transfers', 'sources', 'temporary-sources', 'binaries', 'commands', 'operations'];
+
+    foreach ($types as $prefix) {
+        $router->group(['prefix' => $prefix], function () use ($router, $prefix) {
+            $schema = Str::singular($prefix);
+
+            $router->get('', [
+                'as'          => "modifications.{$prefix}.list",
+                'schema'      => "/v1/modifications/{$prefix}/{$schema}.json",
+                'description' => "Get {$prefix} modifications list",
+                'uses'        => 'ModificationsController@getMany',
+                'type'        =>  $prefix,
+                'tags'        => ['modifications']
+            ]);
+            $router->get('/{id:[0-9]+}', [
+                'as'          => "modifications.{$prefix}.one",
+                'schema'      => "/v1/modifications/{$prefix}/{$schema}.json",
+                'description' => "Get single {$schema} modification",
+                'uses'        => 'ModificationsController@getOne',
+                'type'        => $prefix,
+                'tags'        => ['modifications']
+            ]);
+        });
+    }
 });

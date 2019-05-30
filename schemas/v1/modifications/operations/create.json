@@ -1,0 +1,16 @@
+{
+    "$id": "CreateOperationModification",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "description": "Operation Modification object",
+    "allOf": [
+        {"$ref": "/v1/modifications/operations/operation.json"},
+        {
+            "required": [
+                "name",
+                "issue",
+                "path"
+            ]
+        }
+    ]
+}
