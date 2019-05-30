@@ -66,6 +66,7 @@ class ProjectSpecificRepository extends AbstractRepository implements Repository
     public function delete($id)
     {
         $model = $this->find($id);
+        
         $project = Project::find($model->project->id);
         $project->projectSpecifics()->get()->forget($id);
 
