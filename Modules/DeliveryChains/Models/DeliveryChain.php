@@ -82,7 +82,7 @@ class DeliveryChain extends Model
      */
     protected function projects()
     {
-        return $this->belongsToMany(Project::class, 'project_to_delivery_chain');
+        return $this->belongsToMany(Project::class, 'project_to_delivery_chain')->active();
     }
 
     /**
@@ -90,7 +90,7 @@ class DeliveryChain extends Model
      */
     protected function instances()
     {
-        return $this->belongsToMany(Instance::class, 'instance_to_delivery_chain');
+        return $this->belongsToMany(Instance::class, 'instance_to_delivery_chain')->active();
     }
 
     /**
@@ -98,18 +98,8 @@ class DeliveryChain extends Model
      */
     public function scopeActive($query)
     {
-        return $query
-        ->select([
-            'delivery_chains.id',
-            'delivery_chains.title',
-            'dlvry_type',
-            'patch_directory_name',
-            'dc_version',
-            'dc_role',
-            'type_id',
-            'status'])
-            ->join('enum_values as etype', 'etype.id', '=', 'delivery_chains.type_id')
-            ->join('enum_values as status', 'status.id', '=', 'delivery_chains.status')
-            ->where('status.key', '=', 'active');
+        return $query->whereHas('status', function ($q) {
+                    $q->where('key', 'active');
+        });
     }
 }

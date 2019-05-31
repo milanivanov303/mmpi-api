@@ -155,4 +155,12 @@ class Project extends Model
     {
         return $this->belongsToMany(DeliveryChain::class, 'project_to_delivery_chain')->active();
     }
+
+    /**
+     * Get active delivery_chains
+     */
+    public function scopeActive($query)
+    {
+        return $query->where('inactive', '=', '0');
+    }
 }

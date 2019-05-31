@@ -79,4 +79,14 @@ class Instance extends Model
     {
         return $this->belongsToMany(DeliveryChain::class, 'instance_to_delivery_chain')->active();
     }
+
+    /**
+     * Get active delivery_chains
+     */
+    public function scopeActive($query)
+    {
+        return $query->whereHas('status', function ($q) {
+                    $q->where('key', 'active');
+        });
+    }
 }

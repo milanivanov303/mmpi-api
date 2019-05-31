@@ -12,7 +12,7 @@
             "$ref": "/v1/patches/patch.json"
         },
         "instance": {
-            "$ref": "/v1/instances/instance-minimal.json"
+            "$ref": "/v1/instances/instance.json"
         },
         "installed_on": {
             "type": "string",
