@@ -26,6 +26,7 @@ class Project extends Model
         'tl_mntd_by_clnt_id',
         'njsch_mntd_by_clnt_id',
         'trans_mntd_by_clnt_id',
+        'pivot',
         'project_to_delivery_chain'
     ];
 
@@ -152,7 +153,15 @@ class Project extends Model
      */
     protected function deliveryChains()
     {
-        return $this->belongsToMany(DeliveryChain::class, 'project_to_delivery_chain');
+        return $this->belongsToMany(DeliveryChain::class, 'project_to_delivery_chain')->active();
+    }
+
+    /**
+     * Get active delivery_chains
+     */
+    public function scopeActive($query)
+    {
+        return $query->where('inactive', '=', '0');
     }
 
     public function roles()
