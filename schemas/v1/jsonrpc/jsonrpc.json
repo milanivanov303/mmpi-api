@@ -3,11 +3,6 @@
     "$schema": "http://json-schema.org/draft-07/schema#",
     "type": "object",
     "description": "JSON RPC object",
-    "required": [
-        "jsonrpc",
-        "method",
-        "id"
-    ],
     "properties": {
         "jsonrpc": {
             "type": "string",
@@ -27,5 +22,10 @@
             "description": "Unique id of the request. It is used for batch requests",
             "example": "1"
         }
-    }
+    },
+    "oneOf": [
+        {"$ref": "/v1/jsonrpc/run_cppcheck.json"},
+        {"$ref": "/v1/jsonrpc/import_hash.json"},
+        {"$ref": "/v1/jsonrpc/head_merge_request.json"}
+    ]
 }

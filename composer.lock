@@ -61,11 +61,11 @@
         },
         {
             "name": "codix/api-core",
-            "version": "1.4.2",
+            "version": "1.4.5",
             "source": {
                 "type": "git",
                 "url": "http://rhode.codixfr.private/Enterprise-Apps/api-core",
-                "reference": "f44d6015092ae872d71155861cab208463f6994d"
+                "reference": "0eb86ee0c2d093d8a976d8c75c72040cc37bab4f"
             },
             "require": {
                 "adldap2/adldap2": "^9.1",
@@ -95,7 +95,11 @@
                     "email": "yarnaudov@codix.bg"
                 }
             ],
+<<<<<<< HEAD
             "time": "2019-05-23T11:29:10+00:00"
+=======
+            "time": "2019-05-30T12:03:56+00:00"
+>>>>>>> develop
         },
         {
             "name": "codix/api-sdk",
@@ -2565,6 +2569,7 @@
         },
         {
             "name": "phpseclib/phpseclib",
+<<<<<<< HEAD
             "version": "2.0.15",
             "source": {
                 "type": "git",
@@ -2575,6 +2580,18 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/11cf67cf78dc4acb18dc9149a57be4aee5036ce0",
                 "reference": "11cf67cf78dc4acb18dc9149a57be4aee5036ce0",
+=======
+            "version": "2.0.17",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/phpseclib/phpseclib.git",
+                "reference": "3ca5b88d582c69178c8d01fd9d02b94e15042bb8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/3ca5b88d582c69178c8d01fd9d02b94e15042bb8",
+                "reference": "3ca5b88d582c69178c8d01fd9d02b94e15042bb8",
+>>>>>>> develop
                 "shasum": ""
             },
             "require": {
@@ -2653,7 +2670,11 @@
                 "x.509",
                 "x509"
             ],
+<<<<<<< HEAD
             "time": "2019-03-10T16:53:45+00:00"
+=======
+            "time": "2019-05-26T20:38:34+00:00"
+>>>>>>> develop
         },
         {
             "name": "psr/container",

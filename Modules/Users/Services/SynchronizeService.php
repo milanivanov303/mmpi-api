@@ -19,6 +19,11 @@ class SynchronizeService extends UsersSynchronizeService
             $this->filters['limit'] = 1000;
         }
 
+        $this->filters['with'] = [
+            'manager',
+            'department'
+        ];
+
         $users = app('UserManagementApi')->get('users', $this->filters);
 
         if ($users->isSuccessful()) {

@@ -56,6 +56,12 @@ return [
         'password' => env('USER_MANAGEMENT_PASSWORD')
     ],
 
+    'certificates' => [
+        'check_expiry' => env('CERTIFICATES_CHECK_EXP', '+30 days')
+    ],
+
+    'test_mails' => explode(',', env('TEST_MAILS', 'phpid@codix.bg')),
+    
     'repository' => [
         'username'   => env('REPO_USERNAME'),
         'public_key' => env('REPO_PUBLIC_KEY', 'ssh/id_rsa_repository')

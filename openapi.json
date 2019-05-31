@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "MMPI API",
-    "description": "Тhe aim of this project is to make the integration of the MMPI with third systems easier and more flexible \n\n # Note \n\n All relations will not be load by default. You will need to explicitly list what relations to be return using with parameter \n\n ``` {url}?with[]=department&with[]=manager ```",
+    "description": "Тhe aim of this project is to make the integration of the MMPI with third systems easier and more flexible \n\n ***Note!*** \n\n All relations will not be load by default. You will need to explicitly list what relations to be return using with parameter \n\n ``` {url}?with[]=department&with[]=manager ```",
     "version": "1"
   },
   "servers": [

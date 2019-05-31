@@ -14,7 +14,8 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         \Core\Console\Commands\Openapi\Generate::class,
-        \Modules\Users\Console\Commands\SynchronizeCommand::class
+        \Modules\Users\Console\Commands\SynchronizeCommand::class,
+        \Modules\Certificates\Console\Commands\CheckExpiry::class
     ];
 
     /**
@@ -28,5 +29,7 @@ class Kernel extends ConsoleKernel
         foreach (['8:55', '10:55', '13:55', '18:55'] as $time) {
             $schedule->command('users:synchronize')->dailyAt($time)->environments(['prod']);
         }
+
+        $schedule->command('certificates:check-expiry')->dailyAt('10:00')->environments(['prod']);
     }
 }

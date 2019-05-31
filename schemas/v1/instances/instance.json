@@ -67,6 +67,12 @@
         "environment_type": {
             "$ref": "/v1/delivery-chains/delivery-chain-type.json",
             "description": "Environment type associated with delivery_chain_types"
+        },
+        "delivery_chains": {
+            "type": "array",
+            "items": {
+                "$ref": "/v1/delivery-chains/delivery-chain.json"
+            }
         }
     }
 }

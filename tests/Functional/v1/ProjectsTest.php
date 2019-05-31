@@ -39,7 +39,7 @@ class ProjectsTest extends RestTestCase
         $deliveryMethod   = EnumValue::where('type', 'delivery_method')->inRandomOrder()->first();
         $seMntdByClnt     = EnumValue::where('type', 'project_specific_feature')->inRandomOrder()->first();
         $tlMntdByClnt     = EnumValue::where('type', 'project_specific_feature')->inRandomOrder()->first();
-        $deliveryChains   = DeliveryChain::inRandomOrder()->limit(3)->get();
+        $deliveryChains   = DeliveryChain::active()->inRandomOrder()->limit(3)->get();
 
         return [
             'name'               => $this->faker()->text(128),
