@@ -5,7 +5,7 @@ namespace Modules\Users\Models;
 use Core\Models\Model;
 use Modules\Projects\Models\Project;
 
-class UsertRole extends Model
+class UserRole extends Model
 {
     /**
      * The table associated with the model.

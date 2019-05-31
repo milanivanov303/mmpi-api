@@ -6,7 +6,7 @@ use Illuminate\Auth\Authenticatable;
 use Laravel\Lumen\Auth\Authorizable;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
-use Modules\Users\Models\UsertRole;
+use Modules\Users\Models\UserRole;
 
 class User extends Model implements AuthenticatableContract, AuthorizableContract
 {
@@ -145,7 +145,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      */
     protected function roles()
     {
-        return $this->hasMany(UsertRole::class);
+        return $this->hasMany(UserRole::class);
     }
 
     /**
