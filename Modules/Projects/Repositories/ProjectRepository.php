@@ -147,15 +147,6 @@ class ProjectRepository extends AbstractRepository implements RepositoryInterfac
             $this->model->deliveryChains()->sync($deliveryChains);
         }
 
-        if (array_key_exists('project_specifics', $data)) {
-            foreach ($data['project_specifics'] as $attributes) {
-                $id = array_pull($attributes, 'id');
-                $projectSpecific = ProjectSpecific::find($id);
-                $projectSpecific->fill($attributes);
-                $this->model->projectSpecifics()->save($projectSpecific);
-            }
-        }
-
         $this->model->load($this->getWith());
 
         return $this->model;

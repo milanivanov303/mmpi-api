@@ -40,7 +40,6 @@ class ProjectsTest extends RestTestCase
         $seMntdByClnt     = EnumValue::where('type', 'project_specific_feature')->inRandomOrder()->first();
         $tlMntdByClnt     = EnumValue::where('type', 'project_specific_feature')->inRandomOrder()->first();
         $deliveryChains   = DeliveryChain::inRandomOrder()->limit(3)->get();
-        $projectSpecifics = ProjectSpecific::inRandomOrder()->limit(3)->get();
 
         return [
             'name'               => $this->faker()->text(128),
@@ -72,8 +71,7 @@ class ProjectsTest extends RestTestCase
             'tl_mntd_by_clnt'    => $tlMntdByClnt->toArray(),
             'njsch_mntd_by_clnt' => null,
             'trans_mntd_by_clnt' => null,
-            'delivery_chains'    => $deliveryChains->toArray(),
-            "project_specifics"  => $projectSpecifics->toArray()
+            'delivery_chains'    => $deliveryChains->toArray()
         ];
     }
 
