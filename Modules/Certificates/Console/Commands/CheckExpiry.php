@@ -94,7 +94,8 @@ class CheckExpiry extends Command
 
         return [
             'project_name' => $certificate->project->name,
-            'valid_to'     => $valideTo
+            'valid_to'     => $valideTo,
+            'hash'         => $certificate->hash
         ];
     }
 
