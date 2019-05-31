@@ -6,7 +6,7 @@ use Illuminate\Auth\Authenticatable;
 use Laravel\Lumen\Auth\Authorizable;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
-use Modules\Projects\Models\Project;
+use Modules\Users\Models\UsertRole;
 
 class User extends Model implements AuthenticatableContract, AuthorizableContract
 {
@@ -140,13 +140,13 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         return $this->belongsTo(User::class, 'deputy_id');
     }
 
-    // /**
-    //  * Get user roles.
-    //  */
-    // protected function roles()
-    // {
-    //     return $this->belongsToMany(Project::class, 'users_prjs_roles');
-    // }
+    /**
+     * Get user roles.
+     */
+    protected function roles()
+    {
+        return $this->hasMany(UsertRole::class);
+    }
 
     /**
      * Get only active users

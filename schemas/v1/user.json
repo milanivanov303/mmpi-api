@@ -91,6 +91,12 @@
                 },
                 {"type": "null"}
             ]
+        },
+        "roles": {
+            "type": "array",
+            "items": {
+                
+            }
         }
     }
 }
