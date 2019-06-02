@@ -1,53 +1,37 @@
-FROM avitohol.codixfr.private:5000/web:latest
-ARG XDEBUG_CONFIG_ARG
-ARG PHP_IDE_CONFIG_ARG
-ARG BACKUP2_IP_ARG=10.8.7.31
+FROM php:7.3.6-apache-stretch
 
-# Install cvs
-RUN echo "${BACKUP2_IP_ARG} backup2" >> /etc/hosts && yum -y install cvs
+RUN apt-get update
 
-USER enterprise
+# Install git
+RUN apt-get -y install git
 
-# Set xdebug environment variables in user enterprise profile
-RUN [[ ! -z ${XDEBUG_CONFIG_ARG} ]] && echo "export XDEBUG_CONFIG=\"${XDEBUG_CONFIG_ARG}\"" >> ${HOME}/.profile || echo ""
-RUN [[ ! -z ${PHP_IDE_CONFIG_ARG} ]] && echo "export PHP_IDE_CONFIG=\"${PHP_IDE_CONFIG_ARG}\"" >> ${HOME}/.profile || echo ""
+# Install php mysql pdo driver
+RUN docker-php-ext-install pdo_mysql
 
-# Create built directory if not exists
-RUN mkdir -p ${HOME}/services/built
+# Install ldap
+RUN apt-get -y install libldap2-dev \
+    && docker-php-ext-install ldap \
+    && echo "TLS_REQCERT never" >> /etc/ldap/ldap.conf
 
-# ================ Install cppcheck ====================== #
-ENV CPPCHECKVERSION=1.80
+# Install composer
+RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
+    && php -r "if (hash_file('SHA384', 'composer-setup.php') === trim(file_get_contents('https://composer.github.io/installer.sig'))) { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;" \
+    && php composer-setup.php --install-dir=/usr/local/bin --filename=composer \
+    && php -r "unlink('composer-setup.php');"
 
-# Download
-RUN cd ${HOME}/services/pck \
-    && wget https://github.com/danmar/cppcheck/archive/${CPPCHECKVERSION}.tar.gz
+# Install xdebug
+RUN apt-get -y install $PHPIZE_DEPS \
+    && pecl install xdebug \
+    && echo "zend_extension=$(find /usr/local/lib/php/extensions/ -name xdebug.so)" > /usr/local/etc/php/conf.d/xdebug.ini
 
-# Move cppcheck for build
-RUN cd ${HOME}/services/pck \
-    && cp ${CPPCHECKVERSION}.tar.gz ../build/ \
-    && cd ../build \
-    && zcat ${CPPCHECKVERSION}.tar.gz | tar -xvf - \
-    && rm ${CPPCHECKVERSION}.tar.gz
+COPY vhost.conf /etc/apache2/sites-available/000-default.conf
+COPY ssl/server.crt /etc/apache2/ssl/server.crt
+COPY ssl/server.key /etc/apache2/ssl/server.key
+COPY start.sh /usr/local/bin/start
 
-# Make cppcheck
-RUN cd ${HOME}/services/build \
-    && cd cppcheck-${CPPCHECKVERSION} \
-    && make PREFIX=${HOME}/services/built/cppcheck-${CPPCHECKVERSION} CFGDIR=${HOME}/services/built/cppcheck-${CPPCHECKVERSION}/cfg HAVE_RULES=yes \
-    && make install PREFIX=${HOME}/services/built/cppcheck-${CPPCHECKVERSION} CFGDIR=${HOME}/services/built/cppcheck-${CPPCHECKVERSION}/cfg
+RUN chown -R www-data:www-data /var/www/html \
+    && chmod u+x /usr/local/bin/start \
+    && a2enmod rewrite \
+    && a2enmod ssl
 
-# Add cppcheck in .custom_profile
-RUN echo $'\n\
-#=================  cppcheck  ===============#\n\
-export CPPCHECKVERSION="cppcheck-1.80"\n\
-[[ -z ${CPPCHECKVERSION} ]] && CPPCHECK_HOME="" || CPPCHECK_HOME=${HOME}/services/built/${CPPCHECKVERSION}\n\
- if [[ -d ${CPPCHECK_HOME} ]]\n\
-  then\n\
-   export CPPCHECK_HOME\n\
-   export CPPCHECK_BIN=${CPPCHECK_HOME}/bin\n\
- fi\n\
-[[ -d ${CPPCHECK_BIN} ]] && export PATH=${CPPCHECK_BIN}:${PATH};\n\
-#===========================================#\n\
-' >> ${HOME}/.custom_profile
-# ======================================================== #
-
-USER root
+CMD ["/usr/local/bin/start"]

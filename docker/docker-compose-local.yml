@@ -8,22 +8,57 @@ services:
         build:
             context: web
             args:
-                XDEBUG_CONFIG_ARG: remote_host=${XDEBUG_REMOTE_HOST}
-                               remote_port=9000
-                               remote_enable=On
-                               remote_autostart=On
-                PHP_IDE_CONFIG_ARG: serverName=${XDEBUG_SERVER_NAME}
                 BACKUP2_IP_ARG: 192.9.202.186
-        stdin_open: true
         ports:
             - ${WEB_CONTAINER_IP}:${WEB_CONTAINER_SSH_PORT:-22}:22
             - ${WEB_CONTAINER_IP}:${WEB_CONTAINER_HTTP_PORT:-80}:80
             - ${WEB_CONTAINER_IP}:${WEB_CONTAINER_HTTPS_PORT:-443}:443
-            - ${WEB_CONTAINER_IP}:${WEB_CONTAINER_MYSQL_PORT:-3306}:3306
         volumes:
-            - ${WEB_CONTAINER_SRC_VOLUME:-../.}:/enterprise/src
-            - ${WEB_CONTAINER_DB_VOLUME:-../storage/db/mysql}:/enterprise/mysql-data
-        working_dir: /enterprise/src
+            - ${WEB_CONTAINER_SRC_VOLUME:-../.}:/var/www/html
+        environment:
+            XDEBUG_CONFIG: remote_host=${XDEBUG_REMOTE_HOST}
+                           remote_port=9000
+                           remote_enable=On
+                           remote_autostart=On
+            PHP_IDE_CONFIG: serverName=${XDEBUG_SERVER_NAME}
+        depends_on:
+            - mysql
+        working_dir: /var/www/html
+        networks:
+            - local
+
+    scheduler:
+        image: ${WEB_CONTAINER_IMAGE:-api-mmpi/web}
+        container_name: ${WEB_CONTAINER_NAME:-api-mmpi-web}-scheduler
+        volumes:
+            - ${WEB_CONTAINER_SRC_VOLUME:-../.}:/var/www/html
+        environment:
+            CONTAINER_ROLE: scheduler
+        depends_on:
+            - web
+
+    queue:
+        image: ${WEB_CONTAINER_IMAGE:-api-mmpi/web}
+        container_name: ${WEB_CONTAINER_NAME:-api-mmpi-web}-queue
+        volumes:
+            - ${WEB_CONTAINER_SRC_VOLUME:-../.}:/var/www/html
+        environment:
+            CONTAINER_ROLE: queue
+        depends_on:
+            - web
+
+    mysql:
+        image: ${DB_CONTAINER_IMAGE:-api-mmpi/db}
+        container_name: ${DB_CONTAINER_NAME:-api-mmpi-db}
+        build: mysql
+        environment:
+            - MYSQL_DATABASE=mmpi
+            - MYSQL_USER=mmpi
+            - MYSQL_PASSWORD=ipmm
+            - MYSQL_ROOT_PASSWORD=root
+            - MYSQL_ROOT_HOST=%
+        volumes:
+            - ${WEB_CONTAINER_DB_VOLUME:-../storage/db/mysql}:/var/lib/mysql
         networks:
             - local
 
