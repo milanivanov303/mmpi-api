@@ -5,7 +5,6 @@ namespace App\Models;
 use Core\Contracts\Models\User as UserContact;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
-use Modules\Projects\Models\Project;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Laravel\Lumen\Auth\Authorizable;
 
@@ -119,8 +118,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      */
     protected function roles()
     {
-        return $this->belongsToMany(Project::class, 'users_prjs_roles')
-        ->withPivot('role_id');
+        return $this->hasMany(UserProjectRole::class);
     }
 
     /**
