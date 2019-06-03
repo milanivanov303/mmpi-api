@@ -47,6 +47,18 @@
                 }
             ],
             "description": "Role of the instance for the delivery process"
+        },
+        "projects": {
+            "type": "array",
+            "items": {
+                "$ref": "/v1/projects/project.json"
+            }
+        },
+        "instances": {
+            "type": "array",
+            "items": {
+                "$ref": "/v1/instances/instance.json"
+            }
         }
     }
 }

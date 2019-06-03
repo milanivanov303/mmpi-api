@@ -2,6 +2,8 @@
 
 use App\Models\EnumValue;
 use Modules\DeliveryChains\Models\DeliveryChainType;
+use Modules\Projects\Models\Project;
+use Modules\Instances\Models\Instance;
 
 class DeliveryChainsTest extends RestTestCase
 {
@@ -10,6 +12,8 @@ class DeliveryChainsTest extends RestTestCase
     protected $primaryKey = 'title';
 
     protected $with = [
+        'instances',
+        'projects',
         'dlvry_type',
         'status',
         'dc_version',
@@ -29,6 +33,8 @@ class DeliveryChainsTest extends RestTestCase
         $dcVersion = EnumValue::where('type', 'delivery_chain_version')->inRandomOrder()->first();
         $dcRole    = EnumValue::where('type', 'delivery_chain_role')->inRandomOrder()->first();
         $type      = DeliveryChainType::inRandomOrder()->first();
+        $projects  = Project::active()->inRandomOrder()->limit(3)->get();
+        $instances = Instance::active()->inRandomOrder()->limit(3)->get();
 
         return [
             'title'                => $this->faker()->word(),
@@ -37,7 +43,9 @@ class DeliveryChainsTest extends RestTestCase
             'status'               => $status->toArray(),
             'dc_version'           => $dcVersion->toArray(),
             'dc_role'              => $dcRole->toArray(),
-            'type'                 => $type->toArray()
+            'type'                 => $type->toArray(),
+            'projects'             => $projects->toArray(),
+            'instances'            => $instances->toArray()
         ];
     }
 
