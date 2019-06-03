@@ -9,66 +9,16 @@
             "type": "integer"
         },
         "issue": {
-            "$ref": "/v1/issues/issue.json"
-        },
-        "path": {
-            "$ref": "/v1/enum-values/enum-value.json"
+            "$ref": "/v1/modifications/modification.json#/properties/issue"
         },
         "name": {
-            "type": "string"
+            "$ref": "/v1/modifications/modification.json#/properties/name"
         },
-        "contents": {
-            "type": ["string", "null"]
+        "tablespace": {
+            "$ref": "/v1/modifications/modification.json#/properties/tablespace"
         },
-        "delivery_chain": {
-            "$ref": "/v1/delivery-chains/delivery-chain.json"
-        },
-        "version": {
-            "type": ["string", "null"]
-        },
-        "prev_version": {
-            "type": ["string", "null"]
-        },
-        "revision_converted": {
-            "type": ["string", "null"]
-        },
-        "instance": {
-            "$ref": "/v1/instances/instance.json"
-        },
-        "instance_status": {
-            "oneOf": [
-                {"$ref": "/v1/enum-values/enum-value.json"},
-                {"type": "null"}
-            ]
-        },
-        "comments": {
-            "type": ["string", "null"]
-        },
-        "permissions": {
-            "type": ["string", "null"]
-        },
-        "action_type": {
-            "$ref": "/v1/enum-values/enum-value.json"
-        },
-        "created_by": {
-            "oneOf": [
-                {"$ref": "/v1/user.json"},
-                {"type": "null"}
-            ]
-        },
-        "created_on": {
-            "type": "string",
-            "format": "datetime"
-        },
-        "updated_by": {
-            "oneOf": [
-                {"$ref": "/v1/user.json"},
-                {"type": "null"}
-            ]
-        },
-        "updated_on": {
-            "type": "string",
-            "format": "datetime"
+        "target_schema": {
+            "$ref": "/v1/modifications/modification.json#/properties/target_schema"
         }
     }
 }

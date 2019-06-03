@@ -96,7 +96,7 @@
             "type": ["string", "null"],
             "format": "time"
         },
-        "tablespace_id": {
+        "tablespace": {
             "oneOf": [
                 {
                     "$ref": "/v1/enum-values/enum-value.json"

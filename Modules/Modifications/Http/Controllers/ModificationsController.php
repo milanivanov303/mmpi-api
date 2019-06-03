@@ -7,6 +7,7 @@ use App\Models\Model;
 use Illuminate\Http\Request;
 use Modules\Modifications\Models\OperationModification;
 use Modules\Modifications\Models\SourceModification;
+use Modules\Modifications\Models\TableModification;
 use Modules\Modifications\Repositories\ModificationRepository;
 
 class ModificationsController extends Controller
@@ -44,6 +45,10 @@ class ModificationsController extends Controller
 
         if ($type === 'operations') {
             return new OperationModification();
+        }
+
+        if ($type = 'table') {
+            return new TableModification();
         }
 
         return null;
