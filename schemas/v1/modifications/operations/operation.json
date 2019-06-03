@@ -6,69 +6,16 @@
     "additionalProperties": false,
     "properties": {
         "id": {
-            "type": "integer"
+            "$ref": "/v1/modifications/modification.json#/properties/id"
         },
-        "issue": {
-            "$ref": "/v1/issues/issue.json"
-        },
-        "path": {
-            "$ref": "/v1/enum-values/enum-value.json"
-        },
-        "name": {
-            "type": "string"
-        },
-        "contents": {
-            "type": ["string", "null"]
+        "type": {
+            "$ref": "/v1/modifications/modification.json#/properties/type"
         },
         "delivery_chain": {
-            "$ref": "/v1/delivery-chains/delivery-chain.json"
-        },
-        "version": {
-            "type": ["string", "null"]
-        },
-        "prev_version": {
-            "type": ["string", "null"]
-        },
-        "revision_converted": {
-            "type": ["string", "null"]
-        },
-        "instance": {
-            "$ref": "/v1/instances/instance.json"
+            "$ref": "/v1/modifications/modification.json#/properties/delivery_chain"
         },
         "instance_status": {
-            "oneOf": [
-                {"$ref": "/v1/enum-values/enum-value.json"},
-                {"type": "null"}
-            ]
-        },
-        "comments": {
-            "type": ["string", "null"]
-        },
-        "permissions": {
-            "type": ["string", "null"]
-        },
-        "action_type": {
-            "$ref": "/v1/enum-values/enum-value.json"
-        },
-        "created_by": {
-            "oneOf": [
-                {"$ref": "/v1/user.json"},
-                {"type": "null"}
-            ]
-        },
-        "created_on": {
-            "type": "string",
-            "format": "datetime"
-        },
-        "updated_by": {
-            "oneOf": [
-                {"$ref": "/v1/user.json"},
-                {"type": "null"}
-            ]
-        },
-        "updated_on": {
-            "type": "string",
-            "format": "datetime"
+            "$ref": "/v1/modifications/modification.json#/properties/instance_status"
         }
     }
 }
