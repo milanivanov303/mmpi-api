@@ -8,7 +8,8 @@ class OperationModification extends Modification
 
     protected $visible = [
         'id',
-        'type',
+        'issue',
+        'subtype',
         'deliveryChain',
         'instanceStatus'
     ];
