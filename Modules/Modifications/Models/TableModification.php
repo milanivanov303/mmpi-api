@@ -12,6 +12,7 @@ class TableModification extends Modification
         'name',
         'tablespace',
         'targetSchema',
-        'instanceStatus'
+        'instanceStatus',
+        'subtype'
     ];
 }
