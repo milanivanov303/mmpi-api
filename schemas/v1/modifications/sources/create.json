@@ -8,8 +8,10 @@
         {
             "required": [
                 "name",
-                "issue",
-                "path"
+                "type",
+                "delivery_chain",
+                "prev_version",
+                "instance"
             ]
         }
     ]

@@ -32,7 +32,7 @@ class Modification extends Model
         'old_id',
         'issue_id',
         'pivot',
-        'delivery_chain_id',
+        //'delivery_chain_id',
         'created_by_id',
         'locked_by_id',
         'copied_by_user_id',

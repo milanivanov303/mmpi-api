@@ -6,69 +6,55 @@
     "additionalProperties": false,
     "properties": {
         "id": {
-            "type": "integer"
-        },
-        "issue": {
-            "$ref": "/v1/issues/issue.json"
-        },
-        "path": {
-            "$ref": "/v1/enum-values/enum-value.json"
+            "$ref": "/v1/modifications/modification.json#/properties/id"
         },
         "name": {
-            "type": "string"
+            "$ref": "/v1/modifications/modification.json#/properties/name"
         },
-        "contents": {
-            "type": ["string", "null"]
+        "type": {
+            "$ref": "/v1/modifications/modification.json#/properties/type"
+        },
+        "issue": {
+            "$ref": "/v1/modifications/modification.json#/properties/issue"
+        },
+        "path": {
+            "$ref": "/v1/modifications/modification.json#/properties/path"
         },
         "delivery_chain": {
-            "$ref": "/v1/delivery-chains/delivery-chain.json"
+            "$ref": "/v1/modifications/modification.json#/properties/delivery_chain"
         },
         "version": {
-            "type": ["string", "null"]
+            "$ref": "/v1/modifications/modification.json#/properties/version"
         },
         "prev_version": {
-            "type": ["string", "null"]
-        },
-        "revision_converted": {
-            "type": ["string", "null"]
+            "$ref": "/v1/modifications/modification.json#/properties/prev_version"
         },
         "instance": {
-            "$ref": "/v1/instances/instance.json"
-        },
-        "instance_status": {
-            "oneOf": [
-                {"$ref": "/v1/enum-values/enum-value.json"},
-                {"type": "null"}
-            ]
-        },
-        "comments": {
-            "type": ["string", "null"]
-        },
-        "permissions": {
-            "type": ["string", "null"]
+            "$ref": "/v1/modifications/modification.json#/properties/instance"
         },
         "action_type": {
-            "$ref": "/v1/enum-values/enum-value.json"
+            "$ref": "/v1/modifications/modification.json#/properties/action_type"
+        },
+        "instance_status": {
+            "$ref": "/v1/modifications/modification.json#/properties/instance_status"
+        },
+        "comments": {
+            "$ref": "/v1/modifications/modification.json#/properties/comments"
+        },
+        "permissions": {
+            "$ref": "/v1/modifications/modification.json#/properties/permissions"
         },
         "created_by": {
-            "oneOf": [
-                {"$ref": "/v1/user.json"},
-                {"type": "null"}
-            ]
+            "$ref": "/v1/modifications/modification.json#/properties/created_by"
         },
         "created_on": {
-            "type": "string",
-            "format": "datetime"
+            "$ref": "/v1/modifications/modification.json#/properties/created_on"
         },
         "updated_by": {
-            "oneOf": [
-                {"$ref": "/v1/user.json"},
-                {"type": "null"}
-            ]
+            "$ref": "/v1/modifications/modification.json#/properties/updated_by"
         },
         "updated_on": {
-            "type": "string",
-            "format": "datetime"
+            "$ref": "/v1/modifications/modification.json#/properties/updated_on"
         }
     }
 }

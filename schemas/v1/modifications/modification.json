@@ -199,7 +199,7 @@
             "enum": [0, 1],
             "default": "null"
         },
-        "instance_id": {
+        "instance": {
             "oneOf": [
                 {
                     "$ref": "/v1/instances/instance.json"

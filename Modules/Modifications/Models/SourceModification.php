@@ -9,15 +9,16 @@ class SourceModification extends Modification
     protected $visible = [
         'id',
         'name',
+        'type',
+        'issue',
         'path',
-        'contents',
-        'delivery_chain',
+        'deliveryChain',
         'version',
         'prev_version',
-        'revision_converted',
+        'instance',
+        'actionType',
+        'instanceStatus',
         'comments',
-        'permissions',
-        'action_type',
-        'created_on'
+        'permissions'
     ];
 }
