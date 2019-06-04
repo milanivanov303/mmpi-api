@@ -4,7 +4,6 @@ set -e
 
 ROLE=${CONTAINER_ROLE:-web}
 
-
 if [ ${ROLE} = "scheduler" ]; then
 
     echo "Running the scheduler..."
@@ -22,6 +21,8 @@ elif [ ${ROLE} = "queue" ]; then
 else
 
     echo "Running apache..."
+
+    /etc/init.d/ssh start
     exec apache2-foreground
 
 fi

@@ -2,8 +2,8 @@ FROM php:7.3.6-apache-stretch
 
 RUN apt-get update
 
-# Install git
-RUN apt-get -y install git
+# Install dependencies
+RUN apt-get -y install openssh-server git cppcheck vim
 
 # Install php mysql pdo driver
 RUN docker-php-ext-install pdo_mysql
@@ -24,14 +24,26 @@ RUN apt-get -y install $PHPIZE_DEPS \
     && pecl install xdebug \
     && echo "zend_extension=$(find /usr/local/lib/php/extensions/ -name xdebug.so)" > /usr/local/etc/php/conf.d/xdebug.ini
 
+# Copy vhosts
 COPY vhost.conf /etc/apache2/sites-available/000-default.conf
+
+# Copy certificates
 COPY ssl/server.crt /etc/apache2/ssl/server.crt
 COPY ssl/server.key /etc/apache2/ssl/server.key
-COPY start.sh /usr/local/bin/start
 
-RUN chown -R www-data:www-data /var/www/html \
-    && chmod u+x /usr/local/bin/start \
-    && a2enmod rewrite \
+# Copy entrypoint script
+COPY entrypoint.sh /usr/local/bin/entrypoint
+
+# Give rights to entrypoint script
+RUN chmod u+x /usr/local/bin/entrypoint
+
+# Enable apache modules
+RUN a2enmod rewrite \
     && a2enmod ssl
 
-CMD ["/usr/local/bin/start"]
+# Run entrypoint script
+ENTRYPOINT ["/usr/local/bin/entrypoint"]
+
+# Create a group and user
+RUN useradd --system --groups www-data enterprise
+RUN echo 'enterprise:devenv' | chpasswd
