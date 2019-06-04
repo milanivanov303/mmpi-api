@@ -9,6 +9,7 @@ use Modules\Modifications\Models\OperationModification;
 use Modules\Modifications\Models\SourceModification;
 use Modules\Modifications\Models\TableModification;
 use Modules\Modifications\Repositories\ModificationRepository;
+use Modules\Modifications\Models\BinaryModification;
 
 class ModificationsController extends Controller
 {
@@ -47,8 +48,12 @@ class ModificationsController extends Controller
             return new OperationModification();
         }
 
-        if ($type = 'table') {
+        if ($type === 'table') {
             return new TableModification();
+        }
+
+        if ($type === 'binaries') {
+            return new BinaryModification();
         }
 
         return null;

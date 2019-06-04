@@ -2,14 +2,20 @@
 
 namespace Modules\Modifications\Models;
 
-class OperationModification extends Modification
+class BinaryModification extends Modification
 {
-    protected static $type = 'oper';
+    protected static $type = 'binary';
 
     protected $visible = [
         'id',
         'subtype',
         'issue',
-        'path'
+        'path',
+        'prev_version',
+        'instance',
+        'instanceStatus',
+        'deployment_path',
+        'comments',
+        'permissions'
     ];
 }
