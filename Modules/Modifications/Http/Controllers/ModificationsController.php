@@ -10,6 +10,7 @@ use Modules\Modifications\Models\SourceModification;
 use Modules\Modifications\Models\TableModification;
 use Modules\Modifications\Repositories\ModificationRepository;
 use Modules\Modifications\Models\BinaryModification;
+use Modules\Modifications\Models\CommandModification;
 
 class ModificationsController extends Controller
 {
@@ -54,6 +55,10 @@ class ModificationsController extends Controller
 
         if ($type === 'binaries') {
             return new BinaryModification();
+        }
+
+        if ($type === 'commands') {
+            return new CommandModification();
         }
 
         return null;

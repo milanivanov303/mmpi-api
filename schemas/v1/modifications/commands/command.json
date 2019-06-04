@@ -6,69 +6,34 @@
     "additionalProperties": false,
     "properties": {
         "id": {
-            "type": "integer"
+            "$ref": "/v1/modifications/modification.json#/properties/id"
+        },
+        "subtype": {
+            "$ref": "/v1/modifications/modification.json#/properties/subtype"
         },
         "issue": {
-            "$ref": "/v1/issues/issue.json"
+            "$ref": "/v1/modifications/modification.json#/properties/issue"
         },
         "path": {
-            "$ref": "/v1/enum-values/enum-value.json"
-        },
-        "name": {
-            "type": "string"
-        },
-        "contents": {
-            "type": ["string", "null"]
-        },
-        "delivery_chain": {
-            "$ref": "/v1/delivery-chains/delivery-chain.json"
-        },
-        "version": {
-            "type": ["string", "null"]
+            "$ref": "/v1/modifications/modification.json#/properties/path"
         },
         "prev_version": {
-            "type": ["string", "null"]
-        },
-        "revision_converted": {
-            "type": ["string", "null"]
+            "$ref": "/v1/modifications/modification.json#/properties/prev_version"
         },
         "instance": {
-            "$ref": "/v1/instances/instance.json"
+            "$ref": "/v1/modifications/modification.json#/properties/instance"
         },
         "instance_status": {
-            "oneOf": [
-                {"$ref": "/v1/enum-values/enum-value.json"},
-                {"type": "null"}
-            ]
+            "$ref": "/v1/modifications/modification.json#/properties/instance_status"
+        },
+        "deployment_path": {
+            "$ref": "/v1/modifications/modification.json#/properties/deployment_path"
         },
         "comments": {
-            "type": ["string", "null"]
+            "$ref": "/v1/modifications/modification.json#/properties/comments"
         },
         "permissions": {
-            "type": ["string", "null"]
-        },
-        "action_type": {
-            "$ref": "/v1/enum-values/enum-value.json"
-        },
-        "created_by": {
-            "oneOf": [
-                {"$ref": "/v1/user.json"},
-                {"type": "null"}
-            ]
-        },
-        "created_on": {
-            "type": "string",
-            "format": "datetime"
-        },
-        "updated_by": {
-            "oneOf": [
-                {"$ref": "/v1/user.json"},
-                {"type": "null"}
-            ]
-        },
-        "updated_on": {
-            "type": "string",
-            "format": "datetime"
+            "$ref": "/v1/modifications/modification.json#/properties/permissions"
         }
     }
 }

@@ -41,17 +41,9 @@
         "permissions": {
             "$ref": "/v1/modifications/modification.json#/properties/permissions"
         },
-        "created_by": {
-            "$ref": "/v1/modifications/modification.json#/properties/created_by"
-        },
-        "created_on": {
-            "$ref": "/v1/modifications/modification.json#/properties/created_on"
-        },
-        "updated_by": {
-            "$ref": "/v1/modifications/modification.json#/properties/updated_by"
-        },
-        "updated_on": {
-            "$ref": "/v1/modifications/modification.json#/properties/updated_on"
+        "header_only": {
+            "$ref": "/v1/modifications/modification.json#/properties/header_only"
         }
+
     }
 }

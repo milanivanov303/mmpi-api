@@ -6,7 +6,7 @@
     "additionalProperties": false,
     "properties": {
         "id": {
-            "type": "integer"
+            "$ref": "/v1/modifications/modification.json#/properties/id"
         },
         "issue": {
             "$ref": "/v1/modifications/modification.json#/properties/issue"

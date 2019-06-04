@@ -19,6 +19,7 @@ class SourceModification extends Modification
         'actionType',
         'instanceStatus',
         'comments',
-        'permissions'
+        'permissions',
+        'header_only'
     ];
 }
