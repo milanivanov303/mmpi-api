@@ -3,7 +3,7 @@ FROM php:7.3.6-apache-stretch
 RUN apt-get update
 
 # Install dependencies
-RUN apt-get -y install openssh-server git cppcheck vim
+RUN apt-get -y install openssh-server zip git cppcheck
 
 # Install php mysql pdo driver
 RUN docker-php-ext-install pdo_mysql
@@ -45,5 +45,5 @@ RUN a2enmod rewrite \
 ENTRYPOINT ["/usr/local/bin/entrypoint"]
 
 # Create a group and user
-RUN useradd --system --groups www-data enterprise
+RUN useradd --system --groups www-data --create-home --home-dir /home/enterprise enterprise
 RUN echo 'enterprise:devenv' | chpasswd

@@ -15,13 +15,13 @@ SCRIPT PARAMETERS
 fi
 
 # Try to load env configuration
-DOCKER_COMPOSE_FILE="docker/docker-compose-${APP_ENV}.yml"
+DOCKER_COMPOSE_FILE="docker-compose-${APP_ENV}.yml"
 if [[ ! -f $DOCKER_COMPOSE_FILE ]]; then
-    DOCKER_COMPOSE_FILE="docker/docker-compose.yml"
+    DOCKER_COMPOSE_FILE="docker-compose.yml"
 fi
 
 if [[ ! -f $DOCKER_COMPOSE_FILE ]]; then
-    echo "Could not find docker-compose configuration file in docker directory"
+    echo "Could not find docker-compose configuration file in directory"
 fi
 
 echo "Stopping already running containers"

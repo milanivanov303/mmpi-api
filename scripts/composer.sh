@@ -4,4 +4,4 @@ ARGS="$@"
 # load configuration
 . ./.env
 
-docker exec -i ${WEB_CONTAINER_NAME} bash -c "composer ${ARGS}"
+docker exec -i -u enterprise ${WEB_CONTAINER_NAME} bash -c "composer ${ARGS}"
