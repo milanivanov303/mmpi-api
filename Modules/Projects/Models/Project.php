@@ -6,6 +6,7 @@ use Core\Models\Model;
 use App\Models\User;
 use App\Models\EnumValue;
 use Modules\DeliveryChains\Models\DeliveryChain;
+use Modules\ProjectSpecifics\Models\ProjectSpecific;
 
 class Project extends Model
 {
@@ -167,5 +168,13 @@ class Project extends Model
     public function roles()
     {
         return $this->hasMany(ProjectRole::class);
+    }
+
+    /**
+     * Get project specifics
+     */
+    protected function projectSpecifics()
+    {
+        return $this->hasMany(ProjectSpecific::class);
     }
 }

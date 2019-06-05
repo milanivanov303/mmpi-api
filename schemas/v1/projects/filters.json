@@ -13,6 +13,24 @@
             "$messages": {
                 "$filters": "Project name already registered"
             }
+        },
+        "project_specifics": {
+            "items": {
+                "properties": {
+                    "id": {
+                        "$filters": {
+                            "$func": "checkInDb",
+                            "$vars": {
+                                "rule": "exists:project_specifics,id"
+                            }
+                        },
+                        "$messages": {
+                            "$filters": "Project specific does not exist"
+                        }
+                    }
+                },
+                "required": ["id"]
+            }
         }
     }
 }

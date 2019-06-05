@@ -1,0 +1,42 @@
+{
+    "$id": "ProjectSpecific",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "description": "Project specific object",
+    "additionalProperties": false,
+    "properties": {
+        "id": {
+            "type": "integer"
+        },
+        "project": {
+            "$ref": "/v1/projects/project.json"
+        },
+        "project_specific_feature": {
+            "$ref": "/v1/enum-values/enum-value.json",
+            "description": "The id from table enum_values of the specific feature - enum_values.type=project_specific_feature"
+        },
+        "value": {
+            "type": ["integer", "null"],
+            "default": "null",
+            "description": "'Column to store numeric values some specific features"
+        },
+        "date_characteristic": {
+            "type": ["string", "null"],
+            "format": "date",
+            "default": "null",
+            "description": "Column to store characteristic of type date for some project specifics"
+        },
+        "made_by": {
+            "$ref": "/v1/user.json",
+            "description": "The id of the user who inserted or updated the record"
+        },
+        "made_on": {
+            "type": "string",
+            "format": "datetime",
+            "description": "When was the record inserted or updated"
+        },
+        "comment":{
+            "type": "string"
+        }
+    }
+}
