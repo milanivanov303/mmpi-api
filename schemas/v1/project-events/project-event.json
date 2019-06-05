@@ -14,6 +14,9 @@
         "project_event_type": {
             "$ref": "/v1/enum-values/enum-value.json"
         },
+        "project_event_subtype": {
+            "$ref": "/v1/enum-values/enum-value.json"
+        },
         "event_start_date": {
             "type": ["string", "null"],
             "format": "date",

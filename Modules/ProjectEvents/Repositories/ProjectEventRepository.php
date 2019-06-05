@@ -69,6 +69,13 @@ class ProjectEventRepository extends AbstractRepository implements RepositoryInt
             );
         }
 
+        if (array_key_exists('project_event_subtype', $data)) {
+            $this->model->projectEventSubtype()->associate(
+                app(EnumValue::class)
+                    ->getModelId($data['project_event_subtype'], 'key', ['type' =>'project_event_subtype'])
+            );
+        }
+
         if (array_key_exists('project_event_status', $data)) {
             $this->model->projectEventStatus()->associate(
                 app(EnumValue::class)
