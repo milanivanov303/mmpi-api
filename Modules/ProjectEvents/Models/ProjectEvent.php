@@ -18,7 +18,8 @@ class ProjectEvent extends Model
         'project_id',
         'made_by',
         'project_event_status',
-        'project_event_type_id'
+        'project_event_type_id',
+        'project_event_subtype_id'
     ];
 
     /**
@@ -29,6 +30,7 @@ class ProjectEvent extends Model
     protected $fillable = [
         'project_id',
         'project_event_type_id',
+        'project_event_subtype_id',
         'event_start_date',
         'event_end_date',
         'made_by',
@@ -67,5 +69,13 @@ class ProjectEvent extends Model
     protected function projectEventType()
     {
         return $this->belongsTo(EnumValue::class, 'project_event_type_id');
+    }
+
+    /**
+     * Get project event subtype
+     */
+    protected function projectEventSubtype()
+    {
+        return $this->belongsTo(EnumValue::class, 'project_event_subtype_id');
     }
 }
