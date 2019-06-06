@@ -12,6 +12,7 @@ class ProjectEventsTest extends RestTestCase
     protected $with = [
         'project',
         'project_event_type',
+        'project_event_subtype',
         'project_event_status'
     ];
 
@@ -22,17 +23,19 @@ class ProjectEventsTest extends RestTestCase
      */
     protected function getData()
     {
-        $project            = Project::inRandomOrder()->first();
-        $projectEventType   = EnumValue::where('type', 'project_event_type')->inRandomOrder()->first();
-        $projectEventStatus = EnumValue::where('type', 'project_event_status')->inRandomOrder()->first();
+        $project             = Project::inRandomOrder()->first();
+        $projectEventType    = EnumValue::where('type', 'project_event_type')->inRandomOrder()->first();
+        $projectEventSubtype = EnumValue::where('type', 'project_event_subtype')->inRandomOrder()->first();
+        $projectEventStatus  = EnumValue::where('type', 'project_event_status')->inRandomOrder()->first();
 
         return [
-            'project'              => $project->toArray(),
-            'project_event_type'   => $projectEventType->toArray(),
-            'event_start_date'     => $this->faker()->date('Y-m-d'),
-            'event_end_date'       => $this->faker()->date('Y-m-d'),
-            'description'          => $this->faker()->text(59),
-            'project_event_status' => $projectEventStatus->toArray()
+            'project'               => $project->toArray(),
+            'project_event_type'    => $projectEventType->toArray(),
+            'project_event_subtype' => $projectEventSubtype->toArray(),
+            'event_start_date'      => $this->faker()->date('Y-m-d'),
+            'event_end_date'        => $this->faker()->date('Y-m-d'),
+            'description'           => $this->faker()->text(59),
+            'project_event_status'  => $projectEventStatus->toArray()
         ];
     }
 

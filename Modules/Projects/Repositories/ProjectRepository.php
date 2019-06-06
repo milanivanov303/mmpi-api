@@ -10,6 +10,8 @@ use Core\Repositories\RepositoryInterface;
 use Illuminate\Support\Facades\Auth;
 use Modules\DeliveryChains\Models\DeliveryChain;
 use Modules\Projects\Models\Project;
+use Modules\ProjectSpecifics\Models\ProjectSpecific;
+use Illuminate\Support\Facades\DB;
 
 class ProjectRepository extends AbstractRepository implements RepositoryInterface
 {
@@ -154,15 +156,17 @@ class ProjectRepository extends AbstractRepository implements RepositoryInterfac
      * Delete record
      *
      * @param mixed $id
-     * @return boolean
      *
      * @throws \Exception
      */
     public function delete($id)
     {
-        $model = $this->find($id);
-        $model->deliveryChains()->sync([]);
+        DB::transaction(function () use ($id) {
+            $model = $this->find($id);
+            $model->deliveryChains()->sync([]);
+            $model->projectSpecifics()->delete();
 
-        return $model->delete();
+            $model->delete();
+        });
     }
 }

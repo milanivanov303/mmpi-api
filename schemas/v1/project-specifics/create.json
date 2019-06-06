@@ -1,0 +1,17 @@
+{
+    "$id": "CreateProjectSpecific",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "description": "Project specific object",
+    "allOf": [
+        {"$ref": "/v1/project-specifics/project-specific.json"},
+        {"$ref": "/v1/project-specifics/filters.json"},
+        {
+            "required": [
+                "project",
+                "project_specific_feature",
+                "comment"
+            ]
+        }
+    ]
+}

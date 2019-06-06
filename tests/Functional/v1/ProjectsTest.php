@@ -2,6 +2,7 @@
 
 use App\Models\EnumValue;
 use Modules\DeliveryChains\Models\DeliveryChain;
+use Modules\ProjectSpecifics\Models\ProjectSpecific;
 
 class ProjectsTest extends RestTestCase
 {
@@ -20,7 +21,8 @@ class ProjectsTest extends RestTestCase
         'delivery_chains',
         'njsch_mntd_by_clnt',
         'trans_mntd_by_clnt',
-        'activity'
+        'activity',
+        'project_specifics'
     ];
 
     /**
