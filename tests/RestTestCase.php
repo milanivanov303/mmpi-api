@@ -30,9 +30,10 @@ abstract class RestTestCase extends TestCase
     protected $faker;
 
     /**
-     * Set up test
+     * @inheritDoc
      */
-    public function setUp() {
+    public function setUp() : void
+    {
         parent::setUp();
         $this->actingAs(User::first());
 
