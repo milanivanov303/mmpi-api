@@ -1,4 +1,4 @@
-version: '3.3'
+version: '3.4'
 
 services:
 
@@ -20,9 +20,8 @@ services:
             PHP_IDE_CONFIG: serverName=${XDEBUG_SERVER_NAME}
         depends_on:
             - mysql
+            - elastic
         working_dir: /var/www/html
-        networks:
-            - local
 
     scheduler:
         image: ${WEB_CONTAINER_IMAGE:-api-mmpi/web}
@@ -33,8 +32,6 @@ services:
             CONTAINER_ROLE: scheduler
         depends_on:
             - web
-        networks:
-            - local
 
     queue:
         image: ${WEB_CONTAINER_IMAGE:-api-mmpi/web}
@@ -45,8 +42,12 @@ services:
             CONTAINER_ROLE: queue
         depends_on:
             - web
-        networks:
-            - local
+        healthcheck:
+            test: ["CMD", "pgrep", "-f", "php artisan queue:work"]
+            interval: 1m
+            timeout: 10s
+            retries: 10
+            start_period: 15s
 
     mysql:
         image: ${DB_CONTAINER_IMAGE:-api-mmpi/db}
@@ -56,12 +57,16 @@ services:
             - MYSQL_DATABASE=mmpi
             - MYSQL_USER=mmpi
             - MYSQL_PASSWORD=ipmm
-            - MYSQL_ROOT_PASSWORD=root
+            - MYSQL_ALLOW_EMPTY_PASSWORD=true
             - MYSQL_ROOT_HOST=%
         volumes:
             - mysql:/var/lib/mysql
-        networks:
-            - local
+        healthcheck:
+            test: ["CMD", "mysqladmin", "ping", "-hlocalhost", "-uroot", "-p"]
+            interval: 5s
+            timeout: 10s
+            retries: 10
+            start_period: 15s
 
     elastic:
         image: ${ELASTIC_CONTAINER_IMAGE:-api-mmpi/elastic}
@@ -69,13 +74,9 @@ services:
         build: docker/elasticsearch
         volumes:
             - elasticsearch:/usr/share/elasticsearch/data
-        networks:
-            - local
+        environment:
+            discovery.type: single-node
 
 volumes:
     mysql:
     elasticsearch:
-
-networks:
-    local:
-        driver: bridge

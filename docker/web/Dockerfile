@@ -1,12 +1,16 @@
-FROM php:7.3.6-apache-stretch
+FROM php:7.3.6-apache
 
 RUN apt-get update
 
 # Install dependencies
-RUN apt-get -y install openssh-server zip git cppcheck
+RUN apt-get -y install openssh-server libzip-dev zip git cppcheck
 
 # Install php mysql pdo driver
 RUN docker-php-ext-install pdo_mysql
+
+# Install php zip
+RUN docker-php-ext-configure zip --with-libzip \
+    && docker-php-ext-install zip
 
 # Install ldap
 RUN apt-get -y install libldap2-dev \
@@ -22,7 +26,7 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
 # Install xdebug
 RUN apt-get -y install $PHPIZE_DEPS \
     && pecl install xdebug \
-    && echo "zend_extension=$(find /usr/local/lib/php/extensions/ -name xdebug.so)" > /usr/local/etc/php/conf.d/xdebug.ini
+    && docker-php-ext-enable xdebug
 
 # Copy vhosts
 COPY vhost.conf /etc/apache2/sites-available/000-default.conf
