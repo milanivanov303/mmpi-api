@@ -6,6 +6,7 @@ use Core\Models\Model;
 use App\Models\User;
 use App\Models\EnumValue;
 use Modules\DeliveryChains\Models\DeliveryChain;
+use App\Models\UserProjectRole;
 use Modules\ProjectSpecifics\Models\ProjectSpecific;
 
 class Project extends Model
@@ -165,9 +166,12 @@ class Project extends Model
         return $query->where('inactive', '=', '0');
     }
 
-    public function roles()
+    /**
+     * Get roles
+     */
+    protected function roles()
     {
-        return $this->hasMany(ProjectRole::class);
+        return $this->hasMany(UserProjectRole::class);
     }
 
     /**
