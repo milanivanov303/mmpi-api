@@ -123,6 +123,28 @@ class ProjectRepository extends AbstractRepository implements RepositoryInterfac
                     ->getModelId($data['trans_mntd_by_clnt'], 'key', ['type' => 'project_specific_feature'])
             );
         }
+
+        if (array_key_exists('project_extranet_version', $data)) {
+            $this->model->projectExtranetVersion()->associate(
+                app(EnumValue::class)
+                    ->getModelId(
+                        $data['project_extranet_version'],
+                        'key',
+                        ['type' => 'delivery_chain_version','subtype' => 'EXTRANET']
+                    )
+            );
+        }
+
+        if (array_key_exists('project_intranet_version', $data)) {
+            $this->model->projectIntranetVersion()->associate(
+                app(EnumValue::class)
+                    ->getModelId(
+                        $data['project_intranet_version'],
+                        'key',
+                        ['type' => 'delivery_chain_version', 'subtype' => 'IMX']
+                    )
+            );
+        }
     }
 
     /**
