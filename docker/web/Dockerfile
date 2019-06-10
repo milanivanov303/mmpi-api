@@ -1,9 +1,15 @@
 FROM php:7.3.6-apache
 
-RUN apt-get update
+# Copy config file
+ARG php_config
+COPY ${php_config:-php.ini} /usr/local/etc/php/conf.d/php.ini
+
+# Set timezone
+ARG timezone
+RUN ln -snf /usr/share/zoneinfo/${timezone} /etc/localtime && echo ${timezone} > /etc/timezone
 
 # Install dependencies
-RUN apt-get -y install openssh-server libzip-dev zip git cppcheck
+RUN apt-get update && apt-get -y install apt-utils openssh-server libzip-dev zip git cppcheck
 
 # Install php mysql pdo driver
 RUN docker-php-ext-install pdo_mysql
