@@ -181,7 +181,7 @@ class Project extends Model
     /**
      * Get project intranet version
      */
-    protected function projectIntranetVersion()
+    protected function intranetVersion()
     {
         return $this->belongsTo(EnumValue::class, 'intranet_version');
     }
@@ -189,7 +189,7 @@ class Project extends Model
     /**
      * Get project extranet version
      */
-    protected function projectExtranetVersion()
+    protected function extranetVersion()
     {
         return $this->belongsTo(EnumValue::class, 'extranet_version');
     }
