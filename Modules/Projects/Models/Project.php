@@ -181,4 +181,20 @@ class Project extends Model
     {
         return $this->hasMany(ProjectSpecific::class);
     }
+
+    /**
+     * Get project intranet version
+     */
+    protected function projectIntranetVersion()
+    {
+        return $this->belongsTo(EnumValue::class, 'intranet_version');
+    }
+
+    /**
+     * Get project extranet version
+     */
+    protected function projectExtranetVersion()
+    {
+        return $this->belongsTo(EnumValue::class, 'extranet_version');
+    }
 }
