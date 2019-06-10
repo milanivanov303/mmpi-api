@@ -6,6 +6,8 @@ use Core\Models\Model;
 use App\Models\User;
 use App\Models\EnumValue;
 use Modules\DeliveryChains\Models\DeliveryChain;
+use App\Models\UserProjectRole;
+use Modules\ProjectSpecifics\Models\ProjectSpecific;
 
 class Project extends Model
 {
@@ -27,7 +29,9 @@ class Project extends Model
         'njsch_mntd_by_clnt_id',
         'trans_mntd_by_clnt_id',
         'pivot',
-        'project_to_delivery_chain'
+        'project_to_delivery_chain',
+        'intranet_version',
+        'extranet_version'
     ];
 
     /**
@@ -164,8 +168,35 @@ class Project extends Model
         return $query->where('inactive', '=', '0');
     }
 
-    public function roles()
+    /**
+     * Get roles
+     */
+    protected function roles()
     {
-        return $this->hasMany(ProjectRole::class);
+        return $this->hasMany(UserProjectRole::class);
+    }
+
+    /**
+     * Get project specifics
+     */
+    protected function projectSpecifics()
+    {
+        return $this->hasMany(ProjectSpecific::class);
+    }
+
+    /**
+     * Get project intranet version
+     */
+    protected function intranetVersion()
+    {
+        return $this->belongsTo(EnumValue::class, 'intranet_version');
+    }
+
+    /**
+     * Get project extranet version
+     */
+    protected function extranetVersion()
+    {
+        return $this->belongsTo(EnumValue::class, 'extranet_version');
     }
 }

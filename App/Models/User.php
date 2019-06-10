@@ -114,6 +114,14 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     }
 
     /**
+     * Get user roles.
+     */
+    protected function roles()
+    {
+        return $this->hasMany(UserProjectRole::class);
+    }
+
+    /**
      * Get only active users
      *
      * @param $query

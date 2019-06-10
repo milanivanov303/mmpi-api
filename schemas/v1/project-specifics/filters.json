@@ -1,0 +1,39 @@
+{
+    "$id": "ProjectSpecificsFilters",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+        "project": {
+            "properties": {
+                "id": {
+                    "$filters": {
+                        "$func": "checkInDb",
+                        "$vars": {
+                            "rule": "exists:projects,id"
+                        }
+                    },
+                    "$messages": {
+                        "$filters": "Project does not exist"
+                    }
+                }
+            },
+            "required": ["id"]
+        },
+        "project_specific_feature": {
+            "properties": {
+                "id": {
+                    "$filters": {
+                        "$func": "checkInDb",
+                        "$vars": {
+                            "rule": "exists:enum_values,id"
+                        }
+                    },
+                    "$messages": {
+                        "$filters": "Project specific feature does not exist"
+                    }
+                }
+            },
+            "required": ["id"]
+        }
+    }
+}

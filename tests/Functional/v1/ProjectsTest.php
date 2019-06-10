@@ -2,6 +2,7 @@
 
 use App\Models\EnumValue;
 use Modules\DeliveryChains\Models\DeliveryChain;
+use Modules\ProjectSpecifics\Models\ProjectSpecific;
 
 class ProjectsTest extends RestTestCase
 {
@@ -20,7 +21,10 @@ class ProjectsTest extends RestTestCase
         'delivery_chains',
         'njsch_mntd_by_clnt',
         'trans_mntd_by_clnt',
-        'activity'
+        'activity',
+        'project_specifics',
+        'extranet_version',
+        'intranet_version'
     ];
 
     /**
@@ -38,6 +42,9 @@ class ProjectsTest extends RestTestCase
         $seMntdByClnt     = EnumValue::where('type', 'project_specific_feature')->inRandomOrder()->first();
         $tlMntdByClnt     = EnumValue::where('type', 'project_specific_feature')->inRandomOrder()->first();
         $deliveryChains   = DeliveryChain::active()->inRandomOrder()->limit(3)->get();
+        $extranetVersion  = EnumValue::where('type', 'delivery_chain_version')->where('subtype', 'EXTRANET')->inRandomOrder()->first();
+        $intranetVersion  = EnumValue::where('type', 'delivery_chain_version')->where('subtype', 'IMX')->inRandomOrder()->first();
+
 
         return [
             'name'               => $this->faker()->text(128),
@@ -69,7 +76,9 @@ class ProjectsTest extends RestTestCase
             'tl_mntd_by_clnt'    => $tlMntdByClnt->toArray(),
             'njsch_mntd_by_clnt' => null,
             'trans_mntd_by_clnt' => null,
-            'delivery_chains'    => $deliveryChains->toArray()
+            'delivery_chains'    => $deliveryChains->toArray(),
+            'extranet_version'   => $extranetVersion->toArray(),
+            'intranet_version'   => $intranetVersion->toArray()
         ];
     }
 

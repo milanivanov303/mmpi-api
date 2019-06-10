@@ -214,21 +214,29 @@
                 "$ref": "/v1/delivery-chains/delivery-chain.json"
             }
         },
-        "ïntranet_version": {
-            "type": ["integer", "null"],
-            "default": "null",
-            "description": "iMX version for Intranet"
-        },
-        "extranet_version": {
-            "type": ["integer", "null"],
-            "default": "null",
-            "description": "iMX version for Extranet"
-        },
         "run_cppcheck": {
             "type": "integer",
             "enum": [0, 1],
             "default": 0,
             "description": "Flag determining whether to run cppcheck on source files modifications for this project. 0 - do not run, 1 - run"
+        },
+        "project_specifics": {
+            "type": "array",
+            "items": {
+                "$ref": "/v1/project-specifics/project-specific.json"
+            }
+        },
+        "intranet_version": {
+            "oneOf": [
+                {"$ref": "/v1/enum-values/enum-value.json"},
+                {"type": "null"}
+            ]
+        },
+        "extranet_version": {
+            "oneOf": [
+                {"$ref": "/v1/enum-values/enum-value.json"},
+                {"type": "null"}
+            ]
         }
     }
 }
