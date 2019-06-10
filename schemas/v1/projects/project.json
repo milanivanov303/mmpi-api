@@ -235,6 +235,12 @@
             "items": {
                 "$ref": "/v1/project-specifics/project-specific.json"
             }
+        },
+        "roles": {
+            "type": "array",
+            "items": {
+                "type":  ["object", "null"]
+            }
         }
     }
 }
