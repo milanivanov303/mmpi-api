@@ -214,16 +214,6 @@
                 "$ref": "/v1/delivery-chains/delivery-chain.json"
             }
         },
-        "ïntranet_version": {
-            "type": ["integer", "null"],
-            "default": "null",
-            "description": "iMX version for Intranet"
-        },
-        "extranet_version": {
-            "type": ["integer", "null"],
-            "default": "null",
-            "description": "iMX version for Extranet"
-        },
         "run_cppcheck": {
             "type": "integer",
             "enum": [0, 1],
@@ -236,13 +226,13 @@
                 "$ref": "/v1/project-specifics/project-specific.json"
             }
         },
-        "project_intranet_version": {
+        "intranet_version": {
             "oneOf": [
                 {"$ref": "/v1/enum-values/enum-value.json"},
                 {"type": "null"}
             ]
         },
-        "project_extranet_version": {
+        "extranet_version": {
             "oneOf": [
                 {"$ref": "/v1/enum-values/enum-value.json"},
                 {"type": "null"}
