@@ -235,6 +235,18 @@
             "items": {
                 "$ref": "/v1/project-specifics/project-specific.json"
             }
+        },
+        "project_intranet_version": {
+            "oneOf": [
+                {"$ref": "/v1/enum-values/enum-value.json"},
+                {"type": "null"}
+            ]
+        },
+        "project_extranet_version": {
+            "oneOf": [
+                {"$ref": "/v1/enum-values/enum-value.json"},
+                {"type": "null"}
+            ]
         }
     }
 }
