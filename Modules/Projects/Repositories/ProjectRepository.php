@@ -124,22 +124,22 @@ class ProjectRepository extends AbstractRepository implements RepositoryInterfac
             );
         }
 
-        if (array_key_exists('project_extranet_version', $data)) {
-            $this->model->projectExtranetVersion()->associate(
+        if (array_key_exists('extranet_version', $data)) {
+            $this->model->extranetVersion()->associate(
                 app(EnumValue::class)
                     ->getModelId(
-                        $data['project_extranet_version'],
+                        $data['extranet_version'],
                         'key',
                         ['type' => 'delivery_chain_version','subtype' => 'EXTRANET']
                     )
             );
         }
 
-        if (array_key_exists('project_intranet_version', $data)) {
-            $this->model->projectIntranetVersion()->associate(
+        if (array_key_exists('intranet_version', $data)) {
+            $this->model->intranetVersion()->associate(
                 app(EnumValue::class)
                     ->getModelId(
-                        $data['project_intranet_version'],
+                        $data['intranet_version'],
                         'key',
                         ['type' => 'delivery_chain_version', 'subtype' => 'IMX']
                     )

@@ -29,7 +29,9 @@ class Project extends Model
         'njsch_mntd_by_clnt_id',
         'trans_mntd_by_clnt_id',
         'pivot',
-        'project_to_delivery_chain'
+        'project_to_delivery_chain',
+        'intranet_version',
+        'extranet_version'
     ];
 
     /**
@@ -185,7 +187,7 @@ class Project extends Model
     /**
      * Get project intranet version
      */
-    protected function projectIntranetVersion()
+    protected function intranetVersion()
     {
         return $this->belongsTo(EnumValue::class, 'intranet_version');
     }
@@ -193,7 +195,7 @@ class Project extends Model
     /**
      * Get project extranet version
      */
-    protected function projectExtranetVersion()
+    protected function extranetVersion()
     {
         return $this->belongsTo(EnumValue::class, 'extranet_version');
     }

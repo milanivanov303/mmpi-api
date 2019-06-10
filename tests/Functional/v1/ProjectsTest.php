@@ -23,8 +23,8 @@ class ProjectsTest extends RestTestCase
         'trans_mntd_by_clnt',
         'activity',
         'project_specifics',
-        'project_extranet_version',
-        'project_intranet_version'
+        'extranet_version',
+        'intranet_version'
     ];
 
     /**
@@ -34,51 +34,51 @@ class ProjectsTest extends RestTestCase
      */
     protected function getData()
     {
-        $typeBusiness           = EnumValue::where('type', 'type_business')->inRandomOrder()->first();
-        $group                  = EnumValue::where('type', 'project_groups')->inRandomOrder()->first();
-        $country                = EnumValue::where('type', 'country')->inRandomOrder()->first();
-        $communicationLng       = EnumValue::where('type', 'communication_language')->inRandomOrder()->first();
-        $deliveryMethod         = EnumValue::where('type', 'delivery_method')->inRandomOrder()->first();
-        $seMntdByClnt           = EnumValue::where('type', 'project_specific_feature')->inRandomOrder()->first();
-        $tlMntdByClnt           = EnumValue::where('type', 'project_specific_feature')->inRandomOrder()->first();
-        $deliveryChains         = DeliveryChain::active()->inRandomOrder()->limit(3)->get();
-        $projectExtranetVersion = EnumValue::where('type', 'delivery_chain_version')->where('subtype', 'EXTRANET')->inRandomOrder()->first();
-        $projectIntranetVersion = EnumValue::where('type', 'delivery_chain_version')->where('subtype', 'IMX')->inRandomOrder()->first();
+        $typeBusiness     = EnumValue::where('type', 'type_business')->inRandomOrder()->first();
+        $group            = EnumValue::where('type', 'project_groups')->inRandomOrder()->first();
+        $country          = EnumValue::where('type', 'country')->inRandomOrder()->first();
+        $communicationLng = EnumValue::where('type', 'communication_language')->inRandomOrder()->first();
+        $deliveryMethod   = EnumValue::where('type', 'delivery_method')->inRandomOrder()->first();
+        $seMntdByClnt     = EnumValue::where('type', 'project_specific_feature')->inRandomOrder()->first();
+        $tlMntdByClnt     = EnumValue::where('type', 'project_specific_feature')->inRandomOrder()->first();
+        $deliveryChains   = DeliveryChain::active()->inRandomOrder()->limit(3)->get();
+        $extranetVersion  = EnumValue::where('type', 'delivery_chain_version')->where('subtype', 'EXTRANET')->inRandomOrder()->first();
+        $intranetVersion  = EnumValue::where('type', 'delivery_chain_version')->where('subtype', 'IMX')->inRandomOrder()->first();
 
 
         return [
-            'name'                     => $this->faker()->text(128),
-            'clnt_cvs_dir'             => $this->faker()->text(32),
-            'pnp_type'                 => $this->faker()->text(32),
-            'clnt_code'                => $this->faker()->text(16),
-            'clnt_code2'               => $this->faker()->text(16),
-            'src_prefix'               => $this->faker()->text(8),
-            'src_prefix2'              => null,
-            'src_itf_prefix'           => null,
-            'getdcli'                  => $this->faker()->text(16),
-            'getdcli2'                 => $this->faker()->text(16),
-            'activity'                 => null,
-            'activite_gpc'             => null,
-            'activite_sdr'             => "o",
-            'imx_formstag'             => null,
-            'forms_lng_dlvry'          => 1,
-            'uses_transl_upd'          => 0,
-            'inactive'                 => 0,
-            'display_name'             => $this->faker()->text(128),
-            'sla_from'                 => $this->faker()->time(),
-            'sla_to'                   => $this->faker()->time(),
-            'type_business'            => $typeBusiness->toArray(),
-            'group'                    => $group->toArray(),
-            'country'                  => $country->toArray(),
-            'communication_lng'        => $communicationLng->toArray(),
-            'delivery_method'          => $deliveryMethod->toArray(),
-            'se_mntd_by_clnt'          => $seMntdByClnt->toArray(),
-            'tl_mntd_by_clnt'          => $tlMntdByClnt->toArray(),
-            'njsch_mntd_by_clnt'       => null,
-            'trans_mntd_by_clnt'       => null,
-            'delivery_chains'          => $deliveryChains->toArray(),
-            'project_extranet_version' => $projectExtranetVersion->toArray(),
-            'project_intranet_version' => $projectIntranetVersion->toArray()
+            'name'               => $this->faker()->text(128),
+            'clnt_cvs_dir'       => $this->faker()->text(32),
+            'pnp_type'           => $this->faker()->text(32),
+            'clnt_code'          => $this->faker()->text(16),
+            'clnt_code2'         => $this->faker()->text(16),
+            'src_prefix'         => $this->faker()->text(8),
+            'src_prefix2'        => null,
+            'src_itf_prefix'     => null,
+            'getdcli'            => $this->faker()->text(16),
+            'getdcli2'           => $this->faker()->text(16),
+            'activity'           => null,
+            'activite_gpc'       => null,
+            'activite_sdr'       => "o",
+            'imx_formstag'       => null,
+            'forms_lng_dlvry'    => 1,
+            'uses_transl_upd'    => 0,
+            'inactive'           => 0,
+            'display_name'       => $this->faker()->text(128),
+            'sla_from'           => $this->faker()->time(),
+            'sla_to'             => $this->faker()->time(),
+            'type_business'      => $typeBusiness->toArray(),
+            'group'              => $group->toArray(),
+            'country'            => $country->toArray(),
+            'communication_lng'  => $communicationLng->toArray(),
+            'delivery_method'    => $deliveryMethod->toArray(),
+            'se_mntd_by_clnt'    => $seMntdByClnt->toArray(),
+            'tl_mntd_by_clnt'    => $tlMntdByClnt->toArray(),
+            'njsch_mntd_by_clnt' => null,
+            'trans_mntd_by_clnt' => null,
+            'delivery_chains'    => $deliveryChains->toArray(),
+            'extranet_version'   => $extranetVersion->toArray(),
+            'intranet_version'   => $intranetVersion->toArray()
         ];
     }
 
