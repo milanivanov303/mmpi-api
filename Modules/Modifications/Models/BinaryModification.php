@@ -8,6 +8,7 @@ class BinaryModification extends Modification
 
     protected $visible = [
         'id',
+        'type',
         'subtype',
         'issue',
         'path',

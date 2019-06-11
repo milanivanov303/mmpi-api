@@ -49,7 +49,7 @@ class ModificationsController extends Controller
             return new OperationModification();
         }
 
-        if ($type === 'table') {
+        if ($type === 'tables') {
             return new TableModification();
         }
 

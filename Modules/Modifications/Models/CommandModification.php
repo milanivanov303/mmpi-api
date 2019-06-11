@@ -8,6 +8,7 @@ class CommandModification extends Modification
 
     protected $visible = [
         'id',
+        'type',
         'issue',
         'name',
         'comments',

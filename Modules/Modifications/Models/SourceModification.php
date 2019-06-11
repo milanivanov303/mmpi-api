@@ -9,7 +9,7 @@ class SourceModification extends Modification
     protected $visible = [
         'id',
         'name',
-        'type',
+        'type_id',
         'issue',
         'path',
         'deliveryChain',

@@ -11,6 +11,9 @@
         "issue": {
             "$ref": "/v1/modifications/modification.json#/properties/issue"
         },
+        "type": {
+            "$ref": "/v1/modifications/modification.json#/properties/type"
+        },
         "name": {
             "$ref": "/v1/modifications/modification.json#/properties/name"
         },

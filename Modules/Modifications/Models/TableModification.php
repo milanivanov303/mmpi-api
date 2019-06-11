@@ -9,6 +9,7 @@ class TableModification extends Modification
     protected $visible = [
         'id',
         'issue',
+        'type',
         'name',
         'tablespace',
         'targetSchema',

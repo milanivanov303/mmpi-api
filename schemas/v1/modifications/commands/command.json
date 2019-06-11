@@ -8,6 +8,9 @@
         "id": {
             "$ref": "/v1/modifications/modification.json#/properties/id"
         },
+        "type": {
+            "$ref": "/v1/modifications/modification.json#/properties/type"
+        },
         "subtype": {
             "$ref": "/v1/modifications/modification.json#/properties/subtype"
         },
