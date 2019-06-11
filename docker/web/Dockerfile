@@ -49,7 +49,8 @@ RUN chmod u+x /usr/local/bin/entrypoint
 
 # Enable apache modules
 RUN a2enmod rewrite \
-    && a2enmod ssl
+    && a2enmod ssl \
+    && a2enmod http2
 
 # Run entrypoint script
 ENTRYPOINT ["/usr/local/bin/entrypoint"]
