@@ -15,5 +15,8 @@ class EventServiceProvider extends ServiceProvider
         'Illuminate\Mail\Events\MessageSending' => [
             'Core\Listeners\SendingMessage',
         ],
+        'Illuminate\Queue\Events\JobFailed' => [
+            'Core\Listeners\FailedJob',
+        ]
     ];
 }
