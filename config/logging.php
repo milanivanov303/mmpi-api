@@ -46,6 +46,7 @@ return [
             'path' => storage_path('logs/lumen.log'),
             'level' => 'debug',
             'days' => 7,
+            'permission' => 0664,
         ],
 
         'http' => [
@@ -53,6 +54,7 @@ return [
             'path' => storage_path('logs/http.log'),
             'level' => 'debug',
             'days' => 7,
+            'permission' => 0664,
         ],
 
         'db' => [
@@ -60,6 +62,7 @@ return [
             'path' => storage_path('logs/db.log'),
             'level' => 'debug',
             'days' => 7,
+            'permission' => 0664,
         ],
 
         'tags' => [
@@ -67,6 +70,7 @@ return [
             'path' => storage_path('logs/tags.log'),
             'level' => 'debug',
             'days' => 7,
+            'permission' => 0664,
         ],
 
         'slack' => [

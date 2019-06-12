@@ -37,7 +37,7 @@ return [
         'database' => [
             'driver' => 'database',
             'table' => env('QUEUE_TABLE', 'jobs'),
-            'queue' => 'audit,default',
+            'queue' => 'audit,hashes,mails,default',
             'retry_after' => 90,
         ],
 

@@ -141,7 +141,7 @@ class HashRepository extends AbstractRepository implements RepositoryInterface
     {
         dispatch(
             (new ProcessTags($this->model))
-                ->onQueue('tags')
+                ->onQueue('hashes')
         );
     }
 

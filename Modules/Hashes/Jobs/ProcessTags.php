@@ -48,18 +48,4 @@ class ProcessTags implements ShouldQueue
 
         Log::channel('tags')->info("End" . PHP_EOL);
     }
-
-    /**
-     * The job failed to process.
-     *
-     * @param \Exception  $e
-     * @return void
-     */
-    public function failed(\Exception $e)
-    {
-        Log::channel('tags')->warning($e->getMessage());
-
-        // Send user notification of failure, etc...
-        //var_dump($e->getMessage());
-    }
 }

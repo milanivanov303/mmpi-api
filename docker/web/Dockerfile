@@ -56,5 +56,9 @@ RUN a2enmod rewrite \
 ENTRYPOINT ["/usr/local/bin/entrypoint"]
 
 # Create a group and user
-RUN useradd --system --groups www-data --create-home --home-dir /home/enterprise enterprise
+RUN useradd --system --create-home --home-dir /home/enterprise enterprise \
+    && usermod --uid 1000 --gid www-data --shell /bin/bash enterprise \
+    && groupmod -g 1000 www-data
 RUN echo 'enterprise:devenv' | chpasswd
+
+
