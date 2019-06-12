@@ -8,8 +8,7 @@ class SourceModification extends Modification
 
     protected $visible = [
         'id',
-        'name',
-        'type_id',
+        'type',
         'issue',
         'path',
         'deliveryChain',
@@ -17,9 +16,9 @@ class SourceModification extends Modification
         'prev_version',
         'instance',
         'actionType',
+        'targetSchema',
         'instanceStatus',
         'comments',
-        'permissions',
-        'header_only'
+        'permissions'
     ];
 }

@@ -23,6 +23,9 @@
         "target_schema": {
             "$ref": "/v1/modifications/modification.json#/properties/target_schema"
         },
+        "instance_status": {
+            "$ref": "/v1/modifications/modification.json#/properties/instance_status"
+        },
         "subtype": {
             "$ref": "/v1/modifications/modification.json#/properties/subtype"
         }

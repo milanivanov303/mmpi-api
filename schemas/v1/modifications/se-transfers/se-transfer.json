@@ -8,24 +8,17 @@
         "id": {
             "type": "integer"
         },
-        "issue": {
-            "$ref": "/v1/issues/issue.json"
-        },
         "type": {
-            "type": "string",
-            "maxLength": 8,
-            "description": "Type of the modification"
-        }
+            "$ref": "/v1/modifications/modification.json#/properties/type"
+        },
+        "subtype": {
+            "$ref": "/v1/modifications/modification.json#/properties/subtype"
+        },
+        "instance": {
+            "$ref": "/v1/modifications/modification.json#/properties/instance"
+        },
+        "instance_status": {
+            "$ref": "/v1/modifications/modification.json#/properties/instance_status"
+        }   
     }
 }
-
-'type_id',
-'check_nok',
-'check_ok',
-'subtype_id',
-'instance_id',
-'path_id',
-'name',
-'user_defined_paths',
-'details',
-'instance_status'

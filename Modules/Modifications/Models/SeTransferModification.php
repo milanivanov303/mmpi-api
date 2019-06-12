@@ -8,16 +8,9 @@ class SeTransferModification extends Modification
 
     protected $visible = [
         'id',
-        'issue_id',
-        'type_id',
-        'check_nok',
-        'check_ok',
-        'subtype_id',
-        'instance_id',
-        'path_id',
-        'name',
-        'user_defined_paths',
-        'details',
-        'instance_status'
+        'type',
+        'subtype',
+        'instance',
+        'instanceStatus'
     ];
 }

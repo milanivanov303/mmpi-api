@@ -11,6 +11,8 @@ use Modules\Modifications\Models\TableModification;
 use Modules\Modifications\Repositories\ModificationRepository;
 use Modules\Modifications\Models\BinaryModification;
 use Modules\Modifications\Models\CommandModification;
+use Modules\Modifications\Models\TemporarySourceModification;
+use Modules\Modifications\Models\SeTransferModification;
 
 class ModificationsController extends Controller
 {
@@ -59,6 +61,14 @@ class ModificationsController extends Controller
 
         if ($type === 'commands') {
             return new CommandModification();
+        }
+
+        if ($type === 'temporary-sources') {
+            return new TemporarySourceModification();
+        }
+
+        if ($type === 'se-transfers') {
+            return new SeTransferModification();
         }
 
         return null;

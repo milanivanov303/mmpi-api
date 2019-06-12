@@ -42,7 +42,7 @@ class Modification extends Model
         'subtype_id',
         'tablespace_id',
         'updated_by_id',
-        'type_id'
+        //'type_id'
     ];
 
     /**

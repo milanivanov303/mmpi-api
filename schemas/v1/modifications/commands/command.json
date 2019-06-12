@@ -11,17 +11,20 @@
         "type": {
             "$ref": "/v1/modifications/modification.json#/properties/type"
         },
-        "subtype": {
-            "$ref": "/v1/modifications/modification.json#/properties/subtype"
-        },
         "issue": {
             "$ref": "/v1/modifications/modification.json#/properties/issue"
         },
-        "path": {
-            "$ref": "/v1/modifications/modification.json#/properties/path"
+        "name": {
+            "$ref": "/v1/modifications/modification.json#/properties/name"
         },
-        "prev_version": {
-            "$ref": "/v1/modifications/modification.json#/properties/prev_version"
+        "comments": {
+            "$ref": "/v1/modifications/modification.json#/properties/comments"
+        },
+        "check_exit_status": {
+            "$ref": "/v1/modifications/modification.json#/properties/check_exit_status"
+        },
+        "subtype": {
+            "$ref": "/v1/modifications/modification.json#/properties/subtype"
         },
         "instance": {
             "$ref": "/v1/modifications/modification.json#/properties/instance"
@@ -29,14 +32,8 @@
         "instance_status": {
             "$ref": "/v1/modifications/modification.json#/properties/instance_status"
         },
-        "deployment_path": {
-            "$ref": "/v1/modifications/modification.json#/properties/deployment_path"
-        },
-        "comments": {
-            "$ref": "/v1/modifications/modification.json#/properties/comments"
-        },
-        "permissions": {
-            "$ref": "/v1/modifications/modification.json#/properties/permissions"
+        "est_run_time": {
+            "$ref": "/v1/modifications/modification.json#/properties/est_run_time"
         }
     }
 }

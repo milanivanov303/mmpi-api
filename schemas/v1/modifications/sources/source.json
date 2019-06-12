@@ -8,8 +8,8 @@
         "id": {
             "$ref": "/v1/modifications/modification.json#/properties/id"
         },
-        "name": {
-            "$ref": "/v1/modifications/modification.json#/properties/name"
+        "type": {
+            "$ref": "/v1/modifications/modification.json#/properties/type"
         },
         "issue": {
             "$ref": "/v1/modifications/modification.json#/properties/issue"
@@ -32,6 +32,9 @@
         "action_type": {
             "$ref": "/v1/modifications/modification.json#/properties/action_type"
         },
+        "target_schema": {
+            "$ref": "/v1/modifications/modification.json#/properties/target_schema"
+        },
         "instance_status": {
             "$ref": "/v1/modifications/modification.json#/properties/instance_status"
         },
@@ -40,10 +43,6 @@
         },
         "permissions": {
             "$ref": "/v1/modifications/modification.json#/properties/permissions"
-        },
-        "header_only": {
-            "$ref": "/v1/modifications/modification.json#/properties/header_only"
         }
-
     }
 }
