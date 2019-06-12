@@ -9,7 +9,7 @@ ARG timezone
 RUN ln -snf /usr/share/zoneinfo/${timezone} /etc/localtime && echo ${timezone} > /etc/timezone
 
 # Install dependencies
-RUN apt-get update && apt-get -y install apt-utils openssh-server libzip-dev zip git cppcheck
+RUN apt-get update && apt-get -y install apt-utils openssh-server libzip-dev zip git vim cppcheck
 
 # Install php mysql pdo driver
 RUN docker-php-ext-install pdo_mysql
