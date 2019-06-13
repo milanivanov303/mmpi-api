@@ -35,7 +35,6 @@ services:
             CONTAINER_ROLE: scheduler
         depends_on:
             - web
-        user: enterprise
         restart: always
         healthcheck:
             test: ["CMD", "pgrep", "-f", "sleep 60"]
@@ -53,7 +52,6 @@ services:
             CONTAINER_ROLE: queue
         depends_on:
             - web
-        user: enterprise
         restart: always
         healthcheck:
             test: ["CMD", "pgrep", "-f", "php artisan queue:work"]
