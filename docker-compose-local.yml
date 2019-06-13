@@ -17,6 +17,7 @@ services:
         volumes:
             - ${WEB_CONTAINER_VOLUME}:/var/www/html
         environment:
+            APACHE_RUN_USER: enterprise
             XDEBUG_CONFIG: remote_host=host.docker.internal
                            remote_port=9000
                            remote_enable=On
@@ -42,6 +43,7 @@ services:
             CONTAINER_ROLE: scheduler
         depends_on:
             - web
+        user: enterprise
         healthcheck:
             test: ["CMD", "pgrep", "-f", "sleep 60"]
             interval: 60s
@@ -58,6 +60,7 @@ services:
             CONTAINER_ROLE: queue
         depends_on:
             - web
+        user: enterprise
         healthcheck:
             test: ["CMD", "pgrep", "-f", "php artisan queue:work"]
             interval: 1m
