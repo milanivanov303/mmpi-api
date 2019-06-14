@@ -12,7 +12,21 @@
             "$ref": "/v1/issues/issue.json"
         },
         "type": {
-            "$ref": "/v1/enum-values/enum-value.json",
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "use_in_dependencies": {
+                    "type": "string"
+                }
+            },
             "description": "Type of the modification"
         },
         "old": {
