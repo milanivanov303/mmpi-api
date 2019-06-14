@@ -4,6 +4,7 @@
     "type": "object",
     "description": "Instnace downtime object",
     "allOf": [
-        {"$ref": "/v1/instance-downtimes/instance-downtime.json"}
+        {"$ref": "/v1/instance-downtimes/instance-downtime.json"},
+        {"$ref": "/v1/instance-downtimes/filters.json"}
     ]
 }

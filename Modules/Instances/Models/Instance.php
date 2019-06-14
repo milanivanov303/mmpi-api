@@ -5,6 +5,7 @@ namespace Modules\Instances\Models;
 use Core\Models\Model;
 use App\Models\EnumValue;
 use Modules\DeliveryChains\Models\DeliveryChainType;
+use Modules\DeliveryChains\Models\DeliveryChain;
 
 class Instance extends Model
 {
@@ -16,6 +17,7 @@ class Instance extends Model
     protected $hidden = [
         'instance_type_id',
         'environment_type_id',
+        'pivot',
         'owner',
         'status'
     ];
@@ -68,5 +70,23 @@ class Instance extends Model
     protected function status()
     {
         return $this->belongsTo(EnumValue::class, 'status');
+    }
+
+    /**
+     * Get delivery_chains
+     */
+    protected function deliveryChains()
+    {
+        return $this->belongsToMany(DeliveryChain::class, 'instance_to_delivery_chain')->active();
+    }
+
+    /**
+     * Get active delivery_chains
+     */
+    public function scopeActive($query)
+    {
+        return $query->whereHas('status', function ($q) {
+                    $q->where('key', 'active');
+        });
     }
 }

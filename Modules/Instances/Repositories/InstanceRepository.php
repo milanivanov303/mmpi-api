@@ -7,6 +7,7 @@ use Core\Repositories\AbstractRepository;
 use Core\Repositories\RepositoryInterface;
 use Modules\DeliveryChains\Models\DeliveryChainType;
 use Modules\Instances\Models\Instance;
+use Modules\DeliveryChains\Models\DeliveryChain;
 
 class InstanceRepository extends AbstractRepository implements RepositoryInterface
 {
@@ -48,6 +49,13 @@ class InstanceRepository extends AbstractRepository implements RepositoryInterfa
                     $query->where('id', $operator, $value);
                 });
             },
+            'delivery_chains_type' => function ($builder, $value, $operator) {
+                return $builder->whereHas('deliveryChains', function ($query) use ($value, $operator) {
+                    $query->whereHas('type', function ($query) use ($value, $operator) {
+                        $query->where('type', $operator, $value);
+                    });
+                });
+            }
         ];
     }
 
@@ -83,5 +91,49 @@ class InstanceRepository extends AbstractRepository implements RepositoryInterfa
         if (array_key_exists('instance_type', $data)) {
             $this->model->instanceType()->associate($data['instance_type']['id'] ?? null);
         }
+    }
+
+    /**
+     * Save record
+     *
+     * @param array $data
+     * @return Model
+     *
+     * @throws \Throwable
+     */
+    protected function save($data)
+    {
+        $this->fillModel($data);
+
+        $this->model->saveOrFail();
+
+        if (array_key_exists('delivery_chains', $data)) {
+            $deliveryChains = [];
+            foreach ($data['delivery_chains'] as $deliveryChain) {
+                $deliveryChains[] = app(DeliveryChain::class)->getModelId($deliveryChain, 'title');
+            }
+            $this->model->deliveryChains()->sync($deliveryChains);
+        }
+
+        $this->model->load($this->getWith());
+
+        return $this->model;
+    }
+
+    
+    /**
+     * Delete record
+     *
+     * @param mixed $id
+     * @return boolean
+     *
+     * @throws \Exception
+     */
+    public function delete($id)
+    {
+        $model = $this->find($id);
+        $model->deliveryChains()->sync([]);
+
+        return $model->delete();
     }
 }

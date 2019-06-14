@@ -155,9 +155,8 @@ return [
         'hosts' => explode(',', env('ELASTIC_HOSTS'))
     ],
 
-    'users_sync_mail' => env('USERS_SYNC_MAIL', 'phpid@codix.bg'),
-
-    'test_mails' => explode(',', env('TEST_MAILS', 'phpid@codix.bg')),
+    'admin-mails' => explode(',', env('ADMIN_MAILS', 'phpid@codixfr.private')),
+    'test-mails'  => explode(',', env('TEST_MAILS', 'phpid@codixfr.private')),
 
     'user-management' => [
         'url'      => env('USER_MANAGEMENT_URL'),
@@ -165,6 +164,10 @@ return [
         'password' => env('USER_MANAGEMENT_PASSWORD')
     ],
 
+    'certificates' => [
+        'check_expiry' => env('CERTIFICATES_CHECK_EXP', '+30 days')
+    ],
+    
     'repository' => [
         'username'   => env('REPO_USERNAME'),
         'public_key' => env('REPO_PUBLIC_KEY', 'ssh/id_rsa_repository')

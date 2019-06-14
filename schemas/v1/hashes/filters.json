@@ -76,7 +76,7 @@
                 }
             },
             "$messages": {
-                "$filters": "Branch does not exist for given repo_type"
+                "$filters": "Branch \"%s\" does not exist for given repo_type"
             }
         }
     }

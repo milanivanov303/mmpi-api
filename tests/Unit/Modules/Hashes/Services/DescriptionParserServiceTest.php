@@ -7,7 +7,8 @@ use Core\Models\Model;
 
 class DescriptionParserServiceTest extends TestCase
 {
-    public function setUp() {
+    public function setUp() : void
+    {
         parent::setUp();
 
         // Mock EnumValue

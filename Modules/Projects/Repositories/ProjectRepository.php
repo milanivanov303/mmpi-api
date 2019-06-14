@@ -10,6 +10,8 @@ use Core\Repositories\RepositoryInterface;
 use Illuminate\Support\Facades\Auth;
 use Modules\DeliveryChains\Models\DeliveryChain;
 use Modules\Projects\Models\Project;
+use Modules\ProjectSpecifics\Models\ProjectSpecific;
+use Illuminate\Support\Facades\DB;
 
 class ProjectRepository extends AbstractRepository implements RepositoryInterface
 {
@@ -121,6 +123,28 @@ class ProjectRepository extends AbstractRepository implements RepositoryInterfac
                     ->getModelId($data['trans_mntd_by_clnt'], 'key', ['type' => 'project_specific_feature'])
             );
         }
+
+        if (array_key_exists('extranet_version', $data)) {
+            $this->model->extranetVersion()->associate(
+                app(EnumValue::class)
+                    ->getModelId(
+                        $data['extranet_version'],
+                        'key',
+                        ['type' => 'delivery_chain_version','subtype' => 'EXTRANET']
+                    )
+            );
+        }
+
+        if (array_key_exists('intranet_version', $data)) {
+            $this->model->intranetVersion()->associate(
+                app(EnumValue::class)
+                    ->getModelId(
+                        $data['intranet_version'],
+                        'key',
+                        ['type' => 'delivery_chain_version', 'subtype' => 'IMX']
+                    )
+            );
+        }
     }
 
     /**
@@ -154,15 +178,17 @@ class ProjectRepository extends AbstractRepository implements RepositoryInterfac
      * Delete record
      *
      * @param mixed $id
-     * @return boolean
      *
      * @throws \Exception
      */
     public function delete($id)
     {
-        $model = $this->find($id);
-        $model->deliveryChains()->sync([]);
+        DB::transaction(function () use ($id) {
+            $model = $this->find($id);
+            $model->deliveryChains()->sync([]);
+            $model->projectSpecifics()->delete();
 
-        return $model->delete();
+            $model->delete();
+        });
     }
 }

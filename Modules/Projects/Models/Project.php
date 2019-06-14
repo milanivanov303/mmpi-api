@@ -6,6 +6,8 @@ use Core\Models\Model;
 use App\Models\User;
 use App\Models\EnumValue;
 use Modules\DeliveryChains\Models\DeliveryChain;
+use App\Models\UserProjectRole;
+use Modules\ProjectSpecifics\Models\ProjectSpecific;
 
 class Project extends Model
 {
@@ -26,7 +28,10 @@ class Project extends Model
         'tl_mntd_by_clnt_id',
         'njsch_mntd_by_clnt_id',
         'trans_mntd_by_clnt_id',
-        'project_to_delivery_chain'
+        'pivot',
+        'project_to_delivery_chain',
+        'intranet_version',
+        'extranet_version'
     ];
 
     /**
@@ -152,6 +157,46 @@ class Project extends Model
      */
     protected function deliveryChains()
     {
-        return $this->belongsToMany(DeliveryChain::class, 'project_to_delivery_chain');
+        return $this->belongsToMany(DeliveryChain::class, 'project_to_delivery_chain')->active();
+    }
+
+    /**
+     * Get active delivery_chains
+     */
+    public function scopeActive($query)
+    {
+        return $query->where('inactive', '=', '0');
+    }
+
+    /**
+     * Get roles
+     */
+    protected function roles()
+    {
+        return $this->hasMany(UserProjectRole::class);
+    }
+
+    /**
+     * Get project specifics
+     */
+    protected function projectSpecifics()
+    {
+        return $this->hasMany(ProjectSpecific::class);
+    }
+
+    /**
+     * Get project intranet version
+     */
+    protected function intranetVersion()
+    {
+        return $this->belongsTo(EnumValue::class, 'intranet_version');
+    }
+
+    /**
+     * Get project extranet version
+     */
+    protected function extranetVersion()
+    {
+        return $this->belongsTo(EnumValue::class, 'extranet_version');
     }
 }

@@ -4,6 +4,7 @@ use App\Models\User;
 use App\Models\EnumValue;
 use Modules\DeliveryChains\Models\DeliveryChainType;
 use Modules\Instances\Models\InstanceType;
+use Modules\DeliveryChains\Models\DeliveryChain;
 
 class InstancesTest extends RestTestCase
 {
@@ -15,7 +16,8 @@ class InstancesTest extends RestTestCase
         'owner',
         'status',
         'environment_type',
-        'instance_type'
+        'instance_type',
+        'delivery_chains'
     ];
 
     /**
@@ -29,6 +31,7 @@ class InstancesTest extends RestTestCase
         $status          = EnumValue::where('type', 'active_inactive')->inRandomOrder()->first();
         $environmentType = DeliveryChainType::inRandomOrder()->first();
         $instanceType    = InstanceType::inRandomOrder()->first();
+        $deliveryChains  = DeliveryChain::active()->inRandomOrder()->limit(3)->get();
 
         return [
             'name'                      => 'CVS',
@@ -42,7 +45,8 @@ class InstancesTest extends RestTestCase
             'tns_name'                  => '',
             'has_patch_install_in_init' => 0,
             'instance_type'             => $instanceType->toArray(),
-            'environment_type'          => $environmentType->toArray()
+            'environment_type'          => $environmentType->toArray(),
+            'delivery_chains'           => $deliveryChains->toArray()
         ];
     }
 
