@@ -11,7 +11,7 @@ $router->group([
         'uses'        => 'InstallationsController@getMany'
     ]);
     $router->get('/{id}', [
-        'as'          => 'Installation.one',
+        'as'          => 'installations.one',
         'schema'      => '/v1/installations/installation.json',
         'description' => 'Get single installation',
         'uses'        => 'InstallationsController@getOne'

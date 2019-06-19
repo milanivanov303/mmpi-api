@@ -2,7 +2,8 @@
 
 namespace Modules\Modifications\Models;
 
-use Core\Models\Model;
+use App\Models\Model;
+use Illuminate\Database\Eloquent\Builder;
 use Modules\Issues\Models\Issue;
 use Modules\Instances\Models\Instance;
 use Modules\DeliveryChains\Models\DeliveryChain;
@@ -12,6 +13,20 @@ use App\Models\DbSchema;
 
 class Modification extends Model
 {
+    /**
+     * Modification type
+     *
+     * @var string|null
+     */
+    protected static $type = null;
+
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'modifications';
+
     /**
      * The attributes that will be hidden in output json
      *
@@ -35,6 +50,63 @@ class Modification extends Model
     ];
 
     /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'name',
+        'namesake',
+        'run_repack',
+        'prev_version',
+        'version',
+        'revision_converted',
+        'contents',
+        'comments',
+        'checksum',
+        'size',
+        'est_run_time',
+        'permissions',
+        'backup_orig_data',
+        'backup_type',
+        'backup_where_clause',
+        'trig_status',
+        'seq_table_name',
+        'seq_column_name',
+        'header_only',
+        'title',
+        'maven_repository',
+        'deployment_path',
+        'check_exit_status',
+        'target_schema',
+        'check_status',
+        'check_msg',
+        'checked_on',
+        'active',
+        'visible',
+        'locked',
+        'is_buggy',
+        'marked_buggy_by',
+        'marked_buggy_on',
+        'bad_content_confirmed',
+        'branch'
+    ];
+
+    /**
+     * @inheritDoc
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        if (static::$type) {
+            static::addGlobalScope('type', function (Builder $builder) {
+                $builder->where('type_id', static::$type);
+            });
+        }
+    }
+
+    /**
      * Get issue
      */
     protected function issue()
@@ -47,7 +119,7 @@ class Modification extends Model
      */
     protected function createdBy()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'created_by_id');
     }
 
     /**

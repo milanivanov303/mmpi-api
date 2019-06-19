@@ -11,13 +11,13 @@ $router->group([
         'uses'        => 'EnumValuesController@getMany'
     ]);
     $router->get('/{id}', [
-        'as'          => 'enum-values.one.id',
+        'as'          => 'enum-values.one',
         'schema'      => '/v1/enum-values/enum-value.json',
         'description' => 'Get enum values',
         'uses'        => 'EnumValuesController@getOne'
     ]);
     $router->get('/{type}/{key}', [
-        'as'          => 'enum-values.one',
+        'as'          => 'enum-values.one.type_and_key',
         'schema'      => '/v1/enum-values/enum-value.json',
         'description' => 'Get enum values',
         'uses'        => 'EnumValuesController@getOne'
@@ -29,24 +29,24 @@ $router->group([
         'uses'        => 'EnumValuesController@create'
     ]);
     $router->put('/{id}', [
-        'as'          => 'enum-values.update.id',
-        'description' => 'Update enum values',
-        'schema'      => '/v1/enum-values/update.json',
-        'uses'        => 'EnumValuesController@update'
-    ]);
-    $router->put('/{type}/{key}', [
         'as'          => 'enum-values.update',
         'description' => 'Update enum values',
         'schema'      => '/v1/enum-values/update.json',
         'uses'        => 'EnumValuesController@update'
     ]);
+    $router->put('/{type}/{key}', [
+        'as'          => 'enum-values.update.type_and_key',
+        'description' => 'Update enum values',
+        'schema'      => '/v1/enum-values/update.json',
+        'uses'        => 'EnumValuesController@update'
+    ]);
     $router->delete('/{id}', [
-        'as'          => 'enum-values.delete.id',
+        'as'          => 'enum-values.delete',
         'description' => 'Delete project',
         'uses'        => 'EnumValuesController@delete'
     ]);
     $router->delete('/{type}/{key}', [
-        'as'          => 'enum-values.delete',
+        'as'          => 'enum-values.delete.type_and_key',
         'description' => 'Delete project',
         'uses'        => 'EnumValuesController@delete'
     ]);

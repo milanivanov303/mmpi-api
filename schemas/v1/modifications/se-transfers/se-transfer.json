@@ -1,0 +1,24 @@
+{
+    "$id": "SeTransferModification",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "description": "SeTransfer Modification object",
+    "additionalProperties": false,
+    "properties": {
+        "id": {
+            "type": "integer"
+        },
+        "type": {
+            "$ref": "/v1/modifications/modification.json#/properties/type"
+        },
+        "subtype": {
+            "$ref": "/v1/modifications/modification.json#/properties/subtype"
+        },
+        "instance": {
+            "$ref": "/v1/modifications/modification.json#/properties/instance"
+        },
+        "instance_status": {
+            "$ref": "/v1/modifications/modification.json#/properties/instance_status"
+        }   
+    }
+}

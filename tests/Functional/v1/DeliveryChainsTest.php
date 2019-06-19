@@ -37,8 +37,8 @@ class DeliveryChainsTest extends RestTestCase
         $instances = Instance::active()->inRandomOrder()->limit(3)->get();
 
         return [
-            'title'                => $this->faker()->word(),
-            'patch_directory_name' => $this->faker()->word(),
+            'title'                => $this->faker()->word().$this->faker()->word(),
+            'patch_directory_name' => $this->faker()->text(32),
             'dlvry_type'           => $dlvryType->toArray(),
             'status'               => $status->toArray(),
             'dc_version'           => $dcVersion->toArray(),

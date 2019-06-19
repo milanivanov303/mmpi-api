@@ -29,7 +29,7 @@ $router->group([
         'uses'        => 'HashesController@update'
     ]);
     $router->delete('/{hash_rev:[0-9a-z]+}', [
-        'as'          => 'hash.delete',
+        'as'          => 'hashes.delete',
         'description' => 'Delete hash',
         'uses'        => 'HashesController@delete'
     ]);

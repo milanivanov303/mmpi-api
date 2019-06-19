@@ -1,0 +1,9 @@
+{
+    "$id": "UpdateBinaryModification",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "description": "Binary Modification object",
+    "allOf": [
+        {"$ref": "/v1/modifications/binaries/binary.json"}
+    ]
+}

@@ -11,7 +11,7 @@ $router->group([
         'uses'        => 'PatchesController@getMany'
     ]);
     $router->get('/{id}', [
-        'as'          => 'patch.one',
+        'as'          => 'patches.one',
         'schema'      => '/v1/patches/patch.json',
         'description' => 'Get single patch',
         'uses'        => 'PatchesController@getOne'

@@ -55,6 +55,9 @@ class InstanceDowntimesTest extends RestTestCase
         // Change parameters
         $data['start_datetime'] = $this->faker()->date('Y-m-d H:i:s');
 
+        // Unset made_on as it is not changed on update and make test invalid
+        unset($data['made_on']);
+
         return $data;
     }
 }

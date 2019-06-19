@@ -9,6 +9,7 @@ $router->group([
         'schema'      => '/v1/jsonrpc/jsonrpc.json',
         'description' => 'JSON RPC',
         'uses'        => 'JsonRpcController@execute',
+        'tags'        => [],
         'openapi'     => [
             'responses' => [
                 '200' => [

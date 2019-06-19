@@ -1,0 +1,16 @@
+{
+    "$id": "CreateTableModification",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "description": "Table Modification object",
+    "allOf": [
+        {"$ref": "/v1/modifications/tables/table.json"},
+        {
+            "required": [
+                "name",
+                "issue",
+                "path"
+            ]
+        }
+    ]
+}

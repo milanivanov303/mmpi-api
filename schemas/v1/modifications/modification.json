@@ -11,17 +11,30 @@
         "issue": {
             "$ref": "/v1/issues/issue.json"
         },
-        "type_id": {
-            "type": "string",
-            "maxLength": 8,
+        "type": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "use_in_dependencies": {
+                    "type": "string"
+                }
+            },
             "description": "Type of the modification"
         },
-        "old_id": {
+        "old": {
             "type": ["integer", "null"],
             "default": "null",
             "description": "Identifier in old modification tables (NULL for new modifications)"
         },
-        "subtype_id": {
+        "subtype": {
             "oneOf": [
                 {
                     "$ref": "/v1/enum-values/enum-value.json"
@@ -33,7 +46,7 @@
             "default": "null",
             "description": "Specific type of the modification"
         },
-        "path_id": {
+        "path": {
             "oneOf": [
                 {
                     "$ref": "/v1/enum-values/enum-value.json"
@@ -97,7 +110,7 @@
             "type": ["string", "null"],
             "format": "time"
         },
-        "tablespace_id": {
+        "tablespace": {
             "oneOf": [
                 {
                     "$ref": "/v1/enum-values/enum-value.json"
@@ -200,7 +213,7 @@
             "enum": [0, 1],
             "default": "null"
         },
-        "instance_id": {
+        "instance": {
             "oneOf": [
                 {
                     "$ref": "/v1/instances/instance.json"
