@@ -13,7 +13,11 @@ use App\Models\DbSchema;
 
 class Modification extends Model
 {
-
+    /**
+     * Modification type
+     *
+     * @var string|null
+     */
     protected static $type = null;
 
     /**
