@@ -48,28 +48,28 @@
         "name": "order_by",
         "in": "query",
         "schema": {
-          "type": "string",
-          "description": "Order results by given property"
-        }
-      },
-      "order_dir": {
-        "name": "order_dir",
-        "in": "query",
-        "schema": {
-          "type": "string",
-          "description": "Direction to use when ordering results",
-          "enum": [
-            "asc",
-            "desc"
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
           ]
-        }
+        },
+        "description": "Order results by given properties",
+        "example": ["id", "name desc"]
       },
       "page": {
         "name": "page",
         "in": "query",
         "schema": {
           "type": "integer",
-          "description": "Return given page from paginated results"
+          "description": "Return given page from paginated results",
+          "example": 1
         }
       },
       "per_page": {
@@ -89,7 +89,8 @@
           "items": {
             "type": "string"
           },
-          "description": "Return only listed fields in results"
+          "description": "Return only listed fields in results",
+          "example": ["id", "name"]
         }
       },
       "with": {
@@ -100,7 +101,8 @@
           "items": {
             "type": "string"
           },
-          "description": "Return relations in results"
+          "description": "Return relations in results",
+          "example": ["made_on"]
         }
       }
     },
