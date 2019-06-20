@@ -1,0 +1,58 @@
+{
+    "$id": "UserProjectRole",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "description": "User project role object",
+    "properties": {
+        "user_id": {
+            "$ref": "/v1/user.json"
+        },
+        "project_id": {
+            "$ref": "/v1/projects/project.json"
+        },
+        "role_id": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "title": {
+                    "type": "string",
+                    "maxLength": 32,
+                    "description": "A menaingful title of the role"
+                },
+                "type": {
+                    "$ref": "/v1/enum-values/enum-value.json",
+                    "description": "Role type - for department or project"
+                },
+                "rank": {
+                    "type": ["integer", "null"],
+                    "default": "null",
+                    "description": "Rank of the role in the management hierarchy"
+                },
+                "description": {
+                    "type": ["string", "null"],
+                    "description": "A short description for the role"
+                },
+                "url": {
+                    "type": ["string", "null"],
+                    "maxLength": 256,
+                    "default": "null",
+                    "description": "An URL defining the role and describing the responsiblities"
+                }
+            }
+        },
+        "made_by": {
+            "$ref": "/v1/user.json"
+        },
+        "made_on": {
+            "type": ["string", "null"],
+            "format": "datetime",
+            "default": "null"
+        },
+        "priority": {
+          "type": ["integer", "null"],
+          "default": "null"
+        }
+    }
+}
