@@ -21,18 +21,18 @@ class TagsService
     /**
      * @var DescriptionParserService
      */
-    protected $parser;
+    protected $description;
 
     /**
      * TagsService constructor
      *
      * @param Model $hashCommit
-     * @param DescriptionParserService $parser
+     * @param DescriptionParserService $description
      */
-    public function __construct(Model $hashCommit, DescriptionParserService $parser)
+    public function __construct(Model $hashCommit, DescriptionParserService $description)
     {
-        $this->hashCommit = $hashCommit;
-        $this->parser     = $parser;
+        $this->hashCommit  = $hashCommit;
+        $this->description = $description;
     }
 
     /**
@@ -74,7 +74,7 @@ class TagsService
      */
     protected function saveTtsKeys($sourceRevTagId)
     {
-        $ttsKeys = $this->parser->getTtsKeys();
+        $ttsKeys = $this->description->getTtsKeys();
         $issues  = Issue::setEagerLoads([])->whereIn('tts_id', $ttsKeys)->get(['id', 'tts_id']);
 
         foreach ($ttsKeys as $sortIndex => $ttsKey) {
@@ -105,7 +105,7 @@ class TagsService
      */
     protected function saveDependencies($sourceRevTagId)
     {
-        $dependencies = $this->parser->getDependencies();
+        $dependencies = $this->description->getDependencies();
         foreach ($dependencies as $dependency) {
             $dependencyService = new DependencyService($dependency);
 
@@ -141,7 +141,7 @@ class TagsService
      */
     protected function saveMerge()
     {
-        $merge = $this->parser->getMerge();
+        $merge = $this->description->getMerge();
 
         if (!preg_match('/[0-9a-f]{40}/i', $merge)) {
             Log::channel('tags')->warning("Could not validate commit merge: {$merge}");
@@ -195,22 +195,22 @@ class TagsService
     {
         $this->clearTags();
 
-        if ($this->parser->hasNoTags()) {
+        if ($this->description->hasNoTags()) {
             Log::channel('tags')->info("No tags detected");
             return true;
         }
 
-        foreach ($this->parser->getTags() as $key => $comment) {
+        foreach ($this->description->getTags() as $key => $comment) {
             $sourceRevCvsTag = $this->saveTag($key, $comment);
             if ($sourceRevCvsTag) {
                 switch ($key) {
-                    case $this->parser::TTS_KEYS_KEY:
+                    case $this->description::TTS_KEYS_KEY:
                         $this->saveTtsKeys($sourceRevCvsTag->id);
                         break;
-                    case $this->parser::DEPENDENCIES_KEY:
+                    case $this->description::DEPENDENCIES_KEY:
                         $this->saveDependencies($sourceRevCvsTag->id);
                         break;
-                    case $this->parser::MERGE_KEY:
+                    case $this->description::MERGE_KEY:
                         $this->saveMerge();
                         break;
                 }

@@ -83,7 +83,7 @@ class ImportHash
         $hash = $ssh2->exec('hg log --rev ' . $rev . ' --template \'
                 \{
                     "branch": "{ifeq(branch, "default", "default", "{branch}")}",
-                    "merge_branch": "{revset("parents(%d)", rev) % "{ifeq(branch, "default", "default", "{branch}")}"}",
+                    "merge_branch": "{revset("parents(%d)", rev) % "{ifeq(branch, "default", "", "{branch}")}"}",
                     "hash_rev": "{node}",
                     "rev": "{rev}",
                     "version": "{tags}",

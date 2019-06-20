@@ -3,6 +3,8 @@
 namespace Modules\Hashes\Services;
 
 use App\Models\EnumValue;
+use JiraRestApi\Issue\IssueService;
+use JiraRestApi\JiraException;
 
 class DescriptionParserService
 {
@@ -39,6 +41,20 @@ class DescriptionParserService
     protected $keys = [];
 
     /**
+     * Mandatory keys
+     *
+     * @var array
+     */
+    protected $mandatoryKeys = [];
+
+    /**
+     * Validation errors
+     *
+     * @var array
+     */
+    protected $errors = [];
+
+    /**
      * HashDescriptionParser constructor
      *
      * @param string $description
@@ -67,12 +83,13 @@ class DescriptionParserService
      */
     protected function setKeys()
     {
-        $enums = app(EnumValue::class)
-                    ::where('type', 'cvs_log_tags_stack')
-                    ->get(['key', 'extra_property']);
+        $cvsTags = app(EnumValue::class)::where('type', 'cvs_log_tags_stack')->get();
 
-        foreach ($enums as $enum) {
-            $this->keys[$enum->key] = $enum->extra_property;
+        foreach ($cvsTags as $cvsTag) {
+            $this->keys[$cvsTag->key] = $cvsTag->extra_property;
+            if ($cvsTag->url === 'mandatory') {
+                $this->mandatoryKeys[$cvsTag->key] = $cvsTag->value;
+            }
         }
     }
 
@@ -145,7 +162,7 @@ class DescriptionParserService
         return array_filter(
             array_map(
                 'trim',
-                preg_split('/[\n,;]/', $data, -1, PREG_SPLIT_NO_EMPTY)
+                preg_split('/[\n,; ]/', $data, -1, PREG_SPLIT_NO_EMPTY)
             )
         );
     }
@@ -258,5 +275,47 @@ class DescriptionParserService
     public function getOtherDependencies()
     {
         return $this->getDataArray(static::OTH_DEPS_KEY);
+    }
+
+    /**
+     * Is valid description
+     *
+     * @return bool
+     */
+    public function isValid() : bool
+    {
+        // check mandatory fields
+        foreach ($this->mandatoryKeys as $cvsTagKey => $cvsTagValue) {
+            if (empty($this->getData($cvsTagKey))) {
+                $this->errors[] = "{$cvsTagValue} is mandatory";
+            }
+        }
+
+        // check tts tickets
+        $issueService = new IssueService();
+        foreach ($this->getTtsKeys() as $ttsKey) {
+            try {
+                $issueService->get($ttsKey);
+            } catch (JiraException $e) {
+                if ($e->getCode() === 404) {
+                    $this->errors[] = "Ticket {$ttsKey} does not exists in TTS";
+                }
+                if ($e->getCode() === 401) {
+                    $this->errors[] = "We were unable to validate ticket {$ttsKey} exists in TTS";
+                }
+            }
+        }
+
+        return count($this->errors) === 0;
+    }
+
+    /**
+     * Get validation errors
+     *
+     * @return array
+     */
+    public function getErrors() : array
+    {
+        return $this->errors;
     }
 }
