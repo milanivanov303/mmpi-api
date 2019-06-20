@@ -4,13 +4,13 @@
     "type": "object",
     "description": "User project role object",
     "properties": {
-        "user_id": {
+        "user": {
             "$ref": "/v1/user.json"
         },
-        "project_id": {
+        "project": {
             "$ref": "/v1/projects/project.json"
         },
-        "role_id": {
+        "role": {
             "type": "object",
             "properties": {
                 "id": {
