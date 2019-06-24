@@ -8,6 +8,7 @@ use Core\Helpers\SSH2;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Modules\Hashes\Jobs\GenerateRamlDocumentation;
 
 class ImportHash
 {
@@ -42,6 +43,16 @@ class ImportHash
                 );
 
                 if ($response->isSuccessful()) {
+                    // search for changed raml files and execute generate documentation job
+                    $ramlFiles = collect($data['files'])->filter(function ($file) {
+                        return false !== strpos($file['name'], '.raml');
+                    });
+                    if ($ramlFiles->count()) {
+                        dispatch(
+                            (new GenerateRamlDocumentation($data['hash_rev'], $ramlFiles))
+                                ->onQueue('raml')
+                        );
+                    }
                     return $response->getData();
                 }
 
@@ -93,8 +104,8 @@ class ImportHash
                 }
                 \'');
 
-        if ($ssh2->getExitCode() !== 0) {
-            throw new \Exception($hash, $ssh2->getExitCode());
+        if ($ssh2->getExitStatus() !== 0) {
+            throw new \Exception($hash, $ssh2->getExitStatus());
         }
 
         $hash = json_decode($hash, JSON_FORCE_OBJECT);

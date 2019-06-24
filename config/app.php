@@ -151,13 +151,38 @@ return [
         'password' => env('LDAP_PASSWORD')
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Elastic Search
+    |--------------------------------------------------------------------------
+    |
+    | Here you may configure the elastic search settings for your application.
+    |
+    */
     'elastic' => [
         'hosts' => explode(',', env('ELASTIC_HOSTS'))
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Mail settings
+    |--------------------------------------------------------------------------
+    |
+    */
+    // send notification mails for problems
     'admin-mails' => explode(',', env('ADMIN_MAILS', 'phpid@codixfr.private')),
+
+    // if not production all mails will be send to this addresses
     'test-mails'  => explode(',', env('TEST_MAILS', 'phpid@codixfr.private')),
 
+    /*
+    |--------------------------------------------------------------------------
+    | User Management
+    |--------------------------------------------------------------------------
+    |
+    | Connection to user management system for login and automation requests
+    |
+    */
     'user-management' => [
         'url'      => env('USER_MANAGEMENT_URL'),
         'username' => env('USER_MANAGEMENT_USERNAME'),
@@ -171,5 +196,11 @@ return [
     'repository' => [
         'username'   => env('REPO_USERNAME'),
         'public_key' => env('REPO_PUBLIC_KEY', 'ssh/id_rsa_repository')
-    ]
+    ],
+
+    'raml2html' => [
+        'host'     => env('RAML2HTML_HOST'),
+        'username' => env('RAML2HTML_USERNAME'),
+        'password' => env('RAML2HTML_PASSWORD'),
+    ],
 ];
