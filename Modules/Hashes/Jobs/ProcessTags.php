@@ -52,7 +52,7 @@ class ProcessTags implements ShouldQueue
                 $commitedByManager = $commitedBy->manager;
             }
 
-            return Mail
+            Mail
                 ::to($commitedBy ?? config('app.admin-mails'))
                 ->cc($commitedByManager ?? config('app.admin-mails'))
                 ->send(new HashDescriptionMail([

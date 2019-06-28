@@ -45,7 +45,7 @@ class TagsService
     protected function saveTag(string $key, string $comment)
     {
         $cvsTagId     = app(EnumValue::class)::where('key', $key)->value('id');
-        $revLogTypeId = app(EnumValue::class)::where('key', $this->hashCommit->repo_module)->value('id');
+        $revLogTypeId = $this->hashCommit->repoType->id;
 
         if (is_null($cvsTagId) || is_null($revLogTypeId)) {
             return false;
@@ -150,7 +150,7 @@ class TagsService
 
         // I have taken this from ivasilev's code. Not sure if it is correct like this!
         $commitLogTypeId = app(EnumValue::class)::where('type', 'revision_log_type')
-                            ->where('key', $this->hashCommit->repo_module)
+                            ->where('key', $this->hashCommit->repoType->key)
                             ->value('id');
 
         $commitMerge = new CommitMerge([
@@ -172,11 +172,9 @@ class TagsService
      */
     protected function clearTags()
     {
-        $revLogTypeId = app(EnumValue::class)::where('key', $this->hashCommit->repo_module)->value('id');
-
         $sourceRevCvsTagIds = app(SourceRevCvsTag::class)
             ::where('source_rev_id', $this->hashCommit->id)
-            ->where('rev_log_type_id', $revLogTypeId)
+            ->where('rev_log_type_id', $this->hashCommit->repoType->id)
             ->pluck('id')
             ->toArray();
 

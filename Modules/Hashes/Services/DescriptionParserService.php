@@ -159,11 +159,18 @@ class DescriptionParserService
      */
     protected function getDataArray(string $key)
     {
+        $pattern = '/[\n,; ]/';
+
+        // if dependencies remove space from pattern
+        if (self::DEPENDENCIES_KEY == $key) {
+            $pattern = str_replace(' ', '', $pattern);
+        }
+
         $data = $this->getData($key);
         return array_filter(
             array_map(
                 'trim',
-                preg_split('/[\n,; ]/', $data, -1, PREG_SPLIT_NO_EMPTY)
+                preg_split($pattern, $data, -1, PREG_SPLIT_NO_EMPTY)
             )
         );
     }

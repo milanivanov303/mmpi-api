@@ -5,6 +5,7 @@ namespace Modules\Hashes\Services;
 //use App\Models\EnumValue;
 use App\Models\ImxTable;
 use App\Models\Source;
+use App\Models\SourceRevision;
 
 class DependencyService
 {
@@ -189,14 +190,22 @@ class DependencyService
     {
         $source = app(Source::class)
                     ::where('source_name', $this->name)
-                    ->withRevision($this->revision)
                     ->first();
 
-        if ($source) {
-            $this->depId = $source->source_id;
-            return $source->source_path;
+        if (is_null($source)) {
+            return null;
         }
 
-        return null;
+        $revision = app(SourceRevision::class)
+                        ::where('source_id', $source->source_id)
+                        ->where('revision', $this->revision)
+                        ->first();
+
+        if (is_null($revision)) {
+            return null;
+        }
+
+        $this->depId = $revision->rev_id;
+        return $source->source_path;
     }
 }
