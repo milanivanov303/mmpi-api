@@ -31,8 +31,6 @@ class ProjectEventRepository extends AbstractRepository implements RepositoryInt
     {
         return [
             'project' => function ($builder, $value, $operator) {
-                dump($builder);
-                exit;
                 return $builder->whereHas('project', function ($query) use ($value, $operator) {
                     $query->where('name', $operator, $value);
                 });
@@ -47,14 +45,18 @@ class ProjectEventRepository extends AbstractRepository implements RepositoryInt
                     $query->where('key', $operator, $value);
                 });
             },
-            'start_end_date' => function ($builder, $value) {
-                $start = $value . '-01';
-                $end = $value . '-31';
+            'date' => function ($builder, $value) {
+                $date = date_parse_from_format('Y-m-d', $value);
+
+                if ($date['month'] === false) {
+                    $format = "%Y";
+                } else {
+                    $format = "%Y-%m";
+                }
 
                 return $builder->whereRaw("
-                    ((event_start_date >= '$start') AND (event_start_date <= '$end')) OR
-                    ((event_end_date <= '$end') AND (event_end_date >= '$start')) OR
-                    ((event_start_date <= '$start') AND (event_end_date >= '$end'))
+                    DATE_FORMAT(event_start_date, '$format') = '$value' OR
+                    DATE_FORMAT(event_end_date, '$format') = '$value'
                 ");
             }
         ];
