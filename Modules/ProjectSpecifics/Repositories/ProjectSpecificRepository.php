@@ -37,6 +37,14 @@ class ProjectSpecificRepository extends AbstractRepository implements Repository
                     }
                     return $query->where('name', $operator, $value);
                 });
+            },
+            'project_specific_feature_subtype' => function ($builder, $value, $operator) {
+                return $builder->whereHas('projectSpecificFeature', function ($query) use ($value, $operator) {
+                    if (is_numeric($value)) {
+                        return $query->where('id', $operator, $value);
+                    }
+                    return $query->where('subtype', $operator, $value);
+                });
             }
         ];
     }
