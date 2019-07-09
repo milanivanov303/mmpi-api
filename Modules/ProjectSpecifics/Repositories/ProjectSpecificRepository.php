@@ -33,10 +33,9 @@ class ProjectSpecificRepository extends AbstractRepository implements Repository
             'project' => function ($builder, $value, $operator) {
                 return $builder->whereHas('project', function ($query) use ($value, $operator) {
                     if (is_numeric($value)) {
-                        $query->where('id', $operator, $value);
-                    } else {
-                        $query->where('name', $operator, $value);
+                        return $query->where('id', $operator, $value);
                     }
+                    return $query->where('name', $operator, $value);
                 });
             }
         ];
