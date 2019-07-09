@@ -29,7 +29,16 @@ class ProjectSpecificRepository extends AbstractRepository implements Repository
      */
     public function filters(): array
     {
-        return [];
+        return [
+            'project' => function ($builder, $value, $operator) {
+                return $builder->whereHas('project', function ($query) use ($value, $operator) {
+                    if (is_numeric($value)) {
+                        return $query->where('id', $operator, $value);
+                    }
+                    return $query->where('name', $operator, $value);
+                });
+            }
+        ];
     }
 
     protected function fillModel(array $data)
