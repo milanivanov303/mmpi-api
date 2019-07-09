@@ -18,7 +18,8 @@ return [
         'certificates'       => 'Certificates',
         'jsonrpc'            => 'Json RPC',
         'instance-downtimes' => 'Instance Downtimes',
-        'branches'           => 'Branches'
+        'branches'           => 'Branches',
+        'project-specifics'  => 'Project Specifics'
     ],
 
     'summary' => [
