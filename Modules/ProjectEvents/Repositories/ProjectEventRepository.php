@@ -60,8 +60,11 @@ class ProjectEventRepository extends AbstractRepository implements RepositoryInt
                     $format .= '-%m';
                 }
                 return $builder->whereRaw("
-                    (DATE_FORMAT(event_start_date, '$format') = '$value' OR
-                    DATE_FORMAT(event_end_date, '$format') = '$value')
+                    (
+                        DATE_FORMAT(event_start_date, '$format') = '$value'
+                        OR
+                        DATE_FORMAT(event_end_date, '$format') = '$value'
+                    )
                 ");
             }
         ];
