@@ -37,22 +37,23 @@ class ImportHash
             if ($data) {
                 $data['repo_type'] = ["key" => $repository->key];
 
+                // search for changed raml files and execute generate documentation job
+                $ramlFiles = collect($data['files'])->filter(function ($file) {
+                    return false !== strpos($file['name'], '.raml');
+                });
+                if ($ramlFiles->count()) {
+                    dispatch(
+                        (new GenerateRamlDocumentation($data['hash_rev'], $ramlFiles))
+                            ->onQueue('raml')
+                    );
+                }
+
                 // Make use of hashes routes
                 $response = app()->handle(
                     app('request')->create('v1/hashes', 'POST', $data)
                 );
 
                 if ($response->isSuccessful()) {
-                    // search for changed raml files and execute generate documentation job
-                    $ramlFiles = collect($data['files'])->filter(function ($file) {
-                        return false !== strpos($file['name'], '.raml');
-                    });
-                    if ($ramlFiles->count()) {
-                        dispatch(
-                            (new GenerateRamlDocumentation($data['hash_rev'], $ramlFiles))
-                                ->onQueue('raml')
-                        );
-                    }
                     return $response->getData();
                 }
 
@@ -127,7 +128,7 @@ class ImportHash
         $hash['rev']            = (int) $hash['rev'];
         $hash['branch']         = ["name" => $hash['branch']];
         $hash['committed_by']   = ["username" => $hash['committed_by']];
-        $hash['repo_timestamp'] = Carbon::createFromTimeString($hash['repo_timestamp'])->format('Y-m-d H:s:i');
+        //$hash['repo_timestamp'] = Carbon::createFromTimeString($hash['repo_timestamp'])->format('Y-m-d H:i:s');
 
         return $hash;
     }

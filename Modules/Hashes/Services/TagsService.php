@@ -153,6 +153,13 @@ class TagsService
                             ->where('key', $this->hashCommit->repoType->key)
                             ->value('id');
 
+        if (is_null($commitLogTypeId)) {
+            Log::channel('tags')->warning(
+                "Could not find commit log type for repo type '{$this->hashCommit->repoType->key}'"
+            );
+            return;
+        }
+
         $commitMerge = new CommitMerge([
             'commit_log_type_id' => $commitLogTypeId,
             'commit_id' => $this->hashCommit->id,
