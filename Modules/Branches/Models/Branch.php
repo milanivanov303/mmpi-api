@@ -20,10 +20,7 @@ class Branch extends Model
      *
      * @var array
      */
-    protected $hidden = [
-        'repo_type_id',
-        'made_by'
-    ];
+    protected $hidden = [];
 
     /**
      * The attributes that are mass assignable.

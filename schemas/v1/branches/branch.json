@@ -13,6 +13,9 @@
             "maxLength": 255,
             "description": "Name of the branch"
         },
+        "repo_type_id": {
+            "type": "integer"
+        },
         "repo_type": {
             "$ref": "/v1/enum-values/enum-value.json",
             "description": "Repository id from enum_values tables of type repository_type"
@@ -31,6 +34,7 @@
                     "$ref": "/v1/user.json",
                     "description": "Id of the User who created the record"
                 },
+                {"type": "integer"},
                 {"type": "null"}
             ],
             "default": "null"  
