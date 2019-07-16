@@ -4,6 +4,7 @@
     "type": "object",
     "description": "Branch object",
     "allOf": [
-        {"$ref": "/v1/branches/branch.json"}
+        {"$ref": "/v1/branches/branch.json"},
+        {"$ref": "/v1/branches/filters.json"}           
     ]
 }
