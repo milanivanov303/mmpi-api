@@ -14,7 +14,8 @@
             "description": "Name of the branch"
         },
         "repo_type_id": {
-            "type": "integer"
+            "type": "integer",
+            "description": "Repository type id from enum_values table"
         },
         "repo_type": {
             "$ref": "/v1/enum-values/enum-value.json",
@@ -40,9 +41,8 @@
             "default": "null"  
         },
         "repo_master_branch": {
-            "type": "integer",
-            "default": 0,
-            "enum": [0, 1],
+            "type": ["integer", "null"],
+            "enum": [0, 1, null],
             "description": "1 - Master Branch for the Repo"
         }
     }

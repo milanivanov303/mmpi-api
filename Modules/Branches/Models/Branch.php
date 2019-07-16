@@ -16,13 +16,6 @@ class Branch extends Model
     protected $table = "hash_branches";
 
     /**
-     * The attributes that will be hidden in output json
-     *
-     * @var array
-     */
-    protected $hidden = [];
-
-    /**
      * The attributes that are mass assignable.
      *
      * @var array
