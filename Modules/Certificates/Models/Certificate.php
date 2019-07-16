@@ -20,19 +20,11 @@ class Certificate extends Model
      * @var array
      */
     protected $fillable = [
+        'project_id',
         'hash',
         'organization_name',
         'valid_from',
         'valid_to'
-    ];
-
-    /**
-     * The attributes that will be hidden in output json
-     *
-     * @var array
-     */
-    protected $hidden = [
-        'project_id'
     ];
 
     /**
