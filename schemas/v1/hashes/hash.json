@@ -12,7 +12,7 @@
             "$ref": "/v1/enum-values/enum-value.json"
         },
         "branch": {
-            "$ref": "/v1/hashes/branch.json"
+            "$ref": "/v1/branches/branch.json"
         },
         "merge_branch": {
             "type": "string",
