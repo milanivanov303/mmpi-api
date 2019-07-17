@@ -15,11 +15,6 @@ class DeliveryChain extends Model
      * @var array
      */
     protected $hidden = [
-        'type_id',
-        'dlvry_type',
-        'status',
-        'dc_version',
-        'dc_role',
         'pivot'
     ];
 
@@ -34,7 +29,8 @@ class DeliveryChain extends Model
         'dlvry_type',
         'status',
         'dc_version',
-        'dc_role'
+        'dc_role',
+        'type_id'
     ];
 
     /**
@@ -101,5 +97,15 @@ class DeliveryChain extends Model
         return $query->whereHas('status', function ($q) {
                     $q->where('key', 'active');
         });
+    }
+     
+    public function getDcVersionAttribute($value)
+    {
+        return (int)$value;
+    }
+    
+    public function getDcRoleAttribute($value)
+    {
+        return (int)$value;
     }
 }

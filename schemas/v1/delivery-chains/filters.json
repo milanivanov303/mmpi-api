@@ -24,6 +24,17 @@
             "$messages": {
                 "$filters": "Delivery chain with this patch_directory_name is already defined"
             }
+        },
+        "type_id": {
+            "$filters": {
+                "$func": "checkInDb",
+                "$vars": {
+                    "rule": "exists:delivery_chain_types,id"
+                }
+            },
+            "$messages": {
+                "$filters": "No such delivery chain type id in table delivery_chains"
+            }
         }
     }
 }
