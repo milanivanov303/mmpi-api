@@ -114,28 +114,28 @@ class DeliveryChainRepository extends AbstractRepository implements RepositoryIn
             );
         }
 
-        if (array_key_exists('dlvry_type', $data)) {
+        if (array_key_exists('dlvry_type', $data) && is_array($data['dlvry_type'])) {
             $this->model->dlvryType()->associate(
                 app(EnumValue::class)
                     ->getModelId($data['dlvry_type'], 'key', ['type' => 'dc_dlvry_type'])
             );
         }
 
-        if (array_key_exists('status', $data)) {
+        if (array_key_exists('status', $data) && is_array($data['status'])) {
             $this->model->status()->associate(
                 app(EnumValue::class)
                     ->getModelId($data['status'], 'key', ['type' => 'active_inactive'])
             );
         }
 
-        if (array_key_exists('dc_version', $data)) {
+        if (array_key_exists('dc_version', $data) && is_array($data['dc_version'])) {
             $this->model->dcVersion()->associate(
                 app(EnumValue::class)
                     ->getModelId($data['dc_version'], 'key', ['type' => 'delivery_chain_version'])
             );
         }
 
-        if (array_key_exists('dc_role', $data)) {
+        if (array_key_exists('dc_role', $data) && is_array($data['dc_role'])) {
             $this->model->dcRole()->associate(
                 app(EnumValue::class)
                     ->getModelId($data['dc_role'], 'key', ['type' => 'delivery_chain_role'])
