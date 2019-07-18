@@ -33,20 +33,7 @@ class Modification extends Model
      * @var array
      */
     protected $hidden = [
-        'old_id',
-        'issue_id',
-        'pivot',
-        'delivery_chain_id',
-        'created_by_id',
-        'locked_by_id',
-        'copied_by_user_id',
-        'instance_id',
-        'deployment_prefix_id',
-        'path_id',
-        'subtype_id',
-        'tablespace_id',
-        'updated_by_id',
-        'type_id'
+        'pivot'
     ];
 
     /**
@@ -89,7 +76,20 @@ class Modification extends Model
         'marked_buggy_by',
         'marked_buggy_on',
         'bad_content_confirmed',
-        'branch'
+        'branch',
+        'old_id',
+        'issue_id',
+        'delivery_chain_id',
+        'locked_by_id',
+        'copied_by_user_id',
+        'instance_id',
+        'deployment_prefix_id',
+        'path_id',
+        'subtype_id',
+        'tablespace_id',
+        'created_by_id',
+        'updated_by_id',
+        'type_id'
     ];
 
     /**

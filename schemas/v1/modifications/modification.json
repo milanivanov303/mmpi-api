@@ -11,6 +11,10 @@
         "issue": {
             "$ref": "/v1/issues/issue.json"
         },
+        "issue_id": {
+            "type": "integer",
+            "description": "Issue id from issues table"
+        },
         "type": {
             "type": "object",
             "properties": {
@@ -29,7 +33,16 @@
             },
             "description": "Type of the modification"
         },
+        "type_id": {
+            "type": "string",
+            "description": "Type of the modification"
+        },
         "old": {
+            "type": ["integer", "null"],
+            "default": "null",
+            "description": "Identifier in old modification tables (NULL for new modifications)"
+        },
+        "old_id": {
             "type": ["integer", "null"],
             "default": "null",
             "description": "Identifier in old modification tables (NULL for new modifications)"
@@ -46,6 +59,10 @@
             "default": "null",
             "description": "Specific type of the modification"
         },
+        "subtype_id": {
+            "type": ["integer", "null"],
+            "description": "Id from enum_values table"
+        },
         "path": {
             "oneOf": [
                 {
@@ -57,6 +74,10 @@
             ],
             "default": "null",
             "description": "File path identifier"
+        },
+        "path_id": {
+            "type": ["integer", "null"],
+            "description": "Id of the path"
         },
         "name": {
             "type": ["string", "null"],
@@ -120,6 +141,10 @@
                 }
             ],
             "description": "Table space identifier"
+        },
+        "tablespace_id": {
+            "type": ["integer", "null"],
+            "description": "Id of the tablespace"
         },
         "permissions": {
             "type": ["string", "null"],
@@ -225,6 +250,10 @@
             "default": "null",
             "description": "Source instance identifier"
         },
+        "instance_id": {
+            "type": ["integer", "null"],
+            "description": "Id of the instance"
+        },
         "delivery_chain": {
             "oneOf": [
                 {
@@ -236,6 +265,10 @@
             ],
             "default": "null",
             "description": "The delivery chain for which the modification is added"
+        },
+        "delivery_chain_id": {
+            "type": ["integer", "null"],
+            "description": "Id of the delivery chain"
         },
         "instance_status": {
             "oneOf": [
@@ -310,6 +343,10 @@
         "created_by": {
             "$ref": "/v1/user.json"
         },
+        "created_by_id": {
+            "type": "integer",
+            "description": "Id of the creator"
+        },
         "updated_on": {
             "type": ["string", "null"],
             "format": "datetime",
@@ -356,6 +393,9 @@
                     },
                     {
                           "type": "null"
+                    },
+                    {
+                        "type": "integer"
                     }
             ],
             "default": "null",
