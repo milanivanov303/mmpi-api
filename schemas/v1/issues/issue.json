@@ -35,6 +35,13 @@
             ],
             "description": "If the task is sub-task, the column contains the id of the master task"
         },
+        "parent_issue_id": {
+            "oneOf": [
+                {"type": "integer"},
+                {"type": "null"}
+            ],
+            "description": "If the task is sub-task, the column contains the id of the master task"
+        },
         "revision": {
             "type": ["string", "null"],
             "description": "",

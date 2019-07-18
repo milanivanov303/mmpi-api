@@ -15,7 +15,6 @@ class Issue extends Model
      */
     protected $hidden = [
         'project_id',
-        'parent_issue_id',
         'dev_instance_id'
     ];
 
