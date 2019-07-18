@@ -47,7 +47,7 @@ class HashCommit extends Model
     /**
      * Get user for the hash.
      */
-    public function repoType()
+    protected function repoType()
     {
         return $this->belongsTo(EnumValue::class, 'repo_type_id');
     }
@@ -55,7 +55,7 @@ class HashCommit extends Model
     /**
      * Get user for the hash.
      */
-    public function branch()
+    protected function branch()
     {
         return $this->belongsTo(HashBranch::class, 'branch_id');
     }
@@ -63,7 +63,7 @@ class HashCommit extends Model
     /**
      * Get the files for the hash.
      */
-    public function files()
+    protected function files()
     {
         return $this->hasMany(HashCommitFile::class, 'hash_commit_id');
     }
@@ -71,7 +71,7 @@ class HashCommit extends Model
     /**
      * Get user for the hash.
      */
-    public function committedBy()
+    protected function committedBy()
     {
         return $this->belongsTo(User::class, 'committed_by');
     }
