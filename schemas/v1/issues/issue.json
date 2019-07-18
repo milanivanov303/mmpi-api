@@ -17,6 +17,10 @@
         "project": {
             "$ref": "/v1/projects/project.json"
         },
+        "project_id": {
+            "type": "integer",
+            "description": "Id of the project"
+        },
         "tts_id": {
             "type": "string",
             "description": "TTS key",
@@ -55,6 +59,10 @@
             ],
             "default": "null"
             
+        },
+        "dev_instance_id": {
+            "type": ["null", "integer"],
+            "description": "Id of dev_instance"
         },
         "priority": {
             "type": "string",
