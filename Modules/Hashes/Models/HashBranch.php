@@ -9,19 +9,9 @@ use Core\Models\Model;
 class HashBranch extends Model
 {
     /**
-     * The attributes that will be hidden in output json
-     *
-     * @var array
-     */
-    protected $hidden = [
-        'repo_type_id',
-        'made_by'
-    ];
-
-    /**
      * Get user for the hash.
      */
-    public function repoType()
+    protected function repoType()
     {
         return $this->belongsTo(EnumValue::class, 'repo_type_id');
     }
@@ -29,7 +19,7 @@ class HashBranch extends Model
     /**
      * Get user for the hash.
      */
-    public function madeBy()
+    protected function madeBy()
     {
         return $this->belongsTo(User::class, 'made_by');
     }
