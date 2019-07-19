@@ -101,7 +101,7 @@ class ImportHash
                     "version": "{tags}",
                     "description": {desc|json},
                     "committed_by": "{author|user}",
-                    "repo_timestamp": "{date|isodate}"
+                    "repo_timestamp": "{date}"
                 }
                 \'');
 
@@ -128,7 +128,7 @@ class ImportHash
         $hash['rev']            = (int) $hash['rev'];
         $hash['branch']         = ["name" => $hash['branch']];
         $hash['committed_by']   = ["username" => $hash['committed_by']];
-        $hash['repo_timestamp'] = Carbon::createFromTimeString($hash['repo_timestamp'])->format('Y-m-d H:i:s');
+        $hash['repo_timestamp'] = Carbon::createFromTimestamp($hash['repo_timestamp'])->format('Y-m-d H:i:s');
 
         return $hash;
     }
