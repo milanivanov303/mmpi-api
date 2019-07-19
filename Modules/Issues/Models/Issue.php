@@ -9,17 +9,6 @@ use Modules\Instances\Models\Instance;
 class Issue extends Model
 {
     /**
-     * The attributes that will be hidden in output json
-     *
-     * @var array
-     */
-    protected $hidden = [
-        'project_id',
-        'parent_issue_id',
-        'dev_instance_id'
-    ];
-
-    /**
      * The attributes that are mass assignable.
      *
      * @var array
