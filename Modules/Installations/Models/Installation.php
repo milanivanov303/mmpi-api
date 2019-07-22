@@ -11,17 +11,6 @@ use Modules\Patches\Models\Patch;
 class Installation extends Model
 {
     /**
-     * The attributes that will be hidden in output json
-     *
-     * @var array
-     */
-    protected $hidden = [
-        'patch_id',
-        'instance_id',
-        'status_id'
-    ];
-
-    /**
      * The attributes that are mass assignable.
      *
      * @var array

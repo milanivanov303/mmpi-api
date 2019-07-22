@@ -1,0 +1,40 @@
+{
+    "$id": "InstallationFilters",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+        "status_id": {
+            "$filters": {
+                "$func": "checkInDb",
+                "$vars": {
+                    "rule": "exists:enum_values,id,type,installation_status"
+                }
+            },
+            "$messages": {
+                "$filters": "Status id is not found in installations table."
+            }
+        },
+        "instance_id": {
+            "$filters": {
+                "$func": "checkInDb",
+                "$vars": {
+                    "rule": "exists:instances,id"
+                }
+            },
+            "$messages": {
+                "$filters": "Instance id is not found in instances table."
+            }
+        },
+        "patch_id": {
+            "$filters": {
+                "$func": "checkInDb",
+                "$vars": {
+                    "rule": "exists:patches,id"
+                }
+            },
+            "$messages": {
+                "$filters": "Patch id is not found in patches table."
+            }
+        } 
+    }
+}
