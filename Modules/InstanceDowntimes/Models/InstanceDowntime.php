@@ -9,16 +9,6 @@ use Modules\Instances\Models\Instance;
 class InstanceDowntime extends Model
 {
     /**
-     * The attributes that will be hidden in output json
-     *
-     * @var array
-     */
-    protected $hidden = [
-        'instance_id',
-        'made_by'
-    ];
-
-    /**
      * The attributes that are mass assignable.
      *
      * @var array
@@ -28,7 +18,8 @@ class InstanceDowntime extends Model
         'end_datetime',
         'status',
         'description',
-        'made_by'
+        'made_by',
+        'instance_id'
     ];
 
     /**
