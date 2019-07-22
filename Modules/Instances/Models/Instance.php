@@ -15,11 +15,7 @@ class Instance extends Model
      * @var array
      */
     protected $hidden = [
-        'instance_type_id',
-        'environment_type_id',
-        'pivot',
-        'owner',
-        'status'
+        'pivot'
     ];
 
     /**
@@ -37,7 +33,9 @@ class Instance extends Model
         'tns_name',
         'has_patch_install_in_init',
         'owner',
-        'status'
+        'status',
+        'instance_type_id',
+        'environment_type_id'
     ];
 
     /**

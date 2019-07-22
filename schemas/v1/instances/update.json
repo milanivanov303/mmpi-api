@@ -4,6 +4,7 @@
     "type": "object",
     "description": "Instance object",
     "allOf": [
-        {"$ref": "/v1/instances/instance.json"}
+        {"$ref": "/v1/instances/instance.json"},
+        {"$ref": "/v1/instances/filters.json"}
     ]
 }
