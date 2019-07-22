@@ -11,8 +11,14 @@
         "patch": {
             "$ref": "/v1/patches/patch.json"
         },
+        "patch_id": {
+            "type": "integer"
+        },
         "instance": {
             "$ref": "/v1/instances/instance.json"
+        },
+        "instance_id": {
+            "type": "integer"
         },
         "installed_on": {
             "type": "string",
@@ -21,6 +27,9 @@
         "status": {
             "$ref": "/v1/enum-values/enum-value.json",
             "description": "Register for patch installations on instances"
+        },
+        "status_id": {
+            "type": "integer"
         },
         "duration": {
             "type": ["string", "null"],
