@@ -10,23 +10,13 @@ use Modules\Projects\Models\Project;
 class ProjectSpecific extends Model
 {
     /**
-     * The attributes that will be hidden in output json
-     *
-     * @var array
-     */
-    protected $hidden = [
-        'prj_specific_feature_id',
-        'project_id',
-        'made_by'
-    ];
-
-    /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
         'prj_specific_feature_id',
+        'project_id',
         'value',
         'date_characteristic',
         'made_by',
