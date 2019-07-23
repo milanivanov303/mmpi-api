@@ -11,17 +11,6 @@ use Modules\Patches\Models\Patch;
 class PatchRequest extends Model
 {
     /**
-     * The attributes that will be hidden in output json
-     *
-     * @var array
-     */
-    protected $hidden = [
-        'issue_id',
-        'delivery_chain_id',
-        'migrated_id'
-    ];
-
-    /**
      * The attributes that are mass assignable.
      *
      * @var array
@@ -41,7 +30,10 @@ class PatchRequest extends Model
         'customer_infomed',
         'nr_test',
         'automated_test',
-        'assign_to_planned_ba'
+        'assign_to_planned_ba',
+        'issue_id',
+        'delivery_chain_id',
+        'migrated_id'
     ];
 
     /**
