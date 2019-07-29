@@ -11,15 +11,31 @@
         "patch_request": {
             "$ref": "/v1/patch-requests/patch-request.json"
         },
+        "patch_request_id": {
+            "type": "integer"
+        },
         "project": {
             "$ref": "/v1/projects/project.json"
+        },
+        "project_id": {
+            "type": "integer"
         },
         "delivery_chain": {
             "$ref": "/v1/delivery-chains/delivery-chain.json"
         },
+        "delivery_chain_id": {
+            "type": "integer"
+        },
         "patch_group": {
             "oneOf": [
                 {"$ref": "/v1/patches/patch-group.json"},
+                {"type": "null"}
+            ],
+            "default": "null"
+        },
+        "patch_group_id": {
+            "oneOf": [
+                {"type": "integer"},
                 {"type": "null"}
             ],
             "default": "null"
@@ -123,6 +139,13 @@
             "default": "null",
             "description": "Technically checked by"
         },
+        "checked_by_id": {
+            "oneOf": [
+                {"type": "integer"},
+                {"type": "null"}
+            ],
+            "default": "null"
+        },
         "checked_on": {
             "type": ["string", "null"],
             "format": "datetime",
@@ -135,6 +158,13 @@
             ],
             "default": "null",
             "description": "QA verificaty by"
+        },
+        "verified_by_id": {
+            "oneOf": [
+                {"type": "integer"},
+                {"type": "null"}
+            ],
+            "default": "null"
         },
         "verified_on": {
             "type": ["string", "null"],

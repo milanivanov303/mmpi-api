@@ -17,21 +17,8 @@ class Project extends Model
      * @var array
      */
     protected $hidden = [
-        'modified_by_id',
-        'type_business',
-        'activity',
-        'group_id',
-        'country_id',
-        'communication_lng_id',
-        'delivery_method_id',
-        'se_mntd_by_clnt_id',
-        'tl_mntd_by_clnt_id',
-        'njsch_mntd_by_clnt_id',
-        'trans_mntd_by_clnt_id',
         'pivot',
-        'project_to_delivery_chain',
-        'intranet_version',
-        'extranet_version'
+        'project_to_delivery_chain'
     ];
 
     /**
@@ -61,7 +48,18 @@ class Project extends Model
         'display_name',
         'sla_from',
         'sla_to',
-        'type_business'
+        'type_business',
+        'modified_by_id',
+        'group_id',
+        'country_id',
+        'communication_lng_id',
+        'delivery_method_id',
+        'se_mntd_by_clnt_id',
+        'tl_mntd_by_clnt_id',
+        'njsch_mntd_by_clnt_id',
+        'trans_mntd_by_clnt_id',
+        'intranet_version',
+        'extranet_version'
     ];
 
     /**
@@ -198,5 +196,10 @@ class Project extends Model
     protected function extranetVersion()
     {
         return $this->belongsTo(EnumValue::class, 'extranet_version');
+    }
+    
+    public function getTypeBusinessAttribute($value)
+    {
+        return (int)$value;
     }
 }

@@ -71,7 +71,8 @@
         "activity": {
             "oneOf": [
                 {"$ref": "/v1/enum-values/enum-value.json"},
-                {"type": "null"}
+                {"type": "null"},
+                {"type": "integer"}
             ],
             "default": "null",
             "description": "Client activity (linked to the value in g_etude.activite)"
@@ -128,6 +129,12 @@
             "default": "null",
             "description": "enum_value.id of the business group this project is part of"
         },
+        "group_id": {
+            "oneOf": [
+                {"type": "null"},
+                {"type": "integer"}
+            ]
+        },
         "country": {
             "oneOf": [
                 {"$ref": "/v1/enum-values/enum-value.json"},
@@ -135,6 +142,12 @@
             ],
             "default": "null",
             "description": "Project country from enum_values"
+        },
+        "country_id": {
+            "oneOf": [
+                {"type": "null"},
+                {"type": "integer"}
+            ]
         },
         "communication_lng": {
             "oneOf": [
@@ -144,6 +157,12 @@
             "default": "null",
             "description": "Communication language for the project from enum_values"
         },
+        "communication_lng_id": {
+            "oneOf": [
+                {"type": "null"},
+                {"type": "integer"}
+            ]
+        },
         "delivery_method": {
             "oneOf": [
                 {"$ref": "/v1/enum-values/enum-value.json"},
@@ -151,6 +170,12 @@
             ],
             "default": "null",
             "description": "Delivery method for the project from enum_values"
+        },
+        "delivery_method_id": {
+            "oneOf": [
+                {"type": "null"},
+                {"type": "integer"}
+            ]
         },
         "se_mntd_by_clnt": {
             "oneOf": [
@@ -160,6 +185,12 @@
             "default": "null",
             "description": "If Expert System is maintained by the client"
         },
+        "se_mntd_by_clnt_id": {
+            "oneOf": [
+                {"type": "null"},
+                {"type": "integer"}
+            ]
+        },
         "tl_mntd_by_clnt": {
             "oneOf": [
                 {"$ref": "/v1/enum-values/enum-value.json"},
@@ -167,6 +198,12 @@
             ],
             "default": "null",
             "description": "If Text library is maintained by the client"
+        },
+        "tl_mntd_by_clnt_id": {
+            "oneOf": [
+                {"type": "null"},
+                {"type": "integer"}
+            ]
         },
         "njsch_mntd_by_clnt": {
             "oneOf": [
@@ -176,6 +213,12 @@
             "default": "null",
             "description": "If Night job scheduler is maintained by the client"
         },
+        "njsch_mntd_by_clnt_id": {
+            "oneOf": [
+                {"type": "null"},
+                {"type": "integer"}
+            ]
+        },
         "trans_mntd_by_clnt": {
             "oneOf": [
                 {"$ref": "/v1/enum-values/enum-value.json"},
@@ -183,6 +226,12 @@
             ],
             "default": "null",
             "description": "If Translations are maintained by the client"
+        },
+        "trans_mntd_by_clnt_id": {
+            "oneOf": [
+                {"type": "null"},
+                {"type": "integer"}
+            ]
         },
         "sla_from": {
             "type": ["string", "null"],
@@ -202,10 +251,17 @@
             "default": "null",
             "description": "The user id who inserted the record or made the last change"
         },
+        "modified_by_id": {
+            "oneOf": [
+                {"type": "null"},
+                {"type": "integer"}
+            ]
+        },
         "type_business": {
             "oneOf": [
                 {"$ref": "/v1/enum-values/enum-value.json"},
-                {"type": "null"}
+                {"type": "null"},
+                {"type": "integer"}
             ]
         },
         "delivery_chains": {
@@ -240,13 +296,15 @@
         "intranet_version": {
             "oneOf": [
                 {"$ref": "/v1/enum-values/enum-value.json"},
-                {"type": "null"}
+                {"type": "null"},
+                {"type": "integer"}
             ]
         },
         "extranet_version": {
             "oneOf": [
                 {"$ref": "/v1/enum-values/enum-value.json"},
-                {"type": "null"}
+                {"type": "null"},
+                {"type": "integer"}
             ]
         }
     }
