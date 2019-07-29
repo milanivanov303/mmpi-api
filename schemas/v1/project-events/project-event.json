@@ -11,11 +11,23 @@
         "project": {
             "$ref": "/v1/projects/project.json"
         },
+        "project_id": {
+            "type": "integer"
+        },
         "project_event_type": {
             "$ref": "/v1/enum-values/enum-value.json"
         },
+        "project_event_type_id": {
+            "type": "integer"
+        },
         "project_event_subtype": {
             "$ref": "/v1/enum-values/enum-value.json"
+        },
+        "project_event_subtype_id": {
+            "oneOf": [
+                {"type": "null"},
+                {"type": "integer"}
+            ]
         },
         "event_start_date": {
             "type": ["string", "null"],
@@ -30,8 +42,13 @@
             "description": "End date for the event"
         },
         "made_by": {
-            "$ref": "/v1/user.json",
-            "description": "The id of the user who inserted or updated the record"
+            "oneOf": [
+                {
+                    "$ref": "/v1/user.json",
+                    "description": "The id of the user who inserted or updated the record"
+                },
+                {"type": "integer"}
+            ]
         },
         "made_on": {
             "type": "string",
@@ -42,8 +59,13 @@
             "type": ["string", "null"]
         },
         "project_event_status": {
-            "$ref": "/v1/enum-values/enum-value.json",
-            "description": "The status of the event - Active/Archived. References enum_values of type project_event_status"
+            "oneOf": [
+            {
+                "$ref": "/v1/enum-values/enum-value.json",
+                "description": "The status of the event - Active/Archived. References enum_values of type project_event_status"
+            },
+            {"type": "integer"}
+            ]
         }
     }
 }

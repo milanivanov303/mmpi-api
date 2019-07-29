@@ -10,19 +10,6 @@ use Modules\Projects\Models\Project;
 class ProjectEvent extends Model
 {
     /**
-     * The attributes that will be hidden in output json
-     *
-     * @var array
-     */
-    protected $hidden = [
-        'project_id',
-        'made_by',
-        'project_event_status',
-        'project_event_type_id',
-        'project_event_subtype_id'
-    ];
-
-    /**
      * The attributes that are mass assignable.
      *
      * @var array
