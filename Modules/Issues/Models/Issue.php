@@ -49,4 +49,21 @@ class Issue extends Model
     {
         return $this->belongsTo(Issue::class, 'parent_issue_id');
     }
+    
+    /*
+     * Get patch requests from an issue
+     */
+    protected function patchRequests()
+    {
+       // return $this->belongsToMany(\Modules\PatchRequests\Models\PatchRequest::class, 'issue_details', 'tts_id', 'pr_id')->orderBy('date'); 
+       return $this->hasMany(\Modules\PatchRequests\Models\PatchRequest::class, 'issue_id');
+    }
+    
+    /*
+     * Get all modifications from an issue
+     */
+    protected function modifications()
+    {
+        return $this->hasMany(\Modules\Modifications\Models\Modification::class, 'issue_id');
+    }        
 }
