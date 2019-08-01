@@ -55,8 +55,7 @@ class Issue extends Model
      */
     protected function patchRequests()
     {
-       // return $this->belongsToMany(\Modules\PatchRequests\Models\PatchRequest::class, 'issue_details', 'tts_id', 'pr_id')->orderBy('date'); 
-       return $this->hasMany(\Modules\PatchRequests\Models\PatchRequest::class, 'issue_id');
+        return $this->hasMany(\Modules\PatchRequests\Models\PatchRequest::class, 'issue_id');
     }
     
     /*
@@ -65,5 +64,5 @@ class Issue extends Model
     protected function modifications()
     {
         return $this->hasMany(\Modules\Modifications\Models\Modification::class, 'issue_id');
-    }        
+    }
 }
