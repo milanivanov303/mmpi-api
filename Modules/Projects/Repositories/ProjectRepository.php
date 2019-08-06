@@ -16,11 +16,11 @@ use Illuminate\Support\Facades\DB;
 class ProjectRepository extends AbstractRepository implements RepositoryInterface
 {
     /**
-     * Column to use on get/update/delete
+     * Custom unique primaryKey
      *
-     * @var string
+     * @var array
      */
-    protected $primaryKey = 'name';
+    protected $customUniqueKey = 'name';
 
     /**
      * ProjectRepository constructor

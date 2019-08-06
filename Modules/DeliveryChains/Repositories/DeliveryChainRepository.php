@@ -13,11 +13,11 @@ use Modules\DeliveryChains\Models\DeliveryChainType;
 class DeliveryChainRepository extends AbstractRepository implements RepositoryInterface
 {
     /**
-     * Column to use on get/update/delete
+     * Custom unique primaryKey
      *
-     * @var string
+     * @var array
      */
-    protected $primaryKey = 'title';
+    protected $customUniqueKey = 'title';
 
     /**
      * ProjectRepository constructor

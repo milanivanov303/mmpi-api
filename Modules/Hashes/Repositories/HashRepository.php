@@ -15,11 +15,11 @@ use Illuminate\Support\Facades\DB;
 class HashRepository extends AbstractRepository implements RepositoryInterface
 {
     /**
-     * Column to use on get/update/delete
+     * Custom unique primaryKey
      *
      * @var string
      */
-    protected $primaryKey = 'hash_rev';
+    protected $customUniqueKey = 'hash_rev';
 
     /**
      * HashRepository constructor

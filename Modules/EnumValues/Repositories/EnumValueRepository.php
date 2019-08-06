@@ -11,11 +11,11 @@ use Illuminate\Support\Facades\Auth;
 class EnumValueRepository extends AbstractRepository implements RepositoryInterface
 {
     /**
-     * Column to use on get/update/delete
+     * Custom unique primaryKey
      *
-     * @var string
+     * @var array
      */
-    protected $primaryKey = ['type', 'key'];
+    protected $customUniqueKey = ['type', 'key'];
 
     /**
      * EnumValueRepository constructor

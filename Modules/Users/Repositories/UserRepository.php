@@ -9,11 +9,11 @@ use App\Models\User;
 class UserRepository extends AbstractRepository implements RepositoryInterface
 {
     /**
-     * Column to use on get/update/delete
+     * Custom unique primaryKey
      *
      * @var string
      */
-    protected $primaryKey = 'username';
+    protected $customUniqueKey = 'username';
 
     /**
      * UserRepository constructor

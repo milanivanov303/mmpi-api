@@ -11,11 +11,11 @@ use Modules\Projects\Models\Project;
 class IssueRepository extends AbstractRepository implements RepositoryInterface
 {
     /**
-     * Column to use on get/update/delete
+     * Custom unique primaryKey
      *
-     * @var string
+     * @var array
      */
-    protected $primaryKey = 'tts_id';
+    protected $customUniqueKey = 'tts_id';
 
     /**
      * HashRepository constructor
