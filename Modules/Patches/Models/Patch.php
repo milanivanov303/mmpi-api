@@ -73,9 +73,9 @@ class Patch extends Model
     }
 
     /**
-     * Get instalations
+     * Get installations
      */
-    protected function instalations()
+    protected function installations()
     {
         return $this->hasMany(Installation::class);
     }

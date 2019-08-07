@@ -181,12 +181,12 @@
             "default": 0,
             "description": "Value 1 - if patch can be uninstalled, 0 -if patch cannot be uninstalled"
         },
-        "instalations": {
+        "installations": {
             "type": "array",
             "items": {
                 "oneOf": [
                     {
-                        "$ref": "/v1/instalations/instalation.json"
+                        "$ref": "/v1/installations/installation.json"
                     },
                     {"type": "null"}
                 ]
