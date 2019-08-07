@@ -180,6 +180,17 @@
             "enum": [0, 1],
             "default": 0,
             "description": "Value 1 - if patch can be uninstalled, 0 -if patch cannot be uninstalled"
+        },
+        "installations": {
+            "type": "array",
+            "items": {
+                "oneOf": [
+                    {
+                        "$ref": "/v1/installations/installation.json"
+                    },
+                    {"type": "null"}
+                ]
+            }
         }
     }
 }
