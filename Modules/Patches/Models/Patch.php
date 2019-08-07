@@ -6,6 +6,7 @@ use Core\Models\Model;
 use App\Models\User;
 use Modules\Projects\Models\Project;
 use Modules\DeliveryChains\Models\DeliveryChain;
+use Modules\Installations\Models\Installation;
 
 class Patch extends Model
 {
@@ -69,5 +70,13 @@ class Patch extends Model
     protected function verifiedBy()
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Get instalations
+     */
+    protected function instalations()
+    {
+        return $this->hasMany(Installation::class);
     }
 }
