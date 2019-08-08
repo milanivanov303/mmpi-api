@@ -42,3 +42,20 @@ services:
             CONTAINER_ROLE: queue
         depends_on:
             - php
+
+    elasticsearch:
+        image: ${ELASTIC_CONTAINER_IMAGE}
+        container_name: ${ELASTIC_CONTAINER_NAME}
+        build: docker/elasticsearch
+        volumes:
+            - ${ELASTIC_CONTAINER_VOLUME}:/usr/share/elasticsearch/data
+        environment:
+            TZ: ${APP_TIMEZONE}
+            discovery.type: single-node
+
+    kibana:
+        image: ${KIBANA_CONTAINER_IMAGE}
+        container_name: ${KIBANA_CONTAINER_NAME}
+        build: docker/kibana
+        ports:
+            - ${KIBANA_CONTAINER_HTTP_PORT}:5601
