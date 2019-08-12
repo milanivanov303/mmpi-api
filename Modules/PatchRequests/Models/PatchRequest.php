@@ -7,6 +7,7 @@ use Modules\Issues\Models\Issue;
 use Modules\Modifications\Models\Modification;
 use Modules\DeliveryChains\Models\DeliveryChain;
 use Modules\Patches\Models\Patch;
+use App\Models\User;
 
 class PatchRequest extends Model
 {
@@ -68,5 +69,13 @@ class PatchRequest extends Model
     protected function deliveryChain()
     {
         return $this->belongsTo(DeliveryChain::class);
+    }
+
+    /**
+     * Get greenlighted by
+     */
+    protected function greenlightedBy()
+    {
+        return $this->belongsTo(User::class, 'greenlighted_by');
     }
 }
