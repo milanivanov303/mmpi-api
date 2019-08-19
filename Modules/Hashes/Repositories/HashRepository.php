@@ -93,7 +93,7 @@ class HashRepository extends AbstractRepository implements RepositoryInterface
             );
         }
 
-        $this->model->made_on = Carbon::now()->format('Y-m-d H:i:s');
+        //$this->model->made_on = Carbon::now()->format('Y-m-d H:i:s');
     }
 
     /**

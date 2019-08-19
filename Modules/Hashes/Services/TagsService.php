@@ -35,6 +35,14 @@ class TagsService
         $this->description = $description;
     }
 
+    protected function getRevisionLogType()
+    {
+        return app(EnumValue::class)
+            ::where('type', 'revision_log_type')
+            ->where('key', 'imx_be')
+            ->value('id');
+    }
+
     /**
      * Save tag
      *
@@ -44,8 +52,12 @@ class TagsService
      */
     protected function saveTag(string $key, string $comment)
     {
-        $cvsTagId     = app(EnumValue::class)::where('key', $key)->value('id');
-        $revLogTypeId = $this->hashCommit->repoType->id;
+        $cvsTagId = app(EnumValue::class)
+                      ::where('type', 'cvs_log_tags_stack')
+                      ->where('key', $key)
+                      ->value('id');
+
+        $revLogTypeId = $this->getRevisionLogType();
 
         if (is_null($cvsTagId) || is_null($revLogTypeId)) {
             return false;
@@ -179,9 +191,11 @@ class TagsService
      */
     protected function clearTags()
     {
+        $revLogTypeId = $this->getRevisionLogType();
+
         $sourceRevCvsTagIds = app(SourceRevCvsTag::class)
             ::where('source_rev_id', $this->hashCommit->id)
-            ->where('rev_log_type_id', $this->hashCommit->repoType->id)
+            ->where('rev_log_type_id', $revLogTypeId)
             ->pluck('id')
             ->toArray();
 
