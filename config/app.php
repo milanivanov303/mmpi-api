@@ -203,4 +203,6 @@ return [
         'username' => env('RAML2HTML_USERNAME'),
         'password' => env('RAML2HTML_PASSWORD'),
     ],
+
+    'dev-management-url' => env('DEV_MANAGEMENT_URL'),
 ];
