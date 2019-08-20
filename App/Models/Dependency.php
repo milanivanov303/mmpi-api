@@ -5,6 +5,15 @@ namespace App\Models;
 class Dependency extends Model
 {
     /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'laravel_through_key'
+    ];
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array

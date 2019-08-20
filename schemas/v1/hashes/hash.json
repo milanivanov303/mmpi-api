@@ -60,6 +60,24 @@
             "type": "string",
             "format": "datetime",
             "description": "Timestamp of the record"
+        },
+        "dependencies": {
+            "type": "array",
+            "description": "List with dependencies for this revision",
+            "items": {
+                "type": "object"
+            }
+        },
+        "tts_keys": {
+            "type": "array",
+            "description": "List with TTS tickets for this revision",
+            "items": {
+                "type": "object"
+            }
+        },
+        "merge": {
+            "type": "object",
+            "description": "Merge commit hash for this revision"
         }
     }
 }
