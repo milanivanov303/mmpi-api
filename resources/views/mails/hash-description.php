@@ -18,7 +18,7 @@
         </ul>
     </p>
     <p>
-        You can edit description <a href="<?php echo $getEditUrl(); ?>" >here</a>
+        You can <a href="<?php echo $getEditUrl(); ?>" >edit description here</a>
     </p>
     <p>This is an automatic email! Please do not reply</p>
 </div>
