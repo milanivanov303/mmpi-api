@@ -4,6 +4,7 @@ namespace Modules\SourceDependencies\Models;
 
 use Core\Models\Model;
 use App\Models\User;
+use Modules\SourceRevisions\Models\SourceRevision;
 
 class SourceDependency extends Model
 {
@@ -40,19 +41,19 @@ class SourceDependency extends Model
         return $this->belongsTo(User::class, 'added_by');
     }
 
-    // /**
-    //  * Get revision whose dependency this is
-    //  */
-    // protected function revId()
-    // {
-    //     return $this->belongsTo(SourceRevision::class, 'rev_id');
-    // }
+    /**
+     * Get revision whose dependency this is
+     */
+    protected function revId()
+    {
+        return $this->belongsTo(SourceRevision::class, 'rev_id');
+    }
 
-    // /**
-    //  * Get revision of the dependency
-    //  */
-    // protected function devId()
-    // {
-    //     return $this->belongsTo(SourceRevision::class, 'dev_id');
-    // }
+    /**
+     * Get revision of the dependency
+     */
+    protected function depId()
+    {
+        return $this->belongsTo(SourceRevision::class, 'dep_id');
+    }
 }

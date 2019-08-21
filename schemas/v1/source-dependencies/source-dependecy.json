@@ -12,7 +12,7 @@
             "$ref": "/v1/source-revisions/source-revision.json",
             "description": "Foreign key to source_revision. The revision whose dependency this is."
         },
-        "dev_id": {
+        "dep_id": {
             "oneOf": [
                 {
                     "$ref": "/v1/source-revisions/source-revision.json",
