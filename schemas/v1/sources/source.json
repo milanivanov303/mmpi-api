@@ -51,6 +51,10 @@
             ],
             "default": "null"
         },
+        "department_assigned_by_id": {
+            "type": ["integer", "null"],
+            "default": null
+        },
         "department_assigned_on": {
             "type": ["string", "null"],
             "format": "datetime",

@@ -15,6 +15,12 @@ class Source extends Model
     protected $table = "source";
 
     /**
+     * Set primary key
+     *
+     */
+    protected $primaryKey = "source_id";
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array

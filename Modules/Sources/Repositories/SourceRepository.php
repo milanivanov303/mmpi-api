@@ -11,6 +11,12 @@ use Modules\Sources\Models\Source;
 class SourceRepository extends AbstractRepository implements RepositoryInterface
 {
     /**
+     * Set primary key
+     *
+     */
+    protected $primaryKey = 'source_id';
+
+    /**
      * SourceRepository constructor
      *
      * @param Source $model
@@ -46,5 +52,7 @@ class SourceRepository extends AbstractRepository implements RepositoryInterface
         $this->model->departmentAssignedBy()->associate(Auth::user());
 
         $this->model->source_registration_date = Carbon::now()->format('Y-m-d H:i:s');
+
+        $this->model->department_assigned_on = Carbon::now()->format('Y-m-d H:i:s');
     }
 }
