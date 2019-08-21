@@ -71,5 +71,8 @@ $router->group(['prefix' => 'v1'], function () use ($router) {
 
         // Source dependencies
         require 'v1/source-dependencies.php';
+
+        // Source revisions
+        require 'v1/source-revisions.php';
     });
 });
