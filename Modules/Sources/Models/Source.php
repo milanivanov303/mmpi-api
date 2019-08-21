@@ -1,0 +1,42 @@
+<?php
+
+namespace Modules\Sources\Models;
+
+use Core\Models\Model;
+use App\Models\User;
+
+class Source extends Model
+{
+    /**
+     * Set the table associated with the model.
+     *
+     * @var array
+     */
+    protected $table = "source";
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'source_name',
+        'source_path',
+        'source_status',
+        'comment',
+        'source_registration_date',
+        'department_id',
+        'department_assigned_by_id',
+        'department_assigned_on',
+        'dependencies',
+        'library'
+    ];
+
+    /**
+     * Get user
+     */
+    protected function departmentAssignedBy()
+    {
+        return $this->belongsTo(User::class, 'department_assigned_by_id');
+    }
+}
