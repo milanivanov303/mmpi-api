@@ -16,21 +16,21 @@ $router->group([
         'description' => 'Get single source revision',
         'uses'        => 'SourceRevisionsController@getOne'
     ]);
-    $router->post('', [
-        'as'          => 'source-revisions.create',
-        'schema'      => '/v1/source-revisions/create.json',
-        'description' => 'Create new source revision',
-        'uses'        => 'SourceRevisionsController@create'
-    ]);
-    $router->put('/{name}', [
-        'as'          => 'source-revisions.update',
-        'description' => 'Update source revision',
-        'schema'      => '/v1/source-revisions/update.json',
-        'uses'        => 'SourceRevisionsController@update'
-    ]);
-    $router->delete('/{name}', [
-        'as'          => 'source-revisions.delete',
-        'description' => 'Delete source revision',
-        'uses'        => 'SourceRevisionsController@delete'
-    ]);
+    // $router->post('', [
+    //     'as'          => 'source-revisions.create',
+    //     'schema'      => '/v1/source-revisions/create.json',
+    //     'description' => 'Create new source revision',
+    //     'uses'        => 'SourceRevisionsController@create'
+    // ]);
+    // $router->put('/{name}', [
+    //     'as'          => 'source-revisions.update',
+    //     'description' => 'Update source revision',
+    //     'schema'      => '/v1/source-revisions/update.json',
+    //     'uses'        => 'SourceRevisionsController@update'
+    // ]);
+    // $router->delete('/{name}', [
+    //     'as'          => 'source-revisions.delete',
+    //     'description' => 'Delete source revision',
+    //     'uses'        => 'SourceRevisionsController@delete'
+    // ]);
 });

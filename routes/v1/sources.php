@@ -16,21 +16,21 @@ $router->group([
         'description' => 'Get single source',
         'uses'        => 'SourcesController@getOne'
     ]);
-    $router->post('', [
-        'as'          => 'sources.create',
-        'schema'      => '/v1/sources/create.json',
-        'description' => 'Create new source',
-        'uses'        => 'SourcesController@create'
-    ]);
-    $router->put('/{name}', [
-        'as'          => 'sources.update',
-        'description' => 'Update source',
-        'schema'      => '/v1/sources/update.json',
-        'uses'        => 'SourcesController@update'
-    ]);
-    $router->delete('/{name}', [
-        'as'          => 'sources.delete',
-        'description' => 'Delete source',
-        'uses'        => 'SourcesController@delete'
-    ]);
+    // $router->post('', [
+    //     'as'          => 'sources.create',
+    //     'schema'      => '/v1/sources/create.json',
+    //     'description' => 'Create new source',
+    //     'uses'        => 'SourcesController@create'
+    // ]);
+    // $router->put('/{name}', [
+    //     'as'          => 'sources.update',
+    //     'description' => 'Update source',
+    //     'schema'      => '/v1/sources/update.json',
+    //     'uses'        => 'SourcesController@update'
+    // ]);
+    // $router->delete('/{name}', [
+    //     'as'          => 'sources.delete',
+    //     'description' => 'Delete source',
+    //     'uses'        => 'SourcesController@delete'
+    // ]);
 });
