@@ -55,10 +55,14 @@ class ProcessTags implements ShouldQueue
             Mail
                 ::to($commitedBy ?? config('app.admin-mails'))
                 ->cc($commitedByManager ?? config('app.admin-mails'))
-                ->send(new HashDescriptionMail([
-                    'hashCommit' => $this->hashCommit,
-                    'errors'     => $description->getErrors()
-                ]));
+                ->queue(
+                    (
+                        new HashDescriptionMail([
+                            'hashCommit' => $this->hashCommit,
+                            'errors'     => $description->getErrors()
+                        ])
+                    )->onQueue('mails')
+                );
         }
 
         Log::channel('tags')->info("Start processing tags for hash '{$this->hashCommit->hash_rev}'");

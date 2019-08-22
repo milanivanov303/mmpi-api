@@ -339,7 +339,7 @@ class DescriptionParserService
             return true;
         }
 
-        return true;
+        return false;
     }
 
     /**

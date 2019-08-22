@@ -46,12 +46,15 @@ class HashDescriptionMail extends Mailable
                             'getToName' => function () use ($hashCommit) {
                                 return $hashCommit->committedBy ? $hashCommit->committedBy->name : '';
                             },
-                            'getRepoLink' => function () use ($hashCommit) {
+                            'getRepoUrl' => function () use ($hashCommit) {
                                 if ($hashCommit->repoType->subtype === 'repo_hg') {
                                     return $hashCommit->repoType->url . '/rev/' . $hashCommit->hash_rev;
                                 }
 
                                 return '#!';
+                            },
+                            'getEditUrl' => function () use ($hashCommit) {
+                                return config('app.dev-management-url') . '/hashes/' . $hashCommit->hash_rev;
                             }
                         ],
                         $this->data
