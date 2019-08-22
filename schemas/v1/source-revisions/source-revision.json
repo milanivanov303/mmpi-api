@@ -123,6 +123,18 @@
             "default": null,
             "maxLength": 1,
             "description": "Value 1 - if already processed for merge in head revision"
+        },
+        "source_dependencies_rev": {
+            "type": "array",
+            "items": {
+                "$ref": "/v1/source-dependencies/source-dependency.json"
+            }
+        },
+        "source_dependencies_dep": {
+            "type": "array",
+            "items": {
+                "$ref": "/v1/source-dependencies/source-dependency.json"
+            }
         }
     }
 }

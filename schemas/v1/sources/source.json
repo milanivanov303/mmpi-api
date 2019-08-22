@@ -72,6 +72,12 @@
             "enum": [0, 1],
             "default": 0,
             "description": "If the file is library/framework and dependencies should be added from its content. 1 - is library, 0 - is not a library"
+        },
+        "revisions": {
+            "type": "array",
+            "items": {
+                "$ref": "/v1/source-revisions/source-revision.json"
+            }
         }
     }
 }
