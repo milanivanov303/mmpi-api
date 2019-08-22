@@ -33,14 +33,12 @@
             "maxLength": 1,
             "default": "F",
             "description": "Type of dependency - (F)ile, (T)able"
-
         },
         "table_name": {
             "type": ["string", "null"],
             "maxLength": 100,
             "default": null,
             "description": "Table/field dependency (when T)"
-
         },
         "comment": {
             "type": ["string", "null"],
@@ -73,7 +71,6 @@
             "maxLength": 1,
             "default": "null",
             "description": "Scope of dependency F-factoring only, L-leasing only, D-debt collection only or Null - all"
-
         }
     }
 }

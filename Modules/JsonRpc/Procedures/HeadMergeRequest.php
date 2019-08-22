@@ -2,7 +2,7 @@
 
 namespace Modules\JsonRpc\Procedures;
 
-use App\Models\SourceRevision;
+use Modules\SourceRevisions\Models\SourceRevision;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;

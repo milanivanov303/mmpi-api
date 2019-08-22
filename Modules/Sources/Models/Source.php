@@ -4,6 +4,7 @@ namespace Modules\Sources\Models;
 
 use Core\Models\Model;
 use App\Models\User;
+use Modules\SourceRevisions\Models\SourceRevision;
 
 class Source extends Model
 {
@@ -44,5 +45,15 @@ class Source extends Model
     protected function departmentAssignedBy()
     {
         return $this->belongsTo(User::class, 'department_assigned_by_id');
+    }
+
+     /**
+     * Get revisions
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    protected function revisions()
+    {
+        return $this->hasMany(SourceRevision::class, 'source_id');
     }
 }

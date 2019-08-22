@@ -4,8 +4,8 @@ namespace Modules\Hashes\Services;
 
 //use App\Models\EnumValue;
 use App\Models\ImxTable;
-use App\Models\Source;
-use App\Models\SourceRevision;
+use App\Modules\Sources\Models\Source;
+use Modules\SourceRevisions\Models\SourceRevision;
 
 class DependencyService
 {

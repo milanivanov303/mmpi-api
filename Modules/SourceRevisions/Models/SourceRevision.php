@@ -5,6 +5,7 @@ namespace Modules\SourceRevisions\Models;
 use Core\Models\Model;
 use App\Models\User;
 use Modules\Sources\Models\Source;
+use Modules\SourceDependencies\Models\SourceDependency;
 
 class SourceRevision extends Model
 {
@@ -72,5 +73,21 @@ class SourceRevision extends Model
     protected function validateBy()
     {
         return $this->belongsTo(User::class, 'validate_by');
+    }
+
+    /**
+     * Get dependencies by rev_id
+     */
+    protected function sourceDependenciesRev()
+    {
+        return $this->hasMany(SourceDependency::class, 'rev_id');
+    }
+
+    /**
+     * Get dependencies by dep_id
+     */
+    protected function sourceDependenciesDep()
+    {
+        return $this->hasMany(SourceDependency::class, 'dep_id', 'rev_id');
     }
 }
