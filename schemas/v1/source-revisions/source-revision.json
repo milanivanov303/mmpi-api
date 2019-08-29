@@ -1,0 +1,140 @@
+{
+    "$id": "SourceRevision",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "description": "Source revision object",
+    "additionalProperties": false,
+    "properties": {
+        "rev_id": {
+            "type": "integer"
+        },
+        "source_id": {
+            "$ref": "/v1/sources/source.json",
+            "description": "Foreign key to source"
+        },
+        "rev_cksum": {
+            "type": ["string", "null"],
+            "maxLength": 50,
+            "default": null
+        },
+        "revision": {
+            "type": ["string", "null"],
+            "maxLength": 50,
+            "default": null
+        },
+        "revision_converted": {
+            "type": "string",
+            "maxLength": 100,
+            "default": ""
+        },
+        "cvs_date": {
+            "type": ["string", "null"],
+            "format": "datetime",
+            "default": null
+        },
+        "cvs_editor": {
+            "type": ["string", "null"],
+            "maxLength": 50,
+            "default": null
+        },
+        "cvs_lines": {
+            "type": ["string", "null"],
+            "maxLength": 100,
+            "default": null
+        },
+        "source_revision_status": {
+            "type": "integer",
+            "default": 1
+        },
+        "rev_registration_date": {
+            "type": "string",
+            "format": "datetime"
+        },
+        "cvs_comment": {
+            "type": ["string", "null"],
+            "default": "null",
+            "description": "CVS log"
+        },
+        "cvs_separated_comment": {
+            "type": ["string", "null"],
+            "default": "null",
+            "description": "CVS log with separators for each CVS Log Tag"
+        },
+        "buggy": {
+            "type": ["integer", "null"],
+            "default": null,
+            "maxLength": 1,
+            "description": "True if the revision is buggy and should not be delivered!"
+        },
+        "buggy_comment": {
+            "type": ["string", "null"],
+            "default": "null",
+            "description": "Information with the reason why the revision is buggy. TTS_KEY where discussed"
+        },
+        "buggy_on": {
+            "type": ["string", "null"],
+            "format": "datetime",
+            "default": null,
+            "description": "Timestamp when the buggy flag was set"
+        },
+        "buggy_by": {
+            "oneOf": [
+                {
+                    "$ref": "/v1/user.json",
+                    "description": "Person who set the buggy flag on"
+                },
+                {"type": "null"}
+            ],
+            "default": "null"
+        },
+        "dep_log": {
+            "type": ["string", "null"],
+            "default": "null",
+            "description": "CVS log describing the dependencies"
+        },
+        "dep_warn": {
+            "type": ["integer", "null"],
+            "default": null,
+            "maxLength": 1,
+            "description": "Set to True when automatic dependency parsing failed. User must inspect dep_log"
+        },
+        "creator": {
+            "type": ["string", "null"],
+            "maxLength": 20,
+            "default": "null",
+            "description": "Set by the tool that created the line (cvsadm.pl or NULL)"
+        },
+        "validate_on": {
+            "type": ["string", "null"],
+            "format": "datetime",
+            "default": null
+        },
+        "validate_by": {
+            "oneOf": [
+                {
+                    "$ref": "/v1/user.json"
+                },
+                {"type": "null"}
+            ],
+            "default": "null"
+        },
+        "requested_head_merge": {
+            "type": ["integer", "null"],
+            "default": null,
+            "maxLength": 1,
+            "description": "Value 1 - if already processed for merge in head revision"
+        },
+        "source_dependencies_rev": {
+            "type": "array",
+            "items": {
+                "$ref": "/v1/source-dependencies/source-dependency.json"
+            }
+        },
+        "source_dependencies_dep": {
+            "type": "array",
+            "items": {
+                "$ref": "/v1/source-dependencies/source-dependency.json"
+            }
+        }
+    }
+}

@@ -2,8 +2,8 @@
 
 use Modules\Hashes\Services\DependencyService;
 use App\Models\ImxTable;
-use App\Models\Source;
-use App\Models\SourceRevision;
+use App\Modules\Sources\Models\Source;
+use Modules\SourceRevisions\Models\SourceRevision;
 use Core\Models\Model;
 
 class DependencyServiceTest extends TestCase

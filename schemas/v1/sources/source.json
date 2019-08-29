@@ -1,0 +1,83 @@
+{
+    "$id": "Source",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "description": "Source object",
+    "additionalProperties": false,
+    "properties": {
+        "source_id": {
+            "type": "integer"
+        },
+        "source_name": {
+            "type": "string",
+            "maxLength": 100,
+            "default": "",
+            "description": "Name of the source"
+        },
+        "source_path": {
+            "type": "string",
+            "maxLength": 200,
+            "default": "",
+            "description": "Path of the source"
+        },
+        "source_status": {
+            "type": "integer",
+            "maxLength": 11,
+            "default": 1,
+            "description": "Status 1 means file is under CVS control, 0 means file deleted from the repo, 2 means file deleted from repo but old revisions can still be checkouted"
+        },
+        "comment": {
+            "type": ["string", "null"],
+            "maxLength": 2000,
+            "default": "null"
+        },
+        "source_registration_date": {
+            "type": "string",
+            "format": "datetime",
+            "description": "Timestamp of the record"
+        },
+        "department_id": {
+            "type": ["integer", "null"],
+            "maxLength": 11,
+            "default": "null"
+        },
+        "department_assigned_by": {
+            "oneOf": [
+                {
+                    "$ref": "/v1/user.json",
+                    "description": "The id of the user who made the department assignment"
+                },
+                {"type": "null"}
+            ],
+            "default": "null"
+        },
+        "department_assigned_by_id": {
+            "type": ["integer", "null"],
+            "default": null
+        },
+        "department_assigned_on": {
+            "type": ["string", "null"],
+            "format": "datetime",
+            "default": "null",
+            "description": "When was the department assignment made"
+        },
+        "dependencies": {
+            "type": "integer",
+            "enum": [0, 1],
+            "default": 0,
+            "description": "Set to True if dependencies have been uploaded automatically from CVS log"
+        },
+        "library": {
+            "type": "integer",
+            "enum": [0, 1],
+            "default": 0,
+            "description": "If the file is library/framework and dependencies should be added from its content. 1 - is library, 0 - is not a library"
+        },
+        "revisions": {
+            "type": "array",
+            "items": {
+                "$ref": "/v1/source-revisions/source-revision.json"
+            }
+        }
+    }
+}

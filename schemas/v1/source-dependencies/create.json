@@ -1,0 +1,14 @@
+{
+    "$id": "CreateSourceDependency",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "description": "Source dependency object",
+    "allOf": [
+        {"$ref": "/v1/source-dependencies/source-dependency.json"},
+        {
+            "required": [
+                "rev_id"
+            ]
+        }
+    ]
+}
