@@ -20,7 +20,8 @@ class CheckHashBranchFilter implements IFilter
     public function validate($value, array $args) : bool
     {
         $branchId = app(HashBranch::class)->getModelId((array) $value, 'name', [
-            'repo_type_id' => $this->getRepoTypeId($args)
+            'repo_type_id' => $this->getRepoTypeId($args),
+            'status' => 1
         ]);
 
         if ($branchId) {

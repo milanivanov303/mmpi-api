@@ -26,7 +26,8 @@ class Branch extends Model
         'description',
         'created_at',
         'made_by',
-        'repo_master_branch'
+        'repo_master_branch',
+        'status'
     ];
 
     /**
