@@ -59,7 +59,8 @@ class Project extends Model
         'njsch_mntd_by_clnt_id',
         'trans_mntd_by_clnt_id',
         'intranet_version',
-        'extranet_version'
+        'extranet_version',
+        'tts_dev_project_key'
     ];
 
     /**
