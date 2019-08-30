@@ -10,7 +10,7 @@ $router->group([
         'description' => 'Get source list',
         'uses'        => 'SourcesController@getMany'
     ]);
-    $router->get('/{name}', [
+    $router->get('/{id}', [
         'as'          => 'sources.one',
         'schema'      => '/v1/sources/source.json',
         'description' => 'Get single source',

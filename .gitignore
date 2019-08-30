@@ -6,3 +6,4 @@ public/openapi.json
 storage/jira-cookie.txt
 storage/um-cookie.txt
 .vscode
+node_modules

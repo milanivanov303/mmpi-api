@@ -10,7 +10,7 @@ $router->group([
         'description' => 'Get source revision list',
         'uses'        => 'SourceRevisionsController@getMany'
     ]);
-    $router->get('/{name}', [
+    $router->get('/{id}', [
         'as'          => 'source-revisions.one',
         'schema'      => '/v1/source-revisions/source-revision.json',
         'description' => 'Get single source revision',
