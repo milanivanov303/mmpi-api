@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "MMPI API",
-    "description": "Тhe aim of this project is to make the integration of the MMPI with third systems easier and more flexible \n\n ***Note!*** \n\n All relations will not be load by default. You will need to explicitly list what relations to be return using with parameter \n\n ``` {url}?with[]=department&with[]=manager ```",
+    "description": "Тhe aim of this project is to make the integration of the MMPI with third systems easier and more flexible \n\n# With\n\nResources are often related to one another. For example user have manager and it's in given department. \n\nRelations are not returned by default. You will need to explicitly list what relations to be returned\n\n \nExample request to get ```users```  with department and manager\n \n```\n [\n   \"department\",\n   \"manager\"\n ]\n```\n \n You can even get nested relations. In order to get manager's department you can do\n \n```\n {\n   \"department\": [],\n   \"manager\": [\n     \"department\"\n   ]\n }\n\n OR \n\n {\n   \"department\": {}\n   \"manager\": {\n     \"department\": {}\n   }\n }\n```\n\n# Fields\n\nIn order to optimize data you get from the API you can use fields query parameter to get only the data you need\n\nThe logic here is the same as for <a href=\"#section/With\" >relations</a>, so please check it for details\n\n# Filters \n\nFilters are inspired by <a target=\"blank\" href=\"https://json-schema.org/understanding-json-schema/reference/combining.html\" >JSON schema combining</a>.\nYou can apply filter on all properties of given resource (the response data)\n\nFilters relay on two actions **allOf** and **anyOf**\n\n  - allOf: data is valid if all rules are valid\n  - anyOf: data is valid if at least one rule is valid\n  \nFilter should always start with valid action. Actions can be combained together.\n\n```\n {\n   \"allOf\": [\n      {\n        \"name\": \"Ivan Ivanov\"\n      },\n      {\n        \"status\": \"1\"\n      }\n   ]\n }\n```\n\n## Using special operators\n\nIf you want to specify operator you can do it by setting object instead of concrete filter value\n\nValid operators: ```= > < >= <= != <> <=> like in```\n    \n```\n {\n   \"allOf\": [\n      {\n        \"name\": {\n          \"value\": \"Ivan%\",\n          \"operator\": \"like\"\n        }\n      }\n   ]\n }\n```\n\n```\n {\n   \"allOf\": [\n      {\n        \"name\": {\n          \"value\": [\n            \"Ivan Ivanov\",\n            \"Peter Petrov\"\n          ],\n          \"operator\": \"in\"\n        }\n      }\n   ]\n }\n```\n\n## Combining allOf and anyOf example\n\n```\n {\n   \"allOf\": [\n      {\n        \"anyOf\": [\n          {\n            \"name\": \"Ivan Ivanov\"\n          },\n          {\n            \"email\": \"iivanov@codix.bg\"\n          }\n        ]\n      },\n      {\n        \"status\": \"1\"\n      }\n   ]\n }\n```\n\n```\n {\n   \"anyOf\": [\n      {\n        \"allOf\": [\n          {\n            \"name\": \"Ivan Ivanov\"\n          },\n          {\n            \"status\": \"1\"\n          }\n        ]\n      },\n      {\n        \"phone\": \"0895816253\"\n      }\n   ]\n }\n``` \n\n## Applying filter on relation\n\n```\n {\n   \"allOf\": [\n      {\n        \"manager\": {\n          \"allOf\": [\n            {\n              \"name\": \"Ivan Ivanov\"\n            }  \n          ]\n        }\n      },\n      {\n        \"status\": \"1\"\n      }\n   ]\n }\n```\n\nYou can even apply filter on relation of relation\n\n```\n {\n   \"allOf\": [\n      {\n        \"manager\": {\n          \"allOf\": [\n            {\n              \"department\": {\n                \"allOf\": [\n                  {\n                    \"name\": \"Enterprise Applications\"\n                  }  \n                ] \n              }\n            }  \n          ]\n        }\n      },\n      {\n        \"status\": \"1\"\n      }\n   ]\n }\n```\n\n# Orders\n\nIf you need to order results you can do this by providing JSON object in the request\n\n**Note!** Ordering by relations is not supported yet\n\n```\n {\n   \"name\": \"asc\",\n   \"email\": \"desc\"\n }\n```\n \n ",
     "version": "v1"
   },
   "servers": [
@@ -44,25 +44,6 @@
           "example": 50
         }
       },
-      "order_by": {
-        "name": "order_by",
-        "in": "query",
-        "schema": {
-          "oneOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          ]
-        },
-        "description": "Order results by given properties",
-        "example": ["id", "name desc"]
-      },
       "page": {
         "name": "page",
         "in": "query",
@@ -81,28 +62,36 @@
           "example": 15
         }
       },
+      "filters": {
+        "name": "filters",
+        "in": "query",
+        "schema": {
+          "type": "string",
+          "description": "Filters to process on the request, encoded as <a href=\"#section/Filters\" >JSON string</a>"
+        }
+      },
       "fields": {
         "name": "fields",
         "in": "query",
         "schema": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "Return only listed fields in results",
-          "example": ["id", "name"]
+          "type": "string",
+          "description": "Return only listed fields in results, encoded as <a href=\"#section/Fields\" >JSON string</a>"
         }
       },
       "with": {
         "name": "with",
         "in": "query",
         "schema": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "Return relations in results",
-          "example": ["made_on"]
+          "type": "string",
+          "description": "Return relations data in results, encoded as <a href=\"#section/With\" >JSON string</a>"
+        }
+      },
+      "orders": {
+        "name": "orders",
+        "in": "query",
+        "schema": {
+          "type": "string",
+          "description": "Ordering to apply on results, encoded as <a href=\"#section/Orders\" >JSON string</a>"
         }
       }
     },
@@ -110,9 +99,15 @@
       "Deleted": {
         "description": "Deleted",
         "content": {
-          "text\/html": {
+          "application\/json": {
             "schema": {
-              "type": "string"
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "enum": ["Deleted successfully"]
+                }
+              }
             }
           }
         }
@@ -120,6 +115,30 @@
       "Unauthorized": {
         "description": "Unauthorized",
         "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "enum": ["Unauthorized"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "enum": [401]
+                    },
+                    "debug": {
+                      "type": "object",
+                      "description": "Debug information if debugging is enabled"
+                    }
+                  }
+                }
+              }
+            }
+          },
           "text\/html": {
             "schema": {
               "type": "string"
@@ -130,6 +149,30 @@
       "NotFound": {
         "description": "Not found",
         "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "enum": ["Not found"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "enum": [404]
+                    },
+                    "debug": {
+                      "type": "object",
+                      "description": "Debug information if debugging is enabled"
+                    }
+                  }
+                }
+              }
+            }
+          },
           "text\/html": {
             "schema": {
               "type": "string"
@@ -142,9 +185,9 @@
         "content": {
           "application\/json": {
             "schema": {
-              "type": "array",
+              "type": "object",
               "items": {
-                "type": "object"
+                "type": "array"
               }
             }
           }
@@ -153,6 +196,30 @@
       "InternalServerError": {
         "description": "Internal Server Error",
         "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "enum": ["Internal Server Error"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "enum": [500]
+                    },
+                    "debug": {
+                      "type": "object",
+                      "description": "Debug information if debugging is enabled"
+                    }
+                  }
+                }
+              }
+            }
+          },
           "text\/html": {
             "schema": {
               "type": "string"

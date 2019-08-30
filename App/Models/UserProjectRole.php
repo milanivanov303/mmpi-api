@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\User;
+use App\Models\UserRole;
 use Core\Models\Model;
 use Modules\Projects\Models\Project;
 
@@ -14,16 +15,6 @@ class UserProjectRole extends Model
      * @var string
      */
     protected $table = 'users_prjs_roles';
-
-    /**
-     * The attributes excluded from the model's JSON form.
-     *
-     * @var array
-     */
-    protected $hidden = [
-        'user_id',
-        'project_id'
-    ];
 
     /**
      * Get user
@@ -39,6 +30,14 @@ class UserProjectRole extends Model
     public function project()
     {
         return $this->belongsTo(Project::class);
+    }
+
+    /**
+     * Get project
+     */
+    public function role()
+    {
+        return $this->belongsTo(UserRole::class, 'role_id');
     }
 
     /**

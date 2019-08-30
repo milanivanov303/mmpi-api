@@ -4,8 +4,14 @@
     "type": "object",
     "description": "User project role object",
     "properties": {
+        "user_id": {
+            "type": "integer"
+        },
         "user": {
             "$ref": "/v1/user.json"
+        },
+        "project_id": {
+            "type": "integer"
         },
         "project": {
             "$ref": "/v1/projects/project.json"
