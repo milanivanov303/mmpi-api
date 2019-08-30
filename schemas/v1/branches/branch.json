@@ -44,6 +44,11 @@
             "type": ["integer", "null"],
             "enum": [0, 1, null],
             "description": "1 - Master Branch for the Repo"
+        },
+        "status": {
+            "type": "integer",
+            "enum": [0, 1],
+            "description": "Status of the branch. 1 - active, 0 - closed"
         }
     }
 }
