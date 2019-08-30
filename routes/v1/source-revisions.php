@@ -11,7 +11,7 @@ $router->group([
         'uses'        => 'SourceRevisionsController@getMany'
     ]);
     $router->get('/{name}', [
-        'as'          => 'source-dependencies.one',
+        'as'          => 'source-revisions.one',
         'schema'      => '/v1/source-revisions/source-revision.json',
         'description' => 'Get single source revision',
         'uses'        => 'SourceRevisionsController@getOne'
