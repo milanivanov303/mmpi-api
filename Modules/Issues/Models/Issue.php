@@ -9,27 +9,6 @@ use Modules\Instances\Models\Instance;
 class Issue extends Model
 {
     /**
-     * The relations to eager load on every query.
-     *
-     * @var array
-     */
-    protected $with = [
-        'project',
-        'devInstance'
-    ];
-
-    /**
-     * The attributes that will be hidden in output json
-     *
-     * @var array
-     */
-    protected $hidden = [
-        'project_id',
-        'parent_issue_id',
-        'dev_instance_id'
-    ];
-
-    /**
      * The attributes that are mass assignable.
      *
      * @var array
@@ -50,7 +29,7 @@ class Issue extends Model
     /**
      * Get issue project
      */
-    public function project()
+    protected function project()
     {
         return $this->belongsTo(Project::class);
     }
@@ -58,7 +37,7 @@ class Issue extends Model
     /**
      * Get issue dev instance
      */
-    public function devInstance()
+    protected function devInstance()
     {
         return $this->belongsTo(Instance::class, 'dev_instance_id');
     }
@@ -66,8 +45,24 @@ class Issue extends Model
     /**
      * Get parent issue
      */
-    public function parentIssue()
+    protected function parentIssue()
     {
         return $this->belongsTo(Issue::class, 'parent_issue_id');
+    }
+    
+    /*
+     * Get patch requests from an issue
+     */
+    protected function patchRequests()
+    {
+        return $this->hasMany(\Modules\PatchRequests\Models\PatchRequest::class, 'issue_id');
+    }
+    
+    /*
+     * Get all modifications from an issue
+     */
+    protected function modifications()
+    {
+        return $this->hasMany(\Modules\Modifications\Models\Modification::class, 'issue_id');
     }
 }

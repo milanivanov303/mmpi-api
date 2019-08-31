@@ -15,12 +15,30 @@
         "type": {
             "$ref": "/v1/delivery-chains/delivery-chain-type.json"
         },
+        "type_id": {
+            "type": "integer",
+            "description": "Type id from delivery_chains table"
+        },
         "dlvry_type": {
-            "$ref": "/v1/enum-values/enum-value-minimal.json",
+            "oneOf": [
+                {
+                    "$ref": "/v1/enum-values/enum-value.json"
+                },
+                {
+                    "type": "integer"
+                }
+            ],
             "description": "Delivery type (sources with compilation or binaries)"
         },
         "status": {
-            "$ref": "/v1/enum-values/enum-value-minimal.json"
+            "oneOf": [
+                {
+                    "$ref": "/v1/enum-values/enum-value.json"
+                },
+                {
+                    "type": "integer"
+                }
+            ]
         },
         "patch_directory_name": {
             "type": ["string", "null"],
@@ -29,7 +47,10 @@
         "dc_version": {
             "oneOf": [
                 {
-                    "$ref": "/v1/enum-values/enum-value-minimal.json"
+                    "$ref": "/v1/enum-values/enum-value.json"
+                },
+                {
+                    "type": "integer"
                 },
                 {
                     "type": "null"
@@ -40,13 +61,28 @@
         "dc_role": {
             "oneOf": [
                 {
-                    "$ref": "/v1/enum-values/enum-value-minimal.json"
+                    "$ref": "/v1/enum-values/enum-value.json"
+                },
+                {
+                    "type": "integer"
                 },
                 {
                     "type": "null"
                 }
             ],
             "description": "Role of the instance for the delivery process"
+        },
+        "projects": {
+            "type": "array",
+            "items": {
+                "$ref": "/v1/projects/project.json"
+            }
+        },
+        "instances": {
+            "type": "array",
+            "items": {
+                "$ref": "/v1/instances/instance.json"
+            }
         }
     }
 }

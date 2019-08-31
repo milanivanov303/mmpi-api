@@ -58,7 +58,7 @@
         "changed_by": {
            "oneOf": [
                 {
-                    "$ref": "/v1/user-minimal.json"
+                    "$ref": "/v1/user.json"
                 },
                 {
                     "type": "null"

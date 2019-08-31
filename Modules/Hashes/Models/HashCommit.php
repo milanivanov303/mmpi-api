@@ -2,6 +2,11 @@
 
 namespace Modules\Hashes\Models;
 
+use App\Models\CommitMerge;
+use App\Models\Dependency;
+use App\Models\EnumValue;
+use App\Models\SourceRevCvsTag;
+use App\Models\SourceRevTtsKey;
 use Core\Models\Model;
 use App\Models\User;
 
@@ -13,11 +18,18 @@ class HashCommit extends Model
      * @var array
      */
     protected $mapping = [
-        'repo_branch'        => 'branch',
-        'commit_description' => 'description',
-        'repo_module'        => 'module',
-        'committed_by'       => 'owner',
-        'hash_rev'           => 'rev'
+        'commit_description' => 'description'
+    ];
+
+    /**
+     * The attributes that will be hidden in output json
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'repo_type_id',
+        'branch_id',
+        'committed_by'
     ];
 
     /**
@@ -26,76 +38,79 @@ class HashCommit extends Model
      * @var array
      */
     protected $fillable = [
-        'repo_branch',
-        'commit_description',
-        'merge_branch',
-        'repo_module',
-        'committed_by',
-        'repo_path',
-        'repo_url',
+        'rev',
         'hash_rev',
-        'repo_timestamp'
+        'committed_by',
+        'merge_branch',
+        'repo_timestamp',
+        'version',
+        'commit_description',
+        'made_on'
     ];
 
     /**
-     * Get the files for the hash.
+     * Get user for the hash.
      */
-    public function files()
+    protected function repoType()
     {
-        return $this->hasMany(HashCommitFile::class, 'hash_commit_id');
-    }
-
-    /**
-     * Get the files for the hash.
-     */
-    public function chains()
-    {
-        return $this->belongsToMany(HashChain::class, 'hash_commit_to_chains');
+        return $this->belongsTo(EnumValue::class, 'repo_type_id');
     }
 
     /**
      * Get user for the hash.
      */
-    public function owner()
+    protected function branch()
     {
-        return $this->belongsTo(User::class, 'committed_by')->minimal();
+        return $this->belongsTo(HashBranch::class, 'branch_id');
     }
 
     /**
-     * Set committed by attribute
-     *
-     * @param string $value
+     * Get the files for the hash.
      */
-    public function setCommittedByAttribute($value)
+    protected function files()
     {
-        $user = User::where('username', $value)->first();
-        $this->attributes['committed_by'] = $user->id;
+        return $this->hasMany(HashCommitFile::class, 'hash_commit_id');
     }
 
     /**
-     * Get the model's relationships in array form.
-     *
-     * @return array
+     * Get user for the hash.
      */
-    public function relationsToArray()
+    protected function committedBy()
     {
-        $array = parent::relationsToArray();
+        return $this->belongsTo(User::class, 'committed_by');
+    }
 
-        // convert files relations to simple array with names
-        if ($this->isVisible('files') && array_key_exists('files', $array)) {
-            $array['files'] = array_column($array['files'], 'file_name');
-        }
+    /**
+     * Get dependencies
+     */
+    protected function dependencies()
+    {
+        return $this->hasManyThrough(
+            Dependency::class,
+            SourceRevCvsTag::class,
+            'source_rev_id',
+            'rev_id'
+        );
+    }
 
-        // convert chains relations to simple array with names
-        if ($this->isVisible('chains') && array_key_exists('chains', $array)) {
-            $array['chains'] = array_column($array['chains'], 'chain_name');
-        }
+    /**
+     * Get tts tickets
+     */
+    protected function ttsKeys()
+    {
+        return $this->hasManyThrough(
+            SourceRevTtsKey::class,
+            SourceRevCvsTag::class,
+            'source_rev_id',
+            'source_rev_tag_id'
+        );
+    }
 
-        // set committed_by to owner username
-        if ($this->isVisible('committed_by') && array_key_exists('owner', $array)) {
-            $array['committed_by'] = $array['owner']['username'];
-        }
-
-        return $array;
+    /**
+     * Get merge
+     */
+    protected function merge()
+    {
+        return $this->hasOne(CommitMerge::class, 'commit_id');
     }
 }

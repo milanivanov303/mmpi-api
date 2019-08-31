@@ -1,0 +1,18 @@
+{
+    "$id": "ProjectEventFilters",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+        "project_id": {
+            "$filters": {
+                "$func": "checkInDb",
+                "$vars": {
+                    "rule": "exists:projects,id"
+                }
+            },
+            "$messages": {
+                "$filters": "Project id is not found in table projects."
+            }
+        }       
+    }
+}

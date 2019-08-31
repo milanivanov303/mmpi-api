@@ -24,16 +24,25 @@
             },
             "description": "iMX instances register"
         },
+        "instance_type_id": {
+            "type": "string"
+        },
         "play_as_demo": {
             "type": "string",
             "enum": ["y", "n"],
             "default": "n"
         },
         "owner": {
-            "$ref": "/v1/enum-values/enum-value-minimal.json"
+            "oneOf": [
+                {"type": "integer"},
+                {"$ref": "/v1/enum-values/enum-value.json"}
+            ]
         },
         "status": {
-            "$ref": "/v1/enum-values/enum-value-minimal.json"
+            "oneOf": [
+                {"type": "integer"},
+                {"$ref": "/v1/enum-values/enum-value.json"}
+            ]
         },
         "timezone": {
             "type": "string",
@@ -67,6 +76,15 @@
         "environment_type": {
             "$ref": "/v1/delivery-chains/delivery-chain-type.json",
             "description": "Environment type associated with delivery_chain_types"
+        },
+        "environment_type_id": {
+            "type": "integer"
+        },
+        "delivery_chains": {
+            "type": "array",
+            "items": {
+                "$ref": "/v1/delivery-chains/delivery-chain.json"
+            }
         }
     }
 }

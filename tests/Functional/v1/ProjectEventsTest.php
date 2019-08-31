@@ -1,12 +1,20 @@
 <?php
 
 use App\Models\EnumValue;
+use Modules\Projects\Models\Project;
 
 class ProjectEventsTest extends RestTestCase
 {
     protected $uri        = 'v1/project-events';
     protected $table      = 'project_events';
     protected $primaryKey = 'id';
+
+    protected $with = [
+        'project',
+        'project_event_type',
+        'project_event_subtype',
+        'project_event_status'
+    ];
 
     /**
      * Get request data
@@ -15,19 +23,19 @@ class ProjectEventsTest extends RestTestCase
      */
     protected function getData()
     {
-        $faker = Faker\Factory::create();
-
-        $project            = \Modules\Projects\Models\Project::inRandomOrder()->first();
-        $projectEventType   = EnumValue::where('type', 'project_event_type')->minimal()->inRandomOrder()->first();
-        $projectEventStatus = EnumValue::where('type', 'project_event_status')->minimal()->inRandomOrder()->first();
+        $project             = Project::inRandomOrder()->first();
+        $projectEventType    = EnumValue::where('type', 'project_event_type')->inRandomOrder()->first();
+        $projectEventSubtype = EnumValue::where('type', 'project_event_subtype')->inRandomOrder()->first();
+        $projectEventStatus  = EnumValue::where('type', 'project_event_status')->inRandomOrder()->first();
 
         return [
-            'project'              => $project->toArray(),
-            'project_event_type'   => $projectEventType->toArray(),
-            'event_start_date'     => $faker->date('Y-m-d'),
-            'event_end_date'       => $faker->date('Y-m-d'),
-            'description'          => $faker->text(59),
-            'project_event_status' => $projectEventStatus->toArray()
+            'project'               => $project->toArray(),
+            'project_event_type'    => $projectEventType->toArray(),
+            'project_event_subtype' => $projectEventSubtype->toArray(),
+            'event_start_date'      => $this->faker()->date('Y-m-d'),
+            'event_end_date'        => $this->faker()->date('Y-m-d'),
+            'description'           => $this->faker()->text(59),
+            'project_event_status'  => $projectEventStatus->toArray()
         ];
     }
 
@@ -39,10 +47,8 @@ class ProjectEventsTest extends RestTestCase
      */
     protected function getInvalidData(array $data)
     {
-        $faker = Faker\Factory::create();
-
         // Set invalid parameters
-        $data['project_event_type'] = $faker->randomNumber();
+        $data['project_event_type'] = $this->faker()->randomNumber();
 
         // remove required parameters
         unset($data['project']);
@@ -58,12 +64,9 @@ class ProjectEventsTest extends RestTestCase
      */
     protected function getUpdateData(array $data)
     {
-        $faker = Faker\Factory::create();
-        // Change parameters
-
         //Remove date as it is overwritten on each request
         unset($data['made_on']);
-        $data['event_start_date'] = $faker->date('Y-m-d');
+        $data['event_start_date'] = $this->faker()->date('Y-m-d');
 
         return $data;
     }

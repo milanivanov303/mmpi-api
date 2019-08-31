@@ -1,0 +1,9 @@
+{
+    "$id": "UpdateSource",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "description": "Source object",
+    "allOf": [
+        {"$ref": "/v1/sources/source.json"}         
+    ]
+}

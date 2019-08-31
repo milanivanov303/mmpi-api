@@ -1,0 +1,83 @@
+{
+    "$id": "HashFilters",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+        "committed_by": {
+            "properties": {
+                "id": {
+                    "$filters": {
+                        "$func": "checkInDb",
+                        "$vars": {
+                            "rule": "exists:users,id"
+                        }
+                    },
+                    "$messages": {
+                        "$filters": "User with this id does not exist"
+                    }
+                },
+                "username": {
+                    "$filters": {
+                        "$func": "checkInDb",
+                        "$vars": {
+                            "rule": "exists:users,username"
+                        }
+                    },
+                    "$messages": {
+                        "$filters": "User with this username does not exist"
+                    }
+                }
+            }
+        },
+        "hash_rev": {
+            "pattern": "^[0-9a-z]*$",
+            "$filters": {
+                "$func": "checkInDb",
+                "$vars": {
+                    "rule": "unique:hash_commits,hash_rev"
+                }
+            },
+            "$messages": {
+                "pattern": "Revision can content only numbers and lowercase letters",
+                "$filters": "Revision is already registered"
+            }
+        },
+        "repo_type": {
+            "properties": {
+                "id": {
+                    "$filters": {
+                        "$func": "checkInDb",
+                        "$vars": {
+                            "rule": "exists:enum_values,id,type,repository_type"
+                        }
+                    },
+                    "$messages": {
+                        "$filters": "Repo type with this id does not exist for type repository_type"
+                    }
+                },
+                "key": {
+                    "$filters": {
+                        "$func": "checkInDb",
+                        "$vars": {
+                            "rule": "exists:enum_values,key,type,repository_type"
+                        }
+                    },
+                    "$messages": {
+                        "$filters": "Repo type with this key does not exist for type repository_type"
+                    }
+                }
+            }
+        },
+        "branch": {
+            "$filters": {
+                "$func": "checkHashBranch",
+                "$vars": {
+                    "$ref": "/"
+                }
+            },
+            "$messages": {
+                "$filters": "Branch \"%s\" does not exist for given repo_type or the branch is inactive"
+            }
+        }
+    }
+}

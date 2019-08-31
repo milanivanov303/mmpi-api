@@ -44,6 +44,28 @@ class ProjectEventRepository extends AbstractRepository implements RepositoryInt
                 return $builder->whereHas('projectEventType', function ($query) use ($value, $operator) {
                     $query->where('key', $operator, $value);
                 });
+            },
+            'date' => function ($builder, $value) {
+                $date = date_parse_from_format('Y-m-d', $value);
+
+                if ($date['day']) {
+                    return $builder->whereRaw("
+                        event_start_date <= '$value' AND
+                        event_end_date >= '$value'
+                    ");
+                }
+
+                $format = '%Y';
+                if ($date['month']) {
+                    $format .= '-%m';
+                }
+                return $builder->whereRaw("
+                    (
+                        DATE_FORMAT(event_start_date, '$format') = '$value'
+                        OR
+                        DATE_FORMAT(event_end_date, '$format') = '$value'
+                    )
+                ");
             }
         ];
     }
@@ -66,6 +88,13 @@ class ProjectEventRepository extends AbstractRepository implements RepositoryInt
             $this->model->projectEventType()->associate(
                 app(EnumValue::class)
                     ->getModelId($data['project_event_type'], 'key', ['type' =>'project_event_type'])
+            );
+        }
+
+        if (array_key_exists('project_event_subtype', $data)) {
+            $this->model->projectEventSubtype()->associate(
+                app(EnumValue::class)
+                    ->getModelId($data['project_event_subtype'], 'key', ['type' =>'project_event_subtype'])
             );
         }
 

@@ -7,6 +7,7 @@ use Modules\Issues\Models\Issue;
 use Modules\Modifications\Models\Modification;
 use Modules\DeliveryChains\Models\DeliveryChain;
 use Modules\Patches\Models\Patch;
+use App\Models\User;
 
 class PatchRequest extends Model
 {
@@ -30,15 +31,7 @@ class PatchRequest extends Model
         'customer_infomed',
         'nr_test',
         'automated_test',
-        'assign_to_planned_ba'
-    ];
-
-    /**
-     * The attributes that will be hidden in output json
-     *
-     * @var array
-     */
-    protected $hidden = [
+        'assign_to_planned_ba',
         'issue_id',
         'delivery_chain_id',
         'migrated_id'
@@ -47,7 +40,7 @@ class PatchRequest extends Model
     /**
      * Get issue
      */
-    public function issue()
+    protected function issue()
     {
         return $this->belongsTo(Issue::class);
     }
@@ -55,7 +48,7 @@ class PatchRequest extends Model
     /**
      * Get attached modifications
      */
-    public function modifications()
+    protected function modifications()
     {
         return $this->belongsToMany(Modification::class, 'modif_to_pr', 'pr_id', 'modif_id')
                     ->wherePivot('removed', null)
@@ -65,7 +58,7 @@ class PatchRequest extends Model
     /**
      * Get patch
      */
-    public function patches()
+    protected function patches()
     {
         return $this->hasMany(Patch::class);
     }
@@ -73,8 +66,16 @@ class PatchRequest extends Model
     /**
      * Get attached modifications
      */
-    public function deliveryChain()
+    protected function deliveryChain()
     {
         return $this->belongsTo(DeliveryChain::class);
+    }
+
+    /**
+     * Get greenlighted by
+     */
+    protected function greenlightedBy()
+    {
+        return $this->belongsTo(User::class, 'greenlighted_by');
     }
 }

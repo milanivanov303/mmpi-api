@@ -1,0 +1,18 @@
+{
+    "$id": "BranchFilters",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+        "repo_type_id": {
+            "$filters": {
+                "$func": "checkInDb",
+                "$vars": {
+                    "rule": "exists:enum_values,id,type,repository_type"
+                }
+            },
+            "$messages": {
+                "$filters": "Repo type id is not found in enum_values table."
+            }
+        }       
+    }
+}

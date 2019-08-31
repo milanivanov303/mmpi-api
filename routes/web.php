@@ -13,19 +13,13 @@
 // v1
 $router->group(['prefix' => 'v1'], function () use ($router) {
 
-    // Routes with no authentication. This should be temporary!!!
-    $router->group(['middleware' => ['json-validator', 'audit']], function () use ($router) {
-        // Hashes
-        require 'v1/hashes.php';
-    });
-
-    $router->group(['middleware' => ['auth', 'json-validator', 'audit']], function () use ($router) {
+    $router->group(['middleware' => ['audit', 'auth', 'json-validator']], function () use ($router) {
 
         // Users
         require 'v1/users.php';
 
         // Hashes
-        //require 'v1/hashes.php';
+        require 'v1/hashes.php';
 
         // Issues
         require 'v1/issues.php';
@@ -68,5 +62,17 @@ $router->group(['prefix' => 'v1'], function () use ($router) {
 
         // Hash branches
         require 'v1/branches.php';
+
+        // Project specifics
+        require 'v1/project-specifics.php';
+
+        // Source
+        require 'v1/sources.php';
+
+        // Source dependencies
+        require 'v1/source-dependencies.php';
+
+        // Source revisions
+        require 'v1/source-revisions.php';
     });
 });

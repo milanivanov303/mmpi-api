@@ -2,6 +2,8 @@
 
 namespace Modules\Hashes\Jobs;
 
+use Illuminate\Support\Facades\Mail;
+use Modules\Hashes\Mail\HashDescriptionMail;
 use Modules\Hashes\Models\HashCommit;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
@@ -38,28 +40,37 @@ class ProcessTags implements ShouldQueue
      */
     public function handle()
     {
-        Log::channel('tags')->info("Start processing tags for hash '{$this->hashCommit->id}'");
+        if (is_null($this->hashCommit->commit_description)) {
+            return Log::channel('tags')->info("Description for hash '{$this->hashCommit->hash_rev}' is empty!");
+        }
+
+        $description = new DescriptionParserService($this->hashCommit->commit_description);
+
+        if (!$description->isValid()) {
+            $commitedBy = $this->hashCommit->committedBy;
+            if ($commitedBy) {
+                $commitedByManager = $commitedBy->manager;
+            }
+
+            Mail
+                ::to($commitedBy ?? config('app.admin-mails'))
+                ->cc($commitedByManager ?? config('app.admin-mails'))
+                ->queue(
+                    (
+                        new HashDescriptionMail([
+                            'hashCommit' => $this->hashCommit,
+                            'errors'     => $description->getErrors()
+                        ])
+                    )->onQueue('mails')
+                );
+        }
+
+        Log::channel('tags')->info("Start processing tags for hash '{$this->hashCommit->hash_rev}'");
         Log::channel('tags')->info("Description '{$this->hashCommit->commit_description}'");
 
-        $parser = new DescriptionParserService($this->hashCommit->commit_description);
-
-        $tags = new TagsService($this->hashCommit, $parser);
+        $tags = new TagsService($this->hashCommit, $description);
         $tags->save();
 
         Log::channel('tags')->info("End" . PHP_EOL);
-    }
-
-    /**
-     * The job failed to process.
-     *
-     * @param \Exception  $e
-     * @return void
-     */
-    public function failed(\Exception $e)
-    {
-        Log::channel('tags')->warning($e->getMessage());
-
-        // Send user notification of failure, etc...
-        //var_dump($e->getMessage());
     }
 }

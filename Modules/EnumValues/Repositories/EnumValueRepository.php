@@ -11,20 +11,11 @@ use Illuminate\Support\Facades\Auth;
 class EnumValueRepository extends AbstractRepository implements RepositoryInterface
 {
     /**
-     * Column to use on get/update/delete
-     *
-     * @var string
-     */
-    protected $primaryKey = ['type', 'key'];
-
-    /**
-     * The relations to eager load on every query.
+     * Custom unique primaryKey
      *
      * @var array
      */
-    protected $with = [
-        'changedBy'
-    ];
+    protected $customUniqueKey = ['type', 'key'];
 
     /**
      * EnumValueRepository constructor

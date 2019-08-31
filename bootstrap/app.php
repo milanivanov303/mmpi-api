@@ -2,11 +2,9 @@
 
 require_once __DIR__.'/../vendor/autoload.php';
 
-try {
-    (new Dotenv\Dotenv(__DIR__.'/../'))->load();
-} catch (Dotenv\Exception\InvalidPathException $e) {
-    //
-}
+(new Laravel\Lumen\Bootstrap\LoadEnvironmentVariables(
+    dirname(__DIR__)
+))->bootstrap();
 
 /*
 |--------------------------------------------------------------------------
@@ -20,7 +18,7 @@ try {
 */
 
 $app = new Laravel\Lumen\Application(
-    realpath(__DIR__.'/../')
+    dirname(__DIR__)
 );
 
 $app->withFacades();
@@ -33,6 +31,9 @@ $app->configure('mail');
 $app->alias('mailer', Illuminate\Mail\Mailer::class);
 $app->alias('mailer', Illuminate\Contracts\Mail\Mailer::class);
 $app->alias('mailer', Illuminate\Contracts\Mail\MailQueue::class);
+
+// Create queue so Mailable queues works
+$app->make('queue');
 
 /*
 |--------------------------------------------------------------------------
@@ -75,7 +76,7 @@ $app->middleware([
 $app->routeMiddleware([
     'auth'           => Core\Http\Middleware\Authenticate::class,
     'json-validator' => Core\Http\Middleware\JsonValidator::class,
-    'can'            => \Illuminate\Auth\Middleware\Authorize::class,
+    'can'            => Illuminate\Auth\Middleware\Authorize::class,
     'audit'          => Core\Http\Middleware\AuditLogger::class
 ]);
 
@@ -92,9 +93,11 @@ $app->routeMiddleware([
 
 $app->register(Core\Providers\CoreServiceProvider::class);
 $app->register(App\Providers\AuthServiceProvider::class);
+$app->register(App\Providers\EventServiceProvider::class);
 $app->register(Illuminate\Mail\MailServiceProvider::class);
 $app->register(Modules\Issues\Providers\IssuesServiceProvider::class);
 $app->register(Modules\JsonRpc\Providers\JsonRpcServiceProvider::class);
+$app->register(Modules\Hashes\Providers\HashesServiceProvider::class);
 
 /*
 |--------------------------------------------------------------------------

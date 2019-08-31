@@ -1,0 +1,27 @@
+{
+    "$id": "OperationModification",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "description": "Operation Modification object",
+    "additionalProperties": false,
+    "properties": {
+        "id": {
+            "$ref": "/v1/modifications/modification.json#/properties/id"
+        },
+        "issue": {
+            "$ref": "/v1/modifications/modification.json#/properties/issue"
+        },
+        "type": {
+            "$ref": "/v1/modifications/modification.json#/properties/type"
+        },
+        "subtype": {
+            "$ref": "/v1/modifications/modification.json#/properties/subtype"
+        },
+        "delivery_chain": {
+            "$ref": "/v1/modifications/modification.json#/properties/delivery_chain"
+        },
+        "instance_status": {
+            "$ref": "/v1/modifications/modification.json#/properties/instance_status"
+        }
+    }
+}

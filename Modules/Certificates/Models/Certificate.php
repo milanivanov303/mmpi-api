@@ -15,20 +15,12 @@ class Certificate extends Model
     protected $table = 'imx_certificates';
 
     /**
-     * The relations to eager load on every query.
-     *
-     * @var array
-     */
-    protected $with = [
-        'project'
-    ];
-
-    /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
+        'project_id',
         'hash',
         'organization_name',
         'valid_from',
@@ -36,18 +28,9 @@ class Certificate extends Model
     ];
 
     /**
-     * The attributes that will be hidden in output json
-     *
-     * @var array
-     */
-    protected $hidden = [
-        'project_id'
-    ];
-
-    /**
      * Get owner
      */
-    public function project()
+    protected function project()
     {
         return $this->belongsTo(Project::class);
     }

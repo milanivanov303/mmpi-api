@@ -11,20 +11,11 @@ use Modules\Projects\Models\Project;
 class IssueRepository extends AbstractRepository implements RepositoryInterface
 {
     /**
-     * Column to use on get/update/delete
-     *
-     * @var string
-     */
-    protected $primaryKey = 'tts_id';
-
-    /**
-     * The relations to eager load on every query.
+     * Custom unique primaryKey
      *
      * @var array
      */
-    protected $with = [
-        'parentIssue'
-    ];
+    protected $customUniqueKey = 'tts_id';
 
     /**
      * HashRepository constructor

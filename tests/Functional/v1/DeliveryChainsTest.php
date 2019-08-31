@@ -2,12 +2,24 @@
 
 use App\Models\EnumValue;
 use Modules\DeliveryChains\Models\DeliveryChainType;
+use Modules\Projects\Models\Project;
+use Modules\Instances\Models\Instance;
 
 class DeliveryChainsTest extends RestTestCase
 {
     protected $uri        = 'v1/delivery-chains';
     protected $table      = 'delivery_chains';
     protected $primaryKey = 'title';
+
+    protected $with = [
+        'instances',
+        'projects',
+        'dlvry_type',
+        'status',
+        'dc_version',
+        'dc_role',
+        'type'
+    ];
 
     /**
      * Get request data
@@ -16,22 +28,24 @@ class DeliveryChainsTest extends RestTestCase
      */
     protected function getData()
     {
-        $faker = Faker\Factory::create();
-
-        $dlvryType = EnumValue::where('type', 'dc_dlvry_type')->minimal()->inRandomOrder()->first();
-        $status    = EnumValue::where('type', 'active_inactive')->minimal()->inRandomOrder()->first();
-        $dcVersion = EnumValue::where('type', 'delivery_chain_version')->minimal()->inRandomOrder()->first();
-        $dcRole    = EnumValue::where('type', 'delivery_chain_role')->minimal()->inRandomOrder()->first();
+        $dlvryType = EnumValue::where('type', 'dc_dlvry_type')->inRandomOrder()->first();
+        $status    = EnumValue::where('type', 'active_inactive')->inRandomOrder()->first();
+        $dcVersion = EnumValue::where('type', 'delivery_chain_version')->inRandomOrder()->first();
+        $dcRole    = EnumValue::where('type', 'delivery_chain_role')->inRandomOrder()->first();
         $type      = DeliveryChainType::inRandomOrder()->first();
+        $projects  = Project::active()->inRandomOrder()->limit(3)->get();
+        $instances = Instance::active()->inRandomOrder()->limit(3)->get();
 
         return [
-            'title'                => $faker->word(),
-            'patch_directory_name' => $faker->word(),
+            'title'                => $this->faker()->word().$this->faker()->word(),
+            'patch_directory_name' => $this->faker()->text(32),
             'dlvry_type'           => $dlvryType->toArray(),
             'status'               => $status->toArray(),
             'dc_version'           => $dcVersion->toArray(),
             'dc_role'              => $dcRole->toArray(),
-            'type'                 => $type->toArray()
+            'type'                 => $type->toArray(),
+            'projects'             => $projects->toArray(),
+            'instances'            => $instances->toArray()
         ];
     }
 
@@ -43,10 +57,8 @@ class DeliveryChainsTest extends RestTestCase
      */
     protected function getInvalidData(array $data)
     {
-        $faker = Faker\Factory::create();
-
         // Set invalid parameters
-        $data['patch_directory_name'] = $faker->randomNumber();
+        $data['patch_directory_name'] = $this->faker()->randomNumber();
 
         // remove required parameters
         unset($data['type']);

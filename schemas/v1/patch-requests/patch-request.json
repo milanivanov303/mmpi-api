@@ -15,6 +15,9 @@
         "issue": {
             "$ref": "/v1/issues/issue.json"
         },
+        "issue_id": {
+            "type": "integer"
+        },
         "number":  {
             "type": "integer"
         },
@@ -32,7 +35,7 @@
         "when_to_install_string": {
             "oneOf": [
                 {
-                    "$ref": "/v1/enum-values/enum-value-minimal.json"
+                    "$ref": "/v1/enum-values/enum-value.json"
                 },
                 {
                     "type": "null"
@@ -47,6 +50,9 @@
         },
         "delivery_chain": {
             "$ref": "/v1/delivery-chains/delivery-chain.json"
+        },
+        "delivery_chain_id": {
+            "type": "integer"
         },
         "call_back_tech_valid": {
             "type": "integer",
@@ -64,7 +70,7 @@
         "greenlight_status": {
             "oneOf": [
                 {
-                    "$ref": "/v1/enum-values/enum-value-minimal.json"
+                    "$ref": "/v1/enum-values/enum-value.json"
                 },
                 {
                     "type": "null"
@@ -80,7 +86,7 @@
         "greenlighted_by": {
             "oneOf": [
                 {
-                    "$ref": "/v1/user-minimal.json"
+                    "$ref": "/v1/user.json"
                 },
                 {
                     "type": "null"

@@ -4,12 +4,21 @@ use App\Models\User;
 use App\Models\EnumValue;
 use Modules\DeliveryChains\Models\DeliveryChainType;
 use Modules\Instances\Models\InstanceType;
+use Modules\DeliveryChains\Models\DeliveryChain;
 
 class InstancesTest extends RestTestCase
 {
     protected $uri        = 'v1/instances';
     protected $table      = 'instances';
     protected $primaryKey = 'id';
+
+    protected $with = [
+        'owner',
+        'status',
+        'environment_type',
+        'instance_type',
+        'delivery_chains'
+    ];
 
     /**
      * Get request data
@@ -18,12 +27,11 @@ class InstancesTest extends RestTestCase
      */
     protected function getData()
     {
-        $faker = Faker\Factory::create();
-
-        $owner           = EnumValue::where('type', 'instances_owner')->minimal()->inRandomOrder()->first();
-        $status          = EnumValue::where('type', 'active_inactive')->minimal()->inRandomOrder()->first();
+        $owner           = EnumValue::where('type', 'instances_owner')->inRandomOrder()->first();
+        $status          = EnumValue::where('type', 'active_inactive')->inRandomOrder()->first();
         $environmentType = DeliveryChainType::inRandomOrder()->first();
         $instanceType    = InstanceType::inRandomOrder()->first();
+        $deliveryChains  = DeliveryChain::active()->inRandomOrder()->limit(3)->get();
 
         return [
             'name'                      => 'CVS',
@@ -31,13 +39,14 @@ class InstancesTest extends RestTestCase
             'owner'                     => $owner->toArray(),
             'status'                    => $status->toArray(),
             'timezone'                  => 'Europe/Sofia',
-            'host'                      => $faker->word(),
-            'user'                      => $faker->username(),
-            'db_user'                   => $faker->username(),
+            'host'                      => $this->faker()->word(),
+            'user'                      => $this->faker()->username(),
+            'db_user'                   => $this->faker()->username(),
             'tns_name'                  => '',
             'has_patch_install_in_init' => 0,
             'instance_type'             => $instanceType->toArray(),
-            'environment_type'          => $environmentType->toArray()
+            'environment_type'          => $environmentType->toArray(),
+            'delivery_chains'           => $deliveryChains->toArray()
         ];
     }
 
@@ -49,10 +58,8 @@ class InstancesTest extends RestTestCase
      */
     protected function getInvalidData(array $data)
     {
-        $faker = Faker\Factory::create();
-
         // Set invalid parameters
-        $data['timezone'] = $faker->randomNumber();
+        $data['timezone'] = $this->faker()->randomNumber();
 
         // remove required parameters
         unset($data['name'], $data['owner']);

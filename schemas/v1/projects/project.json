@@ -3,7 +3,7 @@
     "$schema": "http://json-schema.org/draft-07/schema#",
     "type": "object",
     "description": "Project object",
-    "additionalProperties": true,
+    "additionalProperties": false,
     "properties": {
         "id": {
             "type": "integer"
@@ -70,8 +70,9 @@
         },
         "activity": {
             "oneOf": [
-                {"$ref": "/v1/enum-values/enum-value-minimal.json"},
-                {"type": "null"}
+                {"$ref": "/v1/enum-values/enum-value.json"},
+                {"type": "null"},
+                {"type": "integer"}
             ],
             "default": "null",
             "description": "Client activity (linked to the value in g_etude.activite)"
@@ -128,61 +129,109 @@
             "default": "null",
             "description": "enum_value.id of the business group this project is part of"
         },
+        "group_id": {
+            "oneOf": [
+                {"type": "null"},
+                {"type": "integer"}
+            ]
+        },
         "country": {
             "oneOf": [
-                {"$ref": "/v1/enum-values/enum-value-minimal.json"},
+                {"$ref": "/v1/enum-values/enum-value.json"},
                 {"type": "null"}
             ],
             "default": "null",
             "description": "Project country from enum_values"
         },
+        "country_id": {
+            "oneOf": [
+                {"type": "null"},
+                {"type": "integer"}
+            ]
+        },
         "communication_lng": {
             "oneOf": [
-                {"$ref": "/v1/enum-values/enum-value-minimal.json"},
+                {"$ref": "/v1/enum-values/enum-value.json"},
                 {"type": "null"}
             ],
             "default": "null",
             "description": "Communication language for the project from enum_values"
         },
+        "communication_lng_id": {
+            "oneOf": [
+                {"type": "null"},
+                {"type": "integer"}
+            ]
+        },
         "delivery_method": {
             "oneOf": [
-                {"$ref": "/v1/enum-values/enum-value-minimal.json"},
+                {"$ref": "/v1/enum-values/enum-value.json"},
                 {"type": "null"}
             ],
             "default": "null",
             "description": "Delivery method for the project from enum_values"
         },
+        "delivery_method_id": {
+            "oneOf": [
+                {"type": "null"},
+                {"type": "integer"}
+            ]
+        },
         "se_mntd_by_clnt": {
             "oneOf": [
-                {"$ref": "/v1/enum-values/enum-value-minimal.json"},
+                {"$ref": "/v1/enum-values/enum-value.json"},
                 {"type": "null"}
             ],
             "default": "null",
             "description": "If Expert System is maintained by the client"
         },
+        "se_mntd_by_clnt_id": {
+            "oneOf": [
+                {"type": "null"},
+                {"type": "integer"}
+            ]
+        },
         "tl_mntd_by_clnt": {
             "oneOf": [
-                {"$ref": "/v1/enum-values/enum-value-minimal.json"},
+                {"$ref": "/v1/enum-values/enum-value.json"},
                 {"type": "null"}
             ],
             "default": "null",
             "description": "If Text library is maintained by the client"
         },
+        "tl_mntd_by_clnt_id": {
+            "oneOf": [
+                {"type": "null"},
+                {"type": "integer"}
+            ]
+        },
         "njsch_mntd_by_clnt": {
             "oneOf": [
-                {"$ref": "/v1/enum-values/enum-value-minimal.json"},
+                {"$ref": "/v1/enum-values/enum-value.json"},
                 {"type": "null"}
             ],
             "default": "null",
             "description": "If Night job scheduler is maintained by the client"
         },
+        "njsch_mntd_by_clnt_id": {
+            "oneOf": [
+                {"type": "null"},
+                {"type": "integer"}
+            ]
+        },
         "trans_mntd_by_clnt": {
             "oneOf": [
-                {"$ref": "/v1/enum-values/enum-value-minimal.json"},
+                {"$ref": "/v1/enum-values/enum-value.json"},
                 {"type": "null"}
             ],
             "default": "null",
             "description": "If Translations are maintained by the client"
+        },
+        "trans_mntd_by_clnt_id": {
+            "oneOf": [
+                {"type": "null"},
+                {"type": "integer"}
+            ]
         },
         "sla_from": {
             "type": ["string", "null"],
@@ -196,16 +245,23 @@
         },
         "modified_by": {
             "oneOf": [
-                {"$ref": "/v1/user-minimal.json"},
+                {"$ref": "/v1/user.json"},
                 {"type": "null"}
             ],
             "default": "null",
             "description": "The user id who inserted the record or made the last change"
         },
+        "modified_by_id": {
+            "oneOf": [
+                {"type": "null"},
+                {"type": "integer"}
+            ]
+        },
         "type_business": {
             "oneOf": [
-                {"$ref": "/v1/enum-values/enum-value-minimal.json"},
-                {"type": "null"}
+                {"$ref": "/v1/enum-values/enum-value.json"},
+                {"type": "null"},
+                {"type": "integer"}
             ]
         },
         "delivery_chains": {
@@ -214,21 +270,47 @@
                 "$ref": "/v1/delivery-chains/delivery-chain.json"
             }
         },
-        "ïntranet_version": {
-            "type": ["integer", "null"],
-            "default": "null",
-            "description": "iMX version for Intranet"
-        },
-        "extranet_version": {
-            "type": ["integer", "null"],
-            "default": "null",
-            "description": "iMX version for Extranet"
-        },
         "run_cppcheck": {
             "type": "integer",
             "enum": [0, 1],
             "default": 0,
             "description": "Flag determining whether to run cppcheck on source files modifications for this project. 0 - do not run, 1 - run"
+        },
+        "project_specifics": {
+            "type": "array",
+            "items": {
+                "$ref": "/v1/project-specifics/project-specific.json"
+            }
+        },
+        "roles": {
+            "type": "array",
+            "items": {
+                "oneOf": [
+                    {
+                        "$ref": "/v1/user-project-role.json"
+                    },
+                    {"type": "null"}
+                ]
+            }
+        },
+        "intranet_version": {
+            "oneOf": [
+                {"$ref": "/v1/enum-values/enum-value.json"},
+                {"type": "null"},
+                {"type": "integer"}
+            ]
+        },
+        "extranet_version": {
+            "oneOf": [
+                {"$ref": "/v1/enum-values/enum-value.json"},
+                {"type": "null"},
+                {"type": "integer"}
+            ]
+        },
+        "tts_dev_project_key": {
+            "type": ["string", "null"],
+            "default": "null",
+            "description": "The key of the DEV Project in TTS"
         }
     }
 }

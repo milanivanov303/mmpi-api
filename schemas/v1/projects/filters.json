@@ -13,6 +13,54 @@
             "$messages": {
                 "$filters": "Project name already registered"
             }
+        },
+        "project_specifics": {
+            "items": {
+                "properties": {
+                    "id": {
+                        "$filters": {
+                            "$func": "checkInDb",
+                            "$vars": {
+                                "rule": "exists:project_specifics,id"
+                            }
+                        },
+                        "$messages": {
+                            "$filters": "Project specific does not exist"
+                        }
+                    }
+                },
+                "required": ["id"]
+            }
+        },
+        "project_intranet_version": {
+            "properties": {
+                "id": {
+                    "$filters": {
+                        "$func": "checkInDb",
+                        "$vars": {
+                            "rule": "exists:enum_values,id,type,delivery_chain_version,subtype,IMX"
+                        }
+                    },
+                    "$messages": {
+                        "$filters": "Project intranet version must be of type delivery_chain_version and subtype IMX"
+                    }
+                }
+            }
+        },
+        "project_extranet_version": {
+            "properties": {
+                "id": {
+                    "$filters": {
+                        "$func": "checkInDb",
+                        "$vars": {
+                            "rule": "exists:enum_values,id,type,delivery_chain_version,subtype,EXTRANET"
+                        }
+                    },
+                    "$messages": {
+                        "$filters": "Project extranet version must be of type delivery_chain_version and subtype EXTRANET"
+                    }
+                }
+            }
         }
     }
 }

@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use Core\Contracts\Models\User as UserContact;
 use Illuminate\Auth\Authenticatable;
-use Laravel\Lumen\Auth\Authorizable;
-use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
+use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
+use Laravel\Lumen\Auth\Authorizable;
 
-class User extends Model implements AuthenticatableContract, AuthorizableContract
+class User extends Model implements AuthenticatableContract, AuthorizableContract, UserContact
 {
     use Authenticatable, Authorizable;
 
@@ -35,9 +36,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     }
 
     /**
-     * Get id
-     *
-     * @return string
+     * @inheritDoc
      */
     public function getId() : string
     {
@@ -45,9 +44,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     }
 
     /**
-     * Get name
-     *
-     * @return string
+     * @inheritDoc
      */
     public function getName() : string
     {
@@ -55,9 +52,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     }
 
     /**
-     * Get email
-     *
-     * @return string
+     * @inheritDoc
      */
     public function getEmail() : string
     {
@@ -65,9 +60,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     }
 
     /**
-     * Get username
-     *
-     * @return string
+     * @inheritDoc
      */
     public function getUsername() : string
     {
@@ -75,36 +68,17 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     }
 
     /**
-     * Get user by email
-     *
-     * @param string $email
-     * @return User|null
+     * @inheritDoc
      */
-    public static function getByEmail(string $email) : ?self
+    public static function getByUsername(string $username, int $status = null) : ?self
     {
-        return self::where('email', $email)->active()->first();
-    }
+        $query = self::where('username', $username);
 
-    /**
-     * Get user by username
-     *
-     * @param string $username
-     * @return User|null
-     */
-    public static function getByUsername(string $username) : ?self
-    {
-        return self::where('username', $username)->active()->first();
-    }
+        if (is_null($status)) {
+            return $query->first();
+        }
 
-    /**
-     * Get user by sid
-     *
-     * @param string $sid
-     * @return User|null
-     */
-    public static function getBySid(string $sid) : ?self
-    {
-        return self::where('sidfr', $sid)->first();
+        return $query->where('status', $status)->first();
     }
 
     /**
@@ -118,7 +92,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     /**
      * Get user access group.
      */
-    public function accessGroup()
+    protected function accessGroup()
     {
         return $this->belongsTo(AccessGroup::class);
     }
@@ -126,7 +100,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     /**
      * Get user manager.
      */
-    public function manager()
+    protected function manager()
     {
         return $this->belongsTo(User::class, 'manager_id');
     }
@@ -134,9 +108,17 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     /**
      * Get user deputy.
      */
-    public function deputy()
+    protected function deputy()
     {
         return $this->belongsTo(User::class, 'deputy_id');
+    }
+
+    /**
+     * Get user roles.
+     */
+    protected function roles()
+    {
+        return $this->hasMany(UserProjectRole::class);
     }
 
     /**
@@ -148,10 +130,5 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     public function scopeActive($query)
     {
         return $query->where('status', 1);
-    }
-
-    public function scopeMinimal($query)
-    {
-        return $query->select(['id', 'name', 'username', 'email', 'status']);
     }
 }

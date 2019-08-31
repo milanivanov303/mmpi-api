@@ -1,15 +1,43 @@
 <?php
 
 use App\Models\User;
+use Faker\Factory as FakerFactory;
+use Faker\Generator as FakerGenerator;
 use Laravel\Lumen\Testing\DatabaseTransactions;
+use Symfony\Component\HttpFoundation\Response;
 
 abstract class RestTestCase extends TestCase
 {
     use DatabaseTransactions;
 
-    public function setUp() {
+    /**
+     * Resource primary key
+     *
+     * @var string
+     */
+    protected $primaryKey = 'id';
+
+    /**
+     * Relations to return in response
+     *
+     * @var array
+     */
+    protected $with = [];
+
+    /**
+     * @var FakerGenerator
+     */
+    protected $faker;
+
+    /**
+     * @inheritDoc
+     */
+    public function setUp() : void
+    {
         parent::setUp();
         $this->actingAs(User::first());
+
+        $this->faker = FakerFactory::create();
     }
 
     /**
@@ -34,6 +62,16 @@ abstract class RestTestCase extends TestCase
      * @return array
      */
     abstract protected function getUpdateData(array $data);
+
+    /**
+     * Get faker instance
+     *
+     * @return FakerGenerator
+     */
+    protected function faker()
+    {
+        return $this->faker;
+    }
 
     /**
      * Get primary key value
@@ -73,16 +111,35 @@ abstract class RestTestCase extends TestCase
     /**
      * Get response data
      *
+     * @param Response $response
+     * @return array
+     */
+    protected function getResponseData(Response $response)
+    {
+        return json_decode($response->getContent(), JSON_OBJECT_AS_ARRAY)['data'];
+    }
+
+    /**
+     * Get response data
+     *
      * @return array
      */
     protected function create($data)
     {
         $this
             ->json('POST', $this->uri, $data)
-            ->seeJson($data)
             ->assertResponseStatus(201);
 
-        return json_decode($this->response->getContent(), JSON_OBJECT_AS_ARRAY)['data'];
+        $created = $this->getResponseData($this->response);
+
+        $this
+            ->json('GET', $this->uri . '/' . $this->getPrimaryKeyValue($created), [
+                'with' => $this->with
+            ])
+            ->seeJson($data)
+            ->assertResponseOk();
+
+        return $this->getResponseData($this->response);
     }
 
     /**
@@ -132,6 +189,14 @@ abstract class RestTestCase extends TestCase
 
         $this
             ->json('PUT', $this->uri . '/' . $this->getPrimaryKeyValue($data), $updateData)
+            ->assertResponseOk();
+
+        $updated = $this->getResponseData($this->response);
+
+        $this
+            ->json('GET', $this->uri . '/' . $this->getPrimaryKeyValue($updated), [
+                'with' => $this->with
+            ])
             ->seeJson($updateData)
             ->assertResponseOk();
 
@@ -168,7 +233,9 @@ abstract class RestTestCase extends TestCase
         $data = $this->create($this->getData());
 
         $this
-            ->get( $this->uri . '/' . $this->getPrimaryKeyValue($data))
+            ->json('GET', $this->uri . '/' . $this->getPrimaryKeyValue($data), [
+                'with' => $this->with
+            ])
             ->seeJson($data)
             ->assertResponseOk();
     }

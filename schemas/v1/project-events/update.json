@@ -4,6 +4,7 @@
     "type": "object",
     "description": "Project Event object",
     "allOf": [
-        {"$ref": "/v1/project-events/project-event.json"}
+        {"$ref": "/v1/project-events/project-event.json"},
+        {"$ref": "/v1/project-events/filters.json"}
     ]
 }

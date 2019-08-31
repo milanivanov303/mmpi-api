@@ -4,6 +4,7 @@
     "type": "object",
     "description": "Certificate object",
     "allOf": [
-        {"$ref": "/v1/certificates/certificate.json"}
+        {"$ref": "/v1/certificates/certificate.json"},
+        {"$ref": "/v1/certificates/filters.json"}
     ]
 }

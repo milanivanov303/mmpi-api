@@ -51,6 +51,17 @@
                 "$filters": "Parent issue can not have its own parent. We do not allow multi level nesting"
             }
         },
+        "parent_issue_id": {          
+                    "$filters": {
+                        "$func": "checkInDb",
+                        "$vars": {
+                            "rule": "exists:issues,id"
+                        }
+                    },
+                    "$messages": {
+                        "$filters": "Parent issue does not exist in db"
+                    }
+        },
         "dev_instance": {
             "properties": {
                 "id": {

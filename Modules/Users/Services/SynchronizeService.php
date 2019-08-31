@@ -19,6 +19,11 @@ class SynchronizeService extends UsersSynchronizeService
             $this->filters['limit'] = 1000;
         }
 
+        $this->filters['with'] = [
+            'manager',
+            'department'
+        ];
+
         $users = app('UserManagementApi')->get('users', $this->filters);
 
         if ($users->isSuccessful()) {
@@ -31,9 +36,9 @@ class SynchronizeService extends UsersSynchronizeService
     /**
      * @inheritDoc
      */
-    protected function getRemoteUserSid($remoteUser) : string
+    protected function getRemoteUserUsername($remoteUser) : string
     {
-        return $remoteUser['sid'];
+        return $remoteUser['username'];
     }
 
     /**
@@ -49,10 +54,10 @@ class SynchronizeService extends UsersSynchronizeService
      */
     protected function getRemoteUserManager($remoteUser)
     {
-        $managerSid = $remoteUser['manager']['sid'] ?? null;
+        $managerUsername = $remoteUser['manager']['username'] ?? null;
 
-        if ($managerSid) {
-            return User::getBySid($managerSid);
+        if ($managerUsername) {
+            return User::getByUsername($managerUsername);
         }
 
         return null;
@@ -63,11 +68,11 @@ class SynchronizeService extends UsersSynchronizeService
      */
     protected function findRemoteUserManager($remoteUser)
     {
-        $managerSid = $remoteUser['manager']['sid'] ?? null;
+        $managerUsername = $remoteUser['manager']['username'] ?? null;
 
-        // find manager in adUsers
-        return $this->remoteUsers->filter(function ($item) use ($managerSid) {
-            return $item['sid'] === $managerSid;
+        // find manager in remoteUsers
+        return $this->remoteUsers->filter(function ($item) use ($managerUsername) {
+            return $item['username'] === $managerUsername;
         })->first();
     }
 

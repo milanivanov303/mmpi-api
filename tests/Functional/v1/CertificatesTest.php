@@ -1,10 +1,16 @@
 <?php
 
+use Modules\Projects\Models\Project;
+
 class CertificatesTest extends RestTestCase
 {
     protected $uri        = 'v1/certificates';
     protected $table      = 'imx_certificates';
     protected $primaryKey = 'id';
+    
+    protected $with = [
+        'project'
+    ];
 
     /**
      * Get request data
@@ -13,16 +19,14 @@ class CertificatesTest extends RestTestCase
      */
     protected function getData()
     {
-        $faker = Faker\Factory::create();
-
-        $project  = \Modules\Projects\Models\Project::inRandomOrder()->first();
+        $project  = Project::inRandomOrder()->first();
 
         return [
             'project'           => $project->toArray(),
-            'hash'              => $faker->randomAscii(),
-            'organization_name' => $faker->name(),
-            'valid_from'        => $faker->dateTime()->format('Y-m-d H:i:s'),
-            'valid_to'          => $faker->dateTime()->format('Y-m-d H:i:s')
+            'hash'              => $this->faker()->randomAscii(),
+            'organization_name' => $this->faker()->name(),
+            'valid_from'        => $this->faker()->dateTime()->format('Y-m-d H:i:s'),
+            'valid_to'          => $this->faker()->dateTime()->format('Y-m-d H:i:s')
         ];
     }
 
@@ -34,10 +38,8 @@ class CertificatesTest extends RestTestCase
      */
     protected function getInvalidData(array $data)
     {
-        $faker = Faker\Factory::create();
-
         // Set invalid parameters
-        $data['organization_name'] = $faker->randomNumber();
+        $data['organization_name'] = $this->faker()->randomNumber();
 
         // remove required parameters
         unset($data['hash']);

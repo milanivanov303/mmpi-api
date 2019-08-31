@@ -6,5 +6,5 @@ use Core\Models\Model;
 
 class ModificationType extends Model
 {
-
+    public $incrementing = false;
 }

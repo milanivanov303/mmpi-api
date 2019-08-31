@@ -4,6 +4,7 @@
     "type": "object",
     "description": "Installation object",
     "allOf": [
-        {"$ref": "/v1/installations/installation.json"}
+        {"$ref": "/v1/installations/installation.json"},
+        {"$ref": "/v1/installations/filters.json"}
     ]
 }

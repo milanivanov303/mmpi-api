@@ -1,0 +1,9 @@
+{
+    "$id": "UpdateSourceRevision",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "description": "Source revision object",
+    "allOf": [
+        {"$ref": "/v1/source-revisions/source-revision.json"}         
+    ]
+}

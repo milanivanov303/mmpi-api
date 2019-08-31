@@ -2,33 +2,24 @@
 
 namespace Modules\Hashes\Repositories;
 
+use App\Models\EnumValue;
+use App\Models\User;
+use Carbon\Carbon;
 use Modules\Hashes\Jobs\ProcessTags;
 use Modules\Hashes\Models\HashCommit;
-use Modules\Hashes\Models\HashChain;
+use Modules\Hashes\Models\HashBranch;
 use Core\Repositories\RepositoryInterface;
 use Core\Repositories\AbstractRepository;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Database\Eloquent\Model;
 
 class HashRepository extends AbstractRepository implements RepositoryInterface
 {
     /**
-     * Column to use on get/update/delete
+     * Custom unique primaryKey
      *
      * @var string
      */
-    protected $primaryKey = 'hash_rev';
-
-    /**
-     * The relations to eager load on every query.
-     *
-     * @var array
-     */
-    protected $with = [
-        'files',
-        'chains',
-        'owner'
-    ];
+    protected $customUniqueKey = 'hash_rev';
 
     /**
      * HashRepository constructor
@@ -49,20 +40,13 @@ class HashRepository extends AbstractRepository implements RepositoryInterface
     {
         return [
             'committed_by' => function ($model, $value, $operator) {
-                return $model->whereHas('owner', function ($query) use ($value, $operator) {
+                return $model->whereHas('committedBy', function ($query) use ($value, $operator) {
                     $query->where('username', $operator, $value);
                 });
             },
             'files' => function ($model, $value) {
                 return $model->whereHas('files', function ($query) use ($value) {
                     $query->where('file_name', 'like', "%{$value}%");
-                });
-            },
-            'chains' => function ($model, $value) {
-                return $model->whereHas('chains', function ($query) use ($value) {
-                    $query->whereHas('chain', function ($query) use ($value) {
-                        $query->where('chain_name', 'like', "%{$value}%");
-                    });
                 });
             }
         ];
@@ -81,46 +65,71 @@ class HashRepository extends AbstractRepository implements RepositoryInterface
     }
 
     /**
-     * Delete record
-     *
-     * @param mixed $id
+     * @inheritDoc
+     */
+    protected function fillModel(array $data)
+    {
+        parent::fillModel($data);
+
+        if (array_key_exists('repo_type', $data)) {
+            $this->model->repoType()->associate(
+                app(EnumValue::class)
+                    ->getModelId($data['repo_type'], 'key', ['type' =>'repository_type'])
+            );
+            // reload relation so we have last data in case it is needed in branch relation
+            $this->model->load('repoType');
+        }
+
+        if (array_key_exists('branch', $data)) {
+            $this->model->branch()->associate(
+                app(HashBranch::class)
+                    ->getModelId($data['branch'], 'name', ['repo_type_id' => $this->model->repoType->id])
+            );
+        }
+
+        if (array_key_exists('committed_by', $data)) {
+            $this->model->committedBy()->associate(
+                app(User::class)->getModelId($data['committed_by'], 'username')
+            );
+        }
+
+        //$this->model->made_on = Carbon::now()->format('Y-m-d H:i:s');
+    }
+
+    /**
+     * @inheritDoc
      */
     public function delete($id)
     {
         DB::transaction(function () use ($id) {
-            $this->model = $this->find($id);
+            $model = $this->find($id);
 
-            $this->model->files()->delete();
-            $this->model->chains()->sync([]);
+            $model->files()->delete();
 
-            $this->model->delete();
+            $model->delete();
         });
     }
 
     /**
-     * Save hash and it's relations
-     *
-     * @param array $data
-     * @return model
+     * @inheritDoc
      */
     protected function save($data)
     {
-        $this->model->fill($data);
+        $this->fillModel($data);
 
         DB::transaction(function () use ($data) {
             $this->model->saveOrFail();
 
             // save hash files
-            $this->saveFiles($data['files'] ?? []);
-
-            // save hash chains
-            $this->saveChains($data['chains'] ?? []);
+            if (array_key_exists('files', $data)) {
+                $this->saveFiles($data['files']);
+            }
 
             // save tags from description
             $this->saveTags();
         });
 
-        $this->model->load($this->with);
+        $this->model->load($this->getWith());
 
         return $this->model;
     }
@@ -132,7 +141,7 @@ class HashRepository extends AbstractRepository implements RepositoryInterface
     {
         dispatch(
             (new ProcessTags($this->model))
-                ->onQueue('tags')
+                ->onQueue('hashes')
         );
     }
 
@@ -146,24 +155,6 @@ class HashRepository extends AbstractRepository implements RepositoryInterface
         // delete old files before setting new ones
         $this->model->files()->delete();
 
-        $this->model->files()->createMany(
-            array_map(function ($file_name) {
-                return ['file_name' => $file_name];
-            }, $files)
-        );
-    }
-
-    /**
-     * Save hash chains
-     *
-     * @param array $chains
-     */
-    protected function saveChains($chains)
-    {
-        $chains = array_map(function ($chain_name) {
-            return HashChain::where('chain_name', $chain_name)->first();
-        }, $chains);
-
-        $this->model->chains()->sync(array_column($chains, 'id'));
+        $this->model->files()->createMany($files);
     }
 }

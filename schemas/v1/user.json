@@ -91,6 +91,17 @@
                 },
                 {"type": "null"}
             ]
+        },
+        "roles": {
+            "type": "array",
+            "items": {
+                "oneOf": [
+                    {
+                        "$ref": "/v1/user-project-role.json"
+                    },
+                    {"type": "null"}
+                ]
+            }
         }
     }
 }

@@ -2,18 +2,22 @@
 
 namespace Modules\DeliveryChains\Repositories;
 
+use App\Models\EnumValue;
 use Core\Repositories\AbstractRepository;
 use Core\Repositories\RepositoryInterface;
 use Modules\DeliveryChains\Models\DeliveryChain;
+use Modules\Projects\Models\Project;
+use Modules\Instances\Models\Instance;
+use Modules\DeliveryChains\Models\DeliveryChainType;
 
 class DeliveryChainRepository extends AbstractRepository implements RepositoryInterface
 {
     /**
-     * Column to use on get/update/delete
+     * Custom unique primaryKey
      *
-     * @var string
+     * @var array
      */
-    protected $primaryKey = 'title';
+    protected $customUniqueKey = 'title';
 
     /**
      * ProjectRepository constructor
@@ -98,27 +102,98 @@ class DeliveryChainRepository extends AbstractRepository implements RepositoryIn
     }
 
     /**
+     * @inheritDoc
+     */
+    protected function fillModel(array $data)
+    {
+        parent::fillModel($data);
+
+        if (array_key_exists('type', $data)) {
+            $this->model->type()->associate(
+                app(DeliveryChainType::class)->getModelId($data['type'])
+            );
+        }
+
+        if (array_key_exists('dlvry_type', $data) && is_array($data['dlvry_type'])) {
+            $this->model->dlvryType()->associate(
+                app(EnumValue::class)
+                    ->getModelId($data['dlvry_type'], 'key', ['type' => 'dc_dlvry_type'])
+            );
+        }
+
+        if (array_key_exists('status', $data) && is_array($data['status'])) {
+            $this->model->status()->associate(
+                app(EnumValue::class)
+                    ->getModelId($data['status'], 'key', ['type' => 'active_inactive'])
+            );
+        }
+
+        if (array_key_exists('dc_version', $data) && is_array($data['dc_version'])) {
+            $this->model->dcVersion()->associate(
+                app(EnumValue::class)
+                    ->getModelId($data['dc_version'], 'key', ['type' => 'delivery_chain_version'])
+            );
+        }
+
+        if (array_key_exists('dc_role', $data) && is_array($data['dc_role'])) {
+            $this->model->dcRole()->associate(
+                app(EnumValue::class)
+                    ->getModelId($data['dc_role'], 'key', ['type' => 'delivery_chain_role'])
+            );
+        }
+    }
+
+    /**
      * Save record
      *
      * @param array $data
      * @return Model
+     *
      * @throws \Throwable
      */
     protected function save($data)
     {
-        $this->model->type()->associate($data['type']['id']);
-        $this->model->dlvryType()->associate($data['dlvry_type']['id']);
+        $this->fillModel($data);
 
-        // seting associate on relations with same name as column fails!!!
-        //$this->model->status()->associate($data['status']['id']);
-        $this->model->status = $data['status']['id'];
+        $this->model->saveOrFail();
 
-        $this->model->dcVersion()->associate(isset($data['dc_version']) ? $data['dc_version']['id'] : null);
-        $this->model->dcRole()->associate(isset($data['dc_role']) ? $data['dc_role']['id'] : null);
+        if (array_key_exists('projects', $data)) {
+            $projects = [];
+            foreach ($data['projects'] as $project) {
+                $projects[] = app(Project::class)->getModelId($project, 'name');
+            }
+            
+            $this->model->projects()->sync($projects);
+        }
 
-        $this->model->fill($data)->saveOrFail();
+        if (array_key_exists('instances', $data)) {
+            $instances = [];
+            foreach ($data['instances'] as $instance) {
+                $instances[] = app(Instance::class)->getModelId($instance, 'id');
+            }
+            
+            $this->model->instances()->sync($instances);
+        }
+
         $this->model->load($this->getWith());
 
         return $this->model;
+    }
+
+    /**
+     * Delete record
+     *
+     * @param mixed $id
+     * @return boolean
+     *
+     * @throws \Exception
+     */
+    public function delete($id)
+    {
+        $model = $this->find($id);
+        $model->projects()->sync([]);
+        $model->instances()->sync([]);
+
+        return $model->delete();
     }
 }
