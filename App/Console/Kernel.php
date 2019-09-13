@@ -31,8 +31,6 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $today = date('Y-m-d');
-
         foreach (['8:55', '10:55', '13:55', '18:55'] as $time) {
             $schedule->command('users:synchronize')
                 ->dailyAt($time)
@@ -44,8 +42,8 @@ class Kernel extends ConsoleKernel
             ->environments(['prod']);
 
         $schedule->command('sources:head-merge')
-            ->everyMinute()
+            ->dailyAt('01:00')
             ->environments(['prod'])
-            ->appendOutputTo(storage_path("logs/head-merge-command-{$today}.log"));
+            ->appendOutputTo(storage_path("logs/head-merge-command.log"));
     }
 }
