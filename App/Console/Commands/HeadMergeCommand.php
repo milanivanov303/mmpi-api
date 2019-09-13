@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Mail\MissingProjectDevKeyMail;
-use App\Models\PatchHeadMerge;
+use App\Models\PatchesHeadMerge;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -40,7 +40,7 @@ class HeadMergeCommand extends Command
      */
     public function handle()
     {
-        $patches = PatchHeadMerge::where('processed', 0)->get();
+        $patches = PatchesHeadMerge::where('processed', 0)->get();
 
         $this->info("Found {$patches->count()} not processed " . Str::plural('patch', $patches->count()));
 
