@@ -19,7 +19,7 @@ class UserProjectRole extends Model
     /**
      * Get user
      */
-    public function user()
+    protected function user()
     {
         return $this->belongsTo(User::class);
     }
@@ -27,7 +27,7 @@ class UserProjectRole extends Model
     /**
      * Get project
      */
-    public function project()
+    protected function project()
     {
         return $this->belongsTo(Project::class);
     }
@@ -35,7 +35,7 @@ class UserProjectRole extends Model
     /**
      * Get project
      */
-    public function role()
+    protected function role()
     {
         return $this->belongsTo(UserRole::class, 'role_id');
     }
@@ -43,7 +43,7 @@ class UserProjectRole extends Model
     /**
      * Get madeBy
      */
-    public function madeBy()
+    protected function madeBy()
     {
         return $this->belongsTo(User::class, 'made_by');
     }

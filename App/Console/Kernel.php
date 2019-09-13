@@ -2,8 +2,12 @@
 
 namespace App\Console;
 
+use App\Console\Commands\HeadMergeCommand;
+use Core\Console\Commands\Openapi\Generate as OpenapiGenerate;
 use Illuminate\Console\Scheduling\Schedule;
 use Laravel\Lumen\Console\Kernel as ConsoleKernel;
+use Modules\Certificates\Console\Commands\CheckExpiry;
+use Modules\Users\Console\Commands\SynchronizeCommand;
 
 class Kernel extends ConsoleKernel
 {
@@ -13,9 +17,10 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        \Core\Console\Commands\Openapi\Generate::class,
-        \Modules\Users\Console\Commands\SynchronizeCommand::class,
-        \Modules\Certificates\Console\Commands\CheckExpiry::class
+        OpenapiGenerate::class,
+        SynchronizeCommand::class,
+        CheckExpiry::class,
+        HeadMergeCommand::class
     ];
 
     /**
@@ -26,10 +31,21 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
+        $today = date('Y-m-d');
+
         foreach (['8:55', '10:55', '13:55', '18:55'] as $time) {
-            $schedule->command('users:synchronize')->dailyAt($time)->environments(['prod']);
+            $schedule->command('users:synchronize')
+                ->dailyAt($time)
+                ->environments(['prod']);
         }
 
-        $schedule->command('certificates:check-expiry')->dailyAt('10:00')->environments(['prod']);
+        $schedule->command('certificates:check-expiry')
+            ->dailyAt('10:00')
+            ->environments(['prod']);
+
+        $schedule->command('sources:head-merge')
+            ->everyMinute()
+            ->environments(['prod'])
+            ->appendOutputTo(storage_path("logs/head-merge-command-{$today}.log"));
     }
 }

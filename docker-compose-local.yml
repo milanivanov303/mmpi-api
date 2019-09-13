@@ -55,6 +55,8 @@ services:
         image: ${DB_CONTAINER_IMAGE}
         container_name: ${DB_CONTAINER_NAME}
         build: docker/mysql
+        ports:
+            - ${DB_CONTAINER_PORT}:3306
         environment:
             MYSQL_DATABASE: mmpi
             MYSQL_USER: mmpi
