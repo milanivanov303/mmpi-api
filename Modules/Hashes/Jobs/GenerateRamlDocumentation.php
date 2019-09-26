@@ -2,6 +2,7 @@
 
 namespace Modules\Hashes\Jobs;
 
+use Carbon\Carbon;
 use Core\Helpers\SSH2;
 use Illuminate\Support\Collection;
 use Illuminate\Bus\Queueable;
@@ -58,16 +59,17 @@ class GenerateRamlDocumentation implements ShouldQueue
             throw new \Exception("Could login to {$host}");
         }
 
+        $date    = Carbon::now()->format("Y-m-d_H:i:s");
+        $logFile = '${HOME}/src/raml2htmlgen/tmp/' . $this->hashRev . '_' . $date . '.log';
+
         $cmd = "
-            . .profile > /dev/null 2>&1 \
-            && cd /enterprise/src/raml2htmlgen \
-            && php ./index.php --raml2html {$this->hashRev}
+            . .profile > /dev/null 2>&1; \
+            cd /enterprise/src/raml2htmlgen \
+            && nohup php ./index.php --raml2html {$this->hashRev}  > {$logFile} 2>&1 &
         ";
 
         Log::info("Run '{$cmd}'");
 
-        $output = $ssh2->exec($cmd);
-
-        Log::info("Output '{$output}'");
+        $ssh2->exec($cmd);
     }
 }
