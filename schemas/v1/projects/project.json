@@ -311,6 +311,12 @@
             "type": ["string", "null"],
             "default": "null",
             "description": "The key of the DEV Project in TTS"
+        },
+        "languages": {
+            "type": "array",
+            "items": {
+                "$ref": "/v1/enum-values/enum-value.json"
+            }
         }
     }
 }

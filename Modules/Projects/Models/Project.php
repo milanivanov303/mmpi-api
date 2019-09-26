@@ -5,6 +5,7 @@ namespace Modules\Projects\Models;
 use Core\Models\Model;
 use App\Models\User;
 use App\Models\EnumValue;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Modules\DeliveryChains\Models\DeliveryChain;
 use App\Models\UserProjectRole;
 use Modules\ProjectSpecifics\Models\ProjectSpecific;
@@ -197,6 +198,23 @@ class Project extends Model
     protected function extranetVersion()
     {
         return $this->belongsTo(EnumValue::class, 'extranet_version');
+    }
+
+    /**
+     * Get project languages
+     *
+     * @return BelongsToMany
+     */
+    protected function languages() : BelongsToMany
+    {
+        return $this->belongsToMany(
+            EnumValue::class,
+            'project_specifics',
+            'project_id',
+            'prj_specific_feature_id'
+        )
+        ->where('type', 'project_specific_feature')
+        ->where('subtype', 'project_appl_language');
     }
     
     public function getTypeBusinessAttribute($value)

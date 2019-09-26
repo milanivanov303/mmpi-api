@@ -15,8 +15,9 @@ class SynchronizeService extends UsersSynchronizeService
      */
     protected function getRemoteUsers() : Collection
     {
-        if (!array_key_exists('limit', $this->filters)) {
-            $this->filters['limit'] = 1000;
+        if (empty($this->filters)) {
+            $this->filters['limit']  = 1000;
+            $this->filters['status'] = 1;
         }
 
         $this->filters['with'] = [
@@ -91,5 +92,20 @@ class SynchronizeService extends UsersSynchronizeService
             'uidnumber'     => $remoteUser['uidnumber'],
             'status'        => $remoteUser['status']
         ];
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function deactivateUsers($usernames)
+    {
+        $users = User::whereNotIn('username', $usernames)
+            ->where('status', 1)
+            ->get();
+
+        foreach ($users as $user) {
+            $user->status = 0;
+            $this->saveUser($user);
+        }
     }
 }
