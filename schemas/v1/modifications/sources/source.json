@@ -3,7 +3,6 @@
     "$schema": "http://json-schema.org/draft-07/schema#",
     "type": "object",
     "description": "Source Modification object",
-    "additionalProperties": false,
     "properties": {
         "id": {
             "$ref": "/v1/modifications/modification.json#/properties/id"

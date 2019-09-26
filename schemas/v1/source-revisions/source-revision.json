@@ -3,7 +3,6 @@
     "$schema": "http://json-schema.org/draft-07/schema#",
     "type": "object",
     "description": "Source revision object",
-    "additionalProperties": false,
     "properties": {
         "rev_id": {
             "type": "integer"

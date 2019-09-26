@@ -42,7 +42,7 @@ class Kernel extends ConsoleKernel
             ->environments(['prod']);
 
         $schedule->command('sources:head-merge')
-            ->dailyAt('01:00')
+            ->dailyAt('02:00')
             ->environments(['prod'])
             ->appendOutputTo(storage_path("logs/head-merge-command.log"));
     }
