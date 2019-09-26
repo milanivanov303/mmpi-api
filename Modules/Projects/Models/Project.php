@@ -202,6 +202,8 @@ class Project extends Model
 
     /**
      * Get project languages
+     *
+     * @return BelongsToMany
      */
     protected function languages() : BelongsToMany
     {

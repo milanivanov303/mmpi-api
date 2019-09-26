@@ -172,15 +172,21 @@ class ProjectRepository extends AbstractRepository implements RepositoryInterfac
         if (array_key_exists('languages', $data)) {
             $languages = [];
             foreach ($data['languages'] as $language) {
-                $language_id = app(EnumValue::class)->getModelId(
+                $language = app(EnumValue::class)->findModel(
                     $language,
                     'key',
-                    ['type' => 'project_specific_feature', 'subtype' => 'project_appl_language']
+                    [
+                        'type'    => 'project_specific_feature',
+                        'subtype' => 'project_appl_language'
+                    ]
                 );
 
-                $languages[$language_id] = [
-                    'made_by' => Auth::user()->id
-                ];
+                if ($language) {
+                    $languages[$language->id] = [
+                        'made_by' => Auth::user()->id,
+                        'comment' => $language->description
+                    ];
+                }
             }
 
             $this->model->languages()->sync($languages);
