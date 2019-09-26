@@ -39,7 +39,7 @@ class ImportHash
 
                 // search for changed raml files and execute generate documentation job
                 $ramlFiles = collect($data['files'])->filter(function ($file) {
-                    return false !== strpos($file['name'], '.raml');
+                    return false !== strpos(strtolower($file['name']), '.raml');
                 });
                 if ($ramlFiles->count()) {
                     dispatch(
