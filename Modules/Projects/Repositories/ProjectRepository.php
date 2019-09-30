@@ -172,7 +172,7 @@ class ProjectRepository extends AbstractRepository implements RepositoryInterfac
         if (array_key_exists('languages', $data)) {
             $languages = [];
             foreach ($data['languages'] as $language) {
-                $language = app(EnumValue::class)->findModel(
+                $enumValue = app(EnumValue::class)->findModel(
                     $language,
                     'key',
                     [
@@ -181,10 +181,11 @@ class ProjectRepository extends AbstractRepository implements RepositoryInterfac
                     ]
                 );
 
-                if ($language) {
-                    $languages[$language->id] = [
+                if ($enumValue) {
+                    $languages[$enumValue->id] = [
                         'made_by' => Auth::user()->id,
-                        'comment' => $language->description
+                        'comment' => $enumValue->description,
+                        'value'   => $language['priority'] ?? null
                     ];
                 }
             }
