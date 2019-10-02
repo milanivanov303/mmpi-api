@@ -314,7 +314,18 @@
         "languages": {
             "type": "array",
             "items": {
-                "$ref": "/v1/enum-values/enum-value.json"
+                "allOf": [
+                    {"$ref": "/v1/enum-values/enum-value.json"},
+                    {
+                        "properties": {
+                            "priority": {
+                                "type": ["integer", "null"],
+                                "enum": [0, 1],
+                                "description": "If language is priority for this project or not"
+                            }
+                        }
+                    }
+                ]
             }
         }
     }

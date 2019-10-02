@@ -213,6 +213,8 @@ class Project extends Model
             'project_id',
             'prj_specific_feature_id'
         )
+        ->select('enum_values.*')
+        ->selectRaw('project_specifics.value as priority')
         ->where('type', 'project_specific_feature')
         ->where('subtype', 'project_appl_language');
     }

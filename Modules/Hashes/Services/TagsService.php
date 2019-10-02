@@ -8,6 +8,8 @@ use Core\Models\Model;
 use App\Models\EnumValue;
 use App\Models\SourceRevCvsTag;
 use App\Models\SourceRevTtsKey;
+use Illuminate\Support\Facades\DB;
+use Modules\Hashes\Models\HashCommit;
 use Modules\Issues\Models\Issue;
 use Illuminate\Support\Facades\Log;
 
@@ -172,10 +174,13 @@ class TagsService
             return;
         }
 
+        // try to get hash commit id
+        $hashCommit = HashCommit::where('hash_rev', $merge)->first();
+
         $commitMerge = new CommitMerge([
             'commit_log_type_id' => $commitLogTypeId,
             'commit_id' => $this->hashCommit->id,
-            'merge_commit' => $merge
+            'merge_commit' => $hashCommit ? $hashCommit->id : $merge
         ]);
 
         if ($commitMerge->save()) {
@@ -201,39 +206,47 @@ class TagsService
 
         app(SourceRevTtsKey::class)::whereIn('source_rev_tag_id', $sourceRevCvsTagIds)->delete();
         app(Dependency::class)::whereIn('rev_id', $sourceRevCvsTagIds)->delete();
-        app(CommitMerge::class)::where('commit_id', $this->hashCommit->id)->delete();
-        app(SourceRevCvsTag::class)::where('source_rev_id', $this->hashCommit->id)->delete();
+
+        app(CommitMerge::class)
+            ::where('commit_id', $this->hashCommit->id)
+            ->where('commit_log_type_id', $revLogTypeId)
+            ->delete();
+
+        app(SourceRevCvsTag::class)
+            ::where('source_rev_id', $this->hashCommit->id)
+            ->where('rev_log_type_id', $revLogTypeId)
+            ->delete();
     }
 
     /**
      * Save
-     *
-     * @return bool
      */
     public function save()
     {
-        $this->clearTags();
+        DB::transaction(function () {
+            $this->clearTags();
 
-        if ($this->description->hasNoTags()) {
-            Log::channel('tags')->info("No tags detected");
-            return true;
-        }
+            if ($this->description->hasNoTags()) {
+                Log::channel('tags')->info("No tags detected");
+                return;
+            }
 
-        foreach ($this->description->getTags() as $key => $comment) {
-            $sourceRevCvsTag = $this->saveTag($key, $comment);
-            if ($sourceRevCvsTag) {
-                switch ($key) {
-                    case $this->description::TTS_KEYS_KEY:
-                        $this->saveTtsKeys($sourceRevCvsTag->id);
-                        break;
-                    case $this->description::DEPENDENCIES_KEY:
-                        $this->saveDependencies($sourceRevCvsTag->id);
-                        break;
-                    case $this->description::MERGE_KEY:
-                        $this->saveMerge();
-                        break;
+            foreach ($this->description->getTags() as $key => $comment) {
+                $sourceRevCvsTag = $this->saveTag($key, $comment);
+                if ($sourceRevCvsTag) {
+                    switch ($key) {
+                        case $this->description::TTS_KEYS_KEY:
+                            $this->saveTtsKeys($sourceRevCvsTag->id);
+                            break;
+                        case $this->description::DEPENDENCIES_KEY:
+                            $this->saveDependencies($sourceRevCvsTag->id);
+                            break;
+                        case $this->description::MERGE_KEY:
+                            $this->saveMerge();
+                            break;
+                    }
                 }
             }
-        }
+        });
     }
 }
