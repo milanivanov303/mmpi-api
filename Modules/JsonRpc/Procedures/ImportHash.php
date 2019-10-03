@@ -57,7 +57,7 @@ class ImportHash
                 if ($response->isSuccessful()) {
                     // execute hg build job
                     dispatch(
-                        (new HgBuild($data['hash_rev'], $data['branch']))->onQueue('build')
+                        (new HgBuild($data['hash_rev']))->onQueue('builds')
                     );
 
                     return $response->getData();

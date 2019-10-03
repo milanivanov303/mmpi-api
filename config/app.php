@@ -205,4 +205,10 @@ return [
     ],
 
     'dev-management-url' => env('DEV_MANAGEMENT_URL'),
+
+    'hg-build' => [
+        'host'     => env('HG_BUILD_HOST'),
+        'username' => env('HG_BUILD_USERNAME'),
+        'password' => env('HG_BUILD_PASSWORD'),
+    ],
 ];

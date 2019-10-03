@@ -21,21 +21,14 @@ class HgBuild implements ShouldQueue
     protected $hashRev;
 
     /**
-     * @var array
-     */
-    protected $ramlFiles;
-
-    /**
      * Create a new job instance.
      *
      * @param string $hashRev
-     * @param string $branch
      * @return void
      */
-    public function __construct(string $hashRev, string $branch)
+    public function __construct(string $hashRev)
     {
         $this->hashRev = $hashRev;
-        $this->branch  = $branch;
     }
 
     /**
@@ -59,13 +52,11 @@ class HgBuild implements ShouldQueue
             throw new \Exception("Could login to {$host}");
         }
 
-        $date    = Carbon::now()->format("Y-m-d_H:i:s");
-        $logFile = '${HOME}/src/build/tmp/' . $this->hashRev . '_' . $date . '.log';
+        $logFile = '${HOME}/trace/hg_build_' . $this->hashRev . '.log';
 
         $cmd = "
             . .profile > /dev/null 2>&1; \
-            cd /enterprise/src/raml2htmlgen \
-            && nohup shell/hg_build.sh {$this->hashRev} {$this->branch}  > {$logFile} 2>&1 &
+            nohup shell/hg_build.sh {$this->hashRev}  > {$logFile} 2>&1 &
         ";
 
         Log::info("Run '{$cmd}'");
