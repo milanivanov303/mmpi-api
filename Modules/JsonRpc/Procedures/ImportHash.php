@@ -9,6 +9,7 @@ use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Modules\Hashes\Jobs\GenerateRamlDocumentation;
+use Modules\Hashes\Jobs\HgBuild;
 
 class ImportHash
 {
@@ -54,6 +55,11 @@ class ImportHash
                 );
 
                 if ($response->isSuccessful()) {
+                    // execute hg build job
+                    dispatch(
+                        (new HgBuild($data['hash_rev']))->onQueue('builds')
+                    );
+
                     return $response->getData();
                 }
 
