@@ -33,7 +33,7 @@
         },
         "clnt_code2": {
             "type": ["string", "null"],
-            "maxLength": 16,
+            "maxLength": 50,
             "default": "null",
             "description": "Alternate client code (macro) for specific modifications in [Pro*]C/C++ sources"
         },
