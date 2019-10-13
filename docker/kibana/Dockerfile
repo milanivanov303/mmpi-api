@@ -1,2 +1,1 @@
-FROM kibana:7.1.1
-LABEL maintainer="Enterprise Apps"
+FROM avitohol.codixfr.private:5000/kibana:7.4.0-v1
