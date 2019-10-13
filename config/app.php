@@ -160,7 +160,15 @@ return [
     |
     */
     'elastic' => [
-        'hosts' => explode(',', env('ELASTIC_HOSTS'))
+        'hosts' => [
+            [
+                'host'   => env('ELASTIC_HOST'),
+                'port'   => env('ELASTIC_PORT', '9200'),
+                'scheme' => env('ELASTIC_SCHEME', 'http'),
+                'user'   => env('ELASTIC_USERNAME'),
+                'pass'   => env('ELASTIC_PASSWORD')
+            ]
+        ]
     ],
 
     /*

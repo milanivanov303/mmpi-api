@@ -1,6 +1,5 @@
 .env
 vendor
-db/mysql
 .idea
 public/openapi.json
 storage/jira-cookie.txt
