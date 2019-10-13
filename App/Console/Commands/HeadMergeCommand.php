@@ -90,21 +90,10 @@ class HeadMergeCommand extends Command
     protected function getData(int $patchId) : array
     {
         /*
-         * Get min date when we start to parse MERGE comment. The select is provided by Irena Ivanova.
-         * It is used just to get the date. Date will be hard-coded as there is no point to select it every time
-        SELECT
-            MIN(MSR.rev_registration_date) AS min_date
-        FROM
-            source_revision MSR
-            JOIN source_rev_cvs_tags T ON MSR.rev_id=T.source_rev_id
-            JOIN enum_values EVS ON (T.rev_log_type_id=EVS.id AND EVS.`key`='cvs')
-            JOIN enum_values EVT ON T.cvs_tag_enum_id=EVT.id
-        WHERE
-            EVT.`key`='cvs_tag_merge'
-            AND
-            T.cvs_tag_comment like 'MERGE:%'
-        */
-        $minDate = '2017-11-09 16:15:15';
+         * Min date was confirmed by Iskren Marinov
+         * under subject SUDF commit old branches
+         */
+        $minDate = '2018-03-28';
 
         return DB::select(
             "
