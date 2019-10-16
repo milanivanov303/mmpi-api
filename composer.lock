@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1919f38033fd45c160f4c40d77cfda17",
+    "content-hash": "481c508c96662c6fc1af2ca11db21a01",
     "packages": [
         {
             "name": "adldap2/adldap2",
@@ -67,11 +67,11 @@
         },
         {
             "name": "codix/api-core",
-            "version": "1.8.0",
+            "version": "1.8.1",
             "source": {
                 "type": "git",
                 "url": "http://rhode.codixfr.private/Enterprise-Apps/api-core",
-                "reference": "9a6649d0967e988281d3d51cdf7f868b038be2f6"
+                "reference": "733b13d402a847c74c46f34a0e15aa92df911689"
             },
             "require": {
                 "adldap2/adldap2": "^10.1",
@@ -101,7 +101,7 @@
                     "email": "yarnaudov@codix.bg"
                 }
             ],
-            "time": "2019-10-09T11:13:51+00:00"
+            "time": "2019-10-16T11:03:17+00:00"
         },
         {
             "name": "codix/api-sdk",
