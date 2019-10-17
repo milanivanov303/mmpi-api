@@ -11,7 +11,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Log;
 
-class GenerateRamlDocumentation implements ShouldQueue
+class HgBuild implements ShouldQueue
 {
     use InteractsWithQueue, Queueable, SerializesModels;
 
@@ -21,21 +21,14 @@ class GenerateRamlDocumentation implements ShouldQueue
     protected $hashRev;
 
     /**
-     * @var array
-     */
-    protected $ramlFiles;
-
-    /**
      * Create a new job instance.
      *
      * @param string $hashRev
-     * @param array $ramlFiles
      * @return void
      */
-    public function __construct(string $hashRev, Collection $ramlFiles)
+    public function __construct(string $hashRev)
     {
-        $this->hashRev   = $hashRev;
-        $this->ramlFiles = $ramlFiles;
+        $this->hashRev = $hashRev;
     }
 
     /**
@@ -46,11 +39,11 @@ class GenerateRamlDocumentation implements ShouldQueue
      */
     public function handle()
     {
-        Log::info("Generate documentation for hash '{$this->hashRev}'");
+        Log::info("Start build for hash '{$this->hashRev}'");
 
-        $host     = config('app.raml2html.host');
-        $username = config('app.raml2html.username');
-        $password = config('app.raml2html.password');
+        $host     = config('app.hg-build.host');
+        $username = config('app.hg-build.username');
+        $password = config('app.hg-build.password');
 
         $ssh2 = new SSH2($host);
 
@@ -59,13 +52,11 @@ class GenerateRamlDocumentation implements ShouldQueue
             throw new \Exception("Could login to {$host}");
         }
 
-        $date    = Carbon::now()->format("Y-m-d_H:i:s");
-        $logFile = '${HOME}/src/raml2htmlgen/tmp/' . $this->hashRev . '_' . $date . '.log';
+        $logFile = '${HOME}/trace/hg_build_' . $this->hashRev . '.log';
 
         $cmd = "
             . .profile > /dev/null 2>&1; \
-            cd /enterprise/src/raml2htmlgen \
-            && nohup php ./index.php --raml2html {$this->hashRev}  > {$logFile} 2>&1 &
+            nohup shell/hg_build.sh {$this->hashRev}  > {$logFile} 2>&1 &
         ";
 
         Log::info("Run '{$cmd}'");

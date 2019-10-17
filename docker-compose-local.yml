@@ -52,9 +52,11 @@ services:
             - php
 
     mysql:
-        image: ${DB_CONTAINER_IMAGE}
-        container_name: ${DB_CONTAINER_NAME}
+        image: ${MYSQL_CONTAINER_IMAGE}
+        container_name: ${MYSQL_CONTAINER_NAME}
         build: docker/mysql
+        ports:
+            - ${MYSQL_CONTAINER_PORT}:3306
         environment:
             MYSQL_DATABASE: mmpi
             MYSQL_USER: mmpi
@@ -62,17 +64,14 @@ services:
             MYSQL_ALLOW_EMPTY_PASSWORD: "true"
             MYSQL_ROOT_HOST: "%"
         volumes:
-            - mysql:/var/lib/mysql
+            - ${MYSQL_CONTAINER_VOLUME}:/var/lib/mysql
 
     elasticsearch:
         image: ${ELASTIC_CONTAINER_IMAGE}
         container_name: ${ELASTIC_CONTAINER_NAME}
         build: docker/elasticsearch
         volumes:
-            - elasticsearch:/usr/share/elasticsearch/data
-        environment:
-            TZ: ${APP_TIMEZONE}
-            discovery.type: single-node
+            - ${ELASTIC_CONTAINER_VOLUME}:/usr/share/elasticsearch/data
 
     kibana:
         image: ${KIBANA_CONTAINER_IMAGE}
@@ -80,7 +79,6 @@ services:
         build: docker/kibana
         ports:
             - ${KIBANA_CONTAINER_HTTP_PORT}:5601
-
-volumes:
-    mysql:
-    elasticsearch:
+        environment:
+            ELASTICSEARCH_USERNAME: ${KIBANA_ELASTICSEARCH_USERNAME}
+            ELASTICSEARCH_PASSWORD: ${KIBANA_ELASTICSEARCH_PASSWORD}

@@ -3,7 +3,6 @@
     "$schema": "http://json-schema.org/draft-07/schema#",
     "type": "object",
     "description": "Project object",
-    "additionalProperties": false,
     "properties": {
         "id": {
             "type": "integer"
@@ -34,7 +33,7 @@
         },
         "clnt_code2": {
             "type": ["string", "null"],
-            "maxLength": 16,
+            "maxLength": 50,
             "default": "null",
             "description": "Alternate client code (macro) for specific modifications in [Pro*]C/C++ sources"
         },
@@ -311,6 +310,23 @@
             "type": ["string", "null"],
             "default": "null",
             "description": "The key of the DEV Project in TTS"
+        },
+        "languages": {
+            "type": "array",
+            "items": {
+                "allOf": [
+                    {"$ref": "/v1/enum-values/enum-value.json"},
+                    {
+                        "properties": {
+                            "priority": {
+                                "type": ["integer", "null"],
+                                "enum": [0, 1],
+                                "description": "If language is priority for this project or not"
+                            }
+                        }
+                    }
+                ]
+            }
         }
     }
 }

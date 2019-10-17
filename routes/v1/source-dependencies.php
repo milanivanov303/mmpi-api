@@ -10,7 +10,7 @@ $router->group([
         'description' => 'Get source dependency list',
         'uses'        => 'SourceDependenciesController@getMany'
     ]);
-    $router->get('/{name}', [
+    $router->get('/{id}', [
         'as'          => 'source-dependencies.one',
         'schema'      => '/v1/source-dependencies/source-dependency.json',
         'description' => 'Get single source dependency',

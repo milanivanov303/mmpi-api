@@ -61,6 +61,34 @@
                     }
                 }
             }
+        },
+        "languages": {
+            "items": {
+                "properties": {
+                    "id": {
+                        "$filters": {
+                            "$func": "checkInDb",
+                            "$vars": {
+                                "rule": "exists:enum_values,id,type,project_specific_feature,subtype,project_appl_language"
+                            }
+                        },
+                        "$messages": {
+                            "$filters": "Language does not exist"
+                        }
+                    },
+                    "key": {
+                        "$filters": {
+                            "$func": "checkInDb",
+                            "$vars": {
+                                "rule": "exists:enum_values,key,type,project_specific_feature,subtype,project_appl_language"
+                            }
+                        },
+                        "$messages": {
+                            "$filters": "Language does not exist"
+                        }
+                    }
+                }
+            }
         }
     }
 }

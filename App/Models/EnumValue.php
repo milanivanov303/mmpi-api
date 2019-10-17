@@ -10,7 +10,8 @@ class EnumValue extends Model
      * @var array
      */
     protected $hidden = [
-        'changed_by'
+        'changed_by',
+        'pivot'
     ];
 
     /**
