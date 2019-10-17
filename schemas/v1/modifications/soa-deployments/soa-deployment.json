@@ -23,5 +23,8 @@
         "issue": {
             "$ref": "/v1/modifications/modification.json#/properties/issue"
         },
+        "name": {
+            "$ref": "/v1/modifications/modification.json#/properties/name"
+        }
     }
 }
