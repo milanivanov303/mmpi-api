@@ -10,6 +10,7 @@ class SOAdeploymentModification extends Modification
         'id',
         'name',
         'type',
+        'issue',
         'deliveryChain',
         'instanceStatus',
         'deployment_path'

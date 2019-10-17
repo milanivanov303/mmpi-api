@@ -8,6 +8,7 @@
         {
             "required": [
                 "name",
+                "issue",
                 "type",
                 "delivery_chain",
                 "instance_status"

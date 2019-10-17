@@ -19,6 +19,9 @@
         },
         "deployment_path": {
             "$ref": "/v1/modifications/modification.json#/properties/deployment_path"
-        }
+        },
+        "issue": {
+            "$ref": "/v1/modifications/modification.json#/properties/issue"
+        },
     }
 }
