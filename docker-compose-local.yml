@@ -64,7 +64,7 @@ services:
             MYSQL_ALLOW_EMPTY_PASSWORD: "true"
             MYSQL_ROOT_HOST: "%"
         volumes:
-            - ${MYSQL_CONTAINER_VOLUME}./mysql:/var/lib/mysql
+            - ${MYSQL_CONTAINER_VOLUME}:/var/lib/mysql
 
     elasticsearch:
         image: ${ELASTIC_CONTAINER_IMAGE}
