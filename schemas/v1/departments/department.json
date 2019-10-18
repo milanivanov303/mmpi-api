@@ -1,0 +1,40 @@
+{
+    "$id": "Department",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "description": "Department object",
+    "properties": {
+        "id": {
+            "type": "integer"
+        },
+        "hr_department_id": {
+            "type": ["integer", "null"],
+            "default": null
+        },
+        "name": {
+            "type": "string",
+            "maxLength": 64,
+            "description": "Name of the department"
+        },
+        "default_access_group_id": {
+            "type": "integer",
+            "default": 4,
+            "description": "Default access group for new employees from this department is guests"
+        },
+        "src_dlv_by_revision": {
+            "type": "integer",
+            "enum": [0, 1],
+            "default": 0,
+            "description": "Flag which defines whether the department delivers sources only by CVS revision"
+        },
+        "department_type": {
+            "$ref": "/v1/enum-values/enum-value.json"
+        },
+        "status": {
+            "type": "integer",
+            "enum": [0, 1],
+            "default": 0,
+            "description": "1-active, 0-inactive"
+        }
+    }
+}
