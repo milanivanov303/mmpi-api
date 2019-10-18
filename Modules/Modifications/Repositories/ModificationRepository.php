@@ -10,6 +10,8 @@ use Modules\Projects\Models\Project;
 use Modules\DeliveryChains\Models\DeliveryChain;
 use Modules\Modifications\Models\Modification;
 use Modules\Modifications\Models\ModificationType;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class ModificationRepository extends AbstractRepository implements RepositoryInterface
 {
@@ -37,7 +39,6 @@ class ModificationRepository extends AbstractRepository implements RepositoryInt
     {
         parent::fillModel($data);
         
-
         if (array_key_exists('action_type', $data)) {
             $this->model->actionType()->associate(
                 app(EnumValue::class)
@@ -78,5 +79,14 @@ class ModificationRepository extends AbstractRepository implements RepositoryInt
                     ->getModelId($data['path'], 'key', ['type' => 'source_paths'])
             );
         }
+
+        if ($this->model->exists == false) {
+            $this->model->createdBy()->associate(Auth::user());
+            $this->model->created_on = Carbon::now()->format('Y-m-d H:i:s');
+        }
+
+        $this->model->updatedBy()->associate(Auth::user());
+
+        $this->model->updated_on = Carbon::now()->format('Y-m-d H:i:s');
     }
 }

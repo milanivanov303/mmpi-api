@@ -13,6 +13,7 @@ class SOAdeploymentModification extends Modification
         'issue',
         'deliveryChain',
         'instanceStatus',
-        'deployment_path'
+        'deployment_path',
+        'visible'
     ];
 }

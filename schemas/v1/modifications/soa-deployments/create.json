@@ -10,7 +10,8 @@
                 "name",
                 "issue",
                 "delivery_chain",
-                "instance_status"
+                "instance_status",
+                "visible"
             ]
         }
     ]

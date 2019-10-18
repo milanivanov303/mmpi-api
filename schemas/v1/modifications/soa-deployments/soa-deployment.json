@@ -8,8 +8,8 @@
         "id": {
             "$ref": "/v1/modifications/modification.json#/properties/id"
         },
-        "type": {
-            "$ref": "/v1/modifications/modification.json#/properties/type"
+        "type_id": {
+            "$ref": "/v1/modifications/modification.json#/properties/type_id"
         },
         "delivery_chain": {
             "$ref": "/v1/modifications/modification.json#/properties/delivery_chain"
@@ -25,6 +25,9 @@
         },
         "name": {
             "$ref": "/v1/modifications/modification.json#/properties/name"
+        },
+        "visible": {
+            "$ref": "/v1/modifications/modification.json#/properties/visible"
         }
     }
 }
