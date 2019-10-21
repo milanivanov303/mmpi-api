@@ -6,6 +6,7 @@ use Core\Models\Model;
 use App\Models\EnumValue;
 use App\Models\User;
 use Modules\Projects\Models\Project;
+use Modules\PojectEventEstimations\Models\PojectEventEstimation;
 
 class ProjectEvent extends Model
 {
@@ -64,5 +65,13 @@ class ProjectEvent extends Model
     protected function projectEventSubtype()
     {
         return $this->belongsTo(EnumValue::class, 'project_event_subtype_id');
+    }
+
+    /**
+     * Get project event estimations
+     */
+    protected function pojectEventEstimations()
+    {
+        return $this->hasMany(PojectEventEstimation::class);
     }
 }

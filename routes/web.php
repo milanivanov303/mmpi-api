@@ -77,5 +77,8 @@ $router->group(['prefix' => 'v1'], function () use ($router) {
 
         // Departments
         require 'v1/departments.php';
+
+        // Project event estimations
+        require 'v1/project-event-estimations.php';
     });
 });

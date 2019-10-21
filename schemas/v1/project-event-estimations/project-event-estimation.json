@@ -1,0 +1,22 @@
+{
+    "$id": "ProjectEventEstimation",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "description": "Project event estimation object",
+    "properties": {
+        "id": {
+            "type": "integer"
+        },
+        "project_event": {
+            "$ref": "/v1/project-events/project-event.json"
+        },
+        "department": {
+            "$ref": "/v1/departments/department.json"
+        },
+        "duration": {
+            "type": "integer",
+            "default": 0,
+            "description": "Duration in hours"
+        }
+    }
+}
