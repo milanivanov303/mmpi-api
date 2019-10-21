@@ -70,7 +70,7 @@ class ProjectEvent extends Model
     /**
      * Get project event estimations
      */
-    protected function pojectEventEstimations()
+    protected function projectEventEstimations()
     {
         return $this->hasMany(ProjectEventEstimation::class);
     }

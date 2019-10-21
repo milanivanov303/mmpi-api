@@ -4,6 +4,6 @@
     "type": "object",
     "description": "Project event estimation object",
     "allOf": [
-        {"$ref": "/v1/project-event-estimations/project-event-estimation.json"}      
+        {"$ref": "/v1/project-event-estimations/project-event-estimation.json"}
     ]
 }

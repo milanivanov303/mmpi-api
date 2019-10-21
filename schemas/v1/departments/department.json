@@ -28,7 +28,10 @@
             "description": "Flag which defines whether the department delivers sources only by CVS revision"
         },
         "department_type": {
-            "$ref": "/v1/enum-values/enum-value.json"
+            "oneOf": [
+                {"$ref": "/v1/enum-values/enum-value.json"},
+                {"type": "integer"}
+            ]
         },
         "status": {
             "type": "integer",

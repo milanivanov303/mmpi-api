@@ -38,7 +38,7 @@ class DepartmentRepository extends AbstractRepository implements RepositoryInter
 
         if (array_key_exists('department_type', $data)) {
             $this->model->departmentType()->associate(
-                app(EnumValue::class)->getModelId($data['department_type'], 'key', ['type' => 'department_type'])
+                app(EnumValue::class)->getModelId($data['department_type'], 'id')
             );
         }
     }
