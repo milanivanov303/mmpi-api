@@ -1,21 +1,21 @@
 <?php
 
-namespace Modules\PojectEventEstimations\Repositories;
+namespace Modules\ProjectEventEstimations\Repositories;
 
 use Core\Repositories\AbstractRepository;
 use Core\Repositories\RepositoryInterface;
-use Modules\PojectEventEstimations\Models\PojectEventEstimation;
+use Modules\ProjectEventEstimations\Models\ProjectEventEstimation;
 use Modules\Departments\Models\Department;
 use Modules\ProjectEvents\Models\ProjectEvent;
 
-class PojectEventEstimationRepository extends AbstractRepository implements RepositoryInterface
+class ProjectEventEstimationRepository extends AbstractRepository implements RepositoryInterface
 {
     /**
-     * PojectEventEstimationRepository constructor
+     * ProjectEventEstimationRepository constructor
      *
-     * @param PojectEventEstimation $model
+     * @param ProjectEventEstimation $model
      */
-    public function __construct(PojectEventEstimation $model)
+    public function __construct(ProjectEventEstimation $model)
     {
         $this->model = $model;
     }

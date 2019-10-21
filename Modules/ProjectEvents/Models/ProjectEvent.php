@@ -6,7 +6,7 @@ use Core\Models\Model;
 use App\Models\EnumValue;
 use App\Models\User;
 use Modules\Projects\Models\Project;
-use Modules\PojectEventEstimations\Models\PojectEventEstimation;
+use Modules\ProjectEventEstimations\Models\ProjectEventEstimation;
 
 class ProjectEvent extends Model
 {
@@ -72,6 +72,6 @@ class ProjectEvent extends Model
      */
     protected function pojectEventEstimations()
     {
-        return $this->hasMany(PojectEventEstimation::class);
+        return $this->hasMany(ProjectEventEstimation::class);
     }
 }

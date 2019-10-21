@@ -1,12 +1,12 @@
 <?php
 
-namespace Modules\PojectEventEstimations\Models;
+namespace Modules\ProjectEventEstimations\Models;
 
 use Core\Models\Model;
 use Modules\Departments\Models\Department;
 use Modules\ProjectEvents\Models\ProjectEvent;
 
-class PojectEventEstimation extends Model
+class ProjectEventEstimation extends Model
 {
     /**
      * The attributes that are mass assignable.
