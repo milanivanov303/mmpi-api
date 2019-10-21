@@ -1,5 +1,6 @@
 <?php
 use Modules\Sources\Models\Source;
+use Modules\Departments\Models\Department;
 
 class SourcesTest extends RestTestCase
 {
@@ -14,12 +15,14 @@ class SourcesTest extends RestTestCase
      */
     protected function getData()
     {
+        $department  = Department::inRandomOrder()->first();
+
         return [
             'source_name'             => $this->faker()->name(100),
             'source_path'             => $this->faker()->text(200),
             'source_status'           => $this->faker()->numberBetween(0, 2),
             'comment'                 => $this->faker()->text(50),
-            'department_id'           => $this->faker()->randomNumber(),
+            'department'              => $department->toArray(),
             'dependencies'            => $this->faker()->numberBetween(0,1),
             'library'                 => $this->faker()->numberBetween(0,1)
         ];

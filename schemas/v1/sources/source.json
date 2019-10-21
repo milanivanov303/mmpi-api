@@ -35,8 +35,15 @@
             "format": "datetime",
             "description": "Timestamp of the record"
         },
-        "department_id": {
-            "type": ["integer", "null"],
+        "department": {
+            "oneOf": [
+                {
+                    "$ref": "/v1/departments/department.json"
+                },
+                {
+                    "type": "null"
+                }
+            ],
             "maxLength": 11,
             "default": "null"
         },
