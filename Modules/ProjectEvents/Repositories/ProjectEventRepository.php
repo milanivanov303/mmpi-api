@@ -123,15 +123,7 @@ class ProjectEventRepository extends AbstractRepository implements RepositoryInt
         $this->model->saveOrFail();
 
         if (array_key_exists('project_event_estimations', $data)) {
-            foreach ($data['project_event_estimations'] as $projectEventEstimation) {
-                ProjectEventEstimation::updateOrCreate(
-                    [
-                     'department_id' => $projectEventEstimation['department']['id'],
-                     'project_event_id' => $this->model['id']
-                    ],
-                    ['duration' => $projectEventEstimation['duration']]
-                );
-            }
+            $this->saveEstimations($data['project_event_estimations']);
         }
 
         $this->model->load($this->getWith());
@@ -154,5 +146,18 @@ class ProjectEventRepository extends AbstractRepository implements RepositoryInt
 
             $model->delete();
         });
+    }
+
+    /**
+     * Save estimations
+     *
+     * @param array $estimations
+     */
+    protected function saveEstimations($estimations)
+    {
+        // delete old estimations before setting new ones
+        $this->model->projectEventEstimations()->delete();
+
+        $this->model->projectEventEstimations()->createMany($estimations);
     }
 }

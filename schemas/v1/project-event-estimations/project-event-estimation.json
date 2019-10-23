@@ -13,6 +13,12 @@
         "department": {
             "$ref": "/v1/departments/department.json"
         },
+        "project_event_id": {
+            "type": "integer"
+        },
+        "department_id": {
+            "type": "integer"
+        },
         "duration": {
             "type": "integer",
             "default": 0,
