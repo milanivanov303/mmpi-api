@@ -199,7 +199,8 @@ class HeadMergeCommand extends Command
                 
                 *Sources:* 
                 {$sources}
-            ");
+            ")
+            ->addLabel('MMPI_AUTO');
 
         // Set specification
         $issueField->addCustomField('customfield_10140', 'n/a');
