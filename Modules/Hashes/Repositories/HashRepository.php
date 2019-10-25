@@ -85,6 +85,8 @@ class HashRepository extends AbstractRepository implements RepositoryInterface
                 app(HashBranch::class)
                     ->getModelId($data['branch'], 'name', ['repo_type_id' => $this->model->repoType->id])
             );
+            // unset repoType relation as it is returned in response when not needed
+            unset($this->model->repoType);
         }
 
         if (array_key_exists('committed_by', $data)) {
@@ -129,7 +131,7 @@ class HashRepository extends AbstractRepository implements RepositoryInterface
             $this->saveTags();
         });
 
-        $this->model->load($this->getWith($data));
+        $this->loadModelRelations($data);
 
         return $this->model;
     }

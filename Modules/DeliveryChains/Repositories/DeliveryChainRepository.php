@@ -175,7 +175,7 @@ class DeliveryChainRepository extends AbstractRepository implements RepositoryIn
             $this->model->instances()->sync($instances);
         }
 
-        $this->model->load($this->getWith($data));
+        $this->loadModelRelations($data);
 
         return $this->model;
     }

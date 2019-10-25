@@ -115,7 +115,7 @@ class InstanceRepository extends AbstractRepository implements RepositoryInterfa
             $this->model->deliveryChains()->sync($deliveryChains);
         }
 
-        $this->model->load($this->getWith($data));
+        $this->loadModelRelations($data);
 
         return $this->model;
     }
