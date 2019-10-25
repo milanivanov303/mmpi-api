@@ -49,9 +49,6 @@ services:
         build: docker/elasticsearch
         volumes:
             - ${ELASTIC_CONTAINER_VOLUME}:/usr/share/elasticsearch/data
-        environment:
-            TZ: ${APP_TIMEZONE}
-            discovery.type: single-node
 
     kibana:
         image: ${KIBANA_CONTAINER_IMAGE}

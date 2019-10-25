@@ -129,7 +129,7 @@ class HashRepository extends AbstractRepository implements RepositoryInterface
             $this->saveTags();
         });
 
-        $this->model->load($this->getWith());
+        $this->model->load($this->getWith($data));
 
         return $this->model;
     }

@@ -42,7 +42,7 @@ class PatchRequestRepository extends AbstractRepository implements RepositoryInt
             $this->syncModifications($data['modifications'] ?? []);
         });
 
-        $this->model->load($this->getWith());
+        $this->model->load($this->getWith($data));
 
         return $this->model;
     }

@@ -97,7 +97,7 @@ class InstanceRepository extends AbstractRepository implements RepositoryInterfa
      * Save record
      *
      * @param array $data
-     * @return Model
+     * @return Instance
      *
      * @throws \Throwable
      */
@@ -115,7 +115,7 @@ class InstanceRepository extends AbstractRepository implements RepositoryInterfa
             $this->model->deliveryChains()->sync($deliveryChains);
         }
 
-        $this->model->load($this->getWith());
+        $this->model->load($this->getWith($data));
 
         return $this->model;
     }

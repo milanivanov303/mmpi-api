@@ -147,7 +147,7 @@ class DeliveryChainRepository extends AbstractRepository implements RepositoryIn
      * Save record
      *
      * @param array $data
-     * @return Model
+     * @return DeliveryChain
      *
      * @throws \Throwable
      */
@@ -175,7 +175,7 @@ class DeliveryChainRepository extends AbstractRepository implements RepositoryIn
             $this->model->instances()->sync($instances);
         }
 
-        $this->model->load($this->getWith());
+        $this->model->load($this->getWith($data));
 
         return $this->model;
     }
