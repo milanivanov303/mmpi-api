@@ -7,10 +7,6 @@ class CertificatesTest extends RestTestCase
     protected $uri        = 'v1/certificates';
     protected $table      = 'imx_certificates';
     protected $primaryKey = 'id';
-    
-    protected $with = [
-        'project'
-    ];
 
     /**
      * Get request data

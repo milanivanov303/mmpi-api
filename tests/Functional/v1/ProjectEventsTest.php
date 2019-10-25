@@ -9,13 +9,6 @@ class ProjectEventsTest extends RestTestCase
     protected $table      = 'project_events';
     protected $primaryKey = 'id';
 
-    protected $with = [
-        'project',
-        'project_event_type',
-        'project_event_subtype',
-        'project_event_status'
-    ];
-
     /**
      * Get request data
      *
