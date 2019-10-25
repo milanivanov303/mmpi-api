@@ -53,7 +53,7 @@ class Department extends Model
     }
 
     /**
-     * Get default access group
+     * Get department type
      */
     protected function departmentType()
     {
