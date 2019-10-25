@@ -19,6 +19,16 @@ class ProjectEventEstimation extends Model
         'duration'
     ];
 
+    // /**
+    //  * The attributes that will be hidden in output json
+    //  *
+    //  * @var array
+    //  */
+    // protected $hidden = [
+    //     'project_event_id',
+    //     'id'
+    // ];
+
     /**
      * Get project event
      */
