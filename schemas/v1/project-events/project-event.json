@@ -69,7 +69,7 @@
         "project_event_estimations": {
             "type": "array",
             "items": {
-                "$ref": "/v1/project-event-estimations/project-event-estimation.json"
+                "$ref": "/v1/project-events/project-event-estimation.json"
             }
         }
     }

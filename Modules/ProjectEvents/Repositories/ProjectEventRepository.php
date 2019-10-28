@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Auth;
 use Modules\ProjectEvents\Models\ProjectEvent;
 use Modules\Projects\Models\Project;
 use App\Models\EnumValue;
-use Modules\ProjectEventEstimations\Models\ProjectEventEstimation;
 use Illuminate\Support\Facades\DB;
 
 class ProjectEventRepository extends AbstractRepository implements RepositoryInterface
@@ -102,7 +101,9 @@ class ProjectEventRepository extends AbstractRepository implements RepositoryInt
 
         if (array_key_exists('project_event_status', $data)) {
             $this->model->projectEventStatus()->associate(
-                app(EnumValue::class)
+                is_numeric($data['project_event_status'])
+                ? $data['project_event_status']
+                : app(EnumValue::class)
                     ->getModelId($data['project_event_status'], 'key', ['type' =>'project_event_status'])
             );
         }
@@ -126,7 +127,7 @@ class ProjectEventRepository extends AbstractRepository implements RepositoryInt
             $this->saveEstimations($data['project_event_estimations']);
         }
 
-        $this->model->load($this->getWith());
+        $this->loadModelRelations($data);
 
         return $this->model;
     }

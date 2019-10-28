@@ -7,9 +7,40 @@
         {"$ref": "/v1/project-events/project-event.json"},
         {
             "required": [
-                "project",
-                "project_event_type",
                 "project_event_status"
+            ],
+            "anyOf": [
+                {
+                    "oneOf": [
+                        {
+                            "required": [
+                                "project"
+                            ]
+                        },
+                        {
+                            "required": [
+                                "project_id"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "oneOf": [
+                        {
+                            "required": [
+                                "project_event_type"
+                            ]
+                        },
+                        {
+                            "required": [
+                                "project_event_type_id"
+                            ]
+                        }
+                    ],
+                    "messages": {
+                        "oneOf": "Code does not match schema"
+                    }
+                }
             ]
         }
     ]
