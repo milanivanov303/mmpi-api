@@ -1,7 +1,6 @@
 <?php
 
 use App\Models\EnumValue;
-use Modules\ProjectEventEstimations\Models\ProjectEventEstimation;
 use Modules\ProjectEvents\Models\ProjectEvent;
 use Modules\Projects\Models\Project;
 
@@ -10,14 +9,6 @@ class ProjectEventsTest extends RestTestCase
     protected $uri        = 'v1/project-events';
     protected $table      = 'project_events';
     protected $primaryKey = 'id';
-
-    protected $with = [
-        'project',
-        'project_event_type',
-        'project_event_subtype',
-        'project_event_status',
-        'project_event_estimations'
-    ];
 
     /**
      * Get request data

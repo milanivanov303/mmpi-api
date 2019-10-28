@@ -10,13 +10,6 @@ class HashesTest extends RestTestCase
     protected $table      = 'hash_commits';
     protected $primaryKey = 'hash_rev';
 
-    protected $with = [
-        'branch',
-        'repo_type',
-        'committed_by',
-        'files'
-    ];
-
     /**
      * Get request data
      *

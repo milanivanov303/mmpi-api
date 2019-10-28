@@ -123,7 +123,7 @@ class SourcesTest extends RestTestCase
 
         $this
             ->json('GET', $this->uri . '/' . $this->getPrimaryKeyValue($data), [
-                'with' => $this->with
+                'with' => $this->getWith($data)
             ])
             ->seeJson($data)
             ->assertResponseOk();

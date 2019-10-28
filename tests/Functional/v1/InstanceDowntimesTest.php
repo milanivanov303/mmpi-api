@@ -8,10 +8,6 @@ class InstanceDowntimesTest extends RestTestCase
     protected $table      = 'instance_downtimes';
     protected $primaryKey = 'id';
 
-    protected $with = [
-        'instance'
-    ];
-
     /**
      * Get request data
      *
