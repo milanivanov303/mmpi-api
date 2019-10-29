@@ -51,7 +51,7 @@ class ProjectEventsTest extends RestTestCase
         $data['project_event_type'] = $this->faker()->randomNumber();
 
         // remove required parameters
-        unset($data['project']);
+        unset($data['project_event_status']);
 
         return $data;
     }
@@ -75,32 +75,6 @@ class ProjectEventsTest extends RestTestCase
         
         return $data;
     }
-
-        /**
-     * Get response data
-     *
-     * @return array
-     */
-    protected function create($data)
-    {
-        $this
-            ->json('POST', $this->uri, $data)
-            ->assertResponseStatus(201);
-
-        $created = $this->getResponseData($this->response);
-
-        $data['project_event_estimations'] = $this->getEstimations($created);
-
-        $this
-            ->json('GET', $this->uri . '/' . $this->getPrimaryKeyValue($created), [
-                'with' => $this->with
-            ])
-            ->seeJson($data)
-            ->assertResponseOk();
-
-        return $this->getResponseData($this->response);
-    }
-
     
     /**
      * Test update
@@ -121,8 +95,8 @@ class ProjectEventsTest extends RestTestCase
         $updateData['project_event_estimations'] = $this->getEstimations($data);
 
         $this
-            ->json('GET', $this->uri . '/' . $this->getPrimaryKeyValue($updated), [
-                'with' => $this->with
+            ->json('GET', $this->uri . '/' . $this->getPrimaryKeyValue($updated),  [
+                'with' => $this->getWith($data)
             ])
             ->seeJson($updateData)
             ->assertResponseOk();
