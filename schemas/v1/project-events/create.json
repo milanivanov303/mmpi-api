@@ -6,9 +6,6 @@
     "allOf": [
         {"$ref": "/v1/project-events/project-event.json"},
         {
-            "required": [
-                "project_event_status"
-            ],
             "allOf": [
                 {
                     "oneOf": [
@@ -37,8 +34,13 @@
                             ]
                         }
                     ]
+                },
+                {
+                    "required": [
+                        "project_event_status"
+                    ]
                 }
-            ]
+            ]      
         }
     ]
 }
