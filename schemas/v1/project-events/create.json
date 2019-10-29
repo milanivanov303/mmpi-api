@@ -9,7 +9,7 @@
             "required": [
                 "project_event_status"
             ],
-            "anyOf": [
+            "allOf": [
                 {
                     "oneOf": [
                         {
@@ -36,10 +36,7 @@
                                 "project_event_type_id"
                             ]
                         }
-                    ],
-                    "messages": {
-                        "oneOf": "Code does not match schema"
-                    }
+                    ]
                 }
             ]
         }
