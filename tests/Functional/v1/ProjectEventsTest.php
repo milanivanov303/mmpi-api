@@ -67,54 +67,11 @@ class ProjectEventsTest extends RestTestCase
         //Remove date as it is overwritten on each request
         unset($data['made_on']);
         $data['event_start_date'] = $this->faker()->date('Y-m-d');
-        $data['project_event_estimations'] =[
+        $data['project_event_estimations'] = [
             ['duration' => 3, 'department_id'  => 1],
-            ['duration' => 24, 'department_id' => 2],
-            ['duration' => 36, 'department_id' => 3]
+            ['duration' => 2, 'department_id' => 3]
         ];
         
         return $data;
-    }
-    
-    /**
-     * Test update
-     *
-     * @return void
-     */
-    public function testUpdate()
-    {
-        $data       = $this->create($this->getData());
-        $updateData = $this->getUpdateData($data);
-
-        $this
-            ->json('PUT', $this->uri . '/' . $this->getPrimaryKeyValue($data), $updateData)
-            ->assertResponseOk();
-
-        $updated = $this->getResponseData($this->response);
-
-        $updateData['project_event_estimations'] = $this->getEstimations($data);
-
-        $this
-            ->json('GET', $this->uri . '/' . $this->getPrimaryKeyValue($updated),  [
-                'with' => $this->getWith($data)
-            ])
-            ->seeJson($updateData)
-            ->assertResponseOk();
-
-        $this->seeInDatabase($this->table, [
-            $this->primaryKey => $this->getPrimaryKeyValue($data)
-        ]);
-    }
-
-    /**    
-    *   Project Event Estimation object must contain all properties, otherwise seeJson will throw an error
-    *   
-    *   @param array $data
-    *
-    *   @return array
-    */
-    public function getEstimations($data) {
-        $currentEvent = ProjectEvent::where('id', $this->getPrimaryKeyValue($data))->first();
-        return $currentEvent->projectEventEstimations()->get()->toArray();
     }
 }

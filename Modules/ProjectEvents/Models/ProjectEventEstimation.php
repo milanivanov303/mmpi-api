@@ -16,4 +16,14 @@ class ProjectEventEstimation extends Model
         'department_id',
         'duration'
     ];
+
+    /**
+     * The attributes that will be hidden in output json
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'id',
+        'project_event_id'
+    ];
 }
