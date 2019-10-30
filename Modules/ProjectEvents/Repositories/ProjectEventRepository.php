@@ -99,11 +99,9 @@ class ProjectEventRepository extends AbstractRepository implements RepositoryInt
             );
         }
 
-        if (array_key_exists('project_event_status', $data)) {
+        if (array_key_exists('project_event_status', $data) && is_array($data['project_event_status'])) {
             $this->model->projectEventStatus()->associate(
-                is_numeric($data['project_event_status'])
-                ? $data['project_event_status']
-                : app(EnumValue::class)
+                app(EnumValue::class)
                     ->getModelId($data['project_event_status'], 'key', ['type' =>'project_event_status'])
             );
         }
