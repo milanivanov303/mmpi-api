@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Modules\ProjectEvents\Models\ProjectEvent;
 use Modules\Projects\Models\Project;
 use App\Models\EnumValue;
+use Illuminate\Support\Facades\DB;
 
 class ProjectEventRepository extends AbstractRepository implements RepositoryInterface
 {
@@ -98,11 +99,64 @@ class ProjectEventRepository extends AbstractRepository implements RepositoryInt
             );
         }
 
-        if (array_key_exists('project_event_status', $data)) {
+        if (array_key_exists('project_event_status', $data) && is_array($data['project_event_status'])) {
             $this->model->projectEventStatus()->associate(
                 app(EnumValue::class)
                     ->getModelId($data['project_event_status'], 'key', ['type' =>'project_event_status'])
             );
         }
+    }
+
+     /**
+     * Save record
+     *
+     * @param array $data
+     * @return Model
+     *
+     * @throws \Throwable
+     */
+    protected function save($data)
+    {
+        $this->fillModel($data);
+
+        $this->model->saveOrFail();
+
+        if (array_key_exists('project_event_estimations', $data)) {
+            $this->saveEstimations($data['project_event_estimations']);
+        }
+
+        $this->loadModelRelations($data);
+
+        return $this->model;
+    }
+
+    /**
+     * Delete record
+     *
+     * @param mixed $id
+     *
+     * @throws \Exception
+     */
+    public function delete($id)
+    {
+        DB::transaction(function () use ($id) {
+            $model = $this->find($id);
+            $model->projectEventEstimations()->delete();
+
+            $model->delete();
+        });
+    }
+
+    /**
+     * Save estimations
+     *
+     * @param array $estimations
+     */
+    protected function saveEstimations($estimations)
+    {
+        // delete old estimations before setting new ones
+        $this->model->projectEventEstimations()->delete();
+
+        $this->model->projectEventEstimations()->createMany($estimations);
     }
 }

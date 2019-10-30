@@ -74,5 +74,8 @@ $router->group(['prefix' => 'v1'], function () use ($router) {
 
         // Source revisions
         require 'v1/source-revisions.php';
+
+        // Departments
+        require 'v1/departments.php';
     });
 });

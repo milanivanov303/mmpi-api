@@ -6,11 +6,41 @@
     "allOf": [
         {"$ref": "/v1/project-events/project-event.json"},
         {
-            "required": [
-                "project",
-                "project_event_type",
-                "project_event_status"
-            ]
+            "allOf": [
+                {
+                    "oneOf": [
+                        {
+                            "required": [
+                                "project"
+                            ]
+                        },
+                        {
+                            "required": [
+                                "project_id"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "oneOf": [
+                        {
+                            "required": [
+                                "project_event_type"
+                            ]
+                        },
+                        {
+                            "required": [
+                                "project_event_type_id"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "required": [
+                        "project_event_status"
+                    ]
+                }
+            ]      
         }
     ]
 }
