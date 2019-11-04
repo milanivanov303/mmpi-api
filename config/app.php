@@ -219,4 +219,9 @@ return [
         'username' => env('HG_BUILD_USERNAME'),
         'password' => env('HG_BUILD_PASSWORD'),
     ],
+
+    'artifactory' => [
+        'url' => env('ARTIFACTORY_URL'),
+        'key' => env('ARTIFACTORY_KEY'),
+    ]
 ];
