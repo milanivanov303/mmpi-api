@@ -28,6 +28,9 @@
         },
         "visible": {
             "$ref": "/v1/modifications/modification.json#/properties/visible"
+        },
+        "version": {
+            "$ref": "/v1/modifications/modification.json#/properties/version"
         }
     }
 }
