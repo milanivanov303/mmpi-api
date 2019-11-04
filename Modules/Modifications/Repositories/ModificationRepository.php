@@ -80,13 +80,12 @@ class ModificationRepository extends AbstractRepository implements RepositoryInt
             );
         }
 
-        if ($this->model->exists == false) {
+        if ($this->model->exists) {
+            $this->model->updatedBy()->associate(Auth::user());
+            $this->model->updated_on = Carbon::now()->format('Y-m-d H:i:s');
+        } else {
             $this->model->createdBy()->associate(Auth::user());
             $this->model->created_on = Carbon::now()->format('Y-m-d H:i:s');
         }
-
-        $this->model->updatedBy()->associate(Auth::user());
-
-        $this->model->updated_on = Carbon::now()->format('Y-m-d H:i:s');
     }
 }
