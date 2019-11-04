@@ -1,14 +1,13 @@
 <?php
 
-use App\Models\User;
-use App\Models\AccessGroup;
+use App\Models\EnumValue;
 use Modules\Departments\Models\Department;
 
-class UsersTest extends RestTestCase
+class DepartmentsTest extends RestTestCase
 {
-    protected $uri        = 'v1/users';
-    protected $table      = 'users';
-    protected $primaryKey = 'username';
+    protected $uri        = 'v1/departments';
+    protected $table      = 'departments';
+    protected $primaryKey = 'id';
 
     /**
      * Get request data
@@ -17,21 +16,15 @@ class UsersTest extends RestTestCase
      */
     protected function getData()
     {
-        $department  = Department::inRandomOrder()->first();
-        $accessGroup = AccessGroup::inRandomOrder()->first();
+        $departmentType = EnumValue::inRandomOrder()->first();
 
         return [
-            'name'         => $this->faker()->name(),
-            'username'     => $this->faker()->username(),
-            'email'        => $this->faker()->email(),
-            'sid'          => $this->faker()->word(),
-            'sidfr'        => $this->faker()->word(),
-            'uidnumber'    => null,
-            'status'       => 0,
-            'manager'      => null,
-            'deputy'       => null,
-            'department'   => $department->toArray(),
-            'access_group' => $accessGroup->toArray()
+            'name'                    => $this->faker()->name(),
+            'hr_department_id'        => $this->faker()->randomNumber(),
+            'default_access_group_id' => $this->faker()->randomNumber(),
+            'src_dlv_by_revision'     => $this->faker()->numberBetween(0, 1),
+            'status'                  => $this->faker()->numberBetween(0, 1),
+            'department_type'         => $departmentType->toArray()
         ];
     }
 
@@ -116,7 +109,7 @@ class UsersTest extends RestTestCase
      */
     public function testGet()
     {
-        $data = User::inRandomOrder()->first()->toArray();
+        $data = Department::inRandomOrder()->first()->toArray();
 
         $this
             ->get( $this->uri . '/' . $this->getPrimaryKeyValue($data))

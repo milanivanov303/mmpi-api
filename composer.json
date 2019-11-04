@@ -38,8 +38,8 @@
         "fguillot/json-rpc": "^1.2",
         "lesstif/php-jira-rest-client": "1.39.2",
         "phpseclib/phpseclib": "^2.0",
-        "codix/api-core": "^1.8",
-        "laravel/helpers": "^1.1"
+        "laravel/helpers": "^1.1",
+        "codix/api-core": "^1.8"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

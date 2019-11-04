@@ -9,12 +9,6 @@ class IssuesTest extends RestTestCase
     protected $table      = 'issues';
     protected $primaryKey = 'tts_id';
 
-    protected $with = [
-        'project',
-        'dev_instance',
-        'parent_issue'
-    ];
-
     /**
      * Get request data
      *

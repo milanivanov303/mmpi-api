@@ -12,14 +12,6 @@ class InstancesTest extends RestTestCase
     protected $table      = 'instances';
     protected $primaryKey = 'id';
 
-    protected $with = [
-        'owner',
-        'status',
-        'environment_type',
-        'instance_type',
-        'delivery_chains'
-    ];
-
     /**
      * Get request data
      *

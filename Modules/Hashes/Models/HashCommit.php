@@ -22,17 +22,6 @@ class HashCommit extends Model
     ];
 
     /**
-     * The attributes that will be hidden in output json
-     *
-     * @var array
-     */
-    protected $hidden = [
-        'repo_type_id',
-        'branch_id',
-        'committed_by'
-    ];
-
-    /**
      * The attributes that are mass assignable.
      *
      * @var array
@@ -45,7 +34,9 @@ class HashCommit extends Model
         'repo_timestamp',
         'version',
         'commit_description',
-        'made_on'
+        'made_on',
+        'repo_type_id',
+        'branch_id'
     ];
 
     /**

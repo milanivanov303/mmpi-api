@@ -18,13 +18,6 @@ abstract class RestTestCase extends TestCase
     protected $primaryKey = 'id';
 
     /**
-     * Relations to return in response
-     *
-     * @var array
-     */
-    protected $with = [];
-
-    /**
      * @var FakerGenerator
      */
     protected $faker;
@@ -130,16 +123,22 @@ abstract class RestTestCase extends TestCase
             ->json('POST', $this->uri, $data)
             ->assertResponseStatus(201);
 
-        $created = $this->getResponseData($this->response);
-
-        $this
-            ->json('GET', $this->uri . '/' . $this->getPrimaryKeyValue($created), [
-                'with' => $this->with
-            ])
-            ->seeJson($data)
-            ->assertResponseOk();
-
         return $this->getResponseData($this->response);
+    }
+
+    /**
+     * Get with
+     *
+     * @param array $data
+     * @return array
+     */
+    protected function getWith(array $data = [])
+    {
+        return array_keys(
+            array_filter($data, function ($value) {
+                return is_array($value);
+            })
+        );
     }
 
     /**
@@ -189,14 +188,6 @@ abstract class RestTestCase extends TestCase
 
         $this
             ->json('PUT', $this->uri . '/' . $this->getPrimaryKeyValue($data), $updateData)
-            ->assertResponseOk();
-
-        $updated = $this->getResponseData($this->response);
-
-        $this
-            ->json('GET', $this->uri . '/' . $this->getPrimaryKeyValue($updated), [
-                'with' => $this->with
-            ])
             ->seeJson($updateData)
             ->assertResponseOk();
 
@@ -234,7 +225,7 @@ abstract class RestTestCase extends TestCase
 
         $this
             ->json('GET', $this->uri . '/' . $this->getPrimaryKeyValue($data), [
-                'with' => $this->with
+                'with' => $this->getWith($data)
             ])
             ->seeJson($data)
             ->assertResponseOk();

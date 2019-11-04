@@ -11,16 +11,6 @@ class DeliveryChainsTest extends RestTestCase
     protected $table      = 'delivery_chains';
     protected $primaryKey = 'title';
 
-    protected $with = [
-        'instances',
-        'projects',
-        'dlvry_type',
-        'status',
-        'dc_version',
-        'dc_role',
-        'type'
-    ];
-
     /**
      * Get request data
      *

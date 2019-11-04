@@ -77,5 +77,8 @@ $router->group(['prefix' => 'v1'], function () use ($router) {
 
         // Artifactory
         require 'v1/artifactory.php';
+        
+        // Departments
+        require 'v1/departments.php';
     });
 });

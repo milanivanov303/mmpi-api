@@ -59,12 +59,18 @@
         },
         "project_event_status": {
             "oneOf": [
-            {
-                "$ref": "/v1/enum-values/enum-value.json",
-                "description": "The status of the event - Active/Archived. References enum_values of type project_event_status"
-            },
-            {"type": "integer"}
+                {
+                    "$ref": "/v1/enum-values/enum-value.json",
+                    "description": "The status of the event - Active/Archived. References enum_values of type project_event_status"
+                },
+                {"type": "integer"}
             ]
+        },
+        "project_event_estimations": {
+            "type": "array",
+            "items": {
+                "$ref": "/v1/project-events/project-event-estimation.json"
+            }
         }
     }
 }
