@@ -5,7 +5,7 @@ namespace Modules\Artifactory\Helpers;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Http\Response;
 
-class Request
+class ArtifactoryHelper
 {
     /**
      * Request url
@@ -29,19 +29,16 @@ class Request
     protected $headers;
 
     /**
-     * Request constructor.
+     * Artifactory Helper constructor.
      *
      * @param string $url
      * @param string $method
      * @param array $data
      * @param array $headers
      */
-    public function __construct(
-        string $url,
-        string $method,
-        array $headers = []
-    ) {
-        $this->url     = $url;
+    public function __construct(string $uri, string $method, array $headers)
+    {
+        $this->url     = $this->getUrl($uri);
         $this->method  = $method;
         $this->headers = $headers;
     }
@@ -49,11 +46,12 @@ class Request
     /**
      * Get url
      *
+     * @param string $uri
      * @return string
      */
-    protected function getUrl()
+    protected function getUrl(string $uri) : string
     {
-        return $this->url;
+        return config('app.artifactory.url'). "/{$uri}";
     }
 
     /**
