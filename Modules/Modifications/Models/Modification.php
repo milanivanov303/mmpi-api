@@ -89,7 +89,8 @@ class Modification extends Model
         'tablespace_id',
         'created_by_id',
         'updated_by_id',
-        'type_id'
+        'type_id',
+        'created_on'
     ];
 
     /**
