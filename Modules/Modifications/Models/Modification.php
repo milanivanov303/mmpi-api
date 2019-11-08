@@ -90,7 +90,8 @@ class Modification extends Model
         'created_by_id',
         'updated_by_id',
         'type_id',
-        'created_on'
+        'created_on',
+        'instance_status'
     ];
 
     /**

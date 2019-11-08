@@ -6,12 +6,50 @@
     "allOf": [
         {"$ref": "/v1/modifications/soa-deployments/soa-deployment.json"},
         {
-            "required": [
-                "name",
-                "issue",
-                "delivery_chain",
-                "instance_status",
-                "visible"
+            "allOf": [
+                {
+                    "oneOf": [
+                        {
+                            "required": [
+                                "issue"
+                            ]
+                        },
+                        {
+                            "required": [
+                                "issue_id"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "oneOf": [
+                        {
+                            "required": [
+                                "delivery_chain"
+                            ]
+                        },
+                        {
+                            "required": [
+                                "delivery_chain_id"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "required": [
+                        "name"
+                    ]
+                },
+                {
+                    "required": [
+                        "visible"
+                    ]
+                },
+                {
+                    "required": [
+                        "instance_status"
+                    ]
+                } 
             ]
         }
     ]

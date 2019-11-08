@@ -14,6 +14,9 @@
         "delivery_chain": {
             "$ref": "/v1/modifications/modification.json#/properties/delivery_chain"
         },
+        "delivery_chain_id": {
+            "$ref": "/v1/modifications/modification.json#/properties/delivery_chain_id"
+        },
         "instance_status": {
             "$ref": "/v1/modifications/modification.json#/properties/instance_status"
         },
@@ -22,6 +25,9 @@
         },
         "issue": {
             "$ref": "/v1/modifications/modification.json#/properties/issue"
+        },
+        "issue_id": {
+            "$ref": "/v1/modifications/modification.json#/properties/issue_id"
         },
         "name": {
             "$ref": "/v1/modifications/modification.json#/properties/name"
