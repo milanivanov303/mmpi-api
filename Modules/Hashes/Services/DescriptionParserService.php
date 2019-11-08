@@ -338,6 +338,11 @@ class DescriptionParserService
         if (preg_match('/\[maven-release-plugin\]/', $this->description)) {
             return true;
         }
+        
+        // Merge heads is a standard comment when merging competing heads in the same branch
+        if (preg_match('/Merge heads/', $this->description)) {
+            return true;
+        }
 
         return false;
     }
