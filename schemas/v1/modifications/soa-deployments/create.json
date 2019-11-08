@@ -37,19 +37,11 @@
                 },
                 {
                     "required": [
-                        "name"
-                    ]
-                },
-                {
-                    "required": [
-                        "visible"
-                    ]
-                },
-                {
-                    "required": [
+                        "name",
+                        "visible",
                         "instance_status"
                     ]
-                } 
+                }
             ]
         }
     ]
