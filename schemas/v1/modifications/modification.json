@@ -275,6 +275,9 @@
                     "$ref": "/v1/enum-values/enum-value.json"
                 },
                 {
+                    "type": "integer"
+                },
+                {
                     "type": "null"
                 }
             ],

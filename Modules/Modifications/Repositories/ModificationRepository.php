@@ -52,7 +52,7 @@ class ModificationRepository extends AbstractRepository implements RepositoryInt
             );
         }
 
-        if (array_key_exists('instance_status', $data)) {
+        if (array_key_exists('instance_status', $data) && is_array($data['instance_status'])) {
             $this->model->instanceStatus()->associate(
                 app(EnumValue::class)
                     ->getModelId($data['instance_status'], 'key', ['type' => 'instance_status'])
