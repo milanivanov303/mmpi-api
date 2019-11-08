@@ -1,7 +1,7 @@
 <?php
 
 use App\Models\EnumValue;
-use Modules\Departments\Models\Department;
+use App\Models\Department;
 
 class DepartmentsTest extends RestTestCase
 {

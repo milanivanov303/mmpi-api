@@ -4,7 +4,7 @@ namespace Modules\Departments\Repositories;
 
 use Core\Repositories\AbstractRepository;
 use Core\Repositories\RepositoryInterface;
-use Modules\Departments\Models\Department;
+use App\Models\Department;
 use App\Models\EnumValue;
 
 class DepartmentRepository extends AbstractRepository implements RepositoryInterface

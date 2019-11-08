@@ -2,7 +2,7 @@
 
 use App\Models\User;
 use App\Models\AccessGroup;
-use Modules\Departments\Models\Department;
+use App\Models\Department;
 
 class UsersTest extends RestTestCase
 {
