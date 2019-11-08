@@ -4,7 +4,7 @@ namespace Modules\Sources\Models;
 
 use Core\Models\Model;
 use App\Models\User;
-use Modules\Departments\Models\Department;
+use App\Models\Department;
 use Modules\SourceRevisions\Models\SourceRevision;
 
 class Source extends Model

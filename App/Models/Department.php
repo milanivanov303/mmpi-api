@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Departments\Models;
+namespace App\Models;
 
 use Core\Models\Model;
 use App\Models\EnumValue;

@@ -1,6 +1,6 @@
 <?php
 use Modules\Sources\Models\Source;
-use Modules\Departments\Models\Department;
+use App\Models\Department;
 
 class SourcesTest extends RestTestCase
 {

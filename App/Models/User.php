@@ -7,7 +7,7 @@ use Illuminate\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Laravel\Lumen\Auth\Authorizable;
-use Modules\Departments\Models\Department;
+use App\Models\Department;
 
 class User extends Model implements AuthenticatableContract, AuthorizableContract, UserContact
 {
