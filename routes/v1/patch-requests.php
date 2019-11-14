@@ -10,6 +10,11 @@ $router->group([
         'description' => 'Get patch requests list',
         'uses'        => 'PatchRequestsController@getMany'
     ]);
+    $router->get('/modifications/{project_id}/{dlvry_type}', [
+        'as'          => 'patch-requests.modifications.list',
+        'description' => 'Get patch requests modifications list',
+        'uses'        => 'PatchRequestsController@getPRmodifications'
+    ]);
     $router->get('/{tts_id}', [
         'as'          => 'patch-requests.one',
         'schema'      => '/v1/patch-requests/patch-request.json',
