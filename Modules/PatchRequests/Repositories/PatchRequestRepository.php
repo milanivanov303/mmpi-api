@@ -128,13 +128,13 @@ class PatchRequestRepository extends AbstractRepository implements RepositoryInt
                 'DC.id as dlvchain_id',
                 'DCT.type AS delivery_chain_type',
                 'EV.value as pr_tatus',
-                'I.tts_id as ctts_key',
-                'modif.name as modif_name',
-                'modif.version as modif_version',
+                'I.tts_id as tts_key',
+                'modif.name as modification_name',
+                'modif.version as version',
                 'modif.prev_version as modif_prev_version',
                 'modif.revision_converted as modif_revision_converted',
                 'modif.type_id as modif_type_id',
-                'modif.created_on as modif_created_on'
+                'modif.created_on as created_on'
             )
             ->where('EV.type', 'patch_requests_status_history_status')
             ->whereNotIn('EV.key', ['cancelled', 'rejected'])
