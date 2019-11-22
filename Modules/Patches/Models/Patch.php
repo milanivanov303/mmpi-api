@@ -7,6 +7,7 @@ use App\Models\User;
 use Modules\Projects\Models\Project;
 use Modules\DeliveryChains\Models\DeliveryChain;
 use Modules\Installations\Models\Installation;
+use Modules\PatchRequests\Models\PatchRequest;
 
 class Patch extends Model
 {
