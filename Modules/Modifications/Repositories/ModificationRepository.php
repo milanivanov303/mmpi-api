@@ -12,6 +12,7 @@ use Modules\Modifications\Models\Modification;
 use Modules\Modifications\Models\ModificationType;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class ModificationRepository extends AbstractRepository implements RepositoryInterface
 {
@@ -118,7 +119,7 @@ class ModificationRepository extends AbstractRepository implements RepositoryInt
                 'modif.version as version',
                 'modif.checksum as checksum',
                 'modif.prev_version as modif_prev_version',
-                'modif.revision_converted as modif_revision_converted',
+                DB::raw('MAX(CAST(modif.revision_converted as numeric(11,11))) as modif_revision_converted'),
                 'modif.type_id as modif_type_id',
                 'modif.created_on as created_on'
             )
@@ -128,6 +129,7 @@ class ModificationRepository extends AbstractRepository implements RepositoryInt
             ->where('DCT.type', $delivery_chain_type)
             ->where(DB::raw('substr(I.created_on, 1, 4)'), '>=', '2016')
             ->whereNotIn('modif.type_id', ['oper', 'se', 'cmd'])
+            ->groupBy('modification_name')
             ->orderBy('modif.name')
             ->orderByDesc('modif.created_on')
             ->orderByDesc('modif.revision_converted')

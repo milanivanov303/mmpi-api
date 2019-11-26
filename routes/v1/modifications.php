@@ -18,10 +18,10 @@ $router->group([
         'description' => 'Get single modification',
         'uses'        => 'ModificationsController@getOne'
     ]);
-    $router->get('/modifications/{project_id}/{dlvry_type}', [
-        'as'          => 'patch-requests.modifications.list',
+    $router->get('/{project_id}/{dlvry_type}', [
+        'as'          => 'filtered.modifications.list',
         'description' => 'Get patch requests modifications list',
-        'uses'        => 'PatchRequestsController@getPRmodifications'
+        'uses'        => 'ModificationsController@getPRmodifications'
     ]);
 
     $types = [
