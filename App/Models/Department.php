@@ -2,15 +2,23 @@
 
 namespace App\Models;
 
+use Core\Models\Model;
+use App\Models\EnumValue;
+
 class Department extends Model
 {
     /**
-     * The attributes that will be hidden in output json
+     * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $hidden = [
-        'department_type'
+    protected $fillable = [
+        'hr_department_id',
+        'name',
+        'default_access_group_id',
+        'src_dlv_by_revision',
+        'department_type',
+        'status'
     ];
 
     /**
@@ -45,7 +53,7 @@ class Department extends Model
     }
 
     /**
-     * Get departmentType
+     * Get department type
      */
     protected function departmentType()
     {

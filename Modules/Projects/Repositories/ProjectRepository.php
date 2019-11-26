@@ -193,7 +193,7 @@ class ProjectRepository extends AbstractRepository implements RepositoryInterfac
             $this->model->languages()->sync($languages);
         }
 
-        $this->model->load($this->getWith());
+        $this->loadModelRelations($data);
 
         return $this->model;
     }

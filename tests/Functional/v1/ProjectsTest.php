@@ -10,23 +10,6 @@ class ProjectsTest extends RestTestCase
     protected $table      = 'projects';
     protected $primaryKey = 'name';
 
-    protected $with = [
-        'type_business',
-        'group',
-        'country',
-        'communication_lng',
-        'delivery_method',
-        'se_mntd_by_clnt',
-        'tl_mntd_by_clnt',
-        'delivery_chains',
-        'njsch_mntd_by_clnt',
-        'trans_mntd_by_clnt',
-        'activity',
-        'project_specifics',
-        'extranet_version',
-        'intranet_version'
-    ];
-
     /**
      * Get request data
      *

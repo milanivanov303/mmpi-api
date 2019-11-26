@@ -19,12 +19,20 @@ $router->group([
         'uses'        => 'ModificationsController@getOne'
     ]);
 
-    $types = ['tables', 'se-transfers', 'sources', 'temporary-sources', 'binaries', 'commands', 'operations'];
+    $types = [
+        'tables',
+        'se-transfers',
+        'sources',
+        'temporary-sources',
+        'binaries',
+        'commands',
+        'operations',
+        'soa-deployments'
+    ];
 
     foreach ($types as $prefix) {
         $router->group(['prefix' => $prefix], function () use ($router, $prefix) {
             $schema = Str::singular($prefix);
-
             $router->get('', [
                 'as'          => "modifications.{$prefix}.list",
                 'schema'      => "/v1/modifications/{$prefix}/{$schema}.json",
@@ -41,6 +49,16 @@ $router->group([
                 'type'        => $prefix,
                 'tags'        => ['modifications']
             ]);
+            if ($prefix === 'soa-deployments') {
+                $router->post('', [
+                    'as'          => "modifications.{$prefix}.create",
+                    'schema'      => "/v1/modifications/{$prefix}/create.json",
+                    'description' => "Create new {$prefix}",
+                    'uses'        => 'ModificationsController@create',
+                    'type'        =>  $prefix,
+                    'tags'        => ['modifications']
+                ]);
+            }
         });
     }
 });

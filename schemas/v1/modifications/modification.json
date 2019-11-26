@@ -18,7 +18,7 @@
             "type": "object",
             "properties": {
                 "id": {
-                    "type": "integer"
+                    "type": "string"
                 },
                 "name": {
                     "type": "string"
@@ -273,6 +273,9 @@
             "oneOf": [
                 {
                     "$ref": "/v1/enum-values/enum-value.json"
+                },
+                {
+                    "type": "integer"
                 },
                 {
                     "type": "null"

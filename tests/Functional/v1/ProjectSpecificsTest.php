@@ -8,12 +8,6 @@ class ProjectSpecificsTest extends RestTestCase
     protected $table      = 'project_specifics';
     protected $primaryKey = 'id';
 
-    protected $with = [
-        'made_by',
-        'project_specific_feature',
-        'project'
-    ];
-
     /**
      * Get request data
      *

@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\EnumValue;
+use Modules\ProjectEvents\Models\ProjectEvent;
 use Modules\Projects\Models\Project;
 
 class ProjectEventsTest extends RestTestCase
@@ -8,13 +9,6 @@ class ProjectEventsTest extends RestTestCase
     protected $uri        = 'v1/project-events';
     protected $table      = 'project_events';
     protected $primaryKey = 'id';
-
-    protected $with = [
-        'project',
-        'project_event_type',
-        'project_event_subtype',
-        'project_event_status'
-    ];
 
     /**
      * Get request data
@@ -27,15 +21,21 @@ class ProjectEventsTest extends RestTestCase
         $projectEventType    = EnumValue::where('type', 'project_event_type')->inRandomOrder()->first();
         $projectEventSubtype = EnumValue::where('type', 'project_event_subtype')->inRandomOrder()->first();
         $projectEventStatus  = EnumValue::where('type', 'project_event_status')->inRandomOrder()->first();
+        $estimations         = [
+            ['duration' => 3, 'department_id'  => 1],
+            ['duration' => 24, 'department_id' => 2],
+            ['duration' => 36, 'department_id' => 3]
+        ];
 
         return [
-            'project'               => $project->toArray(),
-            'project_event_type'    => $projectEventType->toArray(),
-            'project_event_subtype' => $projectEventSubtype->toArray(),
-            'event_start_date'      => $this->faker()->date('Y-m-d'),
-            'event_end_date'        => $this->faker()->date('Y-m-d'),
-            'description'           => $this->faker()->text(59),
-            'project_event_status'  => $projectEventStatus->toArray()
+            'project'                   => $project->toArray(),
+            'project_event_type'        => $projectEventType->toArray(),
+            'project_event_subtype'     => $projectEventSubtype->toArray(),
+            'event_start_date'          => $this->faker()->date('Y-m-d'),
+            'event_end_date'            => $this->faker()->date('Y-m-d'),
+            'description'               => $this->faker()->text(59),
+            'project_event_status'      => $projectEventStatus->toArray(),
+            'project_event_estimations' => $estimations
         ];
     }
 
@@ -51,7 +51,7 @@ class ProjectEventsTest extends RestTestCase
         $data['project_event_type'] = $this->faker()->randomNumber();
 
         // remove required parameters
-        unset($data['project']);
+        unset($data['project_event_status']);
 
         return $data;
     }
@@ -67,7 +67,11 @@ class ProjectEventsTest extends RestTestCase
         //Remove date as it is overwritten on each request
         unset($data['made_on']);
         $data['event_start_date'] = $this->faker()->date('Y-m-d');
-
+        $data['project_event_estimations'] = [
+            ['duration' => 3, 'department_id'  => 1],
+            ['duration' => 2, 'department_id' => 3]
+        ];
+        
         return $data;
     }
 }

@@ -4,6 +4,7 @@ namespace Modules\Sources\Models;
 
 use Core\Models\Model;
 use App\Models\User;
+use App\Models\Department;
 use Modules\SourceRevisions\Models\SourceRevision;
 
 class Source extends Model
@@ -45,6 +46,14 @@ class Source extends Model
     protected function departmentAssignedBy()
     {
         return $this->belongsTo(User::class, 'department_assigned_by_id');
+    }
+
+    /**
+     * Get department
+     */
+    protected function department()
+    {
+        return $this->belongsTo(Department::class, 'department_id');
     }
 
      /**

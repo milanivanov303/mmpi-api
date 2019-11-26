@@ -43,29 +43,7 @@
             "type": "integer"
         },
         "department": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "src_dlv_by_revision": {
-                    "type": "integer"
-                },
-                "department_type": {
-                    "oneOf": [
-                        {
-                            "$ref": "/v1/enum-values/enum-value.json"
-                        },
-                        {"type": "null"}
-                    ]
-                },
-                "status": {
-                    "type": "integer"
-                }
-            },
+            "$ref": "/v1/departments/department.json",
             "description": "User department",
             "example": "Enterprise Applications"
         },

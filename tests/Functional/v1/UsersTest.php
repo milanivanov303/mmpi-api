@@ -1,8 +1,8 @@
 <?php
 
 use App\Models\User;
-use App\Models\Department;
 use App\Models\AccessGroup;
+use App\Models\Department;
 
 class UsersTest extends RestTestCase
 {
