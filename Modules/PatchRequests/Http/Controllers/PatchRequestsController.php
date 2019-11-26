@@ -18,16 +18,4 @@ class PatchRequestsController extends Controller
     {
         $this->repository = $repository;
     }
-
-    /**
-     * Get patch request modifications by project_id and dlvry_type
-     *
-     * @param int $project_id
-     * @param string $delivery_chain_type
-     * @return Response
-     */
-    public function getPRmodifications(int $project_id, string $delivery_chain_type)
-    {
-        return $this->repository->getPRmodifications($project_id, $delivery_chain_type);
-    }
 }
