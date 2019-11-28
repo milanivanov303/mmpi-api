@@ -61,6 +61,11 @@ class DeliveryChainRepository extends AbstractRepository implements RepositoryIn
                 return $builder->whereHas('dcRole', function ($query) use ($value, $operator) {
                     $query->where('key', $operator, $value);
                 });
+            },
+            'project' => function ($builder, $value, $operator) {
+                return $builder->whereHas('projects', function ($query) use ($value, $operator) {
+                    $query->where('id', $operator, $value);
+                });
             }
         ];
     }
