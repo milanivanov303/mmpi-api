@@ -10,6 +10,12 @@
 |
 */
 
+$router->group([
+    'namespace' => '\Rap2hpoutre\LaravelLogViewer'
+], function () use ($router) {
+    $router->get('logs.html', 'LogViewerController@index');
+});
+
 // v1
 $router->group(['prefix' => 'v1'], function () use ($router) {
 
