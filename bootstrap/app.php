@@ -98,6 +98,7 @@ $app->register(Illuminate\Mail\MailServiceProvider::class);
 $app->register(Modules\Issues\Providers\IssuesServiceProvider::class);
 $app->register(Modules\JsonRpc\Providers\JsonRpcServiceProvider::class);
 $app->register(Modules\Hashes\Providers\HashesServiceProvider::class);
+$app->register(Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider::class);
 
 /*
 |--------------------------------------------------------------------------

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>MMPI API Statistics</title>
+        <!-- needed for adaptive design -->
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <style>
+            body {
+                margin: 0;
+                overflow: hidden;
+            }
+            iframe {
+                border: 0;
+                height: 100vh;
+                width: 100%
+            }
+        </style>
+    </head>
+    <body>
+        <iframe></iframe>
+    </body>
+
+    <script>
+        document.querySelector('iframe').setAttribute('src', `https://${document.location.hostname}:5601`);
+    </script>
+</html>
