@@ -80,7 +80,7 @@ class ModificationsController extends Controller
     }
 
     /**
-     * Get patch request modifications by project_id and dlvry_type
+     * Get modifications by project_id and dlvry_type
      *
      * @param int $project_id
      * @param string $delivery_chain_type

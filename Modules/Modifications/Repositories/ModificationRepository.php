@@ -91,7 +91,7 @@ class ModificationRepository extends AbstractRepository implements RepositoryInt
     }
 
     /**
-     * Filter patch request modifications by project_id and dlvry_type
+     * Filter modifications by project_id and dlvry_type
      *
      * @param int $project_id
      * @param int $delivery_chain_type
