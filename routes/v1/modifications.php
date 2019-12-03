@@ -20,8 +20,8 @@ $router->group([
     ]);
     $router->get('/{project_id}/{dlvry_type}', [
         'as'          => 'filtered.modifications.list',
-        'description' => 'Get patch requests modifications list',
-        'uses'        => 'ModificationsController@getPRmodifications'
+        'description' => 'Get modifications by project and dlvry chain type',
+        'uses'        => 'ModificationsController@getByProjectAndChainType'
     ]);
 
     $types = [

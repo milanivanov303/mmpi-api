@@ -86,8 +86,8 @@ class ModificationsController extends Controller
      * @param string $delivery_chain_type
      * @return Response
      */
-    public function getPRmodifications(int $project_id, string $delivery_chain_type)
+    public function getByProjectAndChainType(int $project_id, string $delivery_chain_type)
     {
-        return $this->repository->getPRmodifications($project_id, $delivery_chain_type);
+        return $this->repository->getByProjectAndChainType($project_id, $delivery_chain_type);
     }
 }

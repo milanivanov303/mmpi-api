@@ -96,7 +96,7 @@ class ModificationRepository extends AbstractRepository implements RepositoryInt
      * @param int $project_id
      * @param int $delivery_chain_type
      */
-    public function getPRmodifications($project_id = null, $delivery_chain_type = null)
+    public function getByProjectAndChainType($project_id = null, $delivery_chain_type = null)
     {
         return DB::table('patch_requests as PR')
             ->join('issues as I', 'PR.issue_id', '=', 'I.id')
