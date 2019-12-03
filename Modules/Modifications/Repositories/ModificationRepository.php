@@ -119,9 +119,9 @@ class ModificationRepository extends AbstractRepository implements RepositoryInt
                 'modif.version as version',
                 'modif.checksum as checksum',
                 'modif.prev_version as modif_prev_version',
-                DB::raw('MAX(CAST(modif.revision_converted as numeric(11,11))) as modif_revision_converted'),
+                'modif.revision_converted as modif_revision_converted',
                 'modif.type_id as modif_type_id',
-                'modif.created_on as created_on'
+                'modif.created_on  as created_on'
             )
             ->where('EV.type', 'patch_requests_status_history_status')
             ->whereNotIn('EV.key', ['cancelled', 'rejected'])
@@ -129,7 +129,6 @@ class ModificationRepository extends AbstractRepository implements RepositoryInt
             ->where('DCT.type', $delivery_chain_type)
             ->where(DB::raw('substr(I.created_on, 1, 4)'), '>=', '2016')
             ->whereNotIn('modif.type_id', ['oper', 'se', 'cmd'])
-            ->groupBy('modification_name')
             ->orderBy('modif.name')
             ->orderByDesc('modif.created_on')
             ->orderByDesc('modif.revision_converted')
