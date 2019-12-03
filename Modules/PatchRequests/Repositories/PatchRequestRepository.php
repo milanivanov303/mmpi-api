@@ -6,9 +6,6 @@ use Core\Repositories\RepositoryInterface;
 use Core\Repositories\AbstractRepository;
 use Core\Models\Model;
 use Modules\PatchRequests\Models\PatchRequest;
-use Modules\Issues\Models\Issue;
-use Modules\DeliveryChains\Models\DeliveryChain;
-use Modules\Modifications\Models\Modification;
 use Illuminate\Support\Facades\DB;
 
 class PatchRequestRepository extends AbstractRepository implements RepositoryInterface
