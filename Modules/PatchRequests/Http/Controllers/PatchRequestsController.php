@@ -2,7 +2,6 @@
 
 namespace Modules\PatchRequests\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
 use Modules\PatchRequests\Repositories\PatchRequestRepository;

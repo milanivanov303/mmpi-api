@@ -12,6 +12,7 @@ use Modules\Modifications\Models\Modification;
 use Modules\Modifications\Models\ModificationType;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class ModificationRepository extends AbstractRepository implements RepositoryInterface
 {
@@ -87,5 +88,51 @@ class ModificationRepository extends AbstractRepository implements RepositoryInt
             $this->model->createdBy()->associate(Auth::user());
             $this->model->created_on = Carbon::now()->format('Y-m-d H:i:s');
         }
+    }
+
+    /**
+     * Filter modifications by project_id and dlvry_type
+     *
+     * @param int $project_id
+     * @param int $delivery_chain_type
+     */
+    public function getByProjectAndChainType($project_id = null, $delivery_chain_type = null)
+    {
+        return DB::table('patch_requests as PR')
+            ->join('issues as I', 'PR.issue_id', '=', 'I.id')
+            ->leftJoin('modif_to_pr as mpr', 'PR.id', '=', 'mpr.pr_id')
+            ->leftJoin('modifications as modif', 'mpr.modif_id', '=', 'modif.id')
+            ->join('projects as PRJ', 'I.project_id', '=', 'PRJ.id')
+            ->join('delivery_chains as DC', 'PR.delivery_chain_id', '=', 'DC.id')
+            ->join('delivery_chain_types as DCT', 'DC.type_id', '=', 'DCT.id')
+            ->join('v_current_pr_status as PRSTAT', 'PR.id', '=', 'PRSTAT.pr_id')
+            ->join('enum_values as EV', 'PRSTAT.pr_status', '=', 'EV.id')
+            ->select(
+                'PR.id as pr_id',
+                'PR.number as prnumber_id',
+                'DC.title as dlvchain_title',
+                'DC.id as dlvchain_id',
+                'DCT.type AS delivery_chain_type',
+                'EV.value as pr_tatus',
+                'I.tts_id as tts_key',
+                'modif.name as modification_name',
+                'modif.version as version',
+                'modif.checksum as checksum',
+                'modif.prev_version as modif_prev_version',
+                'modif.revision_converted as modif_revision_converted',
+                'modif.type_id as modif_type_id',
+                'modif.created_on  as created_on'
+            )
+            ->where('EV.type', 'patch_requests_status_history_status')
+            ->whereNotIn('EV.key', ['cancelled', 'rejected'])
+            ->where('PRJ.id', $project_id)
+            ->where('DCT.type', $delivery_chain_type)
+            ->where(DB::raw('substr(I.created_on, 1, 4)'), '>=', '2016')
+            ->whereNotIn('modif.type_id', ['oper', 'se', 'cmd'])
+            ->orderBy('modif.name')
+            ->orderByDesc('modif.created_on')
+            ->orderByDesc('modif.revision_converted')
+            ->get()
+            ->toArray();
     }
 }

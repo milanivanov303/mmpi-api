@@ -78,4 +78,16 @@ class ModificationsController extends Controller
 
         return null;
     }
+
+    /**
+     * Get modifications by project_id and dlvry_type
+     *
+     * @param int $project_id
+     * @param string $delivery_chain_type
+     * @return Response
+     */
+    public function getByProjectAndChainType(int $project_id, string $delivery_chain_type)
+    {
+        return $this->repository->getByProjectAndChainType($project_id, $delivery_chain_type);
+    }
 }
