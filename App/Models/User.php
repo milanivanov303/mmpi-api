@@ -140,7 +140,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     public function permissions()
     {
         return Permission
-            ::select(['permission_types.id as actions'])
+            ::select(['permission_types.id as actions', 'permission_types.id as subject'])
             ->join('users_to_permissions as up', 'up.permission_type_id', '=', 'permission_types.id')
             ->join('group_permissions as gp', 'gp.permission_type_id', '=', 'permission_types.id')
             ->join('access_groups as ag', 'gp.group_id', '=', 'ag.id')
