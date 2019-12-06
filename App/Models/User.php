@@ -135,7 +135,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     }
 
      /**
-     * Get permissions
+     * Get user custom and group permissions
      */
     public function permissions()
     {
