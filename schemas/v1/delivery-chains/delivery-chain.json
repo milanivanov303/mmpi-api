@@ -82,6 +82,12 @@
             "items": {
                 "$ref": "/v1/instances/instance.json"
             }
+        },
+        "branches": {
+            "type": "array",
+            "items": {
+                "$ref": "/v1/branches/branch.json"
+            }
         }
     }
 }
