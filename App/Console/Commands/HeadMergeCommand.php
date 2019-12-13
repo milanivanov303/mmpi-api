@@ -210,6 +210,9 @@ class HeadMergeCommand extends Command
 
         // Set Milestone
         $issueField->addCustomField('customfield_10530', ['value' => 'Installation']);
+        
+        // Set Codix status
+        $issueField->addCustomField('customfield_10601', ['value' => 'Under Investigation']);
 
         // Set DDCA
         try {
