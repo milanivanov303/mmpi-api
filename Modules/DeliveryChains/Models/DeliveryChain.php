@@ -91,7 +91,7 @@ class DeliveryChain extends Model
     }
 
     /**
-     * Get instances
+     * Get branches
      */
     protected function branches()
     {
