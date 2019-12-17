@@ -64,7 +64,7 @@ class ArtifactoryHelper
             $options = [
                 'headers' => $this->headers,
                 'verify'  => false,
-                'body'    => 'items.find({"name":{"$match":"' . $this->name .'*"}})'
+                'body'    => 'items.find({"name":{"$match":"*' . $this->name .'*"}})'
             ];
 
             $response = $client->request($this->method, $this->url, $options);
