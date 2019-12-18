@@ -11,17 +11,17 @@ class ArtifactoryController extends BaseController
     /**
      * Make get request
      *
-     * @param string $uri
+     * @param string $name
      * @param array $data
      * @return Response
      */
-    public function execute(string $uri) : Response
+    public function execute(string $name) : Response
     {
         $headers = [
             'X-JFrog-Art-Api' => config('app.artifactory.key')
         ];
 
-        $request = new ArtifactoryHelper($uri, 'GET', $headers);
+        $request = new ArtifactoryHelper($name, 'POST', $headers);
 
         return $request->send();
     }

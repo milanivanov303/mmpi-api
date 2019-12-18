@@ -4,6 +4,7 @@ namespace Modules\DeliveryChains\Models;
 
 use Core\Models\Model;
 use App\Models\EnumValue;
+use Modules\Branches\Models\Branch;
 use Modules\Instances\Models\Instance;
 use Modules\Projects\Models\Project;
 
@@ -87,6 +88,14 @@ class DeliveryChain extends Model
     protected function instances()
     {
         return $this->belongsToMany(Instance::class, 'instance_to_delivery_chain')->active();
+    }
+
+    /**
+     * Get branches
+     */
+    protected function branches()
+    {
+        return $this->belongsToMany(Branch::class, 'delivery_chain_branch', null, 'repo_branch_id');
     }
 
     /**

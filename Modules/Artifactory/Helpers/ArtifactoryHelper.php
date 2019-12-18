@@ -29,29 +29,26 @@ class ArtifactoryHelper
     protected $headers;
 
     /**
+     * Requested file name
+     *
+     * @var array
+     */
+    protected $name;
+
+    /**
      * Artifactory Helper constructor.
      *
-     * @param string $url
+     * @param string $name
      * @param string $method
      * @param array $data
      * @param array $headers
      */
-    public function __construct(string $uri, string $method, array $headers)
+    public function __construct(string $name, string $method, array $headers)
     {
-        $this->url     = $this->getUrl($uri);
+        $this->url     = config('app.artifactory.url');
+        $this->name    = $name;
         $this->method  = $method;
         $this->headers = $headers;
-    }
-
-    /**
-     * Get url
-     *
-     * @param string $uri
-     * @return string
-     */
-    protected function getUrl(string $uri) : string
-    {
-        return config('app.artifactory.url'). "/{$uri}";
     }
 
     /**
@@ -66,7 +63,8 @@ class ArtifactoryHelper
 
             $options = [
                 'headers' => $this->headers,
-                'verify'  => false
+                'verify'  => false,
+                'body'    => 'items.find({"name":{"$match":"*' . $this->name .'*"}})'
             ];
 
             $response = $client->request($this->method, $this->url, $options);

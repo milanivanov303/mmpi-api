@@ -5,6 +5,7 @@ namespace Modules\DeliveryChains\Repositories;
 use App\Models\EnumValue;
 use Core\Repositories\AbstractRepository;
 use Core\Repositories\RepositoryInterface;
+use Modules\Branches\Models\Branch;
 use Modules\DeliveryChains\Models\DeliveryChain;
 use Modules\Projects\Models\Project;
 use Modules\Instances\Models\Instance;
@@ -178,6 +179,15 @@ class DeliveryChainRepository extends AbstractRepository implements RepositoryIn
             }
             
             $this->model->instances()->sync($instances);
+        }
+
+        if (array_key_exists('branches', $data)) {
+            $branches = [];
+            foreach ($data['branches'] as $branch) {
+                $branches[] = app(Branch::class)->getModelId($branch, 'id');
+            }
+
+            $this->model->branches()->sync($branches);
         }
 
         $this->loadModelRelations($data);
