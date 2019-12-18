@@ -22,9 +22,9 @@ class HashesTest extends RestTestCase
             $rev     = random_int(1, 1000);
         } catch (\Exception $exception) {}
 
-        $user     = User::inRandomOrder()->active()->first();
-        $repoType = EnumValue::where('type', 'repository_type')->inRandomOrder()->first();
-        $branch   = HashBranch::where('repo_type_id', $repoType->id)->inRandomOrder()->first();
+        $user = User::inRandomOrder()->active()->first();
+        $branch = HashBranch::inRandomOrder()->first();
+        $repoType = EnumValue::where('id', $branch->repo_type_id)->first();
 
         return [
             'branch'       => $branch->toArray(),
