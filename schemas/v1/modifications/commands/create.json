@@ -6,10 +6,27 @@
     "allOf": [
         {"$ref": "/v1/modifications/commands/command.json"},
         {
-            "required": [
-                "name",
-                "issue",
-                "path"
+            "allOf": [
+                {
+                    "oneOf": [
+                        {
+                            "required": [
+                                "issue"
+                            ]
+                        },
+                        {
+                            "required": [
+                                "issue_id"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "required": [
+                        "name",
+                        "est_run_time"
+                    ]
+                }
             ]
         }
     ]

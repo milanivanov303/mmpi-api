@@ -9,13 +9,17 @@ class CommandModification extends Modification
     protected $visible = [
         'id',
         'type',
+        'type_id',
         'issue',
+        'issue_id',
+        'delivery_chain_id',
         'name',
         'comments',
         'check_exit_status',
         'subtype',
         'instance',
-        'instanceStatus',
-        'est_run_time'
+        'instance_status',
+        'est_run_time',
+        'visible'
     ];
 }

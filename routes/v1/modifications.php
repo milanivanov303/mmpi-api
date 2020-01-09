@@ -54,7 +54,7 @@ $router->group([
                 'type'        => $prefix,
                 'tags'        => ['modifications']
             ]);
-            if ($prefix === 'soa-deployments') {
+            if ($prefix === 'soa-deployments' || $prefix === 'commands') {
                 $router->post('', [
                     'as'          => "modifications.{$prefix}.create",
                     'schema'      => "/v1/modifications/{$prefix}/create.json",
