@@ -6,10 +6,84 @@
     "allOf": [
         {"$ref": "/v1/modifications/binaries/binary.json"},
         {
-            "required": [
-                "name",
-                "issue",
-                "path"
+            "allOf": [
+                {
+                    "oneOf": [
+                        {
+                            "required": [
+                                "issue"
+                            ]
+                        },
+                        {
+                            "required": [
+                                "issue_id"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "oneOf": [
+                        {
+                            "required": [
+                                "type"
+                            ]
+                        },
+                        {
+                            "required": [
+                                "type_id"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "oneOf": [
+                        {
+                            "required": [
+                                "subtype"
+                            ]
+                        },
+                        {
+                            "required": [
+                                "subtype_id"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "oneOf": [
+                        {
+                            "required": [
+                                "deployment_prefix"
+                            ]
+                        },
+                        {
+                            "required": [
+                                "deployment_prefix_id"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "oneOf": [
+                        {
+                            "required": [
+                                "delivery_chain"
+                            ]
+                        },
+                        {
+                            "required": [
+                                "delivery_chain_id"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "required": [
+                        "name",
+                        "visible",
+                        "instance_status"
+                    ]
+                }
             ]
         }
     ]

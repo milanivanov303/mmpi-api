@@ -7,35 +7,41 @@
         "id": {
             "$ref": "/v1/modifications/modification.json#/properties/id"
         },
+        "issue": {
+            "$ref": "/v1/modifications/modification.json#/properties/issue"
+        },
         "type": {
             "$ref": "/v1/modifications/modification.json#/properties/type"
         },
         "subtype": {
             "$ref": "/v1/modifications/modification.json#/properties/subtype"
         },
-        "issue": {
-            "$ref": "/v1/modifications/modification.json#/properties/issue"
+        "version": {
+            "$ref": "/v1/modifications/modification.json#/properties/version"
+        },
+        "revision_converted": {
+            "$ref": "/v1/modifications/modification.json#/properties/revision_converted"
+        },
+        "name": {
+            "$ref": "/v1/modifications/modification.json#/properties/name"
         },
         "path": {
             "$ref": "/v1/modifications/modification.json#/properties/path"
         },
-        "prev_version": {
-            "$ref": "/v1/modifications/modification.json#/properties/prev_version"
+        "maven_repository": {
+            "$ref": "/v1/modifications/modification.json#/properties/maven_repository"
         },
-        "instance": {
-            "$ref": "/v1/modifications/modification.json#/properties/instance"
+        "deployment_prefix": {
+            "$ref": "/v1/modifications/modification.json#/properties/deployment_prefix"
         },
         "instance_status": {
             "$ref": "/v1/modifications/modification.json#/properties/instance_status"
         },
-        "deployment_path": {
-            "$ref": "/v1/modifications/modification.json#/properties/deployment_path"
+        "active": {
+            "$ref": "/v1/modifications/modification.json#/properties/active"
         },
-        "comments": {
-            "$ref": "/v1/modifications/modification.json#/properties/comments"
-        },
-        "permissions": {
-            "$ref": "/v1/modifications/modification.json#/properties/permissions"
+        "visible": {
+            "$ref": "/v1/modifications/modification.json#/properties/visible"
         }
     }
 }

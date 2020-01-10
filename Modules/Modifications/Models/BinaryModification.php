@@ -8,15 +8,21 @@ class BinaryModification extends Modification
 
     protected $visible = [
         'id',
-        'type',
-        'subtype',
         'issue',
+        'issue_id',
+        'type',
+        'type_id',
+        'subtype',
+        'subtype_id',
+        'version',
+        'revision_converted',
+        'name',
         'path',
-        'prev_version',
-        'instance',
-        'instanceStatus',
-        'deployment_path',
-        'comments',
-        'permissions'
+        'maven_repository',
+        'deployment_prefix_id',
+        'deployment_prefix',
+        'instance_status',
+        'active',
+        'visible'
     ];
 }

@@ -81,6 +81,20 @@ class ModificationRepository extends AbstractRepository implements RepositoryInt
             );
         }
 
+        if (array_key_exists('subtype', $data)) {
+            $this->model->subtype()->associate(
+                app(EnumValue::class)
+                    ->getModelId($data['subtype'], 'key')
+            );
+        }
+
+        if (array_key_exists('deployment_prefix', $data)) {
+            $this->model->deploymentPrefix()->associate(
+                app(EnumValue::class)
+                    ->getModelId($data['deployment_prefix'], 'key')
+            );
+        }
+
         if ($this->model->exists) {
             $this->model->updatedBy()->associate(Auth::user());
             $this->model->updated_on = Carbon::now()->format('Y-m-d H:i:s');
