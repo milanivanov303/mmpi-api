@@ -46,7 +46,7 @@ class ProcessTags implements ShouldQueue
 
         $description = new DescriptionParserService($this->hashCommit->commit_description);
 
-        if (!$description->isValid()) {
+        if ($this->validateDescription() && !$description->isValid()) {
             $commitedBy = $this->hashCommit->committedBy;
             if ($commitedBy) {
                 $commitedByManager = $commitedBy->manager;
@@ -72,5 +72,15 @@ class ProcessTags implements ShouldQueue
         $tags->save();
 
         Log::channel('tags')->info("End" . PHP_EOL);
+    }
+
+    /**
+     * Validate description
+     *
+     * @return bool
+     */
+    protected function validateDescription() : bool
+    {
+        return $this->hashCommit->repoType->key === 'imx_be';
     }
 }
