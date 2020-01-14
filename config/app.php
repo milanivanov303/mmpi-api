@@ -4,6 +4,8 @@ $app = require __DIR__ . '/../vendor/laravel/lumen-framework/config/app.php';
 return array_merge(
     $app,
     [
+        'timezone' => env('APP_TIMEZONE'),
+
         /*
         |--------------------------------------------------------------------------
         | JWT settings
