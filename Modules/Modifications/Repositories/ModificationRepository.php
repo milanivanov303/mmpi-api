@@ -6,13 +6,13 @@ use App\Models\EnumValue;
 use Core\Repositories\AbstractRepository;
 use Core\Repositories\RepositoryInterface;
 use Modules\Issues\Models\Issue;
-use Modules\Projects\Models\Project;
 use Modules\DeliveryChains\Models\DeliveryChain;
 use Modules\Modifications\Models\Modification;
 use Modules\Modifications\Models\ModificationType;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Modules\Instances\Models\Instance;
 
 class ModificationRepository extends AbstractRepository implements RepositoryInterface
 {
@@ -50,6 +50,12 @@ class ModificationRepository extends AbstractRepository implements RepositoryInt
         if (array_key_exists('delivery_chain', $data)) {
             $this->model->deliveryChain()->associate(
                 app(DeliveryChain::class)->getModelId($data['delivery_chain'], 'id')
+            );
+        }
+
+        if (array_key_exists('instance', $data)) {
+            $this->model->instance()->associate(
+                app(Instance::class)->getModelId($data['instance'], 'id')
             );
         }
 

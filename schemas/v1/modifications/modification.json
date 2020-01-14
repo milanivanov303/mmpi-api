@@ -227,6 +227,10 @@
             ],
             "default": "null"
         },
+        "deployment_prefix_id": {
+            "type": ["integer", "null"],
+            "description": "Id from enum_values table"
+        },
         "deployment_path": {
             "type": ["string", "null"],
             "maxLength": 256,

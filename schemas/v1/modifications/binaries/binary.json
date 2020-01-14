@@ -42,6 +42,9 @@
         },
         "visible": {
             "$ref": "/v1/modifications/modification.json#/properties/visible"
+        },
+        "delivery_chain": {
+            "$ref": "/v1/modifications/modification.json#/properties/delivery_chain"
         }
     }
 }

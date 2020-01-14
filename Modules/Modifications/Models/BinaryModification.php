@@ -20,8 +20,10 @@ class BinaryModification extends Modification
         'path',
         'maven_repository',
         'deployment_prefix_id',
-        'deployment_prefix',
-        'instance_status',
+        'deploymentPrefix',
+        'delivery_chain_id',
+        'deliveryChain',
+        'instanceStatus',
         'active',
         'visible'
     ];
