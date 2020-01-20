@@ -31,8 +31,7 @@ $router->group([
         'temporary-sources',
         'binaries',
         'commands',
-        'operations',
-        'soa-deployments'
+        'operations'
     ];
 
     foreach ($types as $prefix) {
@@ -54,7 +53,7 @@ $router->group([
                 'type'        => $prefix,
                 'tags'        => ['modifications']
             ]);
-            if ($prefix === 'soa-deployments' || $prefix === 'commands') {
+            if ($prefix === 'binaries' || $prefix === 'commands') {
                 $router->post('', [
                     'as'          => "modifications.{$prefix}.create",
                     'schema'      => "/v1/modifications/{$prefix}/create.json",

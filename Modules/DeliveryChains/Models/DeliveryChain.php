@@ -87,7 +87,10 @@ class DeliveryChain extends Model
      */
     protected function instances()
     {
-        return $this->belongsToMany(Instance::class, 'instance_to_delivery_chain')->active();
+        return $this->belongsToMany(Instance::class, 'instance_to_delivery_chain')
+                    ->active()
+                    ->as('instance_to_delivery_chain')
+                    ->withPivot('instance_previous_id');
     }
 
     /**

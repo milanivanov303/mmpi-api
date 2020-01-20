@@ -6,13 +6,13 @@ use App\Models\EnumValue;
 use Core\Repositories\AbstractRepository;
 use Core\Repositories\RepositoryInterface;
 use Modules\Issues\Models\Issue;
-use Modules\Projects\Models\Project;
 use Modules\DeliveryChains\Models\DeliveryChain;
 use Modules\Modifications\Models\Modification;
 use Modules\Modifications\Models\ModificationType;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Modules\Instances\Models\Instance;
 
 class ModificationRepository extends AbstractRepository implements RepositoryInterface
 {
@@ -53,6 +53,12 @@ class ModificationRepository extends AbstractRepository implements RepositoryInt
             );
         }
 
+        if (array_key_exists('instance', $data)) {
+            $this->model->instance()->associate(
+                app(Instance::class)->getModelId($data['instance'], 'id')
+            );
+        }
+
         if (array_key_exists('instance_status', $data) && is_array($data['instance_status'])) {
             $this->model->instanceStatus()->associate(
                 app(EnumValue::class)
@@ -78,6 +84,20 @@ class ModificationRepository extends AbstractRepository implements RepositoryInt
             $this->model->path()->associate(
                 app(EnumValue::class)
                     ->getModelId($data['path'], 'key', ['type' => 'source_paths'])
+            );
+        }
+
+        if (array_key_exists('subtype', $data)) {
+            $this->model->subtype()->associate(
+                app(EnumValue::class)
+                    ->getModelId($data['subtype'], 'key')
+            );
+        }
+
+        if (array_key_exists('deployment_prefix', $data)) {
+            $this->model->deploymentPrefix()->associate(
+                app(EnumValue::class)
+                    ->getModelId($data['deployment_prefix'], 'key')
             );
         }
 

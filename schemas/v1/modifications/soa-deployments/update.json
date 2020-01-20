@@ -1,9 +1,0 @@
-{
-    "$id": "UpdateSOAdeploymentModification",
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "type": "object",
-    "description": "SOA Deployment Modification object",
-    "allOf": [
-        {"$ref": "/v1/modifications/soa-deployments/soa-deployment.json"}
-    ]
-}
