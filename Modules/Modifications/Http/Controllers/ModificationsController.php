@@ -13,7 +13,6 @@ use Modules\Modifications\Models\BinaryModification;
 use Modules\Modifications\Models\CommandModification;
 use Modules\Modifications\Models\TemporarySourceModification;
 use Modules\Modifications\Models\SeTransferModification;
-use Modules\Modifications\Models\SOAdeploymentModification;
 
 class ModificationsController extends Controller
 {
@@ -70,10 +69,6 @@ class ModificationsController extends Controller
 
         if ($type === 'se-transfers') {
             return new SeTransferModification();
-        }
-
-        if ($type === 'soa-deployments') {
-            return new SOAdeploymentModification();
         }
 
         return null;
