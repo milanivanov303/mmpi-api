@@ -99,24 +99,7 @@ return array_merge(
             'check_expiry' => env('CERTIFICATES_CHECK_EXP', '+30 days')
         ],
 
-        'repository' => [
-            'username'   => env('REPO_USERNAME'),
-            'public_key' => env('REPO_PUBLIC_KEY', 'ssh/id_rsa_repository')
-        ],
-
-        'raml2html' => [
-            'host'     => env('RAML2HTML_HOST'),
-            'username' => env('RAML2HTML_USERNAME'),
-            'password' => env('RAML2HTML_PASSWORD'),
-        ],
-
         'dev-management-url' => env('DEV_MANAGEMENT_URL'),
-
-        'hg-build' => [
-            'host'     => env('HG_BUILD_HOST'),
-            'username' => env('HG_BUILD_USERNAME'),
-            'password' => env('HG_BUILD_PASSWORD'),
-        ],
 
         'artifactory' => [
             'url' => env('ARTIFACTORY_URL'),
