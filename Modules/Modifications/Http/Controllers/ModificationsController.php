@@ -11,6 +11,7 @@ use Modules\Modifications\Models\TableModification;
 use Modules\Modifications\Repositories\ModificationRepository;
 use Modules\Modifications\Models\BinaryModification;
 use Modules\Modifications\Models\CommandModification;
+use Modules\Modifications\Models\ScmModification;
 use Modules\Modifications\Models\TemporarySourceModification;
 use Modules\Modifications\Models\SeTransferModification;
 
@@ -69,6 +70,10 @@ class ModificationsController extends Controller
 
         if ($type === 'se-transfers') {
             return new SeTransferModification();
+        }
+
+        if ($type === 'scm') {
+            return new ScmModification();
         }
 
         return null;

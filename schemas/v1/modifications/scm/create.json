@@ -1,0 +1,62 @@
+{
+    "$id": "CreateScmModification",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "description": "Scm Modification object",
+    "allOf": [
+        {"$ref": "/v1/modifications/scm/scm.json"},
+        {
+            "allOf": [
+                {
+                    "oneOf": [
+                        {
+                            "required": [
+                                "issue"
+                            ]
+                        },
+                        {
+                            "required": [
+                                "issue_id"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "oneOf": [
+                        {
+                            "required": [
+                                "type"
+                            ]
+                        },
+                        {
+                            "required": [
+                                "type_id"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "oneOf": [
+                        {
+                            "required": [
+                                "delivery_chain"
+                            ]
+                        },
+                        {
+                            "required": [
+                                "delivery_chain_id"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "required": [
+                        "name",
+                        "visible",
+                        "instance_status"
+                    ]
+                }
+            ]
+        }
+    ]
+}
