@@ -15,7 +15,6 @@ class ScmModification extends Modification
         'version',
         'revision_converted',
         'name',
-        'path',
         'delivery_chain_id',
         'deliveryChain',
         'instanceStatus',
