@@ -25,9 +25,6 @@
         "name": {
             "$ref": "/v1/modifications/modification.json#/properties/name"
         },
-        "path": {
-            "$ref": "/v1/modifications/modification.json#/properties/path"
-        },
         "maven_repository": {
             "$ref": "/v1/modifications/modification.json#/properties/maven_repository"
         },

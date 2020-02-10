@@ -17,7 +17,6 @@ class BinaryModification extends Modification
         'version',
         'revision_converted',
         'name',
-        'path',
         'maven_repository',
         'deployment_prefix_id',
         'deploymentPrefix',

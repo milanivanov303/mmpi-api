@@ -18,7 +18,7 @@ $router->group([
         'description' => 'Get single modification',
         'uses'        => 'ModificationsController@getOne'
     ]);
-    $router->get('/{project_id}/{dlvry_type}', [
+    $router->get('/pr-dlvry-type', [
         'as'          => 'filtered.modifications.list',
         'description' => 'Get modifications by project and dlvry chain type',
         'uses'        => 'ModificationsController@getByProjectAndChainType'

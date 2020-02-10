@@ -27,7 +27,7 @@
                     "type": "string"
                 },
                 "use_in_dependencies": {
-                    "type": "string"
+                    "type": "integer"
                 }
             },
             "description": "Type of the modification"
