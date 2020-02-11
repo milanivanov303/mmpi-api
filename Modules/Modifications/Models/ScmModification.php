@@ -2,9 +2,9 @@
 
 namespace Modules\Modifications\Models;
 
-class BinaryModification extends Modification
+class ScmModification extends Modification
 {
-    protected static $type = 'binary';
+    protected static $type = 'scm';
 
     protected $visible = [
         'id',
@@ -12,14 +12,9 @@ class BinaryModification extends Modification
         'issue_id',
         'type',
         'type_id',
-        'subtype',
-        'subtype_id',
         'version',
         'revision_converted',
         'name',
-        'maven_repository',
-        'deployment_prefix_id',
-        'deploymentPrefix',
         'delivery_chain_id',
         'deliveryChain',
         'instanceStatus',
