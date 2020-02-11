@@ -66,7 +66,7 @@ class ArtifactoryHelper
                 'headers' => $this->headers,
                 'verify'  => false,
                 'body'    =>
-                'items.find({"repo":"libs-snapshot-local","$and":[{"name":{"$match":"*-bin.zip"}},{"name":{"$match":"*'
+                'items.find({"$and":[{"name":{"$match":"*-bin.zip"}},{"name":{"$match":"*'
                     . $this->name
                     .'*"}}]})'
             ];
