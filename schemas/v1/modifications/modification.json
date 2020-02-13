@@ -27,7 +27,7 @@
                     "type": "string"
                 },
                 "use_in_dependencies": {
-                    "type": "string"
+                    "type": "integer"
                 }
             },
             "description": "Type of the modification"
@@ -216,7 +216,7 @@
             "maxLength": 256,
             "default": "null"
         },
-        "deployment_prefix_id": {
+        "deployment_prefix": {
             "oneOf": [
                 {
                     "$ref": "/v1/enum-values/enum-value.json"
@@ -226,6 +226,10 @@
                 }
             ],
             "default": "null"
+        },
+        "deployment_prefix_id": {
+            "type": ["integer", "null"],
+            "description": "Id from enum_values table"
         },
         "deployment_path": {
             "type": ["string", "null"],

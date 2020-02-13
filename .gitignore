@@ -2,6 +2,7 @@
 vendor
 .idea
 public/openapi.json
+public/swagger.json
 storage/jira-cookie.txt
 storage/um-cookie.txt
 .vscode
