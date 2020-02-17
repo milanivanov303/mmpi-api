@@ -9,6 +9,7 @@ use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Laravel\Lumen\Auth\Authorizable;
 use App\Models\Department;
 use Modules\Auth\Models\Permission;
+use App\Models\UserProjectRoleTmp;
 
 class User extends Model implements AuthenticatableContract, AuthorizableContract, UserContact
 {
@@ -121,6 +122,14 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     protected function roles()
     {
         return $this->hasMany(UserProjectRole::class);
+    }
+
+    /**
+     * Get user temporary roles.
+     */
+    protected function rolesTmp()
+    {
+        return $this->hasMany(UserProjectRoleTmp::class);
     }
 
     /**
