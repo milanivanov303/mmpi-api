@@ -17,7 +17,10 @@ services:
     php:
         image: ${PHP_CONTAINER_IMAGE}
         container_name: ${PHP_CONTAINER_NAME}
-        build: docker/php
+        build:
+            context: docker/php
+            args:
+                display_errors: ${PHP_DISPLAY_ERRORS:-0}
         ports:
             - ${APACHE_CONTAINER_IP}:${APACHE_CONTAINER_SSH_PORT}:22
         volumes:
@@ -38,24 +41,8 @@ services:
         container_name: ${PHP_CONTAINER_NAME}-queue
         volumes:
             - ${APACHE_CONTAINER_VOLUME}:/var/www/html
+            - ${APACHE_CONTAINER_VOLUME}/config/supervisor:/etc/supervisor
         environment:
-            CONTAINER_ROLE: queue
+            CONTAINER_ROLE: supervisor
         depends_on:
             - php
-
-    elasticsearch:
-        image: ${ELASTIC_CONTAINER_IMAGE}
-        container_name: ${ELASTIC_CONTAINER_NAME}
-        build: docker/elasticsearch
-        volumes:
-            - ${ELASTIC_CONTAINER_VOLUME}:/usr/share/elasticsearch/data
-
-    kibana:
-        image: ${KIBANA_CONTAINER_IMAGE}
-        container_name: ${KIBANA_CONTAINER_NAME}
-        build: docker/kibana
-        ports:
-            - ${APACHE_CONTAINER_IP}:${KIBANA_CONTAINER_HTTP_PORT}:5601
-        environment:
-            ELASTICSEARCH_USERNAME: ${KIBANA_ELASTICSEARCH_USERNAME}
-            ELASTICSEARCH_PASSWORD: ${KIBANA_ELASTICSEARCH_PASSWORD}
