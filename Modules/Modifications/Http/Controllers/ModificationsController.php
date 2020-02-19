@@ -3,17 +3,19 @@
 namespace Modules\Modifications\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 use App\Models\Model;
 use Illuminate\Http\Request;
+use Modules\Modifications\Jobs\ExportSEJob;
 use Modules\Modifications\Models\OperationModification;
 use Modules\Modifications\Models\SourceModification;
 use Modules\Modifications\Models\TableModification;
-use Modules\Modifications\Repositories\ModificationRepository;
 use Modules\Modifications\Models\BinaryModification;
 use Modules\Modifications\Models\CommandModification;
 use Modules\Modifications\Models\ScmModification;
 use Modules\Modifications\Models\TemporarySourceModification;
-use Modules\Modifications\Models\SeTransferModification;
+use Modules\Modifications\Repositories\ModificationRepository;
 
 class ModificationsController extends Controller
 {
@@ -32,6 +34,9 @@ class ModificationsController extends Controller
             $model = $this->getModel($type);
             if ($model) {
                 $repository->setModel($model);
+            }
+            if ($type === 'se-transfers') {
+                $this->startSeExport($request);
             }
         }
     }
@@ -68,10 +73,6 @@ class ModificationsController extends Controller
             return new TemporarySourceModification();
         }
 
-        if ($type === 'se-transfers') {
-            return new SeTransferModification();
-        }
-
         if ($type === 'scm') {
             return new ScmModification();
         }
@@ -89,5 +90,44 @@ class ModificationsController extends Controller
     {
         $parameters = $request->all();
         return $this->repository->getByProjectAndChainType($parameters['project_id'], $parameters['dlvry_chain_type']);
+    }
+
+    /**
+     * Start SE export
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function startSeExport(Request $request) : JsonResponse
+    {
+        $broadcast = [
+            'queue'       => "se-export-" . microtime(),
+            'durable'     => false,
+            'auto_delete' => false,
+            'exclusive'   => false
+        ];
+
+        dispatch(
+            (new ExportSEJob([
+                'type_id'         => $request->input('type_id'),
+                'subtype_id'      => $request->input('subtype_id'),
+                'name'            => $request->input('name'),
+                'issue_id'        => $request->input('issue_id'),
+                'active'          => $request->input('active'),
+                'visible'         => $request->input('visible'),
+                'issue_id'        => $request->input('issue_id'),
+                'version'         => $request->input('java_version'),
+                'chain'           => $request->input('delivery_chain_id'),
+                'created_by'      => $request->user()->getUsername(),
+                'instance_status' => $request->input('instance_status'),
+                'instance'        => $request->input('instance'),
+                'broadcast'       => $broadcast
+            ]))->onQueue('export-se')
+        );
+
+        return response()->json([
+            'status'    => 'starting',
+            'broadcast' => $broadcast
+        ]);
     }
 }

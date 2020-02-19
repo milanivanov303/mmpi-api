@@ -22,63 +22,63 @@ services:
             - ${APACHE_CONTAINER_SSH_PORT}:22
         volumes:
             - ${APACHE_CONTAINER_VOLUME}:/var/www/html
-        depends_on:
-            - mysql
+        # depends_on:
+        #     - mysql
         environment:
-            XDEBUG_CONFIG: remote_host=host.docker.internal
+            XDEBUG_CONFIG: remote_host=10.8.2.24
                 remote_port=9000
                 remote_enable=On
                 remote_autostart=On
             PHP_IDE_CONFIG: serverName=${XDEBUG_SERVER_NAME}
 
-    scheduler:
-        image: ${PHP_CONTAINER_IMAGE}
-        container_name: ${PHP_CONTAINER_NAME}-scheduler
-        volumes:
-            - ${APACHE_CONTAINER_VOLUME}:/var/www/html
-        environment:
-            CONTAINER_ROLE: scheduler
-        depends_on:
-            - php
+    # scheduler:
+    #     image: ${PHP_CONTAINER_IMAGE}
+    #     container_name: ${PHP_CONTAINER_NAME}-scheduler
+    #     volumes:
+    #         - ${APACHE_CONTAINER_VOLUME}:/var/www/html
+    #     environment:
+    #         CONTAINER_ROLE: scheduler
+    #     depends_on:
+    #         - php
 
-    queue:
-        image: ${PHP_CONTAINER_IMAGE}
-        container_name: ${PHP_CONTAINER_NAME}-queue
-        volumes:
-            - ${APACHE_CONTAINER_VOLUME}:/var/www/html
-        environment:
-            CONTAINER_ROLE: queue
-        depends_on:
-            - php
+    # queue:
+    #     image: ${PHP_CONTAINER_IMAGE}
+    #     container_name: ${PHP_CONTAINER_NAME}-queue
+    #     volumes:
+    #         - ${APACHE_CONTAINER_VOLUME}:/var/www/html
+    #     environment:
+    #         CONTAINER_ROLE: queue
+    #     depends_on:
+    #         - php
 
-    mysql:
-        image: ${MYSQL_CONTAINER_IMAGE}
-        container_name: ${MYSQL_CONTAINER_NAME}
-        build: docker/mysql
-        ports:
-            - ${MYSQL_CONTAINER_PORT}:3306
-        environment:
-            MYSQL_DATABASE: mmpi
-            MYSQL_USER: mmpi
-            MYSQL_PASSWORD: ipmm
-            MYSQL_ALLOW_EMPTY_PASSWORD: "true"
-            MYSQL_ROOT_HOST: "%"
-        volumes:
-            - ${MYSQL_CONTAINER_VOLUME}:/var/lib/mysql
+    # mysql:
+    #     image: ${MYSQL_CONTAINER_IMAGE}
+    #     container_name: ${MYSQL_CONTAINER_NAME}
+    #     build: docker/mysql
+    #     ports:
+    #         - ${MYSQL_CONTAINER_PORT}:3306
+    #     environment:
+    #         MYSQL_DATABASE: mmpi
+    #         MYSQL_USER: mmpi
+    #         MYSQL_PASSWORD: ipmm
+    #         MYSQL_ALLOW_EMPTY_PASSWORD: "true"
+    #         MYSQL_ROOT_HOST: "%"
+    #     volumes:
+    #         - ${MYSQL_CONTAINER_VOLUME}:/var/lib/mysql
 
-    elasticsearch:
-        image: ${ELASTIC_CONTAINER_IMAGE}
-        container_name: ${ELASTIC_CONTAINER_NAME}
-        build: docker/elasticsearch
-        volumes:
-            - ${ELASTIC_CONTAINER_VOLUME}:/usr/share/elasticsearch/data
+    # elasticsearch:
+    #     image: ${ELASTIC_CONTAINER_IMAGE}
+    #     container_name: ${ELASTIC_CONTAINER_NAME}
+    #     build: docker/elasticsearch
+    #     volumes:
+    #         - ${ELASTIC_CONTAINER_VOLUME}:/usr/share/elasticsearch/data
 
-    kibana:
-        image: ${KIBANA_CONTAINER_IMAGE}
-        container_name: ${KIBANA_CONTAINER_NAME}
-        build: docker/kibana
-        ports:
-            - ${KIBANA_CONTAINER_HTTP_PORT}:5601
-        environment:
-            ELASTICSEARCH_USERNAME: ${KIBANA_ELASTICSEARCH_USERNAME}
-            ELASTICSEARCH_PASSWORD: ${KIBANA_ELASTICSEARCH_PASSWORD}
+    # kibana:
+    #     image: ${KIBANA_CONTAINER_IMAGE}
+    #     container_name: ${KIBANA_CONTAINER_NAME}
+    #     build: docker/kibana
+    #     ports:
+    #         - ${KIBANA_CONTAINER_HTTP_PORT}:5601
+    #     environment:
+    #         ELASTICSEARCH_USERNAME: ${KIBANA_ELASTICSEARCH_USERNAME}
+    #         ELASTICSEARCH_PASSWORD: ${KIBANA_ELASTICSEARCH_PASSWORD}

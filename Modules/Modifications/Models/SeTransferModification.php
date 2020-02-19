@@ -8,9 +8,18 @@ class SeTransferModification extends Modification
 
     protected $visible = [
         'id',
+        'issue',
+        'issue_id',
         'type',
+        'type_id',
         'subtype',
+        'subtype_id',
         'instance',
-        'instanceStatus'
+        'instance_id',
+        'delivery_chain_id',
+        'deliveryChain',
+        'instanceStatus',
+        'active',
+        'visible'
     ];
 }

@@ -101,9 +101,38 @@ return array_merge(
 
         'dev-management-url' => env('DEV_MANAGEMENT_URL'),
 
+        /*
+        |--------------------------------------------------------------------------
+        | Binary repository information
+        |--------------------------------------------------------------------------
+        |
+        | Binary repository configuration - Nexus and Artifactory
+        |
+        */
         'artifactory' => [
             'url' => env('ARTIFACTORY_URL'),
             'key' => env('ARTIFACTORY_KEY'),
-        ]
+        ],
+        'nexus' => [
+            'host'    => env('NEXUS_HOST'),
+            'port'    => env('NEXUS_PORT', 80),
+            'se_repo' => env('NEXUS_SE_REPO'),
+        ],
+
+        /*
+        |--------------------------------------------------------------------------
+        | SSH information
+        |--------------------------------------------------------------------------
+        |
+        | SSH configuration for codix internal instances
+        |
+        */
+        'ssh' => [
+            'host'       => env('SSH_HOST', 'bira.codixfr.private'),
+            'port'       => env('SSH_PORT', 22),
+            'username'   => env('SSH_USERNAME'),
+            'password'   => env('SSH_PASSWORD'),
+            'public_key' => env('SSH_KEY')
+        ],
     ]
 );
