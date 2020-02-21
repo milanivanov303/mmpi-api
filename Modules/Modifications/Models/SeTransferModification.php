@@ -20,6 +20,7 @@ class SeTransferModification extends Modification
         'deliveryChain',
         'instanceStatus',
         'active',
+        'comment',
         'visible'
     ];
 }

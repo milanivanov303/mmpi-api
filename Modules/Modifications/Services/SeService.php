@@ -4,6 +4,7 @@ namespace Modules\Modifications\Services;
 
 use Carbon\Carbon;
 use \Core\Helpers\SSH2;
+use App\Models\EnumValue;
 
 class SeService
 {
@@ -27,18 +28,11 @@ class SeService
     protected $chain;
 
     /**
-     * Exported dmp version
-     *
-     * @var int
-     */
-    protected $version;
-
-    /**
      * Export log file dir
      *
      * @var string
      */
-    protected $logFileDir = '/bira/intra/imx/patches/se_repo';
+    protected $logFileDir = '../patches/se_repo';
 
     /**
      * Export log
@@ -59,21 +53,17 @@ class SeService
      *
      * @param SSH $ssh2
      * @param string $type
-     * @param string $version
      * @param string $chain
      * @param callable $callback
      */
     public function __construct(
         SSH2 $ssh2,
-        // int $version,
-        // string $type,
+        string $type,
         // string $chain,
         callable $callback
     ) {
-        
-        $this->ssh2      = $ssh2;
-        // $this->version  = $version;
-        // $this->type     = $type;
+        $this->ssh2 = $ssh2;
+        $this->type = $type;
         // $this->chain    = $chain;
         $this->callback = $callback;
     }
@@ -88,63 +78,123 @@ class SeService
         $cmd = "export TERM=vt100; sudo su - bira -c "
             ."'"
                 . "export TERM=vt100 ; . ~/.profile ;"
-                . "nohup ls -l > {$this->getLogFile()} 2>&1;"
+                . "nohup {$this->getCommandType()} > {$this->getLogFile()} 2>&1;"
             ."'";
 
         $this->ssh2->exec($cmd);
         
-        // if ($this->sftp->getExitStatus()) {
-        //     $this->broadcast([
-        //         'action' => 'build',
-        //         'status' => 'failed',
-        //         'summary' => 'Build has failed',
-        //         'log' =>  $cmd . PHP_EOL . $this->sftp->getStdError()
-        //     ]);
-        //     return false;
-        // }
+        if ($this->ssh2->getExitStatus()) {
+            $this->broadcast([
+                'action' => 'export',
+                'status' => 'failed',
+                'summary' => 'Export has failed',
+                'log' =>  $cmd . PHP_EOL . $this->ssh2->getStdError()
+            ]);
+            return false;
+        }
 
         $this->broadcast([
-            'action' => 'build',
+            'action' => 'export',
             'status' => 'running',
-            'summary' => 'Build is running ...',
-            'comment' => $cmd . PHP_EOL
+            'summary' => 'Exporting...'
         ]);
 
         return true;
     }
 
     /**
-     * Check build
+     * Check export
      *
      * @return string
      */
     protected function check() : string
     {
-        $cmd1    = "ps -fea | grep build-extranet-hg.sh | grep {$this->branch} | grep {$this->createdBy} | wc -l";
-        $running = $this->sftp->exec($cmd1);
+        $psCmd   = "ps -fea | grep {$this->getCommandType()} | wc -l";
+        $running = $this->ssh2->exec($psCmd);
 
         $logStartLine = count(explode(PHP_EOL, $this->log));
 
-        $cmd2 = "sed -n '{$logStartLine},\$p' < {$this->getLogFile()}";
-        $log  = $this->sftp->exec($cmd2);
+        $sedCmd = "sed -n '{$logStartLine},\$p' < {$this->getLogFile()}";
+        $log    = $this->ssh2->exec($sedCmd);
 
         $this->log .= $log;
 
         $status = $this->getStatus((int) $running);
 
         $message = [
-            'action' => 'build',
+            'action' => 'export',
             'status' => $status,
-            'log' => $log
+            'comments' => $log
         ];
 
         if ($status !== 'running') {
-            $message['summary'] = $status === 'success' ? 'Build was completed successfully' : 'Build has failed';
+            $message['summary'] = $status === 'success' ? 'Export was completed successfully' : 'Export has failed';
         }
 
         $this->broadcast($message);
 
         return $status;
+    }
+
+    /**
+     * Upload to Binary repo
+     *
+     * @return bool
+     */
+    protected function upload() : bool
+    {
+        $this->broadcast([
+            'action' => 'export.upload',
+            'status' => 'running',
+            'summary' => 'Uploading dmp ...',
+            'progress' => 0
+        ]);
+
+        $nexus = "cd {$this->getLogFile()}"
+            . "mvn deploy -Des.client=FIRS_translations -Des.artifactId=client_vdpar -Des.version=1.0.2";
+
+        $upload = $this->ssh2->exec($nexus);
+
+        if (!$upload) {
+            $this->broadcast([
+                'action'   => 'export.upload',
+                'status'   => 'failed',
+                'summary'  => 'Upload has failed',
+                'comments' => $this->ssh2->getStdError()
+            ]);
+            return false;
+        }
+
+        $this->broadcast([
+            'action'   => 'export.upload',
+            'status'   => 'success',
+            'summary' => 'Upload to Nexus successfully',
+            'progress' => 100
+        ]);
+
+        return true;
+    }
+
+    /**
+     * Get export script by type
+     *
+     * @return string
+     */
+    protected function getCommandType() : string
+    {
+        $typeInfo = EnumValue::find($this->type);
+
+        $command = '';
+        
+        switch ($typeInfo->key) {
+            case 'se_vd':
+                $command = 'ksh sh_cliimpbr vd';
+                break;
+            default:
+                throw new \Exception("No execution script for this type is provided!");
+        }
+
+        return $command;
     }
 
     /**
@@ -154,9 +204,29 @@ class SeService
      */
     protected function getLogFile() : string
     {
-        $filename = 'test';
+        $logName = str_replace(' ', '_', $this->getCommandType())."_".time();
+        return "{$this->logFileDir}/{$logName}.log";
+    }
 
-        return "{$this->logFileDir}/{$filename}.log";
+    /**
+     * Get build status
+     *
+     * @param int $running
+     * @return string
+     */
+    protected function getStatus(int $running) : string
+    {
+        if ($running > 1) {
+            return 'running';
+        }
+
+        $exitCode = "grep \"Exit code: 0\" {$this->getLogFile()}";
+        $finished = $this->ssh2->exec($exitCode);
+        if ($finished) {
+            return 'success';
+        }
+
+        return 'failed';
     }
 
     /**
@@ -173,7 +243,7 @@ class SeService
                 $status = $this->check();
 
                 if ($status === 'success') {
-                    return true;
+                    //return $this->upload();
                 }
 
                 if ($status === 'failed') {

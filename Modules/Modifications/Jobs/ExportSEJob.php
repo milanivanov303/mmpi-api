@@ -7,7 +7,8 @@ use Core\Jobs\Job;
 use Illuminate\Support\Facades\Storage;
 use Modules\Modifications\Models\SeTransferModification;
 use Modules\Modifications\Services\SeService;
-use Modules\Modifications\Helpers\SSHConnect;
+use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class ExportSEJob extends Job
 {
@@ -49,26 +50,25 @@ class ExportSEJob extends Job
             'active'            => $this->data['active'],
             'visible'           => $this->data['visible'],
             'issue_id'          => $this->data['issue_id'],
-            'version'           => $this->data['version'],
             'delivery_chain_id' => $this->data['chain'],
             'instance_status'   => $this->data['instance_status'],
             'instance'          => $this->data['instance'],
-            'created_by'        => $this->data['created_by'],
-            'created_on'        => time(),
-            'comment'           => 'building'
+            'created_by_id'     => Auth::user()->id,
+            'created_on'        => Carbon::now()->format('Y-m-d H:i:s'),
+            'comments'          => 'exporting'
         ]);
         $this->seTransfer->save();
 
         $exported = $this->export();
         if (!$exported) {
-            $this->seTransfer->update(['comment' => 'SE export failed']);
+            $this->seTransfer->update(['comments' => 'SE export failed']);
             return false;
         }
 
         // SSH demon in container needs time to start
         sleep(5);
 
-        $this->seTransfer->update(['comment' => 'exporting']);
+        $this->seTransfer->update(['comments' => 'exporting']);
         
         return true;
     }
@@ -88,16 +88,17 @@ class ExportSEJob extends Job
             $host     = strpos($this->data['instance']['host'], '.codixfr.private')
                         ? $this->data['instance']['host']
                         : $this->data['instance']['host'] . '.codixfr.private';
-
-            //$ssh = new SSHConnect($host, $port, $username, $key, $password);
             $ssh2 = new \Core\Helpers\SSH2($host, $port);
             
             // login using public key
-            if (!$key) {
-                throw new \Exception("Could not find public key for {$host}");
-            }
-            if (!$ssh2->loginRSA($username, $key)) {
-                // login with password
+            if ($key) {
+                if (!$ssh2->loginRSA($username, $key)) {
+                    // login with password
+                    if (!$ssh2->login($username, $password)) {
+                        throw new \Exception("Could not login to {$host}");
+                    }
+                }
+            } else {
                 if (!$ssh2->login($username, $password)) {
                     throw new \Exception("Could not login to {$host}");
                 }
@@ -105,8 +106,7 @@ class ExportSEJob extends Job
 
             $export = new SeService(
                 $ssh2,
-                // $this->data['version'],
-                // $this->data['subtype_id'],
+                $this->data['subtype_id'],
                 // $this->data['delivery_chain_id'],
                 function (array $message) {
                     $this->broadcast($message);
@@ -115,54 +115,14 @@ class ExportSEJob extends Job
             $result = $export->run();
         } catch (\Exception $e) {
             $this->broadcast([
-                'action' => 'buid',
+                'action' => 'export',
                 'status' => 'failed',
-                'comment' => $e->getMessage()
+                'comments' => $e->getMessage()
             ]);
             $result = false;
         }
 
         return $result;
-    }
-
-    /**
-     * Deploy
-     *
-     * @return bool
-     */
-    protected function deploy() : void
-    {
-        // try {
-        //     $host     = parse_url(config('app.extranet.docker.url'), PHP_URL_HOST);
-        //     $port     = $this->container['NetworkSettings']['Ports']['22/tcp'][0]['HostPort'];
-        //     $username = 'ex1';
-        //     $password = 'Sofphia';
-
-        //     $sftp = new SFTP($host, $port, 600);
-        //     if (!$sftp->login($username, $password)) {
-        //         throw new \Exception("Could not login to instance {$host}:{$port}");
-        //     }
-
-        //     $deploy = new DeployService(
-        //         $sftp,
-        //         $this->getLocalFile(),
-        //         function (array $message) {
-        //             $this->broadcast($message);
-        //         }
-        //     );
-
-        //     $result = $deploy->run();
-        // } catch (\Exception $e) {
-        //     $this->broadcast([
-        //         'action' => 'deploy',
-        //         'status' => 'failed',
-        //         'log' => $e->getMessage()
-        //     ]);
-        //     $result = false;
-        // }
-
-        // $sftp->disconnect();
-        // return $result;
     }
 
     /**
@@ -172,10 +132,10 @@ class ExportSEJob extends Job
      */
     protected function broadcast(array $message)
     {
-        if (array_key_exists('log', $message) && $message['log']) {
+        if (array_key_exists('comments', $message) && $message['comments']) {
             $this->seTransfer->newQuery()
-                ->setBindings([$message['log']])
-                ->update(['log' => 'concat(`log`, ?)']);
+                ->setBindings([$message['comments']])
+                ->update(['comments' => 'concat(`comments`, ?)']);
         }
 
         Broadcast::topic(

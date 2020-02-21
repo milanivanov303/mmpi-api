@@ -116,9 +116,7 @@ class ModificationsController extends Controller
                 'active'          => $request->input('active'),
                 'visible'         => $request->input('visible'),
                 'issue_id'        => $request->input('issue_id'),
-                'version'         => $request->input('java_version'),
                 'chain'           => $request->input('delivery_chain_id'),
-                'created_by'      => $request->user()->getUsername(),
                 'instance_status' => $request->input('instance_status'),
                 'instance'        => $request->input('instance'),
                 'broadcast'       => $broadcast
