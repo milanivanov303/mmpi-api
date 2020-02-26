@@ -114,9 +114,11 @@ return array_merge(
             'key' => env('ARTIFACTORY_KEY'),
         ],
         'nexus' => [
-            'host'    => env('NEXUS_HOST'),
-            'port'    => env('NEXUS_PORT', 80),
-            'se_repo' => env('NEXUS_SE_REPO'),
+            'host'        => env('NEXUS_HOST'),
+            'port'        => env('NEXUS_PORT', 80),
+            'se_repo'     => env('NEXUS_SE_REPO'),
+            'rhode_url'   => env('NEXUS_RHODE_URL'),
+            'se_repo_url' => env('NEXUS_SE_REPO_URL'),
         ],
 
         /*

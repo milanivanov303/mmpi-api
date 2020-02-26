@@ -2,9 +2,9 @@
 
 namespace Modules\Modifications\Services;
 
-use Carbon\Carbon;
 use \Core\Helpers\SSH2;
 use App\Models\EnumValue;
+use Modules\DeliveryChains\Models\DeliveryChain;
 
 class SeService
 {
@@ -21,18 +21,25 @@ class SeService
     protected $type;
 
     /**
-     * Client chain name
+     * Client chain id
+     *
+     * @var int
+     */
+    protected $chain;
+
+   /**
+     * Instance user
      *
      * @var string
      */
-    protected $chain;
+    protected $user;
 
     /**
      * Export log file dir
      *
      * @var string
      */
-    protected $logFileDir = '../patches/se_repo';
+    protected $logFileDir;
 
     /**
      * Export log
@@ -40,6 +47,20 @@ class SeService
      * @var string
      */
     protected $log = '';
+
+    /**
+     * Exported dmp for upload
+     *
+     * @var string
+     */
+    protected $seDump = '';
+
+    /**
+     * Export log time
+     *
+     * @var string
+     */
+    protected $logTime = '';
 
     /**
      * Callback for status progress
@@ -53,18 +74,20 @@ class SeService
      *
      * @param SSH $ssh2
      * @param string $type
-     * @param string $chain
+     * @param int $chain
      * @param callable $callback
      */
     public function __construct(
         SSH2 $ssh2,
         string $type,
-        // string $chain,
+        int $chain,
+        string $user,
         callable $callback
     ) {
-        $this->ssh2 = $ssh2;
-        $this->type = $type;
-        // $this->chain    = $chain;
+        $this->ssh2     = $ssh2;
+        $this->type     = $type;
+        $this->chain    = $chain;
+        $this->user     = $user;
         $this->callback = $callback;
     }
 
@@ -75,20 +98,21 @@ class SeService
      */
     protected function start() : bool
     {
-        $cmd = "export TERM=vt100; sudo su - bira -c "
-            ."'"
-                . "export TERM=vt100 ; . ~/.profile ;"
-                . "nohup {$this->getCommandType()} > {$this->getLogFile()} 2>&1;"
-            ."'";
+        $this->logTime = time();
+        $this->logFileDir = $this->getWorkdir();
 
-        $this->ssh2->exec($cmd);
+        $this->ssh2->exec(
+            "export TERM=vt100; sudo su - {$this->user} -c '" . PHP_EOL
+            . ". ~/.profile " . PHP_EOL
+            . "nohup {$this->getCommandType()} > {$this->getLogFile()} 2>&1 &'"
+        );
         
         if ($this->ssh2->getExitStatus()) {
             $this->broadcast([
                 'action' => 'export',
                 'status' => 'failed',
-                'summary' => 'Export has failed',
-                'log' =>  $cmd . PHP_EOL . $this->ssh2->getStdError()
+                'comments' => 'Export has failed',
+                'log' =>  $this->ssh2->getStdError()
             ]);
             return false;
         }
@@ -96,7 +120,7 @@ class SeService
         $this->broadcast([
             'action' => 'export',
             'status' => 'running',
-            'summary' => 'Exporting...'
+            'comments' => 'Exporting...'
         ]);
 
         return true;
@@ -109,13 +133,13 @@ class SeService
      */
     protected function check() : string
     {
-        $psCmd   = "ps -fea | grep {$this->getCommandType()} | wc -l";
+        $psCmd   = "ps -fea | grep \"{$this->getCommandType()}\" | wc -l";
         $running = $this->ssh2->exec($psCmd);
-
+        
         $logStartLine = count(explode(PHP_EOL, $this->log));
 
-        $sedCmd = "sed -n '{$logStartLine},\$p' < {$this->getLogFile()}";
-        $log    = $this->ssh2->exec($sedCmd);
+        $tailCmd = "sed -n '{$logStartLine},\$p' < {$this->getLogFile()}";
+        $log     = $this->ssh2->exec($tailCmd);
 
         $this->log .= $log;
 
@@ -124,11 +148,11 @@ class SeService
         $message = [
             'action' => 'export',
             'status' => $status,
-            'comments' => $log
+            'log' => $log
         ];
 
         if ($status !== 'running') {
-            $message['summary'] = $status === 'success' ? 'Export was completed successfully' : 'Export has failed';
+            $message['comments'] = $status === 'success' ? 'Export was completed successfully' : 'Export has failed';
         }
 
         $this->broadcast($message);
@@ -146,29 +170,45 @@ class SeService
         $this->broadcast([
             'action' => 'export.upload',
             'status' => 'running',
-            'summary' => 'Uploading dmp ...',
+            'comments' => 'Uploading dmp ...',
             'progress' => 0
         ]);
 
-        $nexus = "cd {$this->getLogFile()}"
-            . "mvn deploy -Des.client=FIRS_translations -Des.artifactId=client_vdpar -Des.version=1.0.2";
+        $chain = DeliveryChain::find($this->chain);
+        $clientRepo = str_replace(' ', '_', $chain->patch_directory_name);
 
-        $upload = $this->ssh2->exec($nexus);
+        $artifact   = substr($this->seDump, strrpos($this->seDump, '/')+1)."\n";
+        $artifactId = substr($artifact, 0, strpos($artifact, "."));
 
-        if (!$upload) {
+        $this->ssh2->exec(
+            "export TERM=vt100" . PHP_EOL
+              . "export TERM=vt100; sudo su - {$this->user} -c '" . PHP_EOL
+                . ". \${IMX_HOME}/extlib/profiles/.extlibprofile; cd {$this->logFileDir}" . PHP_EOL
+                . "cp {$this->seDump} ./{$artifact}" . PHP_EOL
+                . "rm -rf {$clientRepo}" . PHP_EOL // risky got to find another way !
+                . "hg pull" . PHP_EOL
+                . "mvn -s ./settings.xml deploy -Des.client={$clientRepo} \
+                    -Des.artifactId={$artifactId} -Des.version={$this->logTime}'"
+        );
+
+        if ($this->ssh2->getExitStatus()) {
             $this->broadcast([
                 'action'   => 'export.upload',
                 'status'   => 'failed',
-                'summary'  => 'Upload has failed',
-                'comments' => $this->ssh2->getStdError()
+                'comments'  => 'Upload has failed',
+                'log' => $this->ssh2->getStdError()
             ]);
             return false;
         }
 
+        $artifactPath = config('app.nexus.se_repo_url')
+                        ."{$clientRepo}/{$artifactId}/{$this->logTime}/{$artifactId}-{$this->logTime}.tar.gz";
+
         $this->broadcast([
             'action'   => 'export.upload',
             'status'   => 'success',
-            'summary' => 'Upload to Nexus successfully',
+            'comments' => 'Upload to Nexus successfully',
+            'artifact' => $artifactPath,
             'progress' => 100
         ]);
 
@@ -184,11 +224,11 @@ class SeService
     {
         $typeInfo = EnumValue::find($this->type);
 
-        $command = '';
+        $command = "";
         
         switch ($typeInfo->key) {
-            case 'se_vd':
-                $command = 'ksh sh_cliimpbr vd';
+            case "se_vd":
+                $command = "sh_cliexpbr vd";
                 break;
             default:
                 throw new \Exception("No execution script for this type is provided!");
@@ -204,25 +244,71 @@ class SeService
      */
     protected function getLogFile() : string
     {
-        $logName = str_replace(' ', '_', $this->getCommandType())."_".time();
+        $logName = str_replace(' ', '_', $this->getCommandType())."_".$this->logTime;
         return "{$this->logFileDir}/{$logName}.log";
     }
 
     /**
-     * Get build status
+     * Get work dir
+     *
+     * @return string
+     */
+    protected function getWorkdir() : string
+    {
+        $seRepo  = config('app.nexus.rhode_url');
+        $patches =  escapeshellarg('${IMX_PATCH}');
+
+        $dir = $this->ssh2->exec(
+            "export TERM=vt100; sudo su - {$this->user} -c '" . PHP_EOL
+            . ". ~/.profile " . PHP_EOL
+            . "[ -d '\${IMX_PATCH}/patch/system-expert' ] && echo '{$patches}/system-expert' || exit 1'"
+        );
+
+        if ($this->ssh2->getExitStatus()) {
+            $dir = $this->ssh2->exec(
+                "export TERM=vt100; sudo su - {$this->user} -c '" . PHP_EOL
+                . ". ~/.profile " . PHP_EOL
+                . "cd \${IMX_PATCH}" . PHP_EOL
+                . "hg clone {$seRepo}" . PHP_EOL
+                . "cd system-expert" . PHP_EOL
+                . "pwd'"
+            );
+
+            if ($this->ssh2->getExitStatus()) {
+                $this->broadcast([
+                    'action'   => 'export.clone',
+                    'status'   => 'failed',
+                    'comments'  => 'Clone of repo has failed',
+                    'log' => $this->ssh2->getStdError()
+                ]);
+                throw new \Exception("Repo clone failed!");
+            }
+        }
+
+        $dir = array_filter(explode("\n", $dir));
+        $dir = str_replace("\n", "", end($dir));
+
+        return $dir;
+    }
+
+
+    /**
+     * Get export status
      *
      * @param int $running
      * @return string
      */
     protected function getStatus(int $running) : string
     {
-        if ($running > 1) {
+        if ($running > 2) {
             return 'running';
         }
 
-        $exitCode = "grep \"Exit code: 0\" {$this->getLogFile()}";
+        $exitCode = "grep \"DUMP_FILE_FULL_PATH\" {$this->getLogFile()}";
         $finished = $this->ssh2->exec($exitCode);
         if ($finished) {
+            preg_match_all("/\\[(.*?)\\]/", $finished, $matches);
+            $this->seDump = $matches[1][0];
             return 'success';
         }
 
@@ -243,17 +329,16 @@ class SeService
                 $status = $this->check();
 
                 if ($status === 'success') {
-                    //return $this->upload();
+                    return $this->upload();
                 }
 
                 if ($status === 'failed') {
                     return false;
                 }
 
-                sleep(2);
+                sleep(3);
             }
         }
-
         return false;
     }
 

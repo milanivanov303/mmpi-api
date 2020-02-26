@@ -109,17 +109,17 @@ class ModificationsController extends Controller
 
         dispatch(
             (new ExportSEJob([
-                'type_id'         => $request->input('type_id'),
-                'subtype_id'      => $request->input('subtype_id'),
-                'name'            => $request->input('name'),
-                'issue_id'        => $request->input('issue_id'),
-                'active'          => $request->input('active'),
-                'visible'         => $request->input('visible'),
-                'issue_id'        => $request->input('issue_id'),
-                'chain'           => $request->input('delivery_chain_id'),
-                'instance_status' => $request->input('instance_status'),
-                'instance'        => $request->input('instance'),
-                'broadcast'       => $broadcast
+                'type_id'           => $request->input('type_id'),
+                'subtype_id'        => $request->input('subtype_id'),
+                'name'              => $request->input('name'),
+                'issue_id'          => $request->input('issue_id'),
+                'active'            => $request->input('active'),
+                'visible'           => $request->input('visible'),
+                'issue_id'          => $request->input('issue_id'),
+                'delivery_chain_id' => $request->input('delivery_chain_id'),
+                'instance_status'   => $request->input('instance_status'),
+                'instance'          => $request->input('instance'),
+                'broadcast'         => $broadcast
             ]))->onQueue('export-se')
         );
 

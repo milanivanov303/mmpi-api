@@ -50,25 +50,20 @@ class ExportSEJob extends Job
             'active'            => $this->data['active'],
             'visible'           => $this->data['visible'],
             'issue_id'          => $this->data['issue_id'],
-            'delivery_chain_id' => $this->data['chain'],
+            'delivery_chain_id' => $this->data['delivery_chain_id'],
             'instance_status'   => $this->data['instance_status'],
             'instance'          => $this->data['instance'],
             'created_by_id'     => Auth::user()->id,
             'created_on'        => Carbon::now()->format('Y-m-d H:i:s'),
             'comments'          => 'exporting'
         ]);
-        $this->seTransfer->save();
+        $this->seTransfer->save(); // Got to resolve double modif save !
 
         $exported = $this->export();
         if (!$exported) {
             $this->seTransfer->update(['comments' => 'SE export failed']);
             return false;
         }
-
-        // SSH demon in container needs time to start
-        sleep(5);
-
-        $this->seTransfer->update(['comments' => 'exporting']);
         
         return true;
     }
@@ -107,7 +102,8 @@ class ExportSEJob extends Job
             $export = new SeService(
                 $ssh2,
                 $this->data['subtype_id'],
-                // $this->data['delivery_chain_id'],
+                $this->data['delivery_chain_id'],
+                $this->data['instance']['user'],
                 function (array $message) {
                     $this->broadcast($message);
                 }
@@ -133,9 +129,11 @@ class ExportSEJob extends Job
     protected function broadcast(array $message)
     {
         if (array_key_exists('comments', $message) && $message['comments']) {
-            $this->seTransfer->newQuery()
-                ->setBindings([$message['comments']])
-                ->update(['comments' => 'concat(`comments`, ?)']);
+            $this->seTransfer->update(['comments' => "{$message['comments']}"]);
+        }
+
+        if (array_key_exists('artifact', $message) && $message['artifact']) {
+            $this->seTransfer->update(['maven_repository' => "{$message['artifact']}"]);
         }
 
         Broadcast::topic(
