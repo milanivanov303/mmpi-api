@@ -20,7 +20,7 @@ class DdlController extends BaseController
         try {
             $parameters = $request->all();
 
-            $request = new DdlService($parameters['content'], $parameters['file_name'], $parameters['branch']);
+            $request = new DdlService($parameters['content'], $parameters['commit_msg'], $parameters['branch']);
 
             $request->run();
 
