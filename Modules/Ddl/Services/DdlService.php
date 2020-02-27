@@ -2,6 +2,7 @@
 
 namespace Modules\Ddl\Services;
 
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\Process\Process;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -23,6 +24,13 @@ class DdlService
     protected $content;
 
     /**
+     * Commit message
+     *
+     * @var string
+     */
+    protected $commitMsg;
+
+    /**
      * File name
      *
      * @var string
@@ -40,16 +48,17 @@ class DdlService
      * BuildService constructor.
      *
      * @param string $content
-     * @param string $fileName
+     * @param string $commitMsg
      * @param string $branch
      */
     public function __construct(
         string $content,
-        string $fileName,
+        string $commitMsg,
         string $branch
     ) {
         $this->content = $content;
-        $this->fileName = $fileName . '.ddl';
+        $this->commitMsg = $commitMsg;
+        $this->fileName = $commitMsg . '.ddl';
         $this->branch = $branch;
         $this->workDir = $branch;
     }
@@ -141,7 +150,7 @@ class DdlService
     {
         Storage::put($this->workDir . '/' . $this->fileName, $this->content);
 
-        if (!Storage::exists($this->workDir . '/' . $this->fileName . '.ddl')) {
+        if (!Storage::exists($this->workDir . '/' . $this->fileName)) {
             Log::error('Could not create file');
             throw new \Exception('Could not create file', 3);
         }
@@ -174,7 +183,7 @@ class DdlService
      */
     protected function commitFile()
     {
-        $commit = new Process(['hg', 'commit', '-m', "Added $this->fileName"]);
+        $commit = new Process(['hg', 'commit', '-m', $this->commitMsg, '-u', Auth::user()->username]);
         $commit->run();
 
         if (!$commit->isSuccessful()) {
