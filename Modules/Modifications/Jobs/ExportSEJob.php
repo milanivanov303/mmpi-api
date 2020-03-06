@@ -7,7 +7,6 @@ use Core\Jobs\Job;
 use Illuminate\Support\Facades\Storage;
 use Modules\Modifications\Models\SeTransferModification;
 use Modules\Modifications\Services\SeService;
-use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 
 class ExportSEJob extends Job
@@ -45,25 +44,28 @@ class ExportSEJob extends Job
         $this->seTransfer = new SeTransferModification([
             'type_id'           => $this->data['type_id'],
             'subtype_id'        => $this->data['subtype_id'],
-            'name'              => $this->data['name'],
             'issue_id'          => $this->data['issue_id'],
             'active'            => $this->data['active'],
             'visible'           => $this->data['visible'],
             'issue_id'          => $this->data['issue_id'],
             'delivery_chain_id' => $this->data['delivery_chain_id'],
             'instance_status'   => $this->data['instance_status'],
-            'instance'          => $this->data['instance'],
-            'created_by_id'     => Auth::user()->id,
+            'instance'          => $this->data['instance']['id'],
+            'created_by_id'     => $this->data['user'],
             'created_on'        => Carbon::now()->format('Y-m-d H:i:s'),
             'comments'          => 'exporting'
         ]);
-        $this->seTransfer->save(); // Got to resolve double modif save !
+        $this->seTransfer->save();
 
         $exported = $this->export();
         if (!$exported) {
-            $this->seTransfer->update(['comments' => 'SE export failed']);
+            // $this->seTransfer->update(['comments' => 'SE export failed']);
+            $this->seTransfer->delete();
             return false;
         }
+        
+        // SSH demon in container needs time to start
+        sleep(5);
         
         return true;
     }

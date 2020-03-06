@@ -16,6 +16,7 @@ use Modules\Modifications\Models\CommandModification;
 use Modules\Modifications\Models\ScmModification;
 use Modules\Modifications\Models\TemporarySourceModification;
 use Modules\Modifications\Repositories\ModificationRepository;
+use Illuminate\Support\Facades\Auth;
 
 class ModificationsController extends Controller
 {
@@ -34,9 +35,6 @@ class ModificationsController extends Controller
             $model = $this->getModel($type);
             if ($model) {
                 $repository->setModel($model);
-            }
-            if ($type === 'se-transfers') {
-                $this->startSeExport($request);
             }
         }
     }
@@ -101,9 +99,9 @@ class ModificationsController extends Controller
     public function startSeExport(Request $request) : JsonResponse
     {
         $broadcast = [
-            'queue'       => "se-export-" . microtime(),
+            'queue'       => "se-export-" . time(),
             'durable'     => false,
-            'auto_delete' => false,
+            'auto_delete' => true,
             'exclusive'   => false
         ];
 
@@ -119,12 +117,13 @@ class ModificationsController extends Controller
                 'delivery_chain_id' => $request->input('delivery_chain_id'),
                 'instance_status'   => $request->input('instance_status'),
                 'instance'          => $request->input('instance'),
+                'user'              => Auth::user()->id,
                 'broadcast'         => $broadcast
             ]))->onQueue('export-se')
         );
 
         return response()->json([
-            'status'    => 'starting',
+            'status'    => 'running',
             'broadcast' => $broadcast
         ]);
     }

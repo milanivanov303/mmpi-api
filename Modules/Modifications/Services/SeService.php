@@ -63,6 +63,13 @@ class SeService
     protected $logTime = '';
 
     /**
+     * Export pid
+     *
+     * @var string
+     */
+    protected $pid = '';
+
+    /**
      * Callback for status progress
      *
      * @var callable
@@ -101,12 +108,15 @@ class SeService
         $this->logTime = time();
         $this->logFileDir = $this->getWorkdir();
 
-        $this->ssh2->exec(
+        $pid = $this->ssh2->exec(
             "export TERM=vt100; sudo su - {$this->user} -c '" . PHP_EOL
             . ". ~/.profile " . PHP_EOL
-            . "nohup {$this->getCommandType()} > {$this->getLogFile()} 2>&1 &'"
+            . "nohup {$this->getCommandType()} > {$this->getLogFile()} 2>&1 &" . PHP_EOL
+            . "echo $!'"
         );
         
+        $this->pid = str_replace("\n", "", $pid);
+
         if ($this->ssh2->getExitStatus()) {
             $this->broadcast([
                 'action' => 'export',
@@ -133,26 +143,29 @@ class SeService
      */
     protected function check() : string
     {
-        $psCmd   = "ps -fea | grep \"{$this->getCommandType()}\" | wc -l";
-        $running = $this->ssh2->exec($psCmd);
+        $export = $this->ssh2->exec("ps {$this->pid} | wc -l");
         
         $logStartLine = count(explode(PHP_EOL, $this->log));
 
-        $tailCmd = "sed -n '{$logStartLine},\$p' < {$this->getLogFile()}";
-        $log     = $this->ssh2->exec($tailCmd);
-
+        $log = $this->ssh2->exec("sed -n '{$logStartLine},\$p' < {$this->getLogFile()}");
         $this->log .= $log;
 
-        $status = $this->getStatus((int) $running);
+        if (!strpos($this->log, $log)) {
+            $sanitized = preg_replace('/(?!\n)[\x00-\x1F\x7F\xA0]/u', ' ', $log);
+            $sanitized = str_replace("[1m", "<b>", $sanitized);
+            $sanitized = str_replace("[0m", "</b>", $sanitized);
+        }
+        
+        $status = $this->getStatus((int) $export);
 
         $message = [
             'action' => 'export',
             'status' => $status,
-            'log' => $log
+            'log' => $sanitized
         ];
 
         if ($status !== 'running') {
-            $message['comments'] = $status === 'success' ? 'Export was completed successfully' : 'Export has failed';
+            $message['comments'] = $status === 'exported' ? 'Export was completed successfully' : 'Export has failed';
         }
 
         $this->broadcast($message);
@@ -181,8 +194,7 @@ class SeService
         $artifactId = substr($artifact, 0, strpos($artifact, "."));
 
         $this->ssh2->exec(
-            "export TERM=vt100" . PHP_EOL
-              . "export TERM=vt100; sudo su - {$this->user} -c '" . PHP_EOL
+            "export TERM=vt100; sudo su - {$this->user} -c '" . PHP_EOL
                 . ". \${IMX_HOME}/extlib/profiles/.extlibprofile; cd {$this->logFileDir}" . PHP_EOL
                 . "cp {$this->seDump} ./{$artifact}" . PHP_EOL
                 . "rm -rf {$clientRepo}" . PHP_EOL // risky got to find another way !
@@ -196,7 +208,7 @@ class SeService
                 'action'   => 'export.upload',
                 'status'   => 'failed',
                 'comments'  => 'Upload has failed',
-                'log' => $this->ssh2->getStdError()
+                'error' => $this->ssh2->getStdError()
             ]);
             return false;
         }
@@ -274,7 +286,10 @@ class SeService
                 . "pwd'"
             );
 
-            if ($this->ssh2->getExitStatus()) {
+            $dir = array_filter(explode("\n", $dir));
+            $dir = str_replace("\n", "", end($dir));
+
+            if (strpos($dir, 'not found')) {
                 $this->broadcast([
                     'action'   => 'export.clone',
                     'status'   => 'failed',
@@ -300,7 +315,7 @@ class SeService
      */
     protected function getStatus(int $running) : string
     {
-        if ($running > 2) {
+        if ($running > 1) {
             return 'running';
         }
 
@@ -309,7 +324,7 @@ class SeService
         if ($finished) {
             preg_match_all("/\\[(.*?)\\]/", $finished, $matches);
             $this->seDump = $matches[1][0];
-            return 'success';
+            return 'exported';
         }
 
         return 'failed';
@@ -328,7 +343,7 @@ class SeService
             while (true) {
                 $status = $this->check();
 
-                if ($status === 'success') {
+                if ($status === 'exported') {
                     return $this->upload();
                 }
 
