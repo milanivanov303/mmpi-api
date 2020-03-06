@@ -197,7 +197,7 @@ class SeService
             "export TERM=vt100; sudo su - {$this->user} -c '" . PHP_EOL
                 . ". \${IMX_HOME}/extlib/profiles/.extlibprofile; cd {$this->logFileDir}" . PHP_EOL
                 . "cp {$this->seDump} ./{$artifact}" . PHP_EOL
-                . "rm -rf {$clientRepo}" . PHP_EOL // risky got to find another way !
+                // . "rm -rf {$clientRepo}" . PHP_EOL // risky got to find another way !
                 . "hg pull" . PHP_EOL
                 . "mvn -s ./settings.xml deploy -Des.client={$clientRepo} \
                     -Des.artifactId={$artifactId} -Des.version={$this->logTime}'"
