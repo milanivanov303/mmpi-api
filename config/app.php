@@ -101,7 +101,8 @@ return array_merge(
         'user-management' => [
             'url'      => env('USER_MANAGEMENT_URL'),
             'username' => env('USER_MANAGEMENT_USERNAME'),
-            'password' => env('USER_MANAGEMENT_PASSWORD')
+            'password' => env('USER_MANAGEMENT_PASSWORD'),
+            'code'     => env('USER_MANAGEMENT_CODE')
         ],
 
         'certificates' => [
