@@ -18,7 +18,7 @@ $router->group([
         'description' => 'Get single modification',
         'uses'        => 'ModificationsController@getOne'
     ]);
-    $router->get('/{project_id}/{dlvry_type}', [
+    $router->get('/pr-dlvry-type', [
         'as'          => 'filtered.modifications.list',
         'description' => 'Get modifications by project and dlvry chain type',
         'uses'        => 'ModificationsController@getByProjectAndChainType'
@@ -31,7 +31,8 @@ $router->group([
         'temporary-sources',
         'binaries',
         'commands',
-        'operations'
+        'operations',
+        'scm'
     ];
 
     foreach ($types as $prefix) {
@@ -53,7 +54,7 @@ $router->group([
                 'type'        => $prefix,
                 'tags'        => ['modifications']
             ]);
-            if ($prefix === 'binaries' || $prefix === 'commands') {
+            if ($prefix === 'binaries' || $prefix === 'commands' || $prefix === 'scm') {
                 $router->post('', [
                     'as'          => "modifications.{$prefix}.create",
                     'schema'      => "/v1/modifications/{$prefix}/create.json",

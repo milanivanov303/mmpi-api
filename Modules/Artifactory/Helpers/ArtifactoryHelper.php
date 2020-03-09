@@ -61,10 +61,14 @@ class ArtifactoryHelper
         try {
             $client = new \GuzzleHttp\Client();
 
+            // return only -bin.zip files and only files from libs-snapshot-local repo
             $options = [
                 'headers' => $this->headers,
                 'verify'  => false,
-                'body'    => 'items.find({"name":{"$match":"*' . $this->name .'*"}})'
+                'body'    =>
+                'items.find({"$and":[{"name":{"$match":"*-bin.zip"}},{"name":{"$match":"*'
+                    . $this->name
+                    .'*"}}]})'
             ];
 
             $response = $client->request($this->method, $this->url, $options);

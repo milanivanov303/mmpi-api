@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\EnumValue;
+use Modules\Projects\Models\Project;
 
 class ProjectSpecificsTest extends RestTestCase
 {
@@ -17,8 +18,8 @@ class ProjectSpecificsTest extends RestTestCase
     {
         $faker = Faker\Factory::create();
 
-        $project                = \Modules\Projects\Models\Project::inRandomOrder()->first();
-        $projectSpecificFeature = EnumValue::inRandomOrder()->first();
+        $project                = Project::inRandomOrder()->first();
+        $projectSpecificFeature = EnumValue::where('type', 'project_specific_feature')->inRandomOrder()->first();
 
         return [
             'project'                  => $project->toArray(),

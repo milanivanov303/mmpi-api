@@ -67,11 +67,11 @@
         },
         {
             "name": "codix/api-core",
-            "version": "1.8.7",
+            "version": "1.8.13",
             "source": {
                 "type": "git",
                 "url": "http://rhode.codixfr.private/Enterprise-Apps/api-core",
-                "reference": "13892aff09d9832fff89b9ae3607ddb0544b0311"
+                "reference": "191f3c10187da40052eedb6700360c652bf427e2"
             },
             "require": {
                 "adldap2/adldap2": "^10.1",
@@ -101,7 +101,7 @@
                     "email": "yarnaudov@codix.bg"
                 }
             ],
-            "time": "2019-11-29T12:35:16+00:00"
+            "time": "2020-02-17T15:22:00+00:00"
         },
         {
             "name": "codix/api-sdk",
@@ -799,6 +799,7 @@
                 }
             ],
             "description": "Provides a simple API and specification that abstracts away the details of HTTP into a single PHP function.",
+            "abandoned": true,
             "time": "2018-07-31T13:22:33+00:00"
         },
         {
@@ -849,6 +850,7 @@
                 "Guzzle",
                 "stream"
             ],
+            "abandoned": true,
             "time": "2014-10-12T19:18:40+00:00"
         },
         {

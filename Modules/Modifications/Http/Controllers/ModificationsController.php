@@ -11,6 +11,7 @@ use Modules\Modifications\Models\TableModification;
 use Modules\Modifications\Repositories\ModificationRepository;
 use Modules\Modifications\Models\BinaryModification;
 use Modules\Modifications\Models\CommandModification;
+use Modules\Modifications\Models\ScmModification;
 use Modules\Modifications\Models\TemporarySourceModification;
 use Modules\Modifications\Models\SeTransferModification;
 
@@ -71,18 +72,22 @@ class ModificationsController extends Controller
             return new SeTransferModification();
         }
 
+        if ($type === 'scm') {
+            return new ScmModification();
+        }
+
         return null;
     }
 
     /**
-     * Get modifications by project_id and dlvry_type
+     * Get modifications by project_id and delivery chain type
      *
-     * @param int $project_id
-     * @param string $delivery_chain_type
+     * @param Request $request
      * @return Response
      */
-    public function getByProjectAndChainType(int $project_id, string $delivery_chain_type)
+    public function getByProjectAndChainType(Request $request)
     {
-        return $this->repository->getByProjectAndChainType($project_id, $delivery_chain_type);
+        $parameters = $request->all();
+        return $this->repository->getByProjectAndChainType($parameters['project_id'], $parameters['dlvry_chain_type']);
     }
 }
