@@ -31,18 +31,25 @@ class DdlService
     protected $commitMsg;
 
     /**
-     * File name
-     *
-     * @var string
-     */
-    protected $fileName;
-
-    /**
      * Temp directory
      *
      * @var string
      */
     protected $workDir;
+
+    /**
+     * Repostiroty name
+     *
+     * @var string
+     */
+    protected $repo;
+
+    /**
+     * File path and name
+     *
+     * @var string
+     */
+    protected $filePathAndName;
 
     /**
      * BuildService constructor.
@@ -58,9 +65,10 @@ class DdlService
     ) {
         $this->content = $content;
         $this->commitMsg = $commitMsg;
-        $this->fileName = $commitMsg . '.ddl';
         $this->branch = $branch;
-        $this->workDir = $branch;
+        $this->workDir = storage_path('app');
+        $this->repo = 'TEST_DDL';
+        $this->filePathAndName = $this->workDir . '/' . $this->repo . '/' . $commitMsg . '.ddl';
     }
 
     /**
@@ -71,19 +79,17 @@ class DdlService
     public function run()
     {
         try {
-            $this->createWorkDirIfNotExists();
+            $this->cloneRepo();
 
-        // $this->cloneRepo();
+            $this->createFile();
 
-        // $this->createFile();
+            $this->addFile();
 
-        // $this->addFile();
+            $this->commitFile();
 
-        // $this->commitFile();
+            $this->push();
 
-        // $this->push();
-
-        // $this->deleteTempDirectory();
+            $this->deleteTempDirectory();
         } catch (\Exception $e) {
             $this->deleteTempDirectory();
             throw $e;
@@ -93,26 +99,13 @@ class DdlService
     }
 
     /**
-     * Create work directory if not exists
-     */
-    protected function createWorkDirIfNotExists()
-    {
-        if (Storage::makeDirectory($this->workDir) === false) {
-            Log::error('Could not create temporary directory');
-            throw new \Exception('Could not create temporary directory', 3);
-        }
-
-        Log::info('Temporary directory created successfully');
-    }
-
-    /**
      * Delete temporary directory
      *
      * @throws \Exception
      */
     protected function deleteTempDirectory()
     {
-        if (Storage::deleteDirectory($this->workDir) === false) {
+        if (Storage::deleteDirectory($this->repo) === false) {
             Log::error('Could not delete temporary directory');
             throw new \Exception('Could not delete checkout directory', 3);
         }
@@ -127,15 +120,21 @@ class DdlService
      */
     protected function cloneRepo()
     {
-        // must update url
-        $clone = new Process(['hg', 'clone', "http://rhode.codixfr.private/$this->branch", $this->workDir]);
+        $clone = new Process([
+            'hg',
+            'clone',
+            "http://rhode.codixfr.private/DevOps/iMXRefresh/$this->repo",
+            '-r',
+            $this->branch
+        ], $this->workDir);
+        
         $clone->setTimeout(600); // 10 min
 
         $clone->run();
 
         if (!$clone->isSuccessful()) {
-            Log::error('Could not clone branch');
-            throw new \Exception('Could not clone branch', 3);
+            Log::error('Could not clone - ' . $clone->getErrorOutput());
+            throw new \Exception('Could not clone - ' . $clone->getErrorOutput(), 3);
         }
 
         Log::info('Branch was cloned successfully');
@@ -148,14 +147,15 @@ class DdlService
      */
     protected function createFile()
     {
-        Storage::put($this->workDir . '/' . $this->fileName, $this->content);
+        $cmd = 'echo \'' . $this->content . '\' > ' . $this->filePathAndName;
+        exec($cmd, $output, $exit_code);
 
-        if (!Storage::exists($this->workDir . '/' . $this->fileName)) {
-            Log::error('Could not create file');
-            throw new \Exception('Could not create file', 3);
+        if ($exit_code || preg_match('/checkout: warning: new-born/', implode(PHP_EOL, $output))) {
+            Log::error("Could not create file " . implode(PHP_EOL, $output));
+            throw new \Exception("Could not create file ".  implode(PHP_EOL, $output), 4);
         }
 
-        Log::info('File was created successfully');
+        Log::info("File was created successfully");
     }
 
     /**
@@ -165,12 +165,12 @@ class DdlService
      */
     protected function addFile()
     {
-        $add = new Process(['hg', 'add'], $this->fileName);
+        $add = new Process(['hg', 'add', $this->filePathAndName]);
         $add->run();
 
         if (!$add->isSuccessful()) {
-            Log::error('Could not add file');
-            throw new \Exception('Could not add file', 3);
+            Log::error('Could not add file - ' . $add->getErrorOutput());
+            throw new \Exception('Could not add file - ' . $add->getErrorOutput(), 3);
         }
 
         Log::info('File was added successfully');
@@ -183,12 +183,20 @@ class DdlService
      */
     protected function commitFile()
     {
-        $commit = new Process(['hg', 'commit', '-m', $this->commitMsg, '-u', Auth::user()->username]);
+        $commit = new Process([
+            'hg',
+            'commit',
+            '-u',
+            Auth::user()->username . '@codixfr.private',
+            '-m',
+            $this->commitMsg
+        ], $this->workDir . '/' . $this->repo);
+
         $commit->run();
 
         if (!$commit->isSuccessful()) {
-            Log::error('Could not commit file');
-            throw new \Exception('Could not commit file', 3);
+            Log::error('Could not commit - ' . $commit->getErrorOutput());
+            throw new \Exception('Could not commit - ' . $commit->getErrorOutput(), 3);
         }
 
         Log::info('File was commited successfully');
@@ -201,12 +209,19 @@ class DdlService
      */
     protected function push()
     {
-        $push = new Process(['hg', 'push']);
+        $push = new Process([
+            'hg',
+            'push',
+            "http://rhode.codixfr.private/DevOps/iMXRefresh/$this->repo",
+            '-b',
+            $this->branch
+        ], $this->workDir . '/' . $this->repo);
+
         $push->run();
 
         if (!$push->isSuccessful()) {
-            Log::error('Could not push');
-            throw new \Exception('Could not push', 3);
+            Log::error('Could not push - ' . $push->getErrorOutput());
+            throw new \Exception('Could not push - ' . $push->getErrorOutput(), 3);
         }
 
         Log::info('Successfully push changes');
