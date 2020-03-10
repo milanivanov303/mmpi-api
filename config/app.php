@@ -8,6 +8,15 @@ return array_merge(
 
         /*
         |--------------------------------------------------------------------------
+        | Application code
+        |--------------------------------------------------------------------------
+        | User Management application code. Used to get application info from DB
+        |
+        */
+        'application_code' => env('APP_CODE'),
+
+        /*
+        |--------------------------------------------------------------------------
         | JWT settings
         |--------------------------------------------------------------------------
         |
@@ -96,7 +105,8 @@ return array_merge(
         'user-management' => [
             'url'      => env('USER_MANAGEMENT_URL'),
             'username' => env('USER_MANAGEMENT_USERNAME'),
-            'password' => env('USER_MANAGEMENT_PASSWORD')
+            'password' => env('USER_MANAGEMENT_PASSWORD'),
+            'code'     => env('USER_MANAGEMENT_CODE')
         ],
 
         'certificates' => [
@@ -108,6 +118,11 @@ return array_merge(
         'artifactory' => [
             'url' => env('ARTIFACTORY_URL'),
             'key' => env('ARTIFACTORY_KEY'),
+        ],
+
+        'ddl' => [
+            'repo-url' => env('DDL_REPO_URL'),
+            'repo-name' => env('DDL_REPO_NAME'),
         ]
     ]
 );
