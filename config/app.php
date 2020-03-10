@@ -114,6 +114,11 @@ return array_merge(
         'artifactory' => [
             'url' => env('ARTIFACTORY_URL'),
             'key' => env('ARTIFACTORY_KEY'),
+        ],
+
+        'ddl' => [
+            'repo-url' => env('DDL_REPO_URL'),
+            'repo-name' => env('DDL_REPO_NAME'),
         ]
     ]
 );

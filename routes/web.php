@@ -89,5 +89,8 @@ $router->group(['prefix' => 'v1'], function () use ($router) {
 
         // Auth
         require 'v1/auth.php';
+
+        // Ddl
+        require 'v1/ddl.php';
     });
 });
