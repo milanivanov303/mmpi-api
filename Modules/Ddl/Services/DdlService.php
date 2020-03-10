@@ -45,6 +45,13 @@ class DdlService
     protected $repo;
 
     /**
+     * Repostiroty url
+     *
+     * @var string
+     */
+    protected $url;
+
+    /**
      * File path and name
      *
      * @var string
@@ -58,16 +65,14 @@ class DdlService
      * @param string $commitMsg
      * @param string $branch
      */
-    public function __construct(
-        string $content,
-        string $commitMsg,
-        string $branch
-    ) {
+    public function __construct(string $content, string $commitMsg, string $branch)
+    {
         $this->content = $content;
         $this->commitMsg = $commitMsg;
         $this->branch = $branch;
         $this->workDir = storage_path('app');
-        $this->repo = 'TEST_DDL';
+        $this->repo =  config('app.ddl.repo-name');
+        $this->url = config('app.ddl.repo-url');
         $this->filePathAndName = $this->workDir . '/' . $this->repo . '/' . $commitMsg . '.ddl';
     }
 
@@ -120,16 +125,8 @@ class DdlService
      */
     protected function cloneRepo()
     {
-        $clone = new Process([
-            'hg',
-            'clone',
-            "http://rhode.codixfr.private/DevOps/iMXRefresh/$this->repo",
-            '-r',
-            $this->branch
-        ], $this->workDir);
-        
+        $clone = new Process(['hg', 'clone', "$this->url/$this->repo", '-r', $this->branch], $this->workDir);
         $clone->setTimeout(600); // 10 min
-
         $clone->run();
 
         if (!$clone->isSuccessful()) {
@@ -147,12 +144,11 @@ class DdlService
      */
     protected function createFile()
     {
-        $cmd = 'echo \'' . $this->content . '\' > ' . $this->filePathAndName;
-        exec($cmd, $output, $exit_code);
+        $file = file_put_contents($this->filePathAndName, $this->content);
 
-        if ($exit_code || preg_match('/checkout: warning: new-born/', implode(PHP_EOL, $output))) {
-            Log::error("Could not create file " . implode(PHP_EOL, $output));
-            throw new \Exception("Could not create file ".  implode(PHP_EOL, $output), 4);
+        if (empty($file)) {
+            Log::error('Could not create file');
+            throw new \Exception('Could not create file', 3);
         }
 
         Log::info("File was created successfully");
@@ -183,15 +179,10 @@ class DdlService
      */
     protected function commitFile()
     {
-        $commit = new Process([
-            'hg',
-            'commit',
-            '-u',
-            Auth::user()->username . '@codixfr.private',
-            '-m',
-            $this->commitMsg
-        ], $this->workDir . '/' . $this->repo);
-
+        $commit = new Process(
+            ['hg', 'commit', '-u', Auth::user()->email, '-m', $this->commitMsg],
+            "$this->workDir/$this->repo"
+        );
         $commit->run();
 
         if (!$commit->isSuccessful()) {
@@ -209,14 +200,10 @@ class DdlService
      */
     protected function push()
     {
-        $push = new Process([
-            'hg',
-            'push',
-            "http://rhode.codixfr.private/DevOps/iMXRefresh/$this->repo",
-            '-b',
-            $this->branch
-        ], $this->workDir . '/' . $this->repo);
-
+        $push = new Process(
+            ['hg', 'push', "$this->url/$this->repo", '-b', $this->branch],
+            "$this->workDir/$this->repo"
+        );
         $push->run();
 
         if (!$push->isSuccessful()) {
