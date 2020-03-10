@@ -15,8 +15,8 @@ use Modules\Modifications\Models\BinaryModification;
 use Modules\Modifications\Models\CommandModification;
 use Modules\Modifications\Models\ScmModification;
 use Modules\Modifications\Models\TemporarySourceModification;
+use Modules\Modifications\Models\SeTransferModification;
 use Modules\Modifications\Repositories\ModificationRepository;
-use Illuminate\Support\Facades\Auth;
 
 class ModificationsController extends Controller
 {
@@ -71,6 +71,10 @@ class ModificationsController extends Controller
             return new TemporarySourceModification();
         }
 
+        if ($type === 'se-transfer') {
+            return new SeTransferModification();
+        }
+
         if ($type === 'scm') {
             return new ScmModification();
         }
@@ -105,26 +109,35 @@ class ModificationsController extends Controller
             'exclusive'   => false
         ];
 
-        dispatch(
-            (new ExportSEJob([
-                'type_id'           => $request->input('type_id'),
-                'subtype_id'        => $request->input('subtype_id'),
-                'name'              => $request->input('name'),
-                'issue_id'          => $request->input('issue_id'),
-                'active'            => $request->input('active'),
-                'visible'           => $request->input('visible'),
-                'issue_id'          => $request->input('issue_id'),
-                'delivery_chain_id' => $request->input('delivery_chain_id'),
-                'instance_status'   => $request->input('instance_status'),
-                'instance'          => $request->input('instance'),
-                'user'              => Auth::user()->id,
-                'broadcast'         => $broadcast
-            ]))->onQueue('export-se')
-        );
+        $data = [
+            'type_id'           => $request->input('type_id'),
+            'subtype_id'        => $request->input('subtype_id'),
+            'issue_id'          => $request->input('issue_id'),
+            'active'            => $request->input('active'),
+            'visible'           => $request->input('visible'),
+            'delivery_chain_id' => $request->input('delivery_chain_id'),
+            'instance_status'   => $request->input('instance_status'),
+            'instance'          => $request->input('instance'),
+        ];
 
-        return response()->json([
-            'status'    => 'running',
-            'broadcast' => $broadcast
-        ]);
+        $model = $this->repository->create($data);
+
+        if ($request->input('doExport')) {
+            dispatch(
+                (new ExportSEJob([
+                    'model'             => $model,
+                    'instance'          => $request->input('instance'),
+                    'delivery_chain_id' => $request->input('delivery_chain_id'),
+                    'broadcast'         => $broadcast
+                ]))->onQueue('export-se')
+            );
+
+            return response()->json([
+                'status'    => 'running',
+                'broadcast' => $broadcast
+            ]);
+        }
+
+        return response()->json($model);
     }
 }

@@ -7,7 +7,6 @@ use Core\Jobs\Job;
 use Illuminate\Support\Facades\Storage;
 use Modules\Modifications\Models\SeTransferModification;
 use Modules\Modifications\Services\SeService;
-use Carbon\Carbon;
 
 class ExportSEJob extends Job
 {
@@ -41,21 +40,7 @@ class ExportSEJob extends Job
      */
     public function handle()
     {
-        $this->seTransfer = new SeTransferModification([
-            'type_id'           => $this->data['type_id'],
-            'subtype_id'        => $this->data['subtype_id'],
-            'issue_id'          => $this->data['issue_id'],
-            'active'            => $this->data['active'],
-            'visible'           => $this->data['visible'],
-            'issue_id'          => $this->data['issue_id'],
-            'delivery_chain_id' => $this->data['delivery_chain_id'],
-            'instance_status'   => $this->data['instance_status'],
-            'instance'          => $this->data['instance']['id'],
-            'created_by_id'     => $this->data['user'],
-            'created_on'        => Carbon::now()->format('Y-m-d H:i:s'),
-            'comments'          => 'exporting'
-        ]);
-        $this->seTransfer->save();
+        $this->seTransfer = $this->data['model'];
 
         $exported = $this->export();
         if (!$exported) {
@@ -103,7 +88,7 @@ class ExportSEJob extends Job
 
             $export = new SeService(
                 $ssh2,
-                $this->data['subtype_id'],
+                $this->seTransfer->subtype_id,
                 $this->data['delivery_chain_id'],
                 $this->data['instance']['user'],
                 function (array $message) {

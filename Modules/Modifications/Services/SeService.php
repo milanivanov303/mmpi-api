@@ -150,11 +150,10 @@ class SeService
         $log = $this->ssh2->exec("sed -n '{$logStartLine},\$p' < {$this->getLogFile()}");
         $this->log .= $log;
 
-        if (!strpos($this->log, $log)) {
-            $sanitized = preg_replace('/(?!\n)[\x00-\x1F\x7F\xA0]/u', ' ', $log);
-            $sanitized = str_replace("[1m", "<b>", $sanitized);
-            $sanitized = str_replace("[0m", "</b>", $sanitized);
-        }
+
+        $sanitized = preg_replace('/(?!\n)[\x00-\x1F\x7F\xA0]/u', ' ', $log);
+        $sanitized = str_replace("[1m", "<b>", $sanitized);
+        $sanitized = str_replace("[0m", "</b>", $sanitized);
         
         $status = $this->getStatus((int) $export);
 
