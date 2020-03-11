@@ -71,7 +71,7 @@ class ModificationsController extends Controller
             return new TemporarySourceModification();
         }
 
-        if ($type === 'se-transfer') {
+        if ($type === 'se-transfers') {
             return new SeTransferModification();
         }
 
@@ -138,6 +138,6 @@ class ModificationsController extends Controller
             ]);
         }
 
-        return response()->json($model);
+        return response()->json($model, 201);
     }
 }

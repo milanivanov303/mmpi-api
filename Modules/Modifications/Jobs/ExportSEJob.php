@@ -4,7 +4,6 @@ namespace Modules\Modifications\Jobs;
 
 use App\Helpers\Broadcast;
 use Core\Jobs\Job;
-use Illuminate\Support\Facades\Storage;
 use Modules\Modifications\Models\SeTransferModification;
 use Modules\Modifications\Services\SeService;
 
@@ -63,29 +62,9 @@ class ExportSEJob extends Job
     protected function export() : bool
     {
         try {
-            $username = config('app.ssh.username');
-            $password = config('app.ssh.password');
-            $port     = config('app.ssh.port');
-            $key      = Storage::get(config('app.ssh.public_key'));
-            $host     = strpos($this->data['instance']['host'], '.codixfr.private')
-                        ? $this->data['instance']['host']
-                        : $this->data['instance']['host'] . '.codixfr.private';
-            $ssh2 = new \Core\Helpers\SSH2($host, $port);
-            
-            // login using public key
-            if ($key) {
-                if (!$ssh2->loginRSA($username, $key)) {
-                    // login with password
-                    if (!$ssh2->login($username, $password)) {
-                        throw new \Exception("Could not login to {$host}");
-                    }
-                }
-            } else {
-                if (!$ssh2->login($username, $password)) {
-                    throw new \Exception("Could not login to {$host}");
-                }
-            }
-
+            $ssh2 = app('SeExport', [
+                'instance' => $this->data['instance']['host']
+            ]);
             $export = new SeService(
                 $ssh2,
                 $this->seTransfer->subtype_id,

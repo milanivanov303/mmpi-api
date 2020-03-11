@@ -2,11 +2,12 @@
 
 use App\Models\EnumValue;
 use Modules\DeliveryChains\Models\DeliveryChain;
+use Modules\Instances\Models\Instance;
 use Modules\Issues\Models\Issue;
 
-class BinariesTest extends RestTestCase
+class SeTransferTest extends RestTestCase
 {
-    protected $uri        = 'v1/modifications/se-transfer';
+    protected $uri        = 'v1/modifications/se-transfers';
     protected $table      = 'modifications';
     protected $primaryKey = 'id';
     protected $typeId     = 'se';
@@ -21,19 +22,20 @@ class BinariesTest extends RestTestCase
         $faker = Faker\Factory::create();
 
         $issue = Issue::inRandomOrder()->first();
-        $subtype = EnumValue::where('key', 'SE')->inRandomOrder()->first();
+        $subtype = EnumValue::where('subtype', 'SE')->inRandomOrder()->first();
         $deliveryChain = DeliveryChain::inRandomOrder()->first();
         $instance = Instance::inRandomOrder()->first();
         $instanceStatus = EnumValue::where('type', 'instance_status')->inRandomOrder()->first();
         
         return [
-            'issue'              => $issue->toArray(),
-            'type_id'            => $this->typeId,
-            'subtype'            => $subtype->toArray(),
-            'delivery_chain'     => $deliveryChain->toArray(),
-            'instance'           => $instance->toArray(),
-            'instance_status'    => $instanceStatus->toArray(),
-            'active'             => $faker->numberBetween(0, 1)
+            'issue_id'        => $issue->id,
+            'type_id'         => $this->typeId,
+            'subtype_id'      => $subtype->id,
+            'delivery_chain'  => $deliveryChain->toArray(),
+            'instance'        => $instance->toArray(),
+            'instance_status' => $instanceStatus->toArray(),
+            'active'          => $faker->numberBetween(0, 1),
+            'visible'         => $faker->numberBetween(0, 1)
         ];
     }
 
@@ -54,6 +56,20 @@ class BinariesTest extends RestTestCase
     }
 
     /**
+     * Test create
+     *
+     * @return void
+     */
+    public function testCreate()
+    {
+        $data = $this->getData();
+
+        $this
+            ->json('POST', $this->uri . '/' . $this->getPrimaryKeyValue($data), $data)
+            ->assertResponseStatus(201);
+    }
+
+    /**
      * Test update
      *
      * @return void
@@ -68,6 +84,22 @@ class BinariesTest extends RestTestCase
     }
 
     /**
+     * Test get single
+     *
+     * @return void
+     */
+    public function testGet()
+    {
+        $data = $this->getData();
+
+        $this
+            ->json('GET', $this->uri . '/' . $this->getPrimaryKeyValue($data), [
+                'with' => $this->getWith($data)
+            ])
+            ->assertResponseOk();
+    }
+    
+    /**
      * Test delete single
      *
      * @return void
@@ -81,7 +113,7 @@ class BinariesTest extends RestTestCase
             ->assertResponseStatus(405);
     }
 
-        /**
+    /**
      * Get request update data
      *
      * @param array $data
