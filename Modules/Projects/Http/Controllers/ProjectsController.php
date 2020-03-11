@@ -56,7 +56,7 @@ class ProjectsController extends Controller
 
             Mail::to(config('app.pmo-management-mails'))
                 ->cc(Auth::user()->email)
-                ->send(new ProjectRolesChangeMail(
+                ->queue(new ProjectRolesChangeMail(
                     $project->name,
                     Auth::user()->name,
                     config('app.dev-management-url') . '/pmo/organization'
@@ -93,7 +93,7 @@ class ProjectsController extends Controller
                 );
             });
 
-            $project =  Project::with('roles.user', 'rolesTmp.user')->find($id);
+            $project = Project::with('roles.user', 'rolesTmp.user')->find($id);
             return response()->json(['data'=> $project]);
         } catch (\Exception $e) {
             return response()->json(['error' => $e], 400);
