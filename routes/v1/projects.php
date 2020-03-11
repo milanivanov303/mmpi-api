@@ -22,6 +22,16 @@ $router->group([
         'description' => 'Create new project',
         'uses'        => 'ProjectsController@create'
     ]);
+    $router->put('/roles-tmp/{id}', [
+        'as'          => 'roles-tmp.update',
+        'description' => 'Update temporary project user roles',
+        'uses'        => 'ProjectsController@updateRolesTmp'
+    ]);
+    $router->put('/roles/{id}', [
+        'as'          => 'roles.update',
+        'description' => 'Update project user roles',
+        'uses'        => 'ProjectsController@updateRoles'
+    ]);
     $router->put('/{name}', [
         'as'          => 'projects.update',
         'description' => 'Update project',
