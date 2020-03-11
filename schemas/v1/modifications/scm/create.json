@@ -50,6 +50,20 @@
                     ]
                 },
                 {
+                    "oneOf": [
+                        {
+                            "required": [
+                                "subtype"
+                            ]
+                        },
+                        {
+                            "required": [
+                                "subtype_id"
+                            ]
+                        }
+                    ]
+                },
+                {
                     "required": [
                         "name",
                         "visible",

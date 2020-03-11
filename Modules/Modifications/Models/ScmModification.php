@@ -10,6 +10,8 @@ class ScmModification extends Modification
         'id',
         'issue',
         'issue_id',
+        'subtype',
+        'subtype_id',
         'type',
         'type_id',
         'version',
