@@ -4,6 +4,7 @@ services:
 
     apache:
         image: ${APACHE_CONTAINER_IMAGE}
+        restart: always
         container_name: ${APACHE_CONTAINER_NAME}
         build: docker/apache
         ports:
@@ -16,6 +17,7 @@ services:
 
     php:
         image: ${PHP_CONTAINER_IMAGE}
+        restart: always
         container_name: ${PHP_CONTAINER_NAME}
         build:
             context: docker/php
@@ -28,6 +30,7 @@ services:
 
     scheduler:
         image: ${PHP_CONTAINER_IMAGE}
+        restart: always
         container_name: ${PHP_CONTAINER_NAME}-scheduler
         volumes:
             - ${APACHE_CONTAINER_VOLUME}:/var/www/html
@@ -38,6 +41,7 @@ services:
 
     queue:
         image: ${PHP_CONTAINER_IMAGE}
+        restart: always
         container_name: ${PHP_CONTAINER_NAME}-queue
         volumes:
             - ${APACHE_CONTAINER_VOLUME}:/var/www/html
