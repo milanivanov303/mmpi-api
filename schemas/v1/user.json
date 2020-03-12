@@ -80,6 +80,17 @@
                     {"type": "null"}
                 ]
             }
+        },
+        "roles_tmp": {
+            "type": "array",
+            "items": {
+                "oneOf": [
+                    {
+                        "$ref": "/v1/user-project-role-tmp.json"
+                    },
+                    {"type": "null"}
+                ]
+            }
         }
     }
 }

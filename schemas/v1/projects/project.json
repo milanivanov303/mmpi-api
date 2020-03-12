@@ -292,6 +292,17 @@
                 ]
             }
         },
+        "roles_tmp": {
+            "type": "array",
+            "items": {
+                "oneOf": [
+                    {
+                        "$ref": "/v1/user-project-role-tmp.json"
+                    },
+                    {"type": "null"}
+                ]
+            }
+        },
         "intranet_version": {
             "oneOf": [
                 {"$ref": "/v1/enum-values/enum-value.json"},

@@ -8,6 +8,7 @@ use App\Models\EnumValue;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Modules\DeliveryChains\Models\DeliveryChain;
 use App\Models\UserProjectRole;
+use App\Models\UserProjectRoleTmp;
 use Modules\ProjectSpecifics\Models\ProjectSpecific;
 
 class Project extends Model
@@ -174,6 +175,14 @@ class Project extends Model
     protected function roles()
     {
         return $this->hasMany(UserProjectRole::class);
+    }
+
+    /**
+     * Get temporary roles
+     */
+    protected function rolesTmp()
+    {
+        return $this->hasMany(UserProjectRoleTmp::class);
     }
 
     /**

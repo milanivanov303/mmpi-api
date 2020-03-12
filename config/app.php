@@ -87,6 +87,10 @@ return array_merge(
         // send notification mails for problems
         'admin-mails' => explode(',', env('ADMIN_MAILS', 'phpid@codixfr.private')),
 
+         // send notification mails to PMO management group
+         'pmo-management-mails' => explode(',', env('PMO_MANAGEMENT_MAIL', 'TEST_MAILS')),
+
+
         // if not production all mails will be send to this addresses
         'test-mails'  => explode(',', env('TEST_MAILS', 'phpid@codixfr.private')),
 
@@ -114,6 +118,11 @@ return array_merge(
         'artifactory' => [
             'url' => env('ARTIFACTORY_URL'),
             'key' => env('ARTIFACTORY_KEY'),
+        ],
+
+        'ddl' => [
+            'repo-url' => env('DDL_REPO_URL'),
+            'repo-name' => env('DDL_REPO_NAME'),
         ]
     ]
 );

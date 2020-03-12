@@ -10,7 +10,6 @@ use Core\Repositories\RepositoryInterface;
 use Illuminate\Support\Facades\Auth;
 use Modules\DeliveryChains\Models\DeliveryChain;
 use Modules\Projects\Models\Project;
-use Modules\ProjectSpecifics\Models\ProjectSpecific;
 use Illuminate\Support\Facades\DB;
 
 class ProjectRepository extends AbstractRepository implements RepositoryInterface
