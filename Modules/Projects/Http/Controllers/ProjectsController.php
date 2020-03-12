@@ -53,14 +53,16 @@ class ProjectsController extends Controller
             });
 
             $project = Project::with('roles.user', 'rolesTmp.user')->find($id);
-            $message = new ProjectRolesChangeMail(
-                $project->name,
-                Auth::user()->name,
-                config('app.dev-management-url') . '/pmo/organization'
-            );
-            Mail::to(config('app.pmo-management-mails'))
-                ->cc(Auth::user()->email)
-                ->queue($message->onQueue('mails'));
+
+            // uncomment when the recipient will be the Auth user on DEV
+            // $message = new ProjectRolesChangeMail(
+            //     $project->name,
+            //     Auth::user()->name,
+            //     config('app.dev-management-url') . '/pmo/organization'
+            // );
+            // Mail::to(config('app.pmo-management-mails'))
+            //     ->cc(Auth::user()->email)
+            //     ->queue($message->onQueue('mails'));
 
             return response()->json(['data'=> $project]);
         } catch (\Exception $e) {
