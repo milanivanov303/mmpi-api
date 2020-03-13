@@ -6,10 +6,83 @@
     "allOf": [
         {"$ref": "/v1/modifications/se-transfers/se-transfer.json"},
         {
-            "required": [
-                "name",
-                "issue",
-                "path"
+            "allOf": [
+                {
+                    "oneOf": [
+                        {
+                            "required": [
+                                "issue"
+                            ]
+                        },
+                        {
+                            "required": [
+                                "issue_id"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "oneOf": [
+                        {
+                            "required": [
+                                "type"
+                            ]
+                        },
+                        {
+                            "required": [
+                                "type_id"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "oneOf": [
+                        {
+                            "required": [
+                                "subtype"
+                            ]
+                        },
+                        {
+                            "required": [
+                                "subtype_id"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "oneOf": [
+                        {
+                            "required": [
+                                "delivery_chain"
+                            ]
+                        },
+                        {
+                            "required": [
+                                "delivery_chain_id"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "oneOf": [
+                        {
+                            "required": [
+                                "instance"
+                            ]
+                        },
+                        {
+                            "required": [
+                                "instance_id"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "required": [
+                        "visible",
+                        "instance_status"
+                    ]
+                }
             ]
         }
     ]
