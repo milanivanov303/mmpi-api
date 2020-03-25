@@ -241,6 +241,12 @@ class SeService
             case "se_vd":
                 $command = "sh_cliexpbr vd";
                 break;
+            case "se_vdnam":
+                $command = "sh_cliexpbr vdnam";
+                break;
+            case "se_txt_lib":
+                $command = "se_text_db.sh exp";
+                break;
             default:
                 throw new \Exception("No execution script for this type is provided!");
         }
