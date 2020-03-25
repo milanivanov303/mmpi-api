@@ -238,9 +238,6 @@ class SeService
         $command = "";
         
         switch ($typeInfo->key) {
-            case "se_vd":
-                $command = "sh_cliexpbr vd";
-                break;
             case "se_vdnam":
                 $command = "sh_cliexpbr vdnam";
                 break;
