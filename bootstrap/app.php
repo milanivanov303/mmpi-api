@@ -27,6 +27,7 @@ $app->withEloquent();
 
 $app->configure('app');
 $app->configure('mail');
+$app->configure('amqp');
 
 $app->alias('mailer', Illuminate\Mail\Mailer::class);
 $app->alias('mailer', Illuminate\Contracts\Mail\Mailer::class);
@@ -98,6 +99,8 @@ $app->register(Illuminate\Mail\MailServiceProvider::class);
 $app->register(Modules\Issues\Providers\IssuesServiceProvider::class);
 $app->register(Modules\JsonRpc\Providers\JsonRpcServiceProvider::class);
 $app->register(Modules\Hashes\Providers\HashesServiceProvider::class);
+$app->register(Modules\Modifications\Providers\SeServiceProvider::class);
+$app->register(Bschmitt\Amqp\LumenServiceProvider::class);
 $app->register(Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider::class);
 
 /*

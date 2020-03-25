@@ -37,8 +37,8 @@ return [
         'database' => [
             'driver' => 'database',
             'table' => env('QUEUE_TABLE', 'jobs'),
-            'queue' => 'audit,mails,hashes,builds,raml,default',
-            'retry_after' => 90,
+            'queue' => 'default',
+            'retry_after' => 1250,
         ],
 
         'beanstalkd' => [

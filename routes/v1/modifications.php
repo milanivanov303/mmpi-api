@@ -63,6 +63,15 @@ $router->group([
                     'type'        =>  $prefix,
                     'tags'        => ['modifications']
                 ]);
+            } elseif ($prefix === 'se-transfers') {
+                $router->post('', [
+                    'as'          => "modifications.{$prefix}.create",
+                    'schema'      => "/v1/modifications/{$prefix}/create.json",
+                    'description' => "Create new {$prefix}",
+                    'uses'        => 'ModificationsController@startSeExport',
+                    'type'        =>  $prefix,
+                    'tags'        => ['modifications']
+                ]);
             }
         });
     }
