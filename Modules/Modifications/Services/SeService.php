@@ -70,6 +70,20 @@ class SeService
     protected $pid = '';
 
     /**
+     * Export exitCode
+     *
+     * @var string
+     */
+    protected $exitCode = '';
+
+    /**
+     * Export operation
+     *
+     * @var string
+     */
+    protected $operation = '';
+
+    /**
      * Callback for status progress
      *
      * @var callable
@@ -96,6 +110,7 @@ class SeService
         $this->chain    = $chain;
         $this->user     = $user;
         $this->callback = $callback;
+        $this->operation = EnumValue::find($type)->key;
     }
 
     /**
@@ -107,6 +122,7 @@ class SeService
     {
         $this->logTime = time();
         $this->logFileDir = $this->getWorkdir();
+        $this->cleanHouse();
 
         $pid = $this->ssh2->exec(
             "export TERM=vt100; sudo su - {$this->user} -c '" . PHP_EOL
@@ -233,16 +249,15 @@ class SeService
      */
     protected function getCommandType() : string
     {
-        $typeInfo = EnumValue::find($this->type);
-
         $command = "";
-        
-        switch ($typeInfo->key) {
+        switch ($this->operation) {
             case "se_vdnam":
                 $command = "sh_cliexpbr vdnam";
+                $this->exitCode = "DUMP_FILE_FULL_PATH";
                 break;
             case "se_txt_lib":
                 $command = "se_text_db.sh exp";
+                $this->exitCode = "iMX TEXT database exported into compressed format to";
                 break;
             default:
                 throw new \Exception("No execution script for this type is provided!");
@@ -251,6 +266,28 @@ class SeService
         return $command;
     }
 
+    /**
+     * Operation clean house
+     *
+     * @return void
+     */
+    protected function cleanHouse() : void
+    {
+        if ($this->operation === "se_txt_lib") {
+            $this->seDump = "/{$this->user}/intra/imx/base/textsbase.dmp.Z";
+        }
+
+        if ($this->operation === "se_vdnam") {
+            $this->seDump = "/{$this->user}/intra/imx/base/client_vdnam.dmp.Z";
+        }
+
+        $this->ssh2->exec(
+            "export TERM=vt100; sudo su - {$this->user} -c '" . PHP_EOL
+            . ". ~/.profile " . PHP_EOL
+            . "rm -f {$this->seDump}'"
+        );
+    }
+    
     /**
      * Get log file
      *
@@ -321,14 +358,12 @@ class SeService
             return 'running';
         }
 
-        $exitCode = "grep \"DUMP_FILE_FULL_PATH\" {$this->getLogFile()}";
+        $exitCode = "grep \"{$this->exitCode}\" {$this->getLogFile()}";
         $finished = $this->ssh2->exec($exitCode);
         if ($finished) {
-            preg_match_all("/\\[(.*?)\\]/", $finished, $matches);
-            $this->seDump = $matches[1][0];
             return 'exported';
         }
-
+        
         return 'failed';
     }
 
