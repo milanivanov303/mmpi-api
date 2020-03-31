@@ -91,6 +91,14 @@ class SeService
     protected $callback;
 
     /**
+     * Current operations for automatic export
+     *
+     * @const
+     */
+    const VDNAM = 'se_vdnam';
+    const TXTLIB = 'se_txt_lib';
+
+    /**
      * ExportSeService constructor.
      *
      * @param SSH $ssh2
@@ -135,17 +143,17 @@ class SeService
 
         if ($this->ssh2->getExitStatus()) {
             $this->broadcast([
-                'action' => 'export',
-                'status' => 'failed',
+                'action'   => 'export',
+                'status'   => 'failed',
                 'comments' => 'Export has failed',
-                'log' =>  $this->ssh2->getStdError()
+                'log'      =>  $this->ssh2->getStdError()
             ]);
             return false;
         }
 
         $this->broadcast([
-            'action' => 'export',
-            'status' => 'running',
+            'action'   => 'export',
+            'status'   => 'running',
             'comments' => 'Exporting...'
         ]);
 
@@ -176,7 +184,7 @@ class SeService
         $message = [
             'action' => 'export',
             'status' => $status,
-            'log' => $sanitized
+            'log'    => $sanitized
         ];
 
         if ($status !== 'running') {
@@ -196,8 +204,8 @@ class SeService
     protected function upload() : bool
     {
         $this->broadcast([
-            'action' => 'export.upload',
-            'status' => 'running',
+            'action'   => 'export.upload',
+            'status'   => 'running',
             'comments' => 'Uploading dmp ...',
             'progress' => 0
         ]);
@@ -222,8 +230,8 @@ class SeService
             $this->broadcast([
                 'action'   => 'export.upload',
                 'status'   => 'failed',
-                'comments'  => 'Upload has failed',
-                'error' => $this->ssh2->getStdError()
+                'comments' => 'Upload has failed',
+                'error'    => $this->ssh2->getStdError()
             ]);
             return false;
         }
@@ -251,11 +259,11 @@ class SeService
     {
         $command = "";
         switch ($this->operation) {
-            case "se_vdnam":
+            case self::VDNAM:
                 $command = "sh_cliexpbr vdnam";
                 $this->exitCode = "DUMP_FILE_FULL_PATH";
                 break;
-            case "se_txt_lib":
+            case self::TXTLIB:
                 $command = "se_text_db.sh exp";
                 $this->exitCode = "iMX TEXT database exported into compressed format to";
                 break;
@@ -273,18 +281,21 @@ class SeService
      */
     protected function cleanHouse() : void
     {
-        if ($this->operation === "se_txt_lib") {
+        $dump = '';
+        if ($this->operation === self::TXTLIB) {
+            $dump = "/{$this->user}/intra/imx/base/textsbase.dmp";
             $this->seDump = "/{$this->user}/intra/imx/base/textsbase.dmp.Z";
         }
 
-        if ($this->operation === "se_vdnam") {
+        if ($this->operation === self::VDNAM) {
+            $dump = "/{$this->user}/intra/imx/base/client_vdnam.dmp";
             $this->seDump = "/{$this->user}/intra/imx/base/client_vdnam.dmp.Z";
         }
 
         $this->ssh2->exec(
             "export TERM=vt100; sudo su - {$this->user} -c '" . PHP_EOL
             . ". ~/.profile " . PHP_EOL
-            . "rm -f {$this->seDump}'"
+            . "rm -f {$this->seDump} {$dump}'"
         );
     }
     
@@ -332,8 +343,8 @@ class SeService
                 $this->broadcast([
                     'action'   => 'export.clone',
                     'status'   => 'failed',
-                    'comments'  => 'Clone of repo has failed',
-                    'log' => $this->ssh2->getStdError()
+                    'comments' => 'Clone of repo has failed',
+                    'log'      => $this->ssh2->getStdError()
                 ]);
                 throw new \Exception("Repo clone failed!");
             }
