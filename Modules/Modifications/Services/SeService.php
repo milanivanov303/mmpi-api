@@ -318,19 +318,19 @@ class SeService
     protected function getWorkdir() : string
     {
         $seRepo  = config('app.nexus.rhode_url');
-        $patches =  escapeshellarg('${IMX_PATCH}');
+        $repoDir =  "/{$this->user}/intra/imx/patch/system-expert";
 
         $dir = $this->ssh2->exec(
             "export TERM=vt100; sudo su - {$this->user} -c '" . PHP_EOL
             . ". ~/.profile " . PHP_EOL
-            . "[ -d '\${IMX_PATCH}/system-expert' ] && echo '{$patches}/system-expert' || exit 1'"
+            . "[ -d {$repoDir} ] && echo {$repoDir} || exit 1'"
         );
 
         if ($this->ssh2->getExitStatus()) {
             $dir = $this->ssh2->exec(
                 "export TERM=vt100; sudo su - {$this->user} -c '" . PHP_EOL
                 . ". ~/.profile " . PHP_EOL
-                . "cd \${IMX_PATCH}" . PHP_EOL
+                . "cd /{$this->user}/intra/imx/patch" . PHP_EOL
                 . "hg clone {$seRepo}" . PHP_EOL
                 . "cd system-expert" . PHP_EOL
                 . "pwd'"
