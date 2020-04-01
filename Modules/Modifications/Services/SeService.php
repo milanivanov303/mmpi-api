@@ -70,11 +70,33 @@ class SeService
     protected $pid = '';
 
     /**
+     * Export exitCode
+     *
+     * @var string
+     */
+    protected $exitCode = '';
+
+    /**
+     * Export operation
+     *
+     * @var string
+     */
+    protected $operation = '';
+
+    /**
      * Callback for status progress
      *
      * @var callable
      */
     protected $callback;
+
+    /**
+     * Current operations for automatic export
+     *
+     * @const
+     */
+    const VDNAM = 'se_vdnam';
+    const TXTLIB = 'se_txt_lib';
 
     /**
      * ExportSeService constructor.
@@ -96,6 +118,7 @@ class SeService
         $this->chain    = $chain;
         $this->user     = $user;
         $this->callback = $callback;
+        $this->operation = EnumValue::find($type)->key;
     }
 
     /**
@@ -107,6 +130,7 @@ class SeService
     {
         $this->logTime = time();
         $this->logFileDir = $this->getWorkdir();
+        $this->cleanHouse();
 
         $pid = $this->ssh2->exec(
             "export TERM=vt100; sudo su - {$this->user} -c '" . PHP_EOL
@@ -119,17 +143,17 @@ class SeService
 
         if ($this->ssh2->getExitStatus()) {
             $this->broadcast([
-                'action' => 'export',
-                'status' => 'failed',
+                'action'   => 'export',
+                'status'   => 'failed',
                 'comments' => 'Export has failed',
-                'log' =>  $this->ssh2->getStdError()
+                'log'      =>  $this->ssh2->getStdError()
             ]);
             return false;
         }
 
         $this->broadcast([
-            'action' => 'export',
-            'status' => 'running',
+            'action'   => 'export',
+            'status'   => 'running',
             'comments' => 'Exporting...'
         ]);
 
@@ -160,7 +184,7 @@ class SeService
         $message = [
             'action' => 'export',
             'status' => $status,
-            'log' => $sanitized
+            'log'    => $sanitized
         ];
 
         if ($status !== 'running') {
@@ -180,8 +204,8 @@ class SeService
     protected function upload() : bool
     {
         $this->broadcast([
-            'action' => 'export.upload',
-            'status' => 'running',
+            'action'   => 'export.upload',
+            'status'   => 'running',
             'comments' => 'Uploading dmp ...',
             'progress' => 0
         ]);
@@ -206,8 +230,8 @@ class SeService
             $this->broadcast([
                 'action'   => 'export.upload',
                 'status'   => 'failed',
-                'comments'  => 'Upload has failed',
-                'error' => $this->ssh2->getStdError()
+                'comments' => 'Upload has failed',
+                'error'    => $this->ssh2->getStdError()
             ]);
             return false;
         }
@@ -233,16 +257,15 @@ class SeService
      */
     protected function getCommandType() : string
     {
-        $typeInfo = EnumValue::find($this->type);
-
         $command = "";
-        
-        switch ($typeInfo->key) {
-            case "se_vdnam":
+        switch ($this->operation) {
+            case self::VDNAM:
                 $command = "sh_cliexpbr vdnam";
+                $this->exitCode = "DUMP_FILE_FULL_PATH";
                 break;
-            case "se_txt_lib":
+            case self::TXTLIB:
                 $command = "se_text_db.sh exp";
+                $this->exitCode = "iMX TEXT database exported into compressed format to";
                 break;
             default:
                 throw new \Exception("No execution script for this type is provided!");
@@ -251,6 +274,31 @@ class SeService
         return $command;
     }
 
+    /**
+     * Operation clean house
+     *
+     * @return void
+     */
+    protected function cleanHouse() : void
+    {
+        $dump = '';
+        if ($this->operation === self::TXTLIB) {
+            $dump = "/{$this->user}/intra/imx/base/textsbase.dmp";
+            $this->seDump = "/{$this->user}/intra/imx/base/textsbase.dmp.Z";
+        }
+
+        if ($this->operation === self::VDNAM) {
+            $dump = "/{$this->user}/intra/imx/base/client_vdnam.dmp";
+            $this->seDump = "/{$this->user}/intra/imx/base/client_vdnam.dmp.Z";
+        }
+
+        $this->ssh2->exec(
+            "export TERM=vt100; sudo su - {$this->user} -c '" . PHP_EOL
+            . ". ~/.profile " . PHP_EOL
+            . "rm -f {$this->seDump} {$dump}'"
+        );
+    }
+    
     /**
      * Get log file
      *
@@ -270,19 +318,19 @@ class SeService
     protected function getWorkdir() : string
     {
         $seRepo  = config('app.nexus.rhode_url');
-        $patches =  escapeshellarg('${IMX_PATCH}');
+        $repoDir =  "/{$this->user}/intra/imx/patch/system-expert";
 
         $dir = $this->ssh2->exec(
             "export TERM=vt100; sudo su - {$this->user} -c '" . PHP_EOL
             . ". ~/.profile " . PHP_EOL
-            . "[ -d '\${IMX_PATCH}/patch/system-expert' ] && echo '{$patches}/system-expert' || exit 1'"
+            . "[ -d {$repoDir} ] && echo {$repoDir} || exit 1'"
         );
 
         if ($this->ssh2->getExitStatus()) {
             $dir = $this->ssh2->exec(
                 "export TERM=vt100; sudo su - {$this->user} -c '" . PHP_EOL
                 . ". ~/.profile " . PHP_EOL
-                . "cd \${IMX_PATCH}" . PHP_EOL
+                . "cd /{$this->user}/intra/imx/patch" . PHP_EOL
                 . "hg clone {$seRepo}" . PHP_EOL
                 . "cd system-expert" . PHP_EOL
                 . "pwd'"
@@ -295,8 +343,8 @@ class SeService
                 $this->broadcast([
                     'action'   => 'export.clone',
                     'status'   => 'failed',
-                    'comments'  => 'Clone of repo has failed',
-                    'log' => $this->ssh2->getStdError()
+                    'comments' => 'Clone of repo has failed',
+                    'log'      => $this->ssh2->getStdError()
                 ]);
                 throw new \Exception("Repo clone failed!");
             }
@@ -321,14 +369,12 @@ class SeService
             return 'running';
         }
 
-        $exitCode = "grep \"DUMP_FILE_FULL_PATH\" {$this->getLogFile()}";
+        $exitCode = "grep \"{$this->exitCode}\" {$this->getLogFile()}";
         $finished = $this->ssh2->exec($exitCode);
         if ($finished) {
-            preg_match_all("/\\[(.*?)\\]/", $finished, $matches);
-            $this->seDump = $matches[1][0];
             return 'exported';
         }
-
+        
         return 'failed';
     }
 
