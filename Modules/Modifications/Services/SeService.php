@@ -323,7 +323,7 @@ class SeService
         $dir = $this->ssh2->exec(
             "export TERM=vt100; sudo su - {$this->user} -c '" . PHP_EOL
             . ". ~/.profile " . PHP_EOL
-            . "[ -d '\${IMX_PATCH}/patch/system-expert' ] && echo '{$patches}/system-expert' || exit 1'"
+            . "[ -d '\${IMX_PATCH}/system-expert' ] && echo '{$patches}/system-expert' || exit 1'"
         );
 
         if ($this->ssh2->getExitStatus()) {
