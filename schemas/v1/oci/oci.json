@@ -1,0 +1,42 @@
+{
+    "$id": "Oci",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "description": "OCI object",
+    "required": [
+        "query",
+        "instance"
+    ],
+    "properties": {
+        "query": {
+            "oneOf": [
+                {
+                    "operation": {
+                        "oneOf": [
+                            {
+                                "$ref": "/v1/modifications/modification.json#/properties/subtype",
+                                "description": "The subtype id of the operation"
+                            },
+                            {"type": "string"}
+                        ]
+                    },
+                    "select": {
+                        "type": "string"
+                    }
+                }
+            ]
+        },
+        "instance": {
+            "allOf": [
+                {"$ref": "/v1/instances/instance.json"},
+                {
+                    "required": [
+                        "name",
+                        "host",
+                        "tns_name"
+                    ]
+                }
+            ]
+        }
+    }
+}

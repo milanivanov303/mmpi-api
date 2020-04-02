@@ -97,6 +97,8 @@ class SeService
      */
     const VDNAM = 'se_vdnam';
     const TXTLIB = 'se_txt_lib';
+    const BTPROC = 'bkg_trans_proc';
+    const BTTEXT = 'bkg_trans_texte';
 
     /**
      * ExportSeService constructor.
