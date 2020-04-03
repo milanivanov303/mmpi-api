@@ -118,6 +118,7 @@ class ModificationsController extends Controller
             'delivery_chain_id' => $request->input('delivery_chain_id'),
             'instance_status'   => $request->input('instance_status'),
             'instance'          => $request->input('instance'),
+            'contents'          => $request->input('contents')
         ];
 
         $model = $this->repository->create($data);
@@ -125,10 +126,9 @@ class ModificationsController extends Controller
         if ($request->input('doExport')) {
             dispatch(
                 (new ExportSEJob([
-                    'model'             => $model,
-                    'instance'          => $request->input('instance'),
-                    'delivery_chain_id' => $request->input('delivery_chain_id'),
-                    'broadcast'         => $broadcast
+                    'model'     => $model,
+                    'instance'  => $request->input('instance'),
+                    'broadcast' => $broadcast
                 ]))->onQueue('export-se')
             );
 

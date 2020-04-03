@@ -35,6 +35,13 @@ class SeService
     protected $user;
 
     /**
+     * Contents string for BTPROC and BTTEXT
+     *
+     * @var string
+     */
+    protected $contents;
+
+    /**
      * Export log file dir
      *
      * @var string
@@ -113,12 +120,14 @@ class SeService
         string $type,
         int $chain,
         string $user,
+        string $contents,
         callable $callback
     ) {
         $this->ssh2     = $ssh2;
         $this->type     = $type;
         $this->chain    = $chain;
         $this->user     = $user;
+        $this->contents = $contents;
         $this->callback = $callback;
         $this->operation = EnumValue::find($type)->key;
     }
@@ -246,6 +255,7 @@ class SeService
             'status'   => 'success',
             'comments' => 'Upload to Nexus successfully',
             'artifact' => $artifactPath,
+            'version'  => $this->logTime,
             'progress' => 100
         ]);
 
@@ -269,6 +279,14 @@ class SeService
                 $command = "se_text_db.sh exp";
                 $this->exitCode = "iMX TEXT database exported into compressed format to";
                 break;
+            case self::BTPROC:
+                $command = "bkg_trans_proc {$this->contents} -f {$this->seDump} exp";
+                $this->exitCode = "Export terminated successfully without warnings.";
+                break;
+            case self::BTTEXT:
+                $command = "bkg_trans_texte -f {$this->seDump} exp \"{$this->contents}\"";
+                $this->exitCode = "Export terminated successfully without warnings.";
+                break;
             default:
                 throw new \Exception("No execution script for this type is provided!");
         }
@@ -278,22 +296,42 @@ class SeService
 
     /**
      * Operation clean house
-     *
+     *bkg_trans_proc CFPM -f /bull/intra/imx/patch/system-expert/ES_CFPM_20200403123514.dmp exp
      * @return void
      */
     protected function cleanHouse() : void
     {
-        $dump = '';
-        if ($this->operation === self::TXTLIB) {
-            $dump = "/{$this->user}/intra/imx/base/textsbase.dmp";
-            $this->seDump = "/{$this->user}/intra/imx/base/textsbase.dmp.Z";
+        switch ($this->operation) {
+            case self::VDNAM:
+                $dump = "/{$this->user}/intra/imx/base/client_vdnam.dmp";
+                $this->seDump = "/{$this->user}/intra/imx/base/client_vdnam.dmp.Z";
+                $this->cleanExec($dump);
+                break;
+            case self::TXTLIB:
+                $dump = "/{$this->user}/intra/imx/base/textsbase.dmp";
+                $this->seDump = "/{$this->user}/intra/imx/base/textsbase.dmp.Z";
+                $this->cleanExec($dump);
+                break;
+            case self::BTPROC:
+                $dump = '';
+                $this->seDump = "\$IMX_TMP/ES_{$this->contents}.dmp";
+                $this->cleanExec($dump);
+                break;
+            case self::BTTEXT:
+                $dump = '';
+                $this->seDump = "\$IMX_TMP/LETTERS.dmp";
+                $this->cleanExec($dump);
+                break;
         }
+    }
 
-        if ($this->operation === self::VDNAM) {
-            $dump = "/{$this->user}/intra/imx/base/client_vdnam.dmp";
-            $this->seDump = "/{$this->user}/intra/imx/base/client_vdnam.dmp.Z";
-        }
-
+    /**
+     * Clean exec
+     *
+     * @return void
+     */
+    protected function cleanExec($dump) : void
+    {
         $this->ssh2->exec(
             "export TERM=vt100; sudo su - {$this->user} -c '" . PHP_EOL
             . ". ~/.profile " . PHP_EOL
@@ -308,7 +346,8 @@ class SeService
      */
     protected function getLogFile() : string
     {
-        $logName = str_replace(' ', '_', $this->getCommandType())."_".$this->logTime;
+        list($logName) = explode(' ', $this->getCommandType());
+        $logName = $logName."_".$this->logTime;
         return "{$this->logFileDir}/{$logName}.log";
     }
 
