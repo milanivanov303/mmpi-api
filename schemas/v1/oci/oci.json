@@ -3,15 +3,24 @@
     "$schema": "http://json-schema.org/draft-07/schema#",
     "type": "object",
     "description": "OCI object",
-    "oneOf": [
+    "allOf": [
         {
-            "required": [
-                "query"
+            "oneOf": [
+                {
+                    "required": [
+                        "query"
+                    ]
+                },
+                {
+                    "required": [
+                        "operation"
+                    ]
+                }
             ]
         },
         {
             "required": [
-                "operation"
+                "instance"
             ]
         }
     ],
