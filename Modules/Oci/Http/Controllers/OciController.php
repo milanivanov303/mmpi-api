@@ -22,7 +22,7 @@ class OciController extends BaseController
         try {
             $oci = app('OciConnect', $data['instance']);
 
-            $query = new OciRequest($oci, $data['query']);
+            $query = new OciRequest($oci, $data);
 
             $response = $query->run();
         } catch (\Exception $e) {

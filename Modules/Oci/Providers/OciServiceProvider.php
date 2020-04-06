@@ -16,9 +16,7 @@ class OciServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->bind('OciConnect', function ($app, $instance) {
-            $username  = !empty($instance['db_user'])
-                         ? $instance['db_user']
-                         : config('app.oci.username');
+            $username  = $instance['db_user'] ?? config('app.oci.username');
             $password  = config('app.oci.password');
             $tnsname   = $instance['tns_name'];
                          

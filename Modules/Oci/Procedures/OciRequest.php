@@ -19,7 +19,7 @@ class OciRequest
      *
      * @var string
      */
-    protected $select = '';
+    protected $query = '';
 
     /**
      * OciRequest constructor
@@ -29,8 +29,8 @@ class OciRequest
      */
     public function __construct($oci, array $query)
     {
-        $this->oci    = $oci;
-        $this->select = $this->checkSelect($query);
+        $this->oci   = $oci;
+        $this->query = $this->getQuery($query);
     }
 
     /**
@@ -41,9 +41,9 @@ class OciRequest
      */
     public function run()
     {
-        $stid = oci_parse($this->oci, $this->select);
+        $stid = oci_parse($this->oci, $this->query);
         if (oci_statement_type($stid) != "SELECT") {
-            Log::error("Only oci SELECT statements are allowed - \"{$this->select}");
+            Log::error("Only oci SELECT statements are allowed - \"{$this->query}");
             throw new \Exception("Only oci SELECT statements are allowed!");
         }
 
@@ -61,25 +61,25 @@ class OciRequest
      * @return string
      * @throws \Exception
      */
-    protected function checkSelect($selectData) : string
+    protected function getQuery($data) : string
     {
-        if (isset($selectData['select'])) {
-            return $selectData['select'];
+        if (isset($data['query'])) {
+            return $data['query'];
         }
 
-        if (isset($selectData['operation'])) {
-            $operation = $selectData['operation']['key'];
-            switch ($operation) {
+        if (isset($data['operation'])) {
+            switch ($data['operation']['key']) {
                 case SeService::BTPROC:
-                    $select = "SELECT ecran FROM v_domaine WHERE type = 'filiere'";
+                    $query = "SELECT ecran FROM v_domaine WHERE type = 'filiere'";
+                    return $query;
                     break;
                 case SeService::BTTEXT:
-                    $select = "SELECT DISTINCT texte FROM brregleediteur";
+                    $query = "SELECT DISTINCT texte FROM brregleediteur";
+                    return $query;
                     break;
                 default:
                     throw new \Exception("Not provided oci select or valid operation!");
             }
-            return $select;
         }
     }
 }
