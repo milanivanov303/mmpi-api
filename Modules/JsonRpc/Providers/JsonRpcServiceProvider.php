@@ -5,7 +5,6 @@ namespace Modules\JsonRpc\Providers;
 use Illuminate\Support\ServiceProvider;
 use JsonRPC\Server;
 use Modules\JsonRpc\Procedures\Cppcheck;
-use Modules\JsonRpc\Procedures\ImportHash;
 
 class JsonRpcServiceProvider extends ServiceProvider
 {
@@ -20,8 +19,7 @@ class JsonRpcServiceProvider extends ServiceProvider
             $server = new Server();
 
             $server->getProcedureHandler()
-                ->withClassAndMethod('run_cppcheck', new Cppcheck, 'run')
-                ->withClassAndMethod('import_hash', new ImportHash, 'import');
+                ->withClassAndMethod('run_cppcheck', new Cppcheck, 'run');
 
             return $server;
         });
