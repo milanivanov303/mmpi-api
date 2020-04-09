@@ -29,7 +29,7 @@ class Cppcheck
      * @var string
      */
     protected $cppcheckCmd =
-        ". /enterprise/.custom_profile && cppcheck -q -DSYSTEME_64 -DSYSTEME_LINUX -I client-h/client.h";
+        "cppcheck -q --platform=unix64 -I client-h/client.h";
 
     /**
      * Cppcheck constructor
