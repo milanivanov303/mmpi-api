@@ -63,6 +63,9 @@ $router->group(['prefix' => 'v1'], function () use ($router) {
         // Json RPC. All nasty stuff goes here
         require 'v1/jsonrpc.php';
 
+        // OCI. All nasty stuff goes here
+        require 'v1/oci.php';
+
         // Instance downtimes
         require 'v1/instance-downtimes.php';
 

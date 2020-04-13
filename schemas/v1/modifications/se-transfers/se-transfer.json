@@ -30,6 +30,9 @@
         },
         "instance_status": {
             "$ref": "/v1/modifications/modification.json#/properties/instance_status"
-        }   
+        },
+        "contents": {
+            "type": ["string", "null"]
+        }
     }
 }

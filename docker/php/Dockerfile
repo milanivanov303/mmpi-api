@@ -6,4 +6,5 @@ RUN if [ ${display_errors} -eq 1 ]; then cp "$PHP_INI_DIR/php.ini-development" "
 
 USER root
 RUN apt-get -y install mercurial-server cppcheck
+ENV TNS_ADMIN /var/www/html/storage/app/tns
 USER enterprise

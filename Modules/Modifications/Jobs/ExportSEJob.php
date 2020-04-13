@@ -68,8 +68,9 @@ class ExportSEJob extends Job
             $export = new SeService(
                 $ssh2,
                 $this->seTransfer->subtype_id,
-                $this->data['delivery_chain_id'],
+                $this->seTransfer->delivery_chain_id,
                 $this->data['instance']['user'],
+                $this->seTransfer->contents,
                 function (array $message) {
                     $this->broadcast($message);
                 }
@@ -100,6 +101,10 @@ class ExportSEJob extends Job
 
         if (array_key_exists('artifact', $message) && $message['artifact']) {
             $this->seTransfer->update(['maven_repository' => "{$message['artifact']}"]);
+        }
+
+        if (array_key_exists('version', $message) && $message['version']) {
+            $this->seTransfer->update(['version' => "{$message['version']}"]);
         }
 
         Broadcast::topic(
