@@ -70,12 +70,10 @@ class OciRequest
         if (isset($data['operation'])) {
             switch ($data['operation']['key']) {
                 case SeService::BTPROC:
-                    $query = "SELECT ecran FROM v_domaine WHERE type = 'filiere'";
-                    return $query;
+                    return "SELECT ecran FROM v_domaine WHERE type = 'filiere'";
                     break;
                 case SeService::BTTEXT:
-                    $query = "SELECT DISTINCT texte FROM brregleediteur";
-                    return $query;
+                    return "SELECT DISTINCT texte FROM brregleediteur";
                     break;
                 default:
                     throw new \Exception("Not provided oci select or valid operation!");
