@@ -144,11 +144,25 @@ return array_merge(
         |
         */
         'ssh' => [
-            'host'       => env('SSH_HOST', 'bira.codixfr.private'),
-            'port'       => env('SSH_PORT', 22),
-            'username'   => env('SSH_USERNAME'),
-            'password'   => env('SSH_PASSWORD'),
-            'public_key' => env('SSH_KEY')
+            'host'        => env('SSH_HOST', 'bira.codixfr.private'),
+            'port'        => env('SSH_PORT', 22),
+            'username'    => env('SSH_USERNAME'),
+            'password'    => env('SSH_PASSWORD'),
+            'public_key'  => env('SSH_KEY'),
+            'tnsname_host'=> env('TNSNAME_CONFIG_HOST', 'asparuh.codixfr.private'),
+        ],
+
+        /*
+        |--------------------------------------------------------------------------
+        | Oci information
+        |--------------------------------------------------------------------------
+        |
+        | SSH configuration for codix internal instances
+        |
+        */
+        'oci' => [
+            'username'   => env('OCI_USERNAME'),
+            'password'   => env('OCI_PASSWORD'),
         ],
 
         'ddl' => [

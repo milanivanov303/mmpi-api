@@ -8,6 +8,7 @@ use Illuminate\Console\Scheduling\Schedule;
 use Laravel\Lumen\Console\Kernel as ConsoleKernel;
 use Modules\Certificates\Console\Commands\CheckExpiry;
 use Modules\Users\Console\Commands\SynchronizeCommand;
+use Modules\Oci\Console\Commands\Tnsnameora;
 
 class Kernel extends ConsoleKernel
 {
@@ -20,7 +21,8 @@ class Kernel extends ConsoleKernel
         OpenapiGenerate::class,
         SynchronizeCommand::class,
         CheckExpiry::class,
-        HeadMergeCommand::class
+        HeadMergeCommand::class,
+        Tnsnameora::class,
     ];
 
     /**
@@ -45,5 +47,9 @@ class Kernel extends ConsoleKernel
             ->dailyAt('02:00')
             ->environments(['prod'])
             ->appendOutputTo(storage_path("logs/head-merge-command.log"));
+
+        $schedule->command('tnsnameora:get-config')
+            ->dailyAt('10:00')
+            ->environments(['prod']);
     }
 }
