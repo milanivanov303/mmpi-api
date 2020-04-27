@@ -344,6 +344,21 @@ class DescriptionParserService
             return true;
         }
 
+        // Тhe FE release commit
+        if (preg_match('/- FE-RELEASE-COMMIT-/', $this->description)) {
+            return true;
+        }
+
+        // All merge related commit messages
+        if (preg_match('/Merge (remote-tracking )?branch .* (of|into) .*/', $this->description)) {
+            return true;
+        }
+
+        // Rhode pull requests merge
+        if (preg_match('/Merge pull request .*/', $this->description)) {
+            return true;
+        }
+
         return false;
     }
 
