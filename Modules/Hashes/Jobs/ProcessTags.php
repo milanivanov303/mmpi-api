@@ -55,17 +55,16 @@ class ProcessTags implements ShouldQueue
             Mail
                 ::to($commitedBy ?? config('app.admin-mails'))
                 ->cc($commitedByManager ?? config('app.admin-mails'))
-
-                // I know it is stupid, but it's temporary and should remove it in future - DEVOPS-124
-                ->cc(config('imarinov@codix.bg'))
-
                 ->queue(
                     (
                         new HashDescriptionMail([
                             'hashCommit' => $this->hashCommit,
                             'errors'     => $description->getErrors()
                         ])
-                    )->onQueue('mails')
+                    )
+                        // I know it is stupid, but it's temporary and should remove it in future - DEVOPS-124
+                        ->cc('imarinov@codix.bg')
+                        ->onQueue('mails')
                 );
         }
 
