@@ -345,7 +345,7 @@ class DescriptionParserService
         }
 
         // Тhe FE release commit
-        if (preg_match('/- FE-RELEASE-COMMIT-/', $this->description)) {
+        if (preg_match('/FE-RELEASE-COMMIT-/', $this->description)) {
             return true;
         }
 
