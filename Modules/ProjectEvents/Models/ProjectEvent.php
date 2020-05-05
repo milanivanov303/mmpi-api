@@ -6,7 +6,7 @@ use Core\Models\Model;
 use App\Models\EnumValue;
 use App\Models\User;
 use Modules\Projects\Models\Project;
-use Modules\ProjectEvents\Models\ProjectEventEstimation;
+use Modules\ProjectEventEstimations\Models\ProjectEventEstimation;
 
 class ProjectEvent extends Model
 {
