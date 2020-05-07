@@ -21,6 +21,8 @@ class ScmModification extends Modification
         'deliveryChain',
         'instanceStatus',
         'active',
-        'visible'
+        'visible',
+        'instance_id',
+        'instance'
     ];
 }
