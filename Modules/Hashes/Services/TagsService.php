@@ -92,6 +92,11 @@ class TagsService
         $issues  = Issue::setEagerLoads([])->whereIn('tts_id', $ttsKeys)->get(['id', 'tts_id']);
 
         foreach ($ttsKeys as $sortIndex => $ttsKey) {
+            // Skip ttsKey if it is not in right format
+            if (! preg_match('/[A-Z]+-[0-9]+/', $ttsKey)) {
+                continue;
+            }
+
             $issue = $issues->firstWhere('tts_id', $ttsKey);
 
             $sourceRevTtsKey = new SourceRevTtsKey([
