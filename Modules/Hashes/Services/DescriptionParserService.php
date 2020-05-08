@@ -350,7 +350,7 @@ class DescriptionParserService
         }
 
         // All merge related commit messages
-        if (preg_match('/Merge (remote-tracking )?branch .* (of|into) .*/', $this->description)) {
+        if (preg_match('/Merge (remote-tracking )?branch .*/', $this->description)) {
             return true;
         }
 
