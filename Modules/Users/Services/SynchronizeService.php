@@ -15,17 +15,19 @@ class SynchronizeService extends UsersSynchronizeService
      */
     protected function getRemoteUsers() : Collection
     {
-        if (empty($this->filters)) {
-            $this->filters['limit']  = 1000;
-            $this->filters['status'] = 1;
+        $filters = $this->filters;
+        
+        if (empty($filters)) {
+            $filters['limit']  = 1000;
+            $filters['status'] = 1;
         }
-
-        $this->filters['with'] = [
+        
+        $filters['with'] = [
             'manager',
             'department'
         ];
 
-        $users = app('UserManagementApi')->get('users', $this->filters);
+        $users = app('UserManagementApi')->get('users', $filters);
 
         if ($users->isSuccessful()) {
             return collect($users->json()['data']);
@@ -99,7 +101,12 @@ class SynchronizeService extends UsersSynchronizeService
      */
     protected function deactivateUsers($usernames)
     {
+        $accessGroupIds = [
+                            \App\Models\AccessGroup::getByName('app_auto_users')->getId()
+                          ];
+        
         $users = User::whereNotIn('username', $usernames)
+            ->whereNotIn('access_group_id', $accessGroupIds)
             ->where('status', 1)
             ->get();
 
