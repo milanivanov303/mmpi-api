@@ -22,7 +22,6 @@ class ScmModification extends Modification
         'instanceStatus',
         'active',
         'visible',
-        'instance_id',
-        'instance'
+        'contents'
     ];
 }
