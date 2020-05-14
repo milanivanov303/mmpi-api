@@ -37,8 +37,8 @@
         "delivery_chain": {
             "$ref": "/v1/modifications/modification.json#/properties/delivery_chain"
         },
-        "instance": {
-            "$ref": "/v1/modifications/modification.json#/properties/instance"
+        "contents": {
+            "$ref": "/v1/modifications/modification.json#/properties/contents"
         }
     }
 }
