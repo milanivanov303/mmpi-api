@@ -154,9 +154,19 @@ class ProjectEventRepository extends AbstractRepository implements RepositoryInt
      */
     protected function saveEstimations($estimations)
     {
-        // delete old estimations before setting new ones
-        $this->model->projectEventEstimations()->delete();
+        // delete estimations which are not present in the $estimations array
+        $this->model->projectEventEstimations()
+        ->whereNotIn('id', array_map(function ($estimation) {
+            return array_key_exists('id', $estimation) ? $estimation['id'] : false;
+        }, $estimations))
+        ->delete();
 
-        $this->model->projectEventEstimations()->createMany($estimations);
+        // get estimations which don't exist in DB
+        $newEstimations = array_filter($estimations, function ($estimation) {
+            return array_key_exists('id', $estimation) === false;
+        });
+
+        // insert new estimations
+        $this->model->projectEventEstimations()->createMany($newEstimations);
     }
 }

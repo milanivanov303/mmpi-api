@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Core\Models\Model;
 use App\Models\EnumValue;
-use Modules\ProjectEventEstimations\Models\ProjectEventEstimation;
+use Modules\ProjectEvents\Models\ProjectEventEstimation;
 
 class Department extends Model
 {
