@@ -4,12 +4,12 @@ use App\Models\EnumValue;
 use Modules\DeliveryChains\Models\DeliveryChain;
 use Modules\Issues\Models\Issue;
 
-class ScmTest extends RestTestCase
+class CmsTest extends RestTestCase
 {
-    protected $uri        = 'v1/modifications/scm';
+    protected $uri        = 'v1/modifications/cms';
     protected $table      = 'modifications';
     protected $primaryKey = 'id';
-    protected $typeId     = 'scm';
+    protected $typeId     = 'cms';
 
     /**
      * Get request data

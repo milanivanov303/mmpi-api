@@ -32,7 +32,7 @@ $router->group([
         'binaries',
         'commands',
         'operations',
-        'scm'
+        'cms'
     ];
 
     foreach ($types as $prefix) {
@@ -54,7 +54,7 @@ $router->group([
                 'type'        => $prefix,
                 'tags'        => ['modifications']
             ]);
-            if ($prefix === 'binaries' || $prefix === 'commands' || $prefix === 'scm') {
+            if ($prefix === 'binaries' || $prefix === 'commands' || $prefix === 'cms') {
                 $router->post('', [
                     'as'          => "modifications.{$prefix}.create",
                     'schema'      => "/v1/modifications/{$prefix}/create.json",
