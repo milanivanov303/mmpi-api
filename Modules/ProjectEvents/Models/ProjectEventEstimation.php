@@ -63,12 +63,25 @@ class ProjectEventEstimation extends Model
         });
 
         static::created(function ($model) {
-            $to = $model
+            $userDepartmentRole = $model
                 ->department
-                ->userDepartmentRoles
-                ->where('role_id', 'tl')->first()
-                ->user
-                ->email;
+                ->userDepartmentRoles;
+
+            // if the team doesn't have tl or dtl send the email to all users
+            if (count($userDepartmentRole) == 0) {
+                $to = array_filter(array_map(function ($user) {
+                    return $user['email'];
+                }, $model->department->users->toArray()), function ($email) {
+                    return $email === '' ? false : true;
+                });
+            } else {
+                $to = $userDepartmentRole
+                    ->where('role_id', 'tl')->first()
+                    ->orWhere('role_id', 'dtl')->first()
+                    ->user
+                    ->email;
+            }
+
             $cc = $model->madeBy->email;
 
             Mail::
@@ -79,7 +92,7 @@ class ProjectEventEstimation extends Model
                     'user' => $model->madeBy->name,
                     'department' => $model->department->name,
                     'duration' =>  $model->duration
-                    ]));
+                ]));
         });
     }
 }
