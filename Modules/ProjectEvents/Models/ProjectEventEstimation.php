@@ -69,18 +69,17 @@ class ProjectEventEstimation extends Model
 
             // if the team doesn't have tl or dtl send the email to all users
             if (count($userDepartmentRole) == 0) {
-                $to = array_filter(array_map(function ($user) {
-                    return $user['email'];
-                }, $model->department->users->toArray()), function ($email) {
-                    return $email === '' ? false : true;
-                });
+                $users = $model->department->users->toArray();
             } else {
-                $to = $userDepartmentRole
-                    ->where('role_id', 'tl')->first()
-                    ->orWhere('role_id', 'dtl')->first()
-                    ->user
-                    ->email;
+                $users = ($userDepartmentRole->where('role_id', 'tl')
+                        ?? $userDepartmentRole->orWhere('role_id', 'dtl'))->pluck('user')->toArray();
             }
+
+            $to = array_filter(array_map(function ($user) {
+                return $user['email'];
+            }, $users), function ($email) {
+                return $email === '' ? false : true;
+            });
 
             $cc = $model->madeBy->email;
 
