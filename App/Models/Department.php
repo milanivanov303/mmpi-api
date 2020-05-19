@@ -76,4 +76,12 @@ class Department extends Model
     {
         return $this->hasMany(ProjectEventEstimation::class);
     }
+
+    /**
+     * Get users
+     */
+    protected function users()
+    {
+        return $this->hasMany(User::class);
+    }
 }
