@@ -4,6 +4,6 @@
     "type": "object",
     "description": "Cms Modification object",
     "allOf": [
-        {"$ref": "/v1/modifications/Cms/cms.json"}
+        {"$ref": "/v1/modifications/cms/cms.json"}
     ]
 }
