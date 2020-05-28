@@ -13,6 +13,8 @@ use Illuminate\Support\Str;
 use JiraRestApi\Issue\IssueField;
 use JiraRestApi\Issue\IssueService;
 use Modules\SourceRevisions\Models\SourceRevision;
+use JiraRestApi\IssueLink\IssueLink;
+use JiraRestApi\IssueLink\IssueLinkService;
 
 /**
  * Head merge sources to head
@@ -61,6 +63,7 @@ class HeadMergeCommand extends Command
             foreach ($data as $username => $sources) {
                 try {
                     $issue = $this->createIssue($username, $sources);
+                    $this->linkIssue($issue->key, $sources->first()['tts_id']);
 
                     SourceRevision
                         ::whereIn('rev_id', $sources->pluck('rev_id')->all())
@@ -69,6 +72,7 @@ class HeadMergeCommand extends Command
                     $patch->tts_keys = trim("{$patch->tts_keys}, {$issue->key}", ', ');
 
                     $this->info("New issue {$issue->key} was created and assigned to user {$username}");
+                    $this->info("Issue {$issue->key} was linked to {$sources->first()['tts_id']}");
                 } catch (\Exception $e) {
                     Log::error($e->getMessage());
                     $this->error($e->getMessage());
@@ -176,7 +180,6 @@ class HeadMergeCommand extends Command
     protected function getIssue(string $username, Collection $sources) : IssueField
     {
         $ttsId         = $sources->first()['tts_id'];
-        $devProjectKey = $this->getTtsDevProjectKey($sources);
 
         $issueField = new IssueField();
 
@@ -189,7 +192,7 @@ class HeadMergeCommand extends Command
         );
 
         $issueField
-            ->setProjectKey($devProjectKey)
+            ->setProjectKey('CVSHEAD')
             ->setSummary("Commit on Head the changes done in {$ttsId}")
             ->setAssigneeName($username)
             ->setIssueType('Short Task')
@@ -250,5 +253,41 @@ class HeadMergeCommand extends Command
         $issueService->update($newIssue->key, $issue);
 
         return $newIssue;
+    }
+    
+    /**
+     * Get link data
+     *
+     * @param type $inwardIssue
+     * @param type $outwardIssue
+     * @return IssueLink
+     */
+    protected function getLink($inwardIssue, $outwardIssue)
+    {
+        $issueLink = new IssueLink();
+        
+        $issueLink->setInwardIssue($inwardIssue)
+                ->setOutwardIssue($outwardIssue)
+                ->setLinkTypeName("Relate")
+                ->setComment("Automatically linked to task {$outwardIssue}");
+        
+        return $issueLink;
+    }
+    
+    /**
+     * Link issues
+     *
+     * @param type $inwardIssue
+     * @param type $outwardIssue
+     *
+     */
+    protected function linkIssue($inwardIssue, $outwardIssue)
+    {
+        $issueLink = $this->getLink($inwardIssue, $outwardIssue);
+        
+        $issueLinkService = new IssueLinkService();
+        $linkedIssue = $issueLinkService->addIssueLink($issueLink);
+        
+        return $linkedIssue;
     }
 }
