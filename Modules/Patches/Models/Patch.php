@@ -8,6 +8,7 @@ use Modules\Projects\Models\Project;
 use Modules\DeliveryChains\Models\DeliveryChain;
 use Modules\Installations\Models\Installation;
 use Modules\PatchRequests\Models\PatchRequest;
+use Modules\CurrentPatchStatus\Models\CurrentPatchStatus;
 
 class Patch extends Model
 {
@@ -79,5 +80,13 @@ class Patch extends Model
     protected function installations()
     {
         return $this->hasMany(Installation::class);
+    }
+    
+    /**
+     * Get current patch status
+     */
+    protected function currentPatchStatus()
+    {
+        return $this->hasOne(CurrentPatchStatus::class);
     }
 }
