@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\CurrentPatchStatus\Models;
+namespace Modules\Patches\Models;
 
 use Core\Models\Model;
 

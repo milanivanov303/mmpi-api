@@ -8,7 +8,6 @@ use Modules\Projects\Models\Project;
 use Modules\DeliveryChains\Models\DeliveryChain;
 use Modules\Installations\Models\Installation;
 use Modules\PatchRequests\Models\PatchRequest;
-use Modules\CurrentPatchStatus\Models\CurrentPatchStatus;
 
 class Patch extends Model
 {
