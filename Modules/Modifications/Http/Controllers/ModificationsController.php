@@ -13,7 +13,7 @@ use Modules\Modifications\Models\SourceModification;
 use Modules\Modifications\Models\TableModification;
 use Modules\Modifications\Models\BinaryModification;
 use Modules\Modifications\Models\CommandModification;
-use Modules\Modifications\Models\ScmModification;
+use Modules\Modifications\Models\CmsModification;
 use Modules\Modifications\Models\TemporarySourceModification;
 use Modules\Modifications\Models\SeTransferModification;
 use Modules\Modifications\Repositories\ModificationRepository;
@@ -75,8 +75,8 @@ class ModificationsController extends Controller
             return new SeTransferModification();
         }
 
-        if ($type === 'scm') {
-            return new ScmModification();
+        if ($type === 'cms') {
+            return new CmsModification();
         }
 
         return null;

@@ -23,6 +23,20 @@
             "type": "integer",
             "default": 0,
             "description": "Duration in hours"
+        },
+        "made_by": {
+            "oneOf": [
+                {
+                    "$ref": "/v1/user.json",
+                    "description": "The id of the user who inserted or updated the record"
+                },
+                {"type": "integer"}
+            ]
+        },
+        "made_on": {
+            "type": "string",
+            "format": "datetime",
+            "description": "When was the record inserted or updated"
         }
     }
 }

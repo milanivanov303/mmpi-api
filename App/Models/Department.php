@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Core\Models\Model;
 use App\Models\EnumValue;
+use Modules\ProjectEvents\Models\ProjectEventEstimation;
 
 class Department extends Model
 {
@@ -58,5 +59,29 @@ class Department extends Model
     protected function departmentType()
     {
         return $this->belongsTo(EnumValue::class, 'department_type');
+    }
+
+    /**
+     * Get department type
+     */
+    protected function userDepartmentRoles()
+    {
+        return $this->hasMany(UserDepartmentRoles::class);
+    }
+
+    /**
+     * Get project event estimations
+     */
+    protected function projectEventEstimations()
+    {
+        return $this->hasMany(ProjectEventEstimation::class);
+    }
+
+    /**
+     * Get users
+     */
+    protected function users()
+    {
+        return $this->hasMany(User::class);
     }
 }

@@ -1,7 +1,7 @@
 <?php
 
 use App\Models\EnumValue;
-use Modules\ProjectEvents\Models\ProjectEvent;
+use Modules\ProjectEvents\Models\ProjectEventEstimation;
 use Modules\Projects\Models\Project;
 
 class ProjectEventsTest extends RestTestCase
@@ -67,10 +67,6 @@ class ProjectEventsTest extends RestTestCase
         //Remove date as it is overwritten on each request
         unset($data['made_on']);
         $data['event_start_date'] = $this->faker()->date('Y-m-d');
-        $data['project_event_estimations'] = [
-            ['duration' => 3, 'department_id'  => 1],
-            ['duration' => 2, 'department_id' => 3]
-        ];
         
         return $data;
     }

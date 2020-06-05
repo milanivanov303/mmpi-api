@@ -2,9 +2,9 @@
 
 namespace Modules\Modifications\Models;
 
-class ScmModification extends Modification
+class CmsModification extends Modification
 {
-    protected static $type = 'scm';
+    protected static $type = 'cms';
 
     protected $visible = [
         'id',
@@ -21,6 +21,7 @@ class ScmModification extends Modification
         'deliveryChain',
         'instanceStatus',
         'active',
-        'visible'
+        'visible',
+        'contents'
     ];
 }

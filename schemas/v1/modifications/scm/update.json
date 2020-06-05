@@ -1,9 +1,0 @@
-{
-    "$id": "UpdateScmModification",
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "type": "object",
-    "description": "Scm Modification object",
-    "allOf": [
-        {"$ref": "/v1/modifications/scm/scm.json"}
-    ]
-}

@@ -80,4 +80,12 @@ class Patch extends Model
     {
         return $this->hasMany(Installation::class);
     }
+    
+    /**
+     * Get current patch status
+     */
+    protected function currentPatchStatus()
+    {
+        return $this->hasOne(CurrentPatchStatus::class);
+    }
 }
