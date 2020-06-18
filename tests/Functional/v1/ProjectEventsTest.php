@@ -1,8 +1,9 @@
 <?php
 
 use App\Models\EnumValue;
-use Modules\ProjectEvents\Models\ProjectEventEstimation;
 use Modules\Projects\Models\Project;
+use Illuminate\Support\Facades\Mail;
+use Modules\ProjectEvents\Mail\NewEstimationMail;
 
 class ProjectEventsTest extends RestTestCase
 {
@@ -10,6 +11,26 @@ class ProjectEventsTest extends RestTestCase
     protected $table      = 'project_events';
     protected $primaryKey = 'id';
 
+    /**
+     * 
+     * @inheritDoc 
+     */
+    public function setUp() : void
+    {
+        parent::setUp();
+        Mail::fake();
+    }    
+    
+    /**
+     * @inheritDoc
+     */
+    public function testCreate()
+    {
+        parent::testCreate();
+
+        Mail::assertSent(NewEstimationMail::class, 3);
+    }
+    
     /**
      * Get request data
      *
