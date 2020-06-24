@@ -50,20 +50,7 @@ class InstanceDowntimesTest extends RestTestCase
      * @return array
      */
     protected function getUpdateData(array $data)
-    {
-        
-        $hrMock = Mockery::mock(HrService::class);
-        $hrMock
-            ->shouldReceive('getProjectAvailablePmo')
-            ->andReturn([
-                0 => [
-                    'email' => 'test2@test'
-                ]
-            ])
-            ->once();
-
-        $this->app->instance(HrService::class, $hrMock);
-        
+    {    
         $model = InstanceDowntime::with(['instance.deliveryChains.projects'])
             ->findOrFail((int)$data['id']);
 
