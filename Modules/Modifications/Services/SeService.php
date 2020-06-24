@@ -273,7 +273,7 @@ class SeService
         switch ($this->operation) {
             case self::VDNAM:
                 $command = "sh_cliexpbr vdnam";
-                $this->exitCode = "DUMP_FILE_FULL_PATH";
+                $this->exitCode = "Exit code:.*0";
                 break;
             case self::TXTLIB:
                 $command = "se_text_db.sh exp";
@@ -370,7 +370,7 @@ class SeService
         if ($this->ssh2->getExitStatus()) {
             $dir = $this->ssh2->exec(
                 "export TERM=vt100; sudo su - {$this->user} -c '" . PHP_EOL
-                . ". ~/.profile " . PHP_EOL
+                . ". \${IMX_HOME}/extlib/profiles/.extlibprofile" . PHP_EOL
                 . "cd /{$this->user}/intra/imx/patch" . PHP_EOL
                 . "hg clone {$seRepo}" . PHP_EOL
                 . "cd system-expert" . PHP_EOL
