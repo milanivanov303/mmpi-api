@@ -43,7 +43,7 @@ class NotificationService
      */
     public function sendNotification()
     {
-        $senderEmail = Auth::user()->dasd ?? config('mail.mailgroups.installer');
+        $senderEmail = Auth::user()->email ?? config('mail.mailgroups.installer');
 
         $this->data['from'] = $senderEmail;
         $this->data['to']   = config('mail.mailgroups.codix');
