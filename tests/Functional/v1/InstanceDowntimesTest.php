@@ -1,6 +1,7 @@
 <?php
 
 use Modules\Instances\Models\Instance;
+use Modules\Hr\Services\HrService;
 use Modules\InstanceDowntimes\Models\InstanceDowntime;
 use Modules\InstanceDowntimes\Services\NotificationService;
 
@@ -50,6 +51,19 @@ class InstanceDowntimesTest extends RestTestCase
      */
     protected function getUpdateData(array $data)
     {
+        
+        $hrMock = Mockery::mock(HrService::class);
+        $hrMock
+            ->shouldReceive('getProjectAvailablePmo')
+            ->andReturn([
+                0 => [
+                    'email' => 'test2@test'
+                ]
+            ])
+            ->once();
+
+        $this->app->instance(HrService::class, $hrMock);
+        
         $model = InstanceDowntime::with(['instance.deliveryChains.projects'])
             ->findOrFail((int)$data['id']);
 
