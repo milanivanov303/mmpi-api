@@ -104,6 +104,8 @@ $app->register(Modules\Modifications\Providers\SeServiceProvider::class);
 $app->register(Modules\Oci\Providers\OciServiceProvider::class);
 $app->register(Bschmitt\Amqp\LumenServiceProvider::class);
 $app->register(Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider::class);
+$app->register(Maatwebsite\Excel\ExcelServiceProvider::class);
+$app->register(App\Providers\ExcelMacroServiceProvider::class);
 
 /*
 |--------------------------------------------------------------------------
