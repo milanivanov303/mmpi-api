@@ -99,10 +99,13 @@ $app->register(Illuminate\Mail\MailServiceProvider::class);
 $app->register(Modules\Issues\Providers\IssuesServiceProvider::class);
 $app->register(Modules\JsonRpc\Providers\JsonRpcServiceProvider::class);
 $app->register(Modules\Hashes\Providers\HashesServiceProvider::class);
+$app->register(Modules\Hr\Providers\HrServiceProvider::class);
 $app->register(Modules\Modifications\Providers\SeServiceProvider::class);
 $app->register(Modules\Oci\Providers\OciServiceProvider::class);
 $app->register(Bschmitt\Amqp\LumenServiceProvider::class);
 $app->register(Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider::class);
+$app->register(Maatwebsite\Excel\ExcelServiceProvider::class);
+$app->register(App\Providers\ExcelMacroServiceProvider::class);
 
 /*
 |--------------------------------------------------------------------------

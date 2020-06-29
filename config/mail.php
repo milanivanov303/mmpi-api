@@ -133,4 +133,17 @@ return [
 
     'log_channel' => env('MAIL_LOG_CHANNEL'),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Mail groups
+    |--------------------------------------------------------------------------
+    |
+    | Mail groups emails
+    |
+    */
+    'mailgroups' => [
+        'codix'     => env('CODIX_MAIL'),
+        'installer' => env('INSTALLER_MAIL')
+    ],
+
 ];

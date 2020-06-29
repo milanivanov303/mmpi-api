@@ -168,6 +168,19 @@ return array_merge(
         'ddl' => [
             'repo-url' => env('DDL_REPO_URL'),
             'repo-name' => env('DDL_REPO_NAME'),
+        ],
+        
+        /*
+        |--------------------------------------------------------------------------
+        | HR api
+        |--------------------------------------------------------------------------
+        |
+        | Connection to hr center
+        |
+        */
+        'hr' => [
+            'url'      => env('HR_URL', 'https://api-hrc-dev.codixfr.private'),
+            'code'     => env('HR_CODE', 'lE9t3C8ttSP')
         ]
     ]
 );

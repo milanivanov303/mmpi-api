@@ -1,6 +1,9 @@
 <?php
 
 use Modules\Instances\Models\Instance;
+use Modules\Hr\Services\HrService;
+use Modules\InstanceDowntimes\Models\InstanceDowntime;
+use Modules\InstanceDowntimes\Services\NotificationService;
 
 class InstanceDowntimesTest extends RestTestCase
 {
@@ -47,7 +50,17 @@ class InstanceDowntimesTest extends RestTestCase
      * @return array
      */
     protected function getUpdateData(array $data)
-    {
+    {    
+        $model = InstanceDowntime::with(['instance.deliveryChains.projects'])
+            ->findOrFail((int)$data['id']);
+
+        $notifyMock = Mockery::mock(NotificationService::class,[
+            "model" => $model,
+            "data" => $data
+        ])->shouldReceive('sendNotification');
+
+        $this->app->instance(NotificationService::class, $notifyMock);
+
         // Change parameters
         $data['start_datetime'] = $this->faker()->date('Y-m-d H:i:s');
 

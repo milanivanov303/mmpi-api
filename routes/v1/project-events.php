@@ -16,6 +16,12 @@ $router->group([
         'description' => 'Get single project event',
         'uses'        => 'ProjectEventsController@getOne'
     ]);
+    $router->get('/export/{year}', [
+        'as'          => 'project-events.list',
+        'schema'      => '/v1/project-events/project-event.json',
+        'description' => 'Export project event',
+        'uses'        => 'ProjectEventsController@export'
+    ]);
     $router->post('', [
         'as'          => 'project-events.create',
         'schema'      => '/v1/project-events/create.json',
