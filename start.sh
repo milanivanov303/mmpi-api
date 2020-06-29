@@ -39,3 +39,5 @@ if [[ ${EXIT_CODE} -eq 0 ]]; then
     printf "\n"
     echo "App running on ports: ${APACHE_CONTAINER_HTTP_PORT} and ${APACHE_CONTAINER_HTTPS_PORT}"
 fi
+
+exit ${EXIT_CODE}
