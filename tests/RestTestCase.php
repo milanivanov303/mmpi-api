@@ -4,7 +4,7 @@ use App\Models\User;
 use Faker\Factory as FakerFactory;
 use Faker\Generator as FakerGenerator;
 use Laravel\Lumen\Testing\DatabaseTransactions;
-use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Testing\TestResponse;
 
 abstract class RestTestCase extends TestCase
 {
@@ -104,10 +104,10 @@ abstract class RestTestCase extends TestCase
     /**
      * Get response data
      *
-     * @param Response $response
+     * @param TestResponse $response
      * @return array
      */
-    protected function getResponseData(Response $response)
+    protected function getResponseData(TestResponse $response)
     {
         return json_decode($response->getContent(), JSON_OBJECT_AS_ARRAY)['data'];
     }
