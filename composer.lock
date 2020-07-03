@@ -179,11 +179,11 @@
         },
         {
             "name": "codix/api-core",
-            "version": "2.1.1",
+            "version": "2.1.2",
             "source": {
                 "type": "git",
                 "url": "http://rhode.codixfr.private/Enterprise-Apps/api-core",
-                "reference": "3ad4301e7c26b57e9696283561a795eab97d8f0e"
+                "reference": "f47bdd98b921c996cbac63097e0f4ad058194fd5"
             },
             "require": {
                 "adldap2/adldap2": "^10.1",
@@ -225,7 +225,7 @@
                     "email": "yarnaudov@codix.bg"
                 }
             ],
-            "time": "2020-06-27T19:20:27+00:00"
+            "time": "2020-07-01T14:50:20+00:00"
         },
         {
             "name": "codix/api-sdk",

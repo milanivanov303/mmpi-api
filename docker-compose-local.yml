@@ -25,7 +25,7 @@ services:
         depends_on:
             - mysql
         environment:
-            XDEBUG_CONFIG: remote_host=host.docker.internal
+            XDEBUG_CONFIG: remote_host=${XDEBUG_REMOTE_HOST:-host.docker.internal}
                 remote_port=9000
                 remote_enable=On
                 remote_autostart=On
