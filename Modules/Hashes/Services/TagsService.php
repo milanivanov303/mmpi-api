@@ -122,7 +122,7 @@ class TagsService
      *
      * @param $sourceRevTagId
      */
-    protected function saveDependencies($sourceRevTagId)
+    protected function saveDependencies()
     {
         $dependencies = $this->description->getDependencies();
         foreach ($dependencies as $dependency) {
@@ -136,7 +136,7 @@ class TagsService
             $depTypeId = $dependencyService->type === 'table' ? 'table' : 'source';
 
             $dependencyModel = new Dependency([
-                'rev_id'      => $sourceRevTagId,
+                'rev_id'      => $this->hashCommit->id,
                 'rev_type_id' => 'hash',
                 'dep_id'      => $dependencyService->depId,
                 'dep_type_id' => $depTypeId,
@@ -244,7 +244,7 @@ class TagsService
                             $this->saveTtsKeys($sourceRevCvsTag->id);
                             break;
                         case $this->description::DEPENDENCIES_KEY:
-                            $this->saveDependencies($sourceRevCvsTag->id);
+                            $this->saveDependencies();
                             break;
                         case $this->description::MERGE_KEY:
                             $this->saveMerge();
