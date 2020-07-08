@@ -17,7 +17,10 @@ services:
     php:
         image: ${PHP_CONTAINER_IMAGE}
         container_name: ${PHP_CONTAINER_NAME}
-        build: docker/php
+        build:
+            context: docker/php
+            args:
+                display_errors: ${PHP_DISPLAY_ERRORS:-1}
         ports:
             - ${APACHE_CONTAINER_SSH_PORT}:22
         volumes:
