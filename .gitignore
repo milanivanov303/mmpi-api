@@ -4,6 +4,6 @@ vendor
 public/openapi.json
 public/swagger.json
 storage/jira-cookie.txt
-storage/um-cookie.txt
+storage/um-token.txt
 .vscode
 node_modules
