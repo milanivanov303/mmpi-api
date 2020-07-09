@@ -38,10 +38,10 @@ class InstanceDowntimesController extends Controller
             return;
         }
 
-        app(NotificationService::class, [
-            "model" => $model,
-            "data" => $data
-        ])->sendNotification();
+        // app(NotificationService::class, [
+        //     "model" => $model,
+        //     "data" => $data
+        // ])->sendNotification();
 
         return parent::update($request, ...$id);
     }
