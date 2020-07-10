@@ -53,6 +53,5 @@ class Branch extends Model
     protected function deliveryChains()
     {
         return $this->belongsToMany(DeliveryChain::class, 'delivery_chain_branch', 'repo_branch_id');
-
     }
 }
