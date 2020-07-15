@@ -5,6 +5,7 @@ namespace Modules\Branches\Models;
 use Core\Models\Model;
 use App\Models\EnumValue;
 use App\Models\User;
+use Modules\DeliveryChains\Models\DeliveryChain;
 
 class Branch extends Model
 {
@@ -44,5 +45,13 @@ class Branch extends Model
     protected function madeBy()
     {
         return $this->belongsTo(User::class, 'made_by');
+    }
+
+    /**
+     * Get delivery chains.
+     */
+    protected function deliveryChains()
+    {
+        return $this->belongsToMany(DeliveryChain::class, 'delivery_chain_branch', 'repo_branch_id');
     }
 }
