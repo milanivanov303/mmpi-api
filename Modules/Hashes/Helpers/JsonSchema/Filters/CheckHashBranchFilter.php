@@ -4,7 +4,7 @@ namespace Modules\Hashes\Helpers\JsonSchema\Filters;
 
 use App\Models\EnumValue;
 use Core\Helpers\Utils;
-use Modules\Hashes\Models\HashBranch;
+use Modules\Branches\Models\Branch;
 use Modules\Hashes\Models\HashCommit;
 use Opis\JsonSchema\IFilter;
 
@@ -19,7 +19,7 @@ class CheckHashBranchFilter implements IFilter
      */
     public function validate($value, array $args) : bool
     {
-        $branchId = app(HashBranch::class)->getModelId((array) $value, 'name', [
+        $branchId = app(Branch::class)->getModelId((array) $value, 'name', [
             'repo_type_id' => $this->getRepoTypeId($args),
             'status' => 1
         ]);
