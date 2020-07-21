@@ -4,10 +4,9 @@ namespace Modules\Hashes\Repositories;
 
 use App\Models\EnumValue;
 use App\Models\User;
-use Carbon\Carbon;
+use Modules\Branches\Models\Branch;
 use Modules\Hashes\Jobs\ProcessTags;
 use Modules\Hashes\Models\HashCommit;
-use Modules\Hashes\Models\HashBranch;
 use Core\Repositories\RepositoryInterface;
 use Core\Repositories\AbstractRepository;
 use Illuminate\Support\Facades\DB;
@@ -82,7 +81,7 @@ class HashRepository extends AbstractRepository implements RepositoryInterface
 
         if (array_key_exists('branch', $data)) {
             $this->model->branch()->associate(
-                app(HashBranch::class)
+                app(Branch::class)
                     ->getModelId($data['branch'], 'name', ['repo_type_id' => $this->model->repoType->id])
             );
             // unset repoType relation as it is returned in response when not needed

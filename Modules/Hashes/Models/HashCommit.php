@@ -9,6 +9,7 @@ use App\Models\SourceRevCvsTag;
 use App\Models\SourceRevTtsKey;
 use Core\Models\Model;
 use App\Models\User;
+use Modules\Branches\Models\Branch;
 
 class HashCommit extends Model
 {
@@ -52,7 +53,7 @@ class HashCommit extends Model
      */
     protected function branch()
     {
-        return $this->belongsTo(HashBranch::class, 'branch_id');
+        return $this->belongsTo(Branch::class, 'branch_id');
     }
 
     /**
