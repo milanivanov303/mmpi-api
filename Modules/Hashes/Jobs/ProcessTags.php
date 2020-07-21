@@ -84,6 +84,10 @@ class ProcessTags implements ShouldQueue
      */
     protected function validateDescription() : bool
     {
+        if ($this->hashCommit->branch->deliveryChains->count() === 0) {
+            return false;
+        }
+
         if ($this->hashCommit->repoType->key === 'imx_be') {
             return true;
         }

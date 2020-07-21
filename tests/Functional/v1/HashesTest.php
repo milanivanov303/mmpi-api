@@ -2,7 +2,7 @@
 
 use App\Models\EnumValue;
 use App\Models\User;
-use Modules\Hashes\Models\HashBranch;
+use Modules\Branches\Models\Branch;
 
 class HashesTest extends RestTestCase
 {
@@ -23,7 +23,7 @@ class HashesTest extends RestTestCase
         } catch (\Exception $exception) {}
 
         $user = User::inRandomOrder()->active()->first();
-        $branch = HashBranch::inRandomOrder()->first();
+        $branch = Branch::inRandomOrder()->first();
         $repoType = EnumValue::where('id', $branch->repo_type_id)->first();
 
         return [
