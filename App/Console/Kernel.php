@@ -9,6 +9,7 @@ use Laravel\Lumen\Console\Kernel as ConsoleKernel;
 use Modules\Certificates\Console\Commands\CheckExpiry;
 use Modules\Users\Console\Commands\SynchronizeCommand;
 use Modules\Oci\Console\Commands\Tnsnameora;
+use Modules\Hashes\Console\Commands\HashesSynchronizeCommand;
 
 class Kernel extends ConsoleKernel
 {
@@ -23,6 +24,7 @@ class Kernel extends ConsoleKernel
         CheckExpiry::class,
         HeadMergeCommand::class,
         Tnsnameora::class,
+        HashesSynchronizeCommand::class,
     ];
 
     /**
@@ -51,5 +53,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('tnsnameora:get-config')
             ->dailyAt('10:00')
             ->environments(['prod']);
+        
+        $schedule->command('hashes:synchronize');
     }
 }
