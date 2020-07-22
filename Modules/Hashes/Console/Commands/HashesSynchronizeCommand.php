@@ -34,7 +34,7 @@ class HashesSynchronizeCommand extends Command
      */
     public function handle()
     {
-        $filters   = $this->validateDates();
+        $filters   = $this->getFilters();
 
         $hashCommits = HashCommit::where('made_on', '>=', $filters['startDate'])
                 ->where('made_on', '<=', $filters['endDate'])
@@ -46,7 +46,7 @@ class HashesSynchronizeCommand extends Command
 
             $this->info("Hash id: {$hashCommit->id} synched successfully.\r\n");
         }
-        print_r("Synchronization finished.");
+        $this->info("Synchronization finished.");
     }
     
     /**
@@ -56,12 +56,19 @@ class HashesSynchronizeCommand extends Command
      */
     protected function getFilters()
     {
-        return array_filter(
+        $filters = array_filter(
             array_only(
                 $this->options(),
                 ['startDate', 'endDate']
             )
         );
+        
+        if (empty($filters)) {
+            $this->error("Empty options array! Exiting.\r\n");
+            exit;
+        }
+
+        return $this->validateDates($filters);
     }
 
     /*
@@ -69,22 +76,15 @@ class HashesSynchronizeCommand extends Command
      *
      * @return array
      */
-    protected function validateDates() : array
+    protected function validateDates($filters) : array
     {
-        $filters = $this->getFilters();
-        
         foreach ($filters as $key => $filter) {
             if (!strtotime($filter)) {
-                print_r("Invalid date passed! Exiting.\r\n");
+                $this->error("Invalid date passed! Exiting.\r\n");
                 exit;
             }
             $appendToDate = $key === 'startDate' ? ' 00:00:00' : ' 23:59:59';
             $filters[$key] = date("Y-m-d", strtotime($filter)) . $appendToDate;
-        }
-        
-        if (empty($filters)) {
-            print_r("Empty options array! Exiting.\r\n");
-            exit;
         }
         
         return $filters;
