@@ -57,8 +57,16 @@ class ExcelMacroServiceProvider extends ServiceProvider
             $sheet->getDelegate()->getColumnDimension($column)->setWidth($width);
         });
 
+        Sheet::macro('columnWidthDefault', function (Sheet $sheet, float $width) {
+            $sheet->getDelegate()->getDefaultColumnDimension()->setWidth($width);
+        });
+
         Sheet::macro('rowHeight', function (Sheet $sheet, string $row, float $height) {
             $sheet->getDelegate()->getRowDimension($row)->setRowHeight($height);
+        });
+
+        Sheet::macro('rowHeightDefault', function (Sheet $sheet, float $height) {
+            $sheet->getDelegate()->getDefaultRowDimension()->setRowHeight($height);
         });
 
         Sheet::macro('setFontFamily', function (Sheet $sheet, string $cellRange, string $font) {

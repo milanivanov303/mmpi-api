@@ -5,7 +5,6 @@ namespace Modules\ProjectEvents\Exports\Sheets;
 use Carbon\Carbon;
 use Maatwebsite\Excel\Concerns\WithTitle;
 use Maatwebsite\Excel\Concerns\WithHeadings;
-use Maatwebsite\Excel\Concerns\WithMapping;
 use Modules\ProjectEvents\Models\ProjectEvent;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
@@ -16,18 +15,20 @@ use Maatwebsite\Excel\Events\AfterSheet;
 class EventsPerMonthSheet implements
     FromCollection,
     WithTitle,
-    WithMapping,
     WithHeadings,
-    WithEvents,
-    ShouldAutoSize
+    WithEvents
+    //ShouldAutoSize
 {
     private $month;
+    private $monthName;
     private $year;
+    private $collection;
 
     public function __construct(int $year, int $month)
     {
-        $this->month = $month;
-        $this->year  = $year;
+        $this->month      = $month;
+        $this->year       = $year;
+        $this->collection = $this->constructCal();
     }
 
    /*
@@ -35,44 +36,93 @@ class EventsPerMonthSheet implements
     */
     public function collection()
     {
-        return ProjectEvent::with([
-          'project',
-          'madeBy',
-          'projectEventStatus',
-          'projectEventType',
-          'projectEventSubtype',
-          'projectEventEstimations'])
-          ->whereYear('event_end_date', $this->year)
-          ->whereMonth('event_end_date', $this->month)
-          ->get();
+        return $this->collection;
     }
 
-    public function map($event) : array
+    private function constructCal() : \Illuminate\Support\Collection
     {
-        $subType = $event->projectEventSubtype->value ?? '';
-        return [
-            $event->project->name,
-            $event->projectEventType->value,
-            $subType,
-            Carbon::parse($event->event_start_date)->toFormattedDateString(),
-            Carbon::parse($event->event_end_date)->toFormattedDateString(),
-            $event->madeBy->name,
-            $event->description,
-            $event->projectEventStatus->value,
-        ] ;
+        $start = Carbon::parse("{$this->year}-{$this->month}")->startOfMonth();
+        $end = Carbon::parse("{$this->year}-{$this->month}")->endOfMonth();
+       
+        $dates = [];
+        while ($start->lte($end)) {
+            $carbon = Carbon::parse($start);
+            $dates[$carbon->format("W")][$carbon->format("l")] = ltrim($start->copy()->format('d'), '0');
+            $start->addDay();
+        }
+
+        $headings = [
+            'Monday' => '',
+            'Tuesday' => '',
+            'Wednesday' => '',
+            'Thursday' => '',
+            'Friday' => '',
+            'Saturday' => '',
+            'Sunday' => ''
+        ];
+
+        $monthEvents = ProjectEvent::with([
+            'project',
+            'madeBy',
+            'projectEventStatus',
+            'projectEventType',
+            'projectEventSubtype',
+            'projectEventEstimations'])
+            ->whereYear('event_end_date', $this->year)
+            ->whereMonth('event_end_date', $this->month)
+            ->get();
+
+        foreach ($dates as $week => $date) {
+            $dates[$week] = array_merge($headings, $date);
+            foreach ($monthEvents as $event) {
+                $day = Carbon::parse($event->event_end_date)->format('l');
+                $subType = $event->projectEventSubtype->value ?? '';
+                if (Carbon::parse($event->event_end_date)->format('d') === $dates[$week][$day]) {
+                    $dates[$week][$day] = "{$date[$day]}\n{$event->project->name}
+                        -{$event->projectEventType->value}/{$subType}";
+                }
+            }
+            // foreach ($monthEvents as $event) {
+            //     $day = Carbon::parse($event->event_end_date)->format('l');
+            //     // $subType = $event->projectEventSubtype->value ?? '';
+            //     if (Carbon::parse($event->event_end_date)->format('d') === $dates[$week][$day]) {
+            //         $dayEvents[$day][] = "{$event->project}:{$event->projectEventType->value}\n";
+            //     }
+            //     $dayEvents[$day] = '';
+            // }
+            // foreach ($date as $day) {
+            //     if (isset($dayEvents[$day])) {
+            //         $toString = implode("\n", $dayEvents[$day]);
+            //         $dates[$week][$day] = "{$day}\n{$toString}";
+            //     }
+            // }
+        }
+        return collect($dates);
+        // $subType = $event->projectEventSubtype->value ?? '';
+        // return [
+        //     $event->project->name,
+        //     $event->projectEventType->value,
+        //     $subType,
+        //     Carbon::parse($event->event_start_date)->toFormattedDateString(),
+        //     Carbon::parse($event->event_end_date)->toFormattedDateString(),
+        //     $event->madeBy->name,
+        //     $event->description,
+        // ] ;
     }
 
     public function headings() : array
     {
         return [
-           'Project',
-           'Event Type',
-           'Event Sub Type',
-           'Start Date',
-           'End Date',
-           'Made By',
-           'Description',
-           'Status'
+            [$this->monthName],
+            [
+                'Monday',
+                'Tuesday',
+                'Wednesday',
+                'Thursday',
+                'Friday',
+                'Saturday',
+                'Sunday'
+            ]
         ];
     }
 
@@ -86,30 +136,28 @@ class EventsPerMonthSheet implements
                 $event->writer->setCreator('MMPI API');
             },
             AfterSheet::class    => function (AfterSheet $event) {
-                $cellRange = 'A1:H1';
+                $cellRangeData    = 'A3:G8';
+                $event->sheet->columnWidthDefault(20);
+                $event->sheet->rowHeightDefault(40);
+                $event->sheet->mergeCells('A1:G1');
                 $event->sheet->setOrientation(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_LANDSCAPE);
+                $event->sheet->styleCells('A1:G1', $this->headerStyles('FF00BFFF'));
+                $event->sheet->styleCells('A2:G2', $this->headerStyles('FF800000'));
                 $event->sheet->styleCells(
-                    $cellRange,
+                    $cellRangeData,
                     [
                         'font' => [
-                            'bold' => true,
+                            'bold' => false,
+                            'color' => ['argb' => 'FF00BFFF'],
                         ],
                         'alignment' => [
                             'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+                            'wrapText' => true,
                         ],
                         'borders' => [
-                            'top' => [
+                            'allBorders' => [
                                 'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
-                            ],
-                        ],
-                        'fill' => [
-                            'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_GRADIENT_LINEAR,
-                            'rotation' => 90,
-                            'startColor' => [
-                                'argb' => 'FFA0A0A0',
-                            ],
-                            'endColor' => [
-                                'argb' => 'FFFFFFFF',
+                                'color' => ['argb' => 'FF00BFFF'],
                             ],
                         ],
                     ]
@@ -124,7 +172,40 @@ class EventsPerMonthSheet implements
     public function title(): string
     {
         $date  = \DateTime::createFromFormat('!m', $this->month);
-        $month = $date->format('F');
-        return $month;
+        $this->monthName = $date->format('F');
+        return $this->monthName;
+    }
+
+    /**
+     * @return array
+     */
+    private function headerStyles($color): array
+    {
+        return [
+            'font' => [
+                'size' => 15,
+                'bold' => true,
+                'color' => ['argb' => 'FFFFAF0'],
+            ],
+            'alignment' => [
+                'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+                'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+            ],
+            'borders' => [
+                'top' => [
+                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                ],
+            ],
+            'fill' => [
+                'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_GRADIENT_LINEAR,
+                'rotation' => 90,
+                'startColor' => [
+                    'argb' => 'FF87CEFA',
+                ],
+                'endColor' => [
+                    'argb' => $color,
+                ],
+            ]
+        ];
     }
 }
