@@ -7,7 +7,6 @@ use Maatwebsite\Excel\Concerns\WithTitle;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Modules\ProjectEvents\Models\ProjectEvent;
 use Maatwebsite\Excel\Concerns\FromCollection;
-use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Events\BeforeExport;
 use Maatwebsite\Excel\Events\AfterSheet;
@@ -17,7 +16,6 @@ class EventsPerMonthSheet implements
     WithTitle,
     WithHeadings,
     WithEvents
-    //ShouldAutoSize
 {
     private $month;
     private $monthName;
@@ -61,53 +59,18 @@ class EventsPerMonthSheet implements
             'Sunday' => ''
         ];
 
-        $monthEvents = ProjectEvent::with([
-            'project',
-            'madeBy',
-            'projectEventStatus',
-            'projectEventType',
-            'projectEventSubtype',
-            'projectEventEstimations'])
-            ->whereYear('event_end_date', $this->year)
-            ->whereMonth('event_end_date', $this->month)
-            ->get();
+        $monthEvents = $this->eventModelCollection();
 
         foreach ($dates as $week => $date) {
             $dates[$week] = array_merge($headings, $date);
-            foreach ($monthEvents as $event) {
-                $day = Carbon::parse($event->event_end_date)->format('l');
-                $subType = $event->projectEventSubtype->value ?? '';
-                if (Carbon::parse($event->event_end_date)->format('d') === $dates[$week][$day]) {
-                    $dates[$week][$day] = "{$date[$day]}\n{$event->project->name}
-                        -{$event->projectEventType->value}/{$subType}";
+            foreach ($date as $key => $days) {
+                if ($monthEvents->has($days)) {
+                    $toString = implode("\n", $monthEvents->get($days));
+                    $dates[$week][$key] = "{$days}\n{$toString}";
                 }
             }
-            // foreach ($monthEvents as $event) {
-            //     $day = Carbon::parse($event->event_end_date)->format('l');
-            //     // $subType = $event->projectEventSubtype->value ?? '';
-            //     if (Carbon::parse($event->event_end_date)->format('d') === $dates[$week][$day]) {
-            //         $dayEvents[$day][] = "{$event->project}:{$event->projectEventType->value}\n";
-            //     }
-            //     $dayEvents[$day] = '';
-            // }
-            // foreach ($date as $day) {
-            //     if (isset($dayEvents[$day])) {
-            //         $toString = implode("\n", $dayEvents[$day]);
-            //         $dates[$week][$day] = "{$day}\n{$toString}";
-            //     }
-            // }
         }
         return collect($dates);
-        // $subType = $event->projectEventSubtype->value ?? '';
-        // return [
-        //     $event->project->name,
-        //     $event->projectEventType->value,
-        //     $subType,
-        //     Carbon::parse($event->event_start_date)->toFormattedDateString(),
-        //     Carbon::parse($event->event_end_date)->toFormattedDateString(),
-        //     $event->madeBy->name,
-        //     $event->description,
-        // ] ;
     }
 
     public function headings() : array
@@ -138,7 +101,9 @@ class EventsPerMonthSheet implements
             AfterSheet::class    => function (AfterSheet $event) {
                 $cellRangeData    = 'A3:G8';
                 $event->sheet->columnWidthDefault(20);
-                $event->sheet->rowHeightDefault(40);
+                for ($i = 3; $i <= 8; $i++) {
+                    $event->sheet->rowHeight($i, 80);
+                }
                 $event->sheet->mergeCells('A1:G1');
                 $event->sheet->setOrientation(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_LANDSCAPE);
                 $event->sheet->styleCells('A1:G1', $this->headerStyles('FF00BFFF'));
@@ -174,6 +139,41 @@ class EventsPerMonthSheet implements
         $date  = \DateTime::createFromFormat('!m', $this->month);
         $this->monthName = $date->format('F');
         return $this->monthName;
+    }
+
+    /**
+     * @return \Illuminate\Support\Collection
+     */
+    public function eventModelCollection(): \Illuminate\Support\Collection
+    {
+        $monthEvents = ProjectEvent::with([
+            'project',
+            'madeBy',
+            'projectEventStatus',
+            'projectEventType',
+            'projectEventSubtype',
+            'projectEventEstimations'])
+            ->whereYear('event_end_date', $this->year)
+            ->whereMonth('event_end_date', $this->month)
+            ->get();
+        
+        $dayEvents = [];
+        foreach ($monthEvents as $event) {
+            $day = Carbon::parse($event->event_end_date)->format('d');
+            $dayEvents[$day][] = "{$event->project->name} - {$event->projectEventType->value}";
+        }
+
+        return collect($dayEvents);
+        // $subType = $event->projectEventSubtype->value ?? '';
+        // return [
+        //     $event->project->name,
+        //     $event->projectEventType->value,
+        //     $subType,
+        //     Carbon::parse($event->event_start_date)->toFormattedDateString(),
+        //     Carbon::parse($event->event_end_date)->toFormattedDateString(),
+        //     $event->madeBy->name,
+        //     $event->description,
+        // ] ;
     }
 
     /**
