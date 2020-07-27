@@ -114,6 +114,7 @@ class DependencyService
                 case "pc":
                 case "pcs":
                 case "c":
+                case "h":
                     return 'file';
                 case "pck":
                     return 'package';
@@ -187,9 +188,22 @@ class DependencyService
      */
     protected function getPath()
     {
-        $source = app(Source::class)
+        $sourceCollection = app(Source::class)
                     ::where('source_name', $this->name)
-                    ->first();
+                    ->get();
+
+        if (count($sourceCollection) > 1) {
+            $pattern = '/(?<=\/)(?s)(.*$)/';
+
+            if (preg_match($pattern, $this->pathinfo['dirname'], $matches)) {
+                $sourceCollection = app(Source::class)
+                            ::where('source_name', $this->name)
+                            ->where('source_path', $matches[0])
+                            ->get();
+            }
+        }
+
+        $source = $sourceCollection->first();
 
         if (is_null($source)) {
             return null;
