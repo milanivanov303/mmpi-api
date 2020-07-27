@@ -41,9 +41,7 @@ class HashesSynchronizeCommand extends Command
                 ->get();
 
         foreach ($hashCommits as $hashCommit) {
-            $processTags = new ProcessTags($hashCommit);
-            $processTags->handle();
-
+            dispatch((new ProcessTags($hashCommit, false))->onConnection('sync'));
             $this->info("Hash id: {$hashCommit->id} synched successfully.\r\n");
         }
         $this->info("Synchronization finished.");
