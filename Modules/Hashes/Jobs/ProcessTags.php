@@ -21,6 +21,12 @@ class ProcessTags implements ShouldQueue
      * @var HashCommit
      */
     protected $hashCommit;
+    
+     /**
+     * Whether to send mails or not. Added for command hashes:synchronize
+     * @var bool
+     */
+    protected $validateDescription;
 
     /**
      * Create a new job instance.
@@ -28,9 +34,10 @@ class ProcessTags implements ShouldQueue
      * @param HashCommit $hashCommit
      * @return void
      */
-    public function __construct(HashCommit $hashCommit)
+    public function __construct(HashCommit $hashCommit, $validateDescription = true)
     {
         $this->hashCommit = $hashCommit;
+        $this->validateDescription = $validateDescription;
     }
 
     /**
@@ -84,6 +91,10 @@ class ProcessTags implements ShouldQueue
      */
     protected function validateDescription() : bool
     {
+        if (!$this->validateDescription) {
+            return false;
+        }
+
         if ($this->hashCommit->branch->deliveryChains->count() === 0) {
             return false;
         }

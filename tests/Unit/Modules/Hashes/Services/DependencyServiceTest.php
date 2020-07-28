@@ -5,6 +5,7 @@ use App\Models\ImxTable;
 use Modules\Sources\Models\Source;
 use Modules\SourceRevisions\Models\SourceRevision;
 use Core\Models\Model;
+use Illuminate\Support\Collection;
 
 class DependencyServiceTest extends TestCase
 {
@@ -44,7 +45,7 @@ class DependencyServiceTest extends TestCase
             ->shouldReceive('where')
             ->andReturn(
                 Mockery::mock([
-                    'first' => (new Model)->setRawAttributes(['source_id' => $sourceId, 'source_path' => 'pl/pack'])
+                    'get' => new Collection([(new Model)->setRawAttributes(['source_id' => $sourceId, 'source_path' => 'pl/pack'])])
                 ])
             )
             ->once();
@@ -85,7 +86,7 @@ class DependencyServiceTest extends TestCase
             ->shouldReceive('where')
             ->andReturn(
                 Mockery::mock([
-                    'first' => (new Model)->setRawAttributes(['source_id' => $sourceId, 'source_path' => 'pl/pack'])
+                    'get' => new Collection([(new Model)->setRawAttributes(['source_id' => $sourceId, 'source_path' => 'pl/pack'])])
                 ])
             )
             ->once();
@@ -136,7 +137,7 @@ class DependencyServiceTest extends TestCase
             ->shouldReceive('where')
             ->andReturn(
                 Mockery::mock([
-                    'first' => null
+                    'get' => new Collection([null])
                 ])
             )
             ->once();
