@@ -88,7 +88,7 @@ class TagsService
      */
     protected function saveTtsKeys($sourceRevTagId)
     {
-        $ttsKeys = $this->description->getTtsKeys();
+        $ttsKeys = array_unique($this->description->getTtsKeys());
         $issues  = Issue::setEagerLoads([])->whereIn('tts_id', $ttsKeys)->get(['id', 'tts_id']);
 
         foreach ($ttsKeys as $sortIndex => $ttsKey) {
