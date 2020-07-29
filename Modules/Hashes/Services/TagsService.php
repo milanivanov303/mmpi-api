@@ -210,7 +210,6 @@ class TagsService
             ->toArray();
 
         app(SourceRevTtsKey::class)::whereIn('source_rev_tag_id', $sourceRevCvsTagIds)->delete();
-        app(Dependency::class)::whereIn('rev_id', $sourceRevCvsTagIds)->delete();
         app(Dependency::class)::where('rev_id', $this->hashCommit->id)->delete();
 
         app(CommitMerge::class)
