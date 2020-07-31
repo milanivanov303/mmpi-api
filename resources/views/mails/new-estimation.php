@@ -5,7 +5,7 @@
         <b><?php echo $data['user']?></b>
         added
         <b><?php echo $data['duration']?></b>
-        hours estimated effort for
+        days estimated effort for
         <b><?php echo $data['department']?></b>
         department.
     </p>

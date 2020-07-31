@@ -142,8 +142,9 @@ return [
     |
     */
     'mailgroups' => [
-        'codix'     => env('CODIX_MAIL'),
-        'installer' => env('INSTALLER_MAIL')
+        'codix'            => env('CODIX_MAIL'),
+        'installer'        => env('INSTALLER_MAIL'),
+        'client_trainings' => env('CLIENT_TRAINIGS_MAIL')
     ],
 
 ];
