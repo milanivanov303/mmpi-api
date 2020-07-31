@@ -80,7 +80,7 @@ class ProjectEventEstimation extends Model
             }, $users), function ($email) {
                 return $email === '' ? false : true;
             });
-
+            array_push($to, config('mail.mailgroups.client_trainings'));
             $cc = $model->madeBy->email;
 
             Mail::
