@@ -10,22 +10,20 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Modules\ProjectEvents\Models\ProjectEvent;
 use Maatwebsite\Excel\Concerns\Importable;
-use Maatwebsite\Excel\Concerns\SkipsFailures;
-use Maatwebsite\Excel\Concerns\SkipsOnFailure;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
-use Maatwebsite\Excel\Concerns\WithValidation;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class ProjectEventsImport implements
     ToCollection,
-    WithHeadingRow,
-    SkipsOnFailure,
-    WithValidation
+    WithHeadingRow
 {
-    use Importable, SkipsFailures;
+    use Importable;
     
     private $project;
-    protected $skippedEvents = [];
+    private $skippedEvents = [];
+    private $errors = [];
 
     /**
      * Department abbriviations from excel
@@ -54,31 +52,30 @@ class ProjectEventsImport implements
     public function collection(Collection $rows)
     {
         foreach ($rows as $row) {
-            $type = str_replace(' ', '_', strtolower($row['type']));
             $eventType = EnumValue::where([
                 ['type', '=', 'project_event_type'],
-                ['key', '=', $type],
+                ['key', '=', str_replace(' ', '_', strtolower($row['type']))],
             ])->first();
 
             if (!isset($eventType->id)) {
-                Log::error("{$row['type']} could not be imported, as it is not registered in MMPI");
-                $this->skippedEvents[] = $row['type'];
+                $message = "<b>{$row['type']}</b> could not be imported, as it is not registered in MMPI";
+                Log::error($message);
+                $this->errors[] = $message;
                 continue;
             }
 
-            $subType = str_replace(' ', '_', strtolower($row['sub_type']));
             $eventSubType = EnumValue::where([
                 ['type', '=', 'project_event_subtype'],
-                ['key', '=', $subType],
+                ['key', '=', str_replace(' ', '_', strtolower($row['sub_type']))],
             ])->first();
 
             $eventStatus = EnumValue::where([
                 ['type', '=', 'project_event_status'],
                 ['key', '=', 'active'],
             ])->first();
-            
-            $event = ProjectEvent::create([
-                'project_id' => $this->project,
+
+            $insertData = [
+                'project_id' => $this->project->id,
                 'project_event_type_id' => $eventType->id,
                 'project_event_subtype_id' => $eventSubType->id ?? null,
                 'event_start_date' => $this->transformDate($row['start_date']),
@@ -86,17 +83,37 @@ class ProjectEventsImport implements
                 'made_by' => Auth::user()->id,
                 'project_event_status' => $eventStatus->id,
                 'made_on' => Carbon::now()->format('Y-m-d H:i:s')
-            ]);
+            ];
+
+            $validator = Validator::make(
+                $insertData,
+                [
+                    'project_event_type_id' => [
+                        Rule::unique('project_events')->where(function ($query) use ($eventType, $eventSubType) {
+                            return $query->where('project_id', $this->project->id)
+                            ->where('project_event_type_id', $eventType->id)
+                            ->where('project_event_subtype_id', $eventSubType->id ?? null);
+                        }),
+                    ],
+                ],
+                [
+                    '0' => "<b>{$row['type']} {$row['sub_type']}</b> for {$this->project->name} already exist.",
+                ]
+            );
+
+            if ($validator->fails()) {
+                foreach ($validator->errors()->messages() as $messages) {
+                    foreach ($messages as $error) {
+                        $this->errors[] = $error;
+                    }
+                }
+                continue;
+            }
+
+            $event = ProjectEvent::create($insertData);
            
             $this->getDepartmentByAbbr($row['notification_e_mail_for_tl'], $event);
         }
-    }
-
-    public function rules(): array
-    {
-        return [
-            // TO think about somekind of validation for duplicate entries
-        ];
     }
 
     /**
@@ -135,5 +152,10 @@ class ProjectEventsImport implements
                 'department_id' => $department->id
             ]);
         }
+    }
+    
+    public function getErrors()
+    {
+        return $this->errors;
     }
 }

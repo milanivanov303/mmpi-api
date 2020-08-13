@@ -8,6 +8,8 @@ use App\Http\Controllers\Controller;
 use Modules\ProjectEvents\Exports\ProjectEventsExport;
 use Modules\ProjectEvents\Imports\ProjectEventsImport;
 use Modules\ProjectEvents\Repositories\ProjectEventRepository;
+use Illuminate\Support\Facades\Mail;
+use Modules\ProjectEvents\Mail\ImportEventsMail;
 
 class ProjectEventsController extends Controller
 {
@@ -42,18 +44,22 @@ class ProjectEventsController extends Controller
     public function import(Request $request) : JsonResponse
     {
         if (!$request->hasFile('project_events_excel')) {
-            $data['error'] = "No valid file to import.";
-            return response()->json($data, 422);
+            return response()->json(["error" => "No valid file to import."], 422);
         }
 
-        $project = $request->input('project');
-        $file    = $request->file('project_events_excel')->store('imports');
+        $project = json_decode($request->input('project'));
+        
+        if (!is_object($project)) {
+            return response()->json(["error" => "No valid project data"], 422);
+        }
 
+        $file   = $request->file('project_events_excel')->store('imports');
         $import = new ProjectEventsImport($project);
+
         $import->import($file);
 
-        if ($import->failures()->isNotEmpty()) {
-            // to send mail with failiures
+        if ($import->getErrors()) {
+            Mail::queue((new ImportEventsMail($import->getErrors()))->onQueue('mails'));
         }
 
         return response()->json($import, 200);
