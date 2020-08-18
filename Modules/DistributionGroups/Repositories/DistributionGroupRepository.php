@@ -9,8 +9,14 @@ use Modules\DistributionGroups\Models\DistributionGroup;
 class DistributionGroupRepository extends AbstractRepository implements RepositoryInterface
 {
 
+    /**
+     * @var string
+     */
     protected $primaryKey = 'distribution_groups_id';
 
+    /**
+     * @var string
+     */
     protected $customUniqueKey = 'samaccountname';
 
     /**

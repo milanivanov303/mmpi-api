@@ -12,6 +12,9 @@ class DistributionMember extends Model
      */
     protected $table = 'distribution_members';
 
+    /**
+     * @var string[]
+     */
     protected $fillable = [
         'distribution_groups_id',
         'username',
@@ -19,7 +22,9 @@ class DistributionMember extends Model
         'status',
     ];
 
-
+    /**
+     * Relationship with Distribution Group
+     */
     public function distributionGroup() {
         return $this->belongsTo(DistributionGroup::class, 'distribution_groups_id');
     }

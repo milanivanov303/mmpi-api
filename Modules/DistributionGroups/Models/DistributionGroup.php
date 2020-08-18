@@ -23,8 +23,10 @@ class DistributionGroup extends Model
         'email',
     ];
 
+    /**
+     * Relation for Distribution Members
+     */
     public function members() {
-        \Log::error('test');
         return $this->hasMany(DistributionMember::class, 'distribution_groups_id', 'distribution_groups_id');
     }
 
