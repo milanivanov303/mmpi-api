@@ -1,0 +1,47 @@
+{
+    "$id": "DistributionGroup",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "description": "Distribution Group object",
+    "properties": {
+        "distribution_groups_id": {
+            "type": "integer"
+        },
+        "samaccountname": {
+            "type": "string",
+            "maxLength": 200,
+            "description": "The unique distribution group name",
+            "$filters": {
+                "$func": "checkInDb",
+                "$vars": {
+                    "rule": "unique:distribution_groups,samaccountname"
+                }
+            }
+        },
+        "displayname": {
+            "type": "string",
+            "maxLength": 50,
+            "description": "The display name of the distribution group"
+        },
+        "distinguished_name": {
+            "type": "string",
+            "maxLength": 300,
+            "description": "The distinguished name of the distribution group"
+        },
+        "created_date": {
+            "type": ["string", "null"],
+            "format": "datetime",
+            "description": "Timestamp when the distribution group was created"
+        },
+        "email": {
+            "type": "string",
+            "description": "User email",
+            "example": "jdoe@codix.fr",
+            "maxLength": 50
+        },
+        "distributionMembers": {
+            "type": "array",
+            "$ref": "/v1/distribution-member.json"
+        }
+    }
+}
