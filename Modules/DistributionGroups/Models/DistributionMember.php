@@ -25,8 +25,8 @@ class DistributionMember extends Model
     /**
      * Relationship with Distribution Group
      */
-    public function distributionGroup() {
+    public function distributionGroup()
+    {
         return $this->belongsTo(DistributionGroup::class, 'distribution_groups_id');
     }
-
 }

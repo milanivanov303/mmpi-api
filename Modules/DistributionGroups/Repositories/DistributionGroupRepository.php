@@ -27,5 +27,4 @@ class DistributionGroupRepository extends AbstractRepository implements Reposito
     {
         $this->model = $model;
     }
-
 }

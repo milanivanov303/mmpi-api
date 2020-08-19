@@ -26,8 +26,8 @@ class DistributionGroup extends Model
     /**
      * Relation for Distribution Members
      */
-    public function members() {
+    public function members()
+    {
         return $this->hasMany(DistributionMember::class, 'distribution_groups_id', 'distribution_groups_id');
     }
-
 }
