@@ -6,7 +6,7 @@ class DistributionGroupTest extends RestTestCase
 {
     protected $uri        = 'v1/distribution_groups';
     protected $table      = 'distribution_groups';
-    protected $primaryKey = 'distribution_groups_id';
+    protected $primaryKey = 'samaccountname';
 
     /**
      * Test creation with wrong data
@@ -96,7 +96,7 @@ class DistributionGroupTest extends RestTestCase
         $data = DistributionGroup::first()->toArray();
 
         $this
-            ->get( $this->uri . '/' . $data['samaccountname'])
+            ->get( $this->uri . '/' . $this->getPrimaryKeyValue($data))
             ->seeJson($data)
             ->assertResponseOk();
     }
