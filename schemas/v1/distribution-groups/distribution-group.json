@@ -41,7 +41,7 @@
         },
         "distributionMembers": {
             "type": "array",
-            "$ref": "/v1/distribution-member.json"
+            "$ref": "/v1/distribution-groups/distribution-member.json"
         }
     }
 }
