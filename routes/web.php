@@ -16,6 +16,14 @@ $router->group([
     $router->get('logs.html', 'LogViewerController@index');
 });
 
+$router->group([
+    'namespace' => '\Modules\Welcome\Http\Controllers'
+], function () use ($router) {
+    $router->get('/', function () {
+        return view('welcome');
+    });
+});
+
 // v1
 $router->group(['prefix' => 'v1'], function () use ($router) {
 
