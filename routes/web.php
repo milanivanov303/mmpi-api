@@ -10,18 +10,14 @@
 |
 */
 
+$router->get('/', function () {
+    return view('welcome');
+});
+
 $router->group([
     'namespace' => '\Rap2hpoutre\LaravelLogViewer'
 ], function () use ($router) {
     $router->get('logs.html', 'LogViewerController@index');
-});
-
-$router->group([
-    'namespace' => '\Modules\Welcome\Http\Controllers'
-], function () use ($router) {
-    $router->get('/', function () {
-        return view('welcome');
-    });
 });
 
 // v1
