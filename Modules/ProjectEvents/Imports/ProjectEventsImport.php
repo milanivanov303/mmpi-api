@@ -30,7 +30,7 @@ class ProjectEventsImport implements
      *
      * @const
      */
-    const BD = 'Business Department';
+    const BD = 'Business Department Management';
     const DD = 'Development Department';
 
     /**
@@ -54,7 +54,7 @@ class ProjectEventsImport implements
         foreach ($rows as $row) {
             $eventType = EnumValue::where([
                 ['type', '=', 'project_event_type'],
-                ['key', '=', str_replace(' ', '_', strtolower($row['type']))],
+                ['value', '=', $row['type']],
             ])->first();
 
             if (!isset($eventType->id)) {
@@ -66,7 +66,7 @@ class ProjectEventsImport implements
 
             $eventSubType = EnumValue::where([
                 ['type', '=', 'project_event_subtype'],
-                ['key', '=', str_replace(' ', '_', strtolower($row['sub_type']))],
+                ['value', '=', $row['sub_type']],
             ])->first();
 
             $eventStatus = EnumValue::where([
