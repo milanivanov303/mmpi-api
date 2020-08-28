@@ -10,6 +10,10 @@
 |
 */
 
+$router->get('/', function () {
+    return view('welcome');
+});
+
 $router->group([
     'namespace' => '\Rap2hpoutre\LaravelLogViewer'
 ], function () use ($router) {
