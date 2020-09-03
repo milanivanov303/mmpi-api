@@ -80,6 +80,7 @@ class ProjectEventsImport implements
                 'project_event_subtype_id' => $eventSubType->id ?? null,
                 'event_start_date' => $this->transformDate($row['start_date']),
                 'event_end_date' => $this->transformDate($row['end_date']),
+                'description' => "Auto imported",
                 'made_by' => Auth::user()->id,
                 'project_event_status' => $eventStatus->id,
                 'made_on' => Carbon::now()->format('Y-m-d H:i:s')

@@ -47,13 +47,19 @@ class ProjectEventsController extends Controller
             return response()->json(["error" => "No valid file to import."], 422);
         }
 
+        $file    = $request->file('project_events_excel');
+
+        if ($file->getClientOriginalExtension() != 'xlsx') {
+            return response()->json(["error" => "File needs to be in .xlsx format"], 422);
+        }
+
         $project = json_decode($request->input('project'));
-        
+
         if (!is_object($project)) {
             return response()->json(["error" => "No valid project data"], 422);
         }
 
-        $file   = $request->file('project_events_excel')->store('imports');
+        $file   = $file->store('imports');
         $import = new ProjectEventsImport($project);
 
         $import->import($file);
