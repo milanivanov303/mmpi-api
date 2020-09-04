@@ -85,20 +85,23 @@ class ProjectEventEstimation extends Model
      */
     protected function setMailRecipients($model) : array
     {
-        $userDepartmentRole = $model->department;
-        
+        $userDepartmentRole   = $model->department;
         $userDepartmentEmails = $model->getMailRecipients($userDepartmentRole);
+        $recipients['to']     =  $userDepartmentEmails;
 
         $notifyDepartments = $model
             ->projectEvent
             ->projectEventNotifications
             ->where('project_event_id', '=', $model->project_event_id);
         
+        $departmentsEmails = [];
         foreach ($notifyDepartments as $notification) {
             $departmentsEmails[] = $model->getMailRecipients($notification->department);
         }
 
-        $recipients['to'] = array_merge($userDepartmentEmails, call_user_func_array('array_merge', $departmentsEmails));
+        if (!empty($departmentsEmails)) {
+            $recipients['to'] = array_merge($recipients['to'], call_user_func_array('array_merge', $departmentsEmails));
+        }
 
         $hr  = new HrService;
         $pmo = $hr->getProjectAvailablePmo($model->projectEvent->project->name);

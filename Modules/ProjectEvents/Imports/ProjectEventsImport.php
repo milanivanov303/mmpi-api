@@ -113,7 +113,7 @@ class ProjectEventsImport implements
 
             $event = ProjectEvent::create($insertData);
            
-            $this->getDepartmentByAbbr($row['notification_e_mail_for_tl'], $event);
+            $this->addDepartmentNotifications($row['notification_e_mail_for_tl'], $event);
         }
     }
 
@@ -136,7 +136,7 @@ class ProjectEventsImport implements
      *
      * @return void
      */
-    public function getDepartmentByAbbr($abbriviations, $event)
+    public function addDepartmentNotifications($abbriviations, $event)
     {
         $abbriviations = explode("/", $abbriviations);
         $departments   = [];

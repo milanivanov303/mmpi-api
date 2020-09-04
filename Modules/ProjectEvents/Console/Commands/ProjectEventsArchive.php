@@ -30,22 +30,21 @@ class ProjectEventsArchive extends Command
      */
     public function handle()
     {
-        $model  = app(ProjectEvent::class);
+        $projectEventModel = app(ProjectEvent::class);
         $now    = Carbon::now()->format('Y-m-d H:i:s');
         $status = EnumValue::where([
             ['type', '=', 'project_event_status'],
             ['key', '=', 'archived'],
         ])->first();
-        $data = $model::with('projectEventStatus')
+        $projectEvents = $projectEventModel::with('projectEventStatus')
             ->whereHas('projectEventStatus', function ($status) {
                 $status->where('key', 'active');
             })->get();
 
-        foreach ($data as $expired) {
+        foreach ($projectEvents as $expired) {
             $expireDate = Carbon::parse($expired->event_end_date)->addMonths(2);
             if ($now > $expireDate) {
-                $model::where('id', '=', $expired->id)
-                    ->update(['project_event_status' => $status->id]);
+                $expired->id->update(['project_event_status' => $status->id]);
             }
         }
     }
