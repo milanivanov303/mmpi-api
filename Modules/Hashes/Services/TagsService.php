@@ -39,9 +39,19 @@ class TagsService
 
     protected function getRevisionLogType()
     {
+        $repoKey = app(EnumValue::class)
+                ::where('type', 'repository_type')
+                ->where('id', $this->hashCommit->repo_type_id)
+                ->value('key');
+
+        if (is_null($this->hashCommit->repo_type_id) || is_null($repoKey)) {
+            Log::channel('tags')->warning("Could not get repository key of hash '{$this->hashCommit->hash_rev}'");
+            return;
+        }
+
         return app(EnumValue::class)
             ::where('type', 'revision_log_type')
-            ->where('key', 'imx_be')
+            ->where('key', $repoKey)
             ->value('id');
     }
 
