@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <title>MMPI API</title>
+</head>
+
+<body>
+<div class="page">
+  <header></header>
+
+  <main>
+    <div class="row">
+      <div class="col s10 offset-s1 m8 offset-m2">
+        <div class="main card horizontal">
+          <div class="card-image col s3"></div>
+          <div class="card-stacked">
+            <div class="card-content">
+              <span class="card-title">MMPI API</span>
+              <p>Welcome to MMPI API, this is a web API created by Codix Bulgaria.</p>
+            </div>
+            <div class="card-action" >
+              <a href="/docs.html" title="Check the documentation">
+                <div class="card horizontal col s12 l5">
+                  <div class="card-image">
+                    <i class="material-icons large">import_contacts</i>
+                  </div>
+                  <div class="card-stacked truncate">
+                    <div class="card-content valign-wrapper">
+                      <b>Check the documentation</b> 
+                    </div>
+                  </div>
+                </div>
+              </a>
+              <a href="https://asparuh.codixfr.private/prt/news/" title="Go to MMPI">
+                <div class="card horizontal col s12 l5">
+                  <div class="card-image">
+                    <i class="material-icons large" >laptop_chromebook</i>
+                  </div>
+                  <div class="card-stacked truncate">
+                    <div class="card-content valign-wrapper">
+                      <b>Go to MMPI</b>
+                    </div>
+                  </div>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  
+  <footer>
+    <div class="footer">
+      <div class="row">
+        <div class="col s4"></div>
+        <div class="col s4 center-align"></div>
+        <div class="col s4 right-align">
+          <div>Copyright © 2020 Codix | MMPI API</div>
+        </div>
+      </div>
+    </div>
+  </footer>
+</div>
+ 
+  
+</div>
+
+<style>
+html {
+  line-height: 1.5;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+  font-weight: normal;
+  color:#013a77;
+  line-height: 1.15;
+}
+
+body {
+  margin: 0;
+}
+
+.page {
+  background-color:#ececec; display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+header {
+  height: 200px;
+  background-color: #013a77;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2)
+}
+
+main {
+  flex: 1 0 auto;
+}
+
+footer {
+  display: block;
+}
+
+a {
+  color: #013a77;
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.material-icons {
+  text-rendering: optimizeLegibility;
+  -webkit-font-feature-settings: 'liga';
+     -moz-font-feature-settings: 'liga';
+          font-feature-settings: 'liga';
+}
+
+i {
+  line-height: inherit;
+}
+
+i.large {
+  font-size: 6rem;
+}
+
+.valign-wrapper {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+.right-align {
+  text-align: right;
+}
+
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* Card Styles */
+.card {
+  position: relative;
+  margin: 0.5rem 0 1rem 0;
+  background-color: #fff;
+  -webkit-transition: -webkit-box-shadow .25s;
+  transition: -webkit-box-shadow .25s;
+  transition: box-shadow .25s;
+  transition: box-shadow .25s, -webkit-box-shadow .25s;
+  border-radius: 2px;
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2);
+}
+.card.main {
+  margin-top: -50px
+}
+.card.main >.card-image{
+  background: #cedeeb;
+}
+.card .card-title {
+  font-size: 40px;
+  font-weight: 300;
+}
+.card.horizontal {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+.card.horizontal .card-image {
+  max-width: 50%;
+}
+.card.horizontal .card-image img {
+  border-radius: 2px 0 0 2px;
+  max-width: 100%;
+  width: auto;
+}
+.card.horizontal .card-stacked {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+  position: relative;
+}
+.card.horizontal .card-stacked .card-content {
+  -webkit-box-flex: 1;
+  -webkit-flex-grow: 1;
+      -ms-flex-positive: 1;
+          flex-grow: 1;
+}
+.card .card-content {
+  padding: 24px;
+  border-radius: 0 0 2px 2px;
+}
+.card .card-content .card-title {
+  display: block;
+  line-height: 32px;
+  margin-bottom: 30px;
+  margin-top: 20px;
+}
+.card .card-action {
+  background-color: inherit;
+  border-top: 1px solid rgba(160, 160, 160, 0.2);
+  position: relative;
+  padding: 16px 24px;
+}
+.card .card-action .card.horizontal:hover {
+  transform: scale(1.07)
+}
+.card.horizontal .card-action .card.horizontal {
+  border: solid #013a77;
+  margin-right: 20px;
+  box-shadow: none;
+}
+.card.horizontal .card-action .card.horizontal .card-content {
+  color: #013a77;
+}
+
+.col .row {
+  margin-left: -0.75rem;
+  margin-right: -0.75rem;
+}
+.row {
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 20px;
+}
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+.row .col {
+  float: left;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  padding: 0 0.75rem;
+  min-height: 1px;
+}
+.row .col.s3 {
+  width: 25%;
+  margin-left: auto;
+  left: auto;
+  right: auto;
+}
+.row .col.s4 {
+  width: 33.3333333333%;
+  margin-left: auto;
+  left: auto;
+  right: auto;
+}
+.row .col.s10 {
+  width: 83.3333333333%;
+  margin-left: auto;
+  left: auto;
+  right: auto;
+}
+.row .col.s12 {
+  width: 100%;
+  margin-left: auto;
+  left: auto;
+  right: auto;
+}
+.row .col.offset-s1 {
+  margin-left: 8.3333333333%;
+}
+
+@media only screen and (min-width: 601px) {
+  .row .col.m8 {
+    width: 66.6666666667%;
+    margin-left: auto;
+    left: auto;
+    right: auto;
+  }
+  .row .col.offset-m2 {
+    margin-left: 16.6666666667%;
+  }
+}
+
+@media only screen and (min-width: 993px) {
+  .row .col.l5 {
+    width: 41.6666666667%;
+    margin-left: auto;
+    left: auto;
+    right: auto;
+  }
+}
+</style>
+
+</body>
+</html>
