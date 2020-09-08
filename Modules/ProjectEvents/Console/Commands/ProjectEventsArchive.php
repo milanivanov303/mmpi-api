@@ -4,7 +4,9 @@ namespace Modules\ProjectEvents\Console\Commands;
 
 use Carbon\Carbon;
 use App\Models\EnumValue;
+use Exception;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 use Modules\ProjectEvents\Models\ProjectEvent;
 
 class ProjectEventsArchive extends Command
@@ -44,7 +46,13 @@ class ProjectEventsArchive extends Command
         foreach ($projectEvents as $expired) {
             $expireDate = Carbon::parse($expired->event_end_date)->addMonths(2);
             if ($now > $expireDate) {
-                $expired->id->update(['project_event_status' => $status->id]);
+                try {
+                    $expired->update(['project_event_status' => $status->id]);
+                    Log::channel('project-events')->info("Event {$expired->id} archived!");
+                } catch (Exception $e) {
+                    Log::channel('project-events')->error("Event {$expired->id} archive failed: {$e->getMessage()}");
+                    continue;
+                }
             }
         }
     }

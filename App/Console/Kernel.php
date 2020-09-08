@@ -58,7 +58,8 @@ class Kernel extends ConsoleKernel
 
         $schedule->command('project-events:archive')
             ->everyFifteenMinutes()
-            ->environments(['prod']);
+            ->environments(['prod'])
+            ->appendOutputTo(storage_path('logs/project_events.log'));
 
         $schedule->command('hashes:synchronize');
     }
