@@ -133,16 +133,18 @@ class ProjectEventEstimation extends Model
 
         static::created(function ($model) {
             $recipients = $model->setMailRecipients($model);
+            $message    = (new NewEstimationMail([
+                'project' => $model->projectEvent->project->name,
+                'user' => $model->madeBy->name,
+                'department' => $model->department->name,
+                'duration' =>  $model->duration
+            ]))
+            ->onQueue('mails');
 
             Mail::
                 to($recipients['to'])
                 ->cc($recipients['cc'])
-                ->send(new NewEstimationMail([
-                    'project' => $model->projectEvent->project->name,
-                    'user' => $model->madeBy->name,
-                    'department' => $model->department->name,
-                    'duration' =>  $model->duration
-                ]));
+                ->queue($message);
         });
     }
 }

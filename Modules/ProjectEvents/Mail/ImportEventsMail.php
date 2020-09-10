@@ -26,7 +26,6 @@ class ImportEventsMail extends Mailable
      */
     public function __construct(array $data)
     {
-        $this->from("api-mmpi@codix.bg", "MMPI API auto");
         $this->to(Auth::user()->email);
         $this->data = $data;
     }
