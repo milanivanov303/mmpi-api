@@ -77,6 +77,12 @@ return [
             'level' => 'critical',
         ],
 
+        'project-events' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/project_events.log'),
+            'level' => 'debug',
+        ],
+
         'syslog' => [
             'driver' => 'syslog',
             'level' => 'debug',

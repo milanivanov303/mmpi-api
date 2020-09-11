@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Modules\ProjectEvents\Models\ProjectEvent;
 use Illuminate\Support\Facades\Mail;
 use Modules\ProjectEvents\Mail\NewEstimationMail;
+use Modules\Hr\Services\HrService;
 
 class ProjectEventEstimation extends Model
 {
@@ -51,6 +52,74 @@ class ProjectEventEstimation extends Model
     }
 
     /**
+     * Get mail recipients
+     * if the team doesn't have tl or dtl send the email to all users
+     *
+     * @param Collection $data
+     * @return array
+     */
+    protected function getMailRecipients($data) : array
+    {
+        $roles = $data->userDepartmentRoles;
+        if (count($roles) == 0) {
+            $users = $data->users->toArray();
+        } else {
+            $users = ($roles->where('role_id', 'tl')
+                ?? $roles->orWhere('role_id', 'dtl'))->pluck('user')->toArray();
+        }
+
+        $emails = array_filter(array_map(function ($user) {
+            return $user['email'];
+        }, $users), function ($email) {
+            return $email === '' ? false : true;
+        });
+
+        return $emails;
+    }
+
+    /**
+     * Set mail recipients
+     *
+     * @param ProjectEventEstimation $model
+     * @return array
+     */
+    protected function setMailRecipients($model) : array
+    {
+        $userDepartmentRole   = $model->department;
+        $userDepartmentEmails = $model->getMailRecipients($userDepartmentRole);
+        $recipients['to']     =  $userDepartmentEmails;
+
+        $notifyDepartments = $model
+            ->projectEvent
+            ->projectEventNotifications
+            ->where('project_event_id', '=', $model->project_event_id);
+        
+        $departmentsEmails = [];
+        foreach ($notifyDepartments as $notification) {
+            $departmentsEmails[] = $model->getMailRecipients($notification->department);
+        }
+
+        if (!empty($departmentsEmails)) {
+            $recipients['to'] = array_merge($recipients['to'], call_user_func_array('array_merge', $departmentsEmails));
+        }
+
+        $hr  = new HrService;
+        $pmo = $hr->getProjectAvailablePmo($model->projectEvent->project->name);
+
+        [$pmoTo] = $pmo;
+        array_push($recipients['to'], $pmoTo->email);
+
+        $recipients['cc'] = array_column($pmo, 'email');
+        array_push($recipients['cc'], $model->madeBy->email);
+
+        if ($model->projectEvent->projectEventType->value === "Assistance") {
+            array_push($recipients['to'], config('mail.mailgroups.client_trainings'));
+        }
+
+        return $recipients;
+    }
+
+    /**
      * @inheritDoc
      */
     public static function boot()
@@ -63,35 +132,19 @@ class ProjectEventEstimation extends Model
         });
 
         static::created(function ($model) {
-            $userDepartmentRole = $model
-                ->department
-                ->userDepartmentRoles;
-
-            // if the team doesn't have tl or dtl send the email to all users
-            if (count($userDepartmentRole) == 0) {
-                $users = $model->department->users->toArray();
-            } else {
-                $users = ($userDepartmentRole->where('role_id', 'tl')
-                        ?? $userDepartmentRole->orWhere('role_id', 'dtl'))->pluck('user')->toArray();
-            }
-
-            $to = array_filter(array_map(function ($user) {
-                return $user['email'];
-            }, $users), function ($email) {
-                return $email === '' ? false : true;
-            });
-            array_push($to, config('mail.mailgroups.client_trainings'));
-            $cc = $model->madeBy->email;
+            $recipients = $model->setMailRecipients($model);
+            $message    = (new NewEstimationMail([
+                'project' => $model->projectEvent->project->name,
+                'user' => $model->madeBy->name,
+                'department' => $model->department->name,
+                'duration' =>  $model->duration
+            ]))
+            ->onQueue('mails');
 
             Mail::
-                to($to)
-                ->cc($cc)
-                ->send(new NewEstimationMail([
-                    'project' => $model->projectEvent->project->name,
-                    'user' => $model->madeBy->name,
-                    'department' => $model->department->name,
-                    'duration' =>  $model->duration
-                ]));
+                to($recipients['to'])
+                ->cc($recipients['cc'])
+                ->queue($message);
         });
     }
 }
