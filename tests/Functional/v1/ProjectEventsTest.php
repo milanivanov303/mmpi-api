@@ -27,7 +27,7 @@ class ProjectEventsTest extends RestTestCase
     public function testCreate()
     {
         parent::testCreate();
-        Mail::assertQueued(NewEstimationMail::class, 1);
+        Mail::assertQueued(NewEstimationMail::class, 3);
     }
     
     /**
@@ -86,7 +86,7 @@ class ProjectEventsTest extends RestTestCase
     {
         //Remove date as it is overwritten on each request
         unset($data['made_on']);
-        $data['event_start_date'] = $this->faker()->date('Y-m-d');
+        $data['description'] = "update description";
         
         return $data;
     }
