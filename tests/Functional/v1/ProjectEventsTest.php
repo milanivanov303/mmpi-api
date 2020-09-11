@@ -27,8 +27,7 @@ class ProjectEventsTest extends RestTestCase
     public function testCreate()
     {
         parent::testCreate();
-
-        Mail::assertSent(NewEstimationMail::class, 3);
+        Mail::assertQueued(NewEstimationMail::class, 1);
     }
     
     /**
