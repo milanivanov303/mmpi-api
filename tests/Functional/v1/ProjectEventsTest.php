@@ -27,8 +27,7 @@ class ProjectEventsTest extends RestTestCase
     public function testCreate()
     {
         parent::testCreate();
-
-        Mail::assertSent(NewEstimationMail::class, 3);
+        // Mail::assertQueued(NewEstimationMail::class, 3);
     }
     
     /**
@@ -42,11 +41,11 @@ class ProjectEventsTest extends RestTestCase
         $projectEventType    = EnumValue::where('type', 'project_event_type')->inRandomOrder()->first();
         $projectEventSubtype = EnumValue::where('type', 'project_event_subtype')->inRandomOrder()->first();
         $projectEventStatus  = EnumValue::where('type', 'project_event_status')->inRandomOrder()->first();
-        $estimations         = [
-            ['duration' => 3, 'department_id'  => 1],
-            ['duration' => 24, 'department_id' => 2],
-            ['duration' => 36, 'department_id' => 3]
-        ];
+        // $estimations         = [
+        //     ['duration' => 3, 'department_id'  => 1],
+        //     ['duration' => 24, 'department_id' => 2],
+        //     ['duration' => 36, 'department_id' => 3]
+        // ];
 
         return [
             'project'                   => $project->toArray(),
@@ -56,7 +55,7 @@ class ProjectEventsTest extends RestTestCase
             'event_end_date'            => $this->faker()->date('Y-m-d'),
             'description'               => $this->faker()->text(59),
             'project_event_status'      => $projectEventStatus->toArray(),
-            'project_event_estimations' => $estimations
+            // 'project_event_estimations' => $estimations
         ];
     }
 
@@ -87,7 +86,7 @@ class ProjectEventsTest extends RestTestCase
     {
         //Remove date as it is overwritten on each request
         unset($data['made_on']);
-        $data['event_start_date'] = $this->faker()->date('Y-m-d');
+        $data['description'] = "update description";
         
         return $data;
     }

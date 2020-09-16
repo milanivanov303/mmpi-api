@@ -7,6 +7,7 @@ use App\Models\EnumValue;
 use App\Models\User;
 use Modules\Projects\Models\Project;
 use Modules\ProjectEvents\Models\ProjectEventEstimation;
+use Modules\ProjectEvents\Models\ProjectEventNotifications;
 
 class ProjectEvent extends Model
 {
@@ -73,5 +74,13 @@ class ProjectEvent extends Model
     protected function projectEventEstimations()
     {
         return $this->hasMany(ProjectEventEstimation::class);
+    }
+
+    /**
+     * Get project event notifications
+     */
+    protected function projectEventNotifications()
+    {
+        return $this->hasMany(ProjectEventNotifications::class);
     }
 }

@@ -125,6 +125,10 @@ class ProjectEventRepository extends AbstractRepository implements RepositoryInt
             $this->saveEstimations($data['project_event_estimations']);
         }
 
+        if (array_key_exists('project_event_notifications', $data)) {
+            $this->saveNotifications($data['project_event_notifications']);
+        }
+
         $this->loadModelRelations($data);
 
         return $this->model;
@@ -142,6 +146,7 @@ class ProjectEventRepository extends AbstractRepository implements RepositoryInt
         DB::transaction(function () use ($id) {
             $model = $this->find($id);
             $model->projectEventEstimations()->delete();
+            $model->projectEventNotifications()->delete();
 
             $model->delete();
         });
@@ -168,5 +173,28 @@ class ProjectEventRepository extends AbstractRepository implements RepositoryInt
 
         // insert new estimations
         $this->model->projectEventEstimations()->createMany($newEstimations);
+    }
+
+    /**
+     * Save notifications
+     *
+     * @param array $notifications
+     */
+    protected function saveNotifications($notifications)
+    {
+        // delete notifications which are not present in the $notifications array
+        $this->model->projectEventNotifications()
+        ->whereNotIn('id', array_map(function ($notification) {
+            return array_key_exists('id', $notification) ? $notification['id'] : false;
+        }, $notifications))
+        ->delete();
+
+        // get notification which don't exist in DB
+        $newNotification = array_filter($notifications, function ($notification) {
+            return array_key_exists('id', $notification) === false;
+        });
+
+        // insert new notifications
+        $this->model->projectEventNotifications()->createMany($newNotification);
     }
 }

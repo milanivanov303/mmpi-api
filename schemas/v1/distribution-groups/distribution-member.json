@@ -1,0 +1,35 @@
+{
+    "$id": "DistributionMember",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "description": "Distribution Member object",
+    "properties": {
+        "distribution_member_id": {
+            "type": "integer"
+        },
+        "distribution_groups_id": {
+            "type": "integer"
+        },
+        "username": {
+            "type": "string",
+            "maxLength": 200,
+            "description": "The unique distribution member name",
+            "$filters": {
+                "$func": "checkInDb",
+                "$vars": {
+                    "rule": "unique:distribution_members,username"
+                }
+            }
+        },
+        "created_date": {
+            "type": ["string", "null"],
+            "format": "datetime",
+            "description": "Timestamp when the distribution member was created"
+        },
+        "status": {
+            "type": ["integer", "null"],
+            "enum": [0, 1, null],
+            "description": "Status"
+        }
+    }
+}

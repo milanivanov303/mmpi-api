@@ -1,0 +1,37 @@
+{
+    "$id": "ProjectEventNotification",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "description": "Project event notification object",
+    "properties": {
+        "id": {
+            "type": "integer"
+        },
+        "project_event": {
+            "$ref": "/v1/project-events/project-event.json"
+        },
+        "department": {
+            "$ref": "/v1/departments/department.json"
+        },
+        "project_event_id": {
+            "type": "integer"
+        },
+        "department_id": {
+            "type": "integer"
+        },
+        "made_by": {
+            "oneOf": [
+                {
+                    "$ref": "/v1/user.json",
+                    "description": "The id of the user who inserted or updated the record"
+                },
+                {"type": "integer"}
+            ]
+        },
+        "made_on": {
+            "type": "string",
+            "format": "datetime",
+            "description": "When was the record inserted or updated"
+        }
+    }
+}

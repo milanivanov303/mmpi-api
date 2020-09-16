@@ -10,6 +10,10 @@
 |
 */
 
+$router->get('/', function () {
+    return view('welcome');
+});
+
 $router->group([
     'namespace' => '\Rap2hpoutre\LaravelLogViewer'
 ], function () use ($router) {
@@ -98,5 +102,8 @@ $router->group(['prefix' => 'v1'], function () use ($router) {
 
         // Ddl
         require 'v1/ddl.php';
+
+        // Distribution Groups
+        require 'v1/distribution-groups.php';
     });
 });

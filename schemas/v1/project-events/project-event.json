@@ -71,6 +71,12 @@
             "items": {
                 "$ref": "/v1/project-events/project-event-estimation.json"
             }
+        },
+        "project_event_notifications": {
+            "type": "array",
+            "items": {
+                "$ref": "/v1/project-events/project-event-notification.json"
+            }
         }
     }
 }
