@@ -18,7 +18,6 @@ $router->group([
     ]);
     $router->post('/import', [
         'as'          => 'project-events.import',
-        'schema'      =>  false,
         'description' => 'Import project events',
         'uses'        => 'ProjectEventsController@import'
     ]);
