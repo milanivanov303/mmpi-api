@@ -14,8 +14,8 @@ class AddProcessedDcsyncColumnToPatchesHeadMerge extends Migration
     public function up()
     {
         Schema::table('patches_head_merge', function (Blueprint $table) {
-            $table->integer('processed_dcsync')->nullable(false)->default(0)->after('processed');
-            $table->string('tts_keys_dcsync', 256)->nullable()->default(null)->after('tts_keys');
+            $table->integer('processed_dcsync')->default(0)->after('processed');
+            $table->string('tts_keys_dcsync', 256)->nullable()->after('tts_keys');
         });
         
         Schema::table('patches_head_merge', function (Blueprint $table) {
