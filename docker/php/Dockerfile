@@ -4,6 +4,8 @@ FROM avitohol.codixfr.private:5000/php:7.3.6-fpm-v9
 ARG display_errors
 RUN if [ ${display_errors} -eq 1 ]; then cp "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"; fi
 
+COPY php.ini "$PHP_INI_DIR/conf.d/"
+
 USER root
 RUN apt-get -y install mercurial-server cppcheck
 RUN apt-get update && apt-get install -y \

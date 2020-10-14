@@ -112,7 +112,7 @@ class ProjectEventEstimation extends Model
         $recipients['cc'] = array_column($pmo, 'email');
         array_push($recipients['cc'], $model->madeBy->email);
 
-        if ($model->projectEvent->projectEventType->value === "Assistance") {
+        if ($model->projectEvent->projectEventType->value === "Client Training") {
             array_push($recipients['to'], config('mail.mailgroups.client_trainings'));
         }
 
