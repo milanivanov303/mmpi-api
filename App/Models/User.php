@@ -28,6 +28,16 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         'access_group_id'
     ];
 
+    protected $fillable = [
+        'name',
+        'username',
+        'email',
+        'sid',
+        'sidfr',
+        'uidnumber',
+        'status',
+    ];
+
     /**
      * Check if user is super admin
      *
@@ -87,7 +97,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     /**
      * Get user department.
      */
-    public function department()
+    protected function department()
     {
         return $this->belongsTo(Department::class);
     }
