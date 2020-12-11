@@ -65,9 +65,10 @@ class Kernel extends ConsoleKernel
 
         $schedule->command('hashes:synchronize');
 
+        /* Not to be scheduled until PMO decision is made.
         $schedule->command('sources:missing-deliverychain')
             ->dailyAt('03:00')
             ->environments(['prod'])
-            ->appendOutputTo(storage_path("logs/missing-deliverychain-command.log"));
+            ->appendOutputTo(storage_path("logs/missing-deliverychain-command.log"));*/
     }
 }
