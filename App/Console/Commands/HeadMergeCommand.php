@@ -42,7 +42,7 @@ class HeadMergeCommand extends Command
      */
     public function handle()
     {
-        $patches = PatchesHeadMerge::where('processed', 0)->get();
+        $patches = PatchesHeadMerge::where('processed_headmerge', 0)->get();
 
         $this->info("Found {$patches->count()} not processed " . Str::plural('patch', $patches->count()));
 
@@ -69,7 +69,7 @@ class HeadMergeCommand extends Command
                         ::whereIn('rev_id', $sources->pluck('rev_id')->all())
                         ->update(['requested_head_merge' => 1]);
 
-                    $patch->tts_keys = trim("{$patch->tts_keys}, {$issue->key}", ', ');
+                    $patch->tts_keys_headmerge = trim("{$patch->tts_keys_headmerge}, {$issue->key}", ', ');
 
                     $this->info("New issue {$issue->key} was created and assigned to user {$username}");
                     $this->info("Issue {$issue->key} was linked to {$sources->first()['tts_id']}");
@@ -79,7 +79,7 @@ class HeadMergeCommand extends Command
                 }
             }
 
-            $patch->processed = 1;
+            $patch->processed_headmerge = 1;
             $patch->save();
         }
     }

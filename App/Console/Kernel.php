@@ -11,6 +11,7 @@ use Modules\Users\Console\Commands\SynchronizeCommand;
 use Modules\Oci\Console\Commands\Tnsnameora;
 use Modules\Hashes\Console\Commands\HashesSynchronizeCommand;
 use Modules\ProjectEvents\Console\Commands\ProjectEventsArchive;
+use App\Console\Commands\MissingDeliverychainSourcesCommand;
 
 class Kernel extends ConsoleKernel
 {
@@ -26,7 +27,8 @@ class Kernel extends ConsoleKernel
         HeadMergeCommand::class,
         Tnsnameora::class,
         HashesSynchronizeCommand::class,
-        ProjectEventsArchive::class
+        ProjectEventsArchive::class,
+        MissingDeliverychainSourcesCommand::class
     ];
 
     /**
@@ -62,5 +64,11 @@ class Kernel extends ConsoleKernel
             ->appendOutputTo(storage_path('logs/project_events.log'));
 
         $schedule->command('hashes:synchronize');
+
+        /* Not to be scheduled until PMO decision is made.
+        $schedule->command('sources:missing-deliverychain')
+            ->dailyAt('03:00')
+            ->environments(['prod'])
+            ->appendOutputTo(storage_path("logs/missing-deliverychain-command.log"));*/
     }
 }
