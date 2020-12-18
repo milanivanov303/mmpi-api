@@ -110,15 +110,16 @@ class ModificationsController extends Controller
         ];
 
         $data = [
-            'type_id'           => $request->input('type_id'),
-            'subtype_id'        => $request->input('subtype_id'),
-            'issue_id'          => $request->input('issue_id'),
-            'active'            => $request->input('active'),
-            'visible'           => $request->input('visible'),
-            'delivery_chain_id' => $request->input('delivery_chain_id'),
-            'instance_status'   => $request->input('instance_status'),
-            'instance'          => $request->input('instance'),
-            'contents'          => $request->input('contents')
+            'type_id'            => $request->input('type_id'),
+            'subtype_id'         => $request->input('subtype_id'),
+            'issue_id'           => $request->input('issue_id'),
+            'active'             => $request->input('active'),
+            'visible'            => $request->input('visible'),
+            'delivery_chain'     => $request->input('delivery_chain'),
+            'instance_status'    => $request->input('instance_status'),
+            'instance'           => $request->input('instance'),
+            'contents'           => $request->input('contents'),
+            'creator_department' => $request->input('creator_department')
         ];
 
         $model = $this->repository->create($data);

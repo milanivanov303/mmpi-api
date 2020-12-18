@@ -13,6 +13,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Modules\Instances\Models\Instance;
+use App\Models\Department;
 
 class ModificationRepository extends AbstractRepository implements RepositoryInterface
 {
@@ -50,6 +51,12 @@ class ModificationRepository extends AbstractRepository implements RepositoryInt
         if (array_key_exists('delivery_chain', $data)) {
             $this->model->deliveryChain()->associate(
                 app(DeliveryChain::class)->getModelId($data['delivery_chain'], 'id')
+            );
+        }
+
+        if (array_key_exists('creator_department', $data)) {
+            $this->model->creatorDepartment()->associate(
+                app(Department::class)->getModelId($data['creator_department'], 'id')
             );
         }
 

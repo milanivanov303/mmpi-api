@@ -10,6 +10,7 @@ use Modules\DeliveryChains\Models\DeliveryChain;
 use App\Models\User;
 use App\Models\EnumValue;
 use App\Models\DbSchema;
+use App\Models\Department;
 
 class Modification extends Model
 {
@@ -88,6 +89,7 @@ class Modification extends Model
         'subtype_id',
         'tablespace_id',
         'created_by_id',
+        'creator_department_id',
         'updated_by_id',
         'type_id',
         'created_on',
@@ -267,5 +269,13 @@ class Modification extends Model
     protected function type()
     {
         return $this->belongsTo(ModificationType::class, 'type_id');
+    }
+
+    /**
+     * Get department of modification's creator
+     */
+    protected function creatorDepartment()
+    {
+        return $this->belongsTo(Department::class);
     }
 }
