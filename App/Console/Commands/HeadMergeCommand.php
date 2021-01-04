@@ -15,6 +15,7 @@ use JiraRestApi\Issue\IssueService;
 use Modules\SourceRevisions\Models\SourceRevision;
 use JiraRestApi\IssueLink\IssueLink;
 use JiraRestApi\IssueLink\IssueLinkService;
+use Modules\Hashes\Models\HashCommit;
 
 /**
  * Head merge sources to head
@@ -53,7 +54,7 @@ class HeadMergeCommand extends Command
                 json_decode(json_encode($this->getData($patch->patch_id)), JSON_OBJECT_AS_ARRAY)
             );
 
-            $revisions = implode(", ", $data->pluck('rev_id')->all());
+            $revisions = implode(", ", $data->pluck('modif_id')->all());
             $this->info(
                 "Found {$data->count()} not merged " . Str::plural('revision', $data->count()) . " - {$revisions}"
             );
@@ -65,9 +66,19 @@ class HeadMergeCommand extends Command
                     $issue = $this->createIssue($username, $sources);
                     $this->linkIssue($issue->key, $sources->first()['tts_id']);
 
-                    SourceRevision
-                        ::whereIn('rev_id', $sources->pluck('rev_id')->all())
-                        ->update(['requested_head_merge' => 1]);
+                    switch ($sources->first()['type_id']) {
+                        case 'source':
+                            SourceRevision
+                            ::whereIn('rev_id', $sources->pluck('modif_id')->all())
+                            ->update(['requested_head_merge' => 1]);
+                            break;
+                        case 'hash':
+                            HashCommit
+                            ::whereIn('id', $sources->pluck('modif_id')->all())
+                            ->update(['requested_head_merge' => 1]);
+                            break;
+                        default:
+                    }
 
                     $patch->tts_keys_headmerge = trim("{$patch->tts_keys_headmerge}, {$issue->key}", ', ');
 
@@ -102,38 +113,52 @@ class HeadMergeCommand extends Command
         return DB::select(
             "
             SELECT U.username,
-               SR.rev_id,
-               M.name AS source_file,
-               SR.revision,
-               P.id AS patch_id,
-               PRJ.id AS project_id,
-               I.tts_id,
-               PRJ.name AS project_name,
-               PRJ.tts_dev_project_key
-            FROM patches P
-            JOIN patch_requests PR ON P.patch_request_id=PR.id
-            JOIN issues I ON PR.issue_id=I.id
-            JOIN projects PRJ ON I.project_id=PRJ.id
-            JOIN modif_to_patch MP ON P.id=MP.patch_id
-            JOIN modifications M ON MP.modif_id=M.id
-            JOIN users U ON IFNULL(M.updated_by_id, M.created_by_id)=U.id
-            JOIN source S ON M.name=CONCAT(S.source_path, '/', S.source_name)
-            JOIN source_revision SR ON (S.source_id=SR.source_id AND M.version=SR.revision)
-            JOIN enum_values EVS ON (EVS.type='revision_log_type' AND EVS.`key`='cvs')
-            JOIN enum_values EVT ON (EVT.type='cvs_log_tags_stack' AND EVT.`key`='cvs_tag_merge')
-            LEFT JOIN commit_merge CM ON 
-            ((SR.rev_id=CM.commit_id OR SR.rev_id=CM.merge_commit) AND CM.commit_log_type_id=EVS.id)
-            LEFT JOIN source_revision BSR ON 
-            (CM.merge_commit<>SR.rev_id AND CM.merge_commit=BSR.rev_id AND BSR.revision NOT LIKE '%.%.%')
-            LEFT JOIN source_revision MSR ON (CM.commit_id=MSR.rev_id AND MSR.revision NOT LIKE '%.%.%')
-            WHERE P.id=?
-            AND M.type_id='source'
-            AND SR.rev_registration_date>=?
-            AND (SR.requested_head_merge IS NULL OR SR.requested_head_merge<>1)
-            AND M.version LIKE '%.%.%'
-            AND MSR.rev_id IS NULL
-            AND BSR.rev_id IS NULL
-            ORDER BY P.migr_sequence_N DESC;
+                   IFNULL(SR.rev_id, HC.id) as modif_id,
+                   M.type_id,
+                   M.name AS source_file,
+                   IFNULL(SR.revision, HC.repo_timestamp) AS revision,
+                   P.id AS patch_id,
+                   PRJ.id AS project_id,
+                   I.tts_id,
+                   PRJ.name AS project_name,
+                   PRJ.tts_dev_project_key
+              FROM patches P
+              JOIN patch_requests PR ON P.patch_request_id=PR.id
+              JOIN issues I ON PR.issue_id=I.id
+              JOIN projects PRJ ON I.project_id=PRJ.id
+              JOIN modif_to_patch MP ON P.id=MP.patch_id
+              JOIN modifications M ON MP.modif_id=M.id
+              JOIN users U ON IFNULL(M.updated_by_id, M.created_by_id)=U.id
+              LEFT JOIN source S ON M.name=CONCAT(S.source_path, '/', S.source_name)
+              LEFT JOIN source_revision SR ON (S.source_id=SR.source_id AND M.version=SR.revision)
+              LEFT JOIN hash_commits HC ON M.name=HC.hash_rev
+              LEFT JOIN enum_values EVS ON 
+                (EVS.type='revision_log_type' AND IF(M.type_id='source', EVS.`key`='cvs', EVS.`key`='imx_be'))
+              JOIN enum_values EVT ON (EVT.type='cvs_log_tags_stack' AND EVT.`key`='cvs_tag_merge')
+              LEFT JOIN commit_merge CM ON
+              ((IFNULL(SR.rev_id, HC.id)=CM.commit_id OR IFNULL(SR.rev_id, HC.hash_rev)=CM.merge_commit) 
+              AND CM.commit_log_type_id=EVS.id)
+              LEFT JOIN source_revision BSR ON
+              (CM.merge_commit<>SR.rev_id AND CM.merge_commit=BSR.rev_id AND BSR.revision NOT LIKE '%.%.%')
+              LEFT JOIN source_revision MSR ON (CM.commit_id=MSR.rev_id AND MSR.revision NOT LIKE '%.%.%')
+              LEFT JOIN hash_commits HCB ON
+              (CM.merge_commit<>HC.hash_rev AND CM.merge_commit=HCB.hash_rev)
+              LEFT JOIN hash_commits HCM ON (CM.commit_id=HCM.id)
+              WHERE P.id=?
+              AND M.type_id in ('source', 'hash')
+              AND IFNULL(SR.rev_registration_date, HC.repo_timestamp)>=?
+              AND (CASE
+                   WHEN M.type_id='source' THEN
+                    M.version LIKE '%.%.%'
+                    AND (SR.requested_head_merge IS NULL OR SR.requested_head_merge<>1)
+                    AND MSR.rev_id IS NULL
+                    AND BSR.rev_id IS NULL
+                   ELSE -- type_id='hash'
+                    (HC.requested_head_merge IS NULL OR HC.requested_head_merge<>1)
+                    AND HCB.hash_rev IS NULL
+                    AND HCM.id IS NULL
+                  END)
+             ORDER BY P.migr_sequence_N DESC;
             ",
             [$patchId, $minDate]
         );
