@@ -55,8 +55,10 @@ class HeadMergeCommand extends Command
             );
 
             $groupedModifs = $data->groupBy('type_id')->all();
-            $sources = implode(", ", $groupedModifs['source']->pluck('modif_id')->all());
-            $hashes = implode(", ", $groupedModifs['hash']->pluck('modif_id')->all());
+            $sources = isset($groupedModifs['source'])
+                    ? implode(", ", $groupedModifs['source']->pluck('modif_id')->all()) : "";
+            $hashes = isset($groupedModifs['hash'])
+                    ? implode(", ", $groupedModifs['hash']->pluck('modif_id')->all()) : "";
 
             $this->info(
                 "Found {$data->count()} not merged " . Str::plural('modification', $data->count())
