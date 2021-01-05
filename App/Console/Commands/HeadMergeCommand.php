@@ -54,27 +54,31 @@ class HeadMergeCommand extends Command
                 json_decode(json_encode($this->getData($patch->patch_id)), JSON_OBJECT_AS_ARRAY)
             );
 
-            $revisions = implode(", ", $data->pluck('modif_id')->all());
+            $groupedModifs = $data->groupBy('type_id')->all();
+            $sources = implode(", ", $groupedModifs['source']->pluck('modif_id')->all());
+            $hashes = implode(", ", $groupedModifs['hash']->pluck('modif_id')->all());
+
             $this->info(
-                "Found {$data->count()} not merged " . Str::plural('revision', $data->count()) . " - {$revisions}"
+                "Found {$data->count()} not merged " . Str::plural('modification', $data->count())
+                        . ": sources - {$sources}; hashes - {$hashes}"
             );
 
             $data = $data->groupBy('username');
 
-            foreach ($data as $username => $sources) {
+            foreach ($data as $username => $modifications) {
                 try {
-                    $issue = $this->createIssue($username, $sources);
-                    $this->linkIssue($issue->key, $sources->first()['tts_id']);
+                    $issue = $this->createIssue($username, $modifications);
+                    $this->linkIssue($issue->key, $modifications->first()['tts_id']);
 
-                    switch ($sources->first()['type_id']) {
+                    switch ($modifications->first()['type_id']) {
                         case 'source':
                             SourceRevision
-                            ::whereIn('rev_id', $sources->pluck('modif_id')->all())
+                            ::whereIn('rev_id', $modifications->pluck('modif_id')->all())
                             ->update(['requested_head_merge' => 1]);
                             break;
                         case 'hash':
                             HashCommit
-                            ::whereIn('id', $sources->pluck('modif_id')->all())
+                            ::whereIn('id', $modifications->pluck('modif_id')->all())
                             ->update(['requested_head_merge' => 1]);
                             break;
                         default:
@@ -83,7 +87,7 @@ class HeadMergeCommand extends Command
                     $patch->tts_keys_headmerge = trim("{$patch->tts_keys_headmerge}, {$issue->key}", ', ');
 
                     $this->info("New issue {$issue->key} was created and assigned to user {$username}");
-                    $this->info("Issue {$issue->key} was linked to {$sources->first()['tts_id']}");
+                    $this->info("Issue {$issue->key} was linked to {$modifications->first()['tts_id']}");
                 } catch (\Exception $e) {
                     Log::error($e->getMessage());
                     $this->error($e->getMessage());
