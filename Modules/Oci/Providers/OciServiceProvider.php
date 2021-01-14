@@ -2,9 +2,7 @@
 
 namespace Modules\Oci\Providers;
 
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;
-use phpseclib\Net\SFTP;
 
 class OciServiceProvider extends ServiceProvider
 {
@@ -27,20 +25,6 @@ class OciServiceProvider extends ServiceProvider
             }
 
             return $oci;
-        });
-
-        $this->app->singleton('GetTnsnameora', function () {
-            $host     = config('app.ssh.tnsname_host');
-            $port     = config('app.ssh.port');
-            $username = config('app.ssh.username');
-            $password = config('app.ssh.password');
-
-            $sftp = new SFTP($host, $port, 30);
-            if (!$sftp->login($username, $password)) {
-                Log::error("Could not login to instance {$host}");
-                throw new \Exception("Could not login to instance {$host}");
-            }
-            return $sftp;
         });
     }
 }

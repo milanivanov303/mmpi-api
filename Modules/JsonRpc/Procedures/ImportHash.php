@@ -42,13 +42,12 @@ class ImportHash
      */
     protected function hgImport(string $rev, EnumValue $repository)
     {
-        $ssh2 = app('ssh2', ['instance' => 'rhode']);
+        $ssh2 = app('SSH', ['host' => 'rhode']);
+        $ssh2->setWorkDir("/home/rhode/repos/{$repository->extra_property}/.hg");
 
-        // Get revision data
-        $importHash = $ssh2->exec(
-            "export TERM=vt100; sudo su - rhode -c '" . PHP_EOL
-            . "cd /home/rhode/repos/{$repository->extra_property}/.hg". PHP_EOL
-            . "php {$this->importScriptPath} {$rev} {$repository->key} sync"
+        $importHash = $ssh2->execAs(
+            "rhode",
+            "php {$this->importScriptPath} {$rev} {$repository->key} sync"
         );
 
         if ($ssh2->getExitStatus() !== 0) {

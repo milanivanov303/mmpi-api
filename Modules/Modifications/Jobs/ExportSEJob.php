@@ -62,8 +62,8 @@ class ExportSEJob extends Job
     protected function export() : bool
     {
         try {
-            $ssh2 = app('SeExport', [
-                'instance' => $this->data['instance']['host']
+            $ssh2 = app('SSH', [
+                'host' => $this->data['instance']['host']
             ]);
             $export = new SeService(
                 $ssh2,
