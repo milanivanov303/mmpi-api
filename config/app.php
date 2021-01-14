@@ -143,12 +143,9 @@ return array_merge(
         | SSH configuration for codix internal instances
         |
         */
+        'automation_username' => env('AUTOMATION_USERNAME'),
+        'automation_rsa_key' => env('AUTOMATION_RSA_KEY'),
         'ssh' => [
-            'host'        => env('SSH_HOST', 'bira.codixfr.private'),
-            'port'        => env('SSH_PORT', 22),
-            'username'    => env('SSH_USERNAME'),
-            'password'    => env('SSH_PASSWORD'),
-            'public_key'  => env('SSH_KEY'),
             'tnsname_host'=> env('TNSNAME_CONFIG_HOST', 'asparuh.codixfr.private'),
         ],
 

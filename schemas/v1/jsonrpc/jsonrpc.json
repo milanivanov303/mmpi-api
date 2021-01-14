@@ -24,6 +24,7 @@
         }
     },
     "oneOf": [
-        {"$ref": "/v1/jsonrpc/run_cppcheck.json"}
+        {"$ref": "/v1/jsonrpc/run_cppcheck.json"},
+        {"$ref": "/v1/jsonrpc/import_hash.json"}
     ]
 }

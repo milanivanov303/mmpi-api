@@ -1,0 +1,25 @@
+{
+    "$id": "ImportHash",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "description": "JSON RPC Run ImportHash object",
+    "required": [
+        "params"
+    ],
+    "properties": {
+        "method": {
+            "enum": ["import_hash"]
+        },
+        "params": {
+            "type": "object",
+            "properties": {
+                "hash": {
+                    "type": "string"
+                },
+                "repo_type": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}

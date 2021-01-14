@@ -143,11 +143,13 @@ class SeService
         $this->logFileDir = $this->getWorkdir();
         $this->cleanHouse();
 
-        $pid = $this->ssh2->exec(
-            "export TERM=vt100; sudo su - {$this->user} -c '" . PHP_EOL
-            . ". ~/.profile " . PHP_EOL
+        $cmd = ". ~/.profile" . PHP_EOL
             . "nohup {$this->getCommandType()} > {$this->getLogFile()} 2>&1 &" . PHP_EOL
-            . "echo $!'"
+            . "echo $!";
+
+        $pid = $this->ssh2->execAs(
+            $this->user,
+            $cmd
         );
         
         $this->pid = str_replace("\n", "", $pid);
@@ -227,15 +229,19 @@ class SeService
         $artifact   = substr($this->seDump, strrpos($this->seDump, '/')+1)."\n";
         $artifactId = substr($artifact, 0, strpos($artifact, "."));
 
-        $this->ssh2->exec(
-            "export TERM=vt100; sudo su - {$this->user} -c '" . PHP_EOL
-                . ". \${IMX_HOME}/extlib/profiles/.extlibprofile; cd {$this->logFileDir}" . PHP_EOL
-                . "cp {$this->seDump} ./{$artifact}" . PHP_EOL
-                // . "rm -rf {$clientRepo}" . PHP_EOL // risky got to find another way !
-                . "hg pull" . PHP_EOL
-                . "mvn -s ./settings.xml deploy -Des.client={$clientRepo} \
-                    -Des.artifactId={$artifactId} -Des.version={$this->logTime}'"
+        $cmd = ". \${IMX_HOME}/extlib/profiles/.extlibprofile; cd {$this->logFileDir}" . PHP_EOL
+            . "cp {$this->seDump} ./{$artifact}" . PHP_EOL
+            // . "rm -rf {$clientRepo}" . PHP_EOL // risky got to find another way !
+            . "hg pull" . PHP_EOL
+            . "mvn -s ./settings.xml deploy -Des.client={$clientRepo} \
+                -Des.artifactId={$artifactId} -Des.version={$this->logTime}";
+
+        $this->ssh2->execAs(
+            $this->user,
+            $cmd
         );
+
+
 
         if ($this->ssh2->getExitStatus()) {
             $this->broadcast([
@@ -332,10 +338,12 @@ class SeService
      */
     protected function cleanExec($dump) : void
     {
-        $this->ssh2->exec(
-            "export TERM=vt100; sudo su - {$this->user} -c '" . PHP_EOL
-            . ". ~/.profile " . PHP_EOL
-            . "rm -f {$this->seDump} {$dump}'"
+        $cmd = ". ~/.profile" . PHP_EOL
+            . "rm -f {$this->seDump} {$dump}";
+
+        $this->ssh2->execAs(
+            $this->user,
+            $cmd
         );
     }
     
@@ -360,21 +368,24 @@ class SeService
     {
         $seRepo  = config('app.nexus.rhode_url');
         $repoDir =  "/{$this->user}/intra/imx/patch/system-expert";
+        $cmd = ". ~/.profile" . PHP_EOL
+            . "[ -d {$repoDir} ] && echo {$repoDir} || exit 1";
 
-        $dir = $this->ssh2->exec(
-            "export TERM=vt100; sudo su - {$this->user} -c '" . PHP_EOL
-            . ". ~/.profile " . PHP_EOL
-            . "[ -d {$repoDir} ] && echo {$repoDir} || exit 1'"
+        $dir = $this->ssh2->execAs(
+            $this->user,
+            $cmd
         );
 
         if ($this->ssh2->getExitStatus()) {
-            $dir = $this->ssh2->exec(
-                "export TERM=vt100; sudo su - {$this->user} -c '" . PHP_EOL
-                . ". \${IMX_HOME}/extlib/profiles/.extlibprofile" . PHP_EOL
+            $cmd = ". \${IMX_HOME}/extlib/profiles/.extlibprofile" . PHP_EOL
                 . "cd /{$this->user}/intra/imx/patch" . PHP_EOL
                 . "hg clone {$seRepo}" . PHP_EOL
                 . "cd system-expert" . PHP_EOL
-                . "pwd'"
+                . "pwd";
+
+            $dir = $this->ssh2->execAs(
+                $this->user,
+                $cmd
             );
 
             $dir = array_filter(explode("\n", $dir));
