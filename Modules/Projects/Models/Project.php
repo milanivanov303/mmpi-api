@@ -62,7 +62,8 @@ class Project extends Model
         'trans_mntd_by_clnt_id',
         'intranet_version',
         'extranet_version',
-        'tts_dev_project_key'
+        'tts_dev_project_key',
+        'e_reggest_mntd_by_clnt_id'
     ];
 
     /**
@@ -231,5 +232,13 @@ class Project extends Model
     public function getTypeBusinessAttribute($value)
     {
         return (int)$value;
+    }
+
+    /**
+     * Get e_reggest_mntd_by_clnt_id
+     */
+    protected function eReggestMntdByClntId()
+    {
+        return $this->belongsTo(EnumValue::class, 'e_reggest_mntd_by_clnt_id');
     }
 }
