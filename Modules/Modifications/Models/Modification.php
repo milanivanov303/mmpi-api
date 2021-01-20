@@ -82,7 +82,7 @@ class Modification extends Model
         'issue_id',
         'delivery_chain_id',
         'locked_by_id',
-        'copied_by_user_id',
+        'copied_from_user_id',
         'instance_id',
         'deployment_prefix_id',
         'path_id',
@@ -161,9 +161,9 @@ class Modification extends Model
     /**
      * Get copied by user
      */
-    protected function copiedByUser()
+    protected function copiedFromUser()
     {
-        return $this->belongsTo(User::class, 'copied_by_user_id');
+        return $this->belongsTo(User::class, 'copied_from_user_id');
     }
 
     /**
