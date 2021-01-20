@@ -37,7 +37,8 @@ class HashCommit extends Model
         'commit_description',
         'made_on',
         'repo_type_id',
-        'branch_id'
+        'branch_id',
+        'requested_head_merge'
     ];
 
     /**
