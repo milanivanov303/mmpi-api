@@ -24,6 +24,12 @@ class ProjectSpecific extends Model
         'comment'
     ];
 
+    // protected $maps = [
+    //     'value' => 'property'
+    // ];
+
+    // protected $append = ['property'];
+
     /**
      * Get project
      */
@@ -47,4 +53,9 @@ class ProjectSpecific extends Model
     {
         return $this->belongsTo(EnumValue::class, 'prj_specific_feature_id');
     }
+
+    // public function property()
+    // {
+    //     return $this->belongsTo(EnumValue::class, 'value');
+    // }
 }
