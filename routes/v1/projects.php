@@ -43,4 +43,10 @@ $router->group([
         'description' => 'Delete project',
         'uses'        => 'ProjectsController@delete'
     ]);
+    $router->get('/export', [
+        'as'          => 'projects.export',
+        'schema'      => '/v1/projects/project.json',
+        'description' => 'Import project events',
+        'uses'        => 'ProjectsController@export'
+    ]);
 });
