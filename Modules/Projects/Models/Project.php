@@ -78,11 +78,7 @@ class Project extends Model
      */
     protected function typeBusiness()
     {
-        try {
-            return $this->belongsTo(EnumValue::class, 'type_business');
-        } catch (\Throwable $e) {
-            return $this->belongsTo(EnumValue::class);
-        }
+        return $this->belongsTo(EnumValue::class, 'type_business');
     }
 
     /**

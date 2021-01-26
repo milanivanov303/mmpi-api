@@ -108,9 +108,10 @@ class ProjectsController extends Controller
      *
      * @return void
      */
-    public function export()
+    public function export(string $type)
     {
-        return (new ProjectsExport)->download('projects.xlsx');
-
+        if ($type === 'wiki') {
+            return (new ProjectsExport)->download('projects.xlsx');
+        }
     }
 }

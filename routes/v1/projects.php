@@ -22,6 +22,12 @@ $router->group([
         'description' => 'Create new project',
         'uses'        => 'ProjectsController@create'
     ]);
+    $router->get('/export/{type}', [
+        'as'          => 'projects.export',
+        'schema'      => '/v1/projects/project.json',
+        'description' => 'Import project events',
+        'uses'        => 'ProjectsController@export'
+    ]);
     $router->put('/roles-tmp/{id}', [
         'as'          => 'roles-tmp.update',
         'description' => 'Update temporary project user roles',
@@ -42,11 +48,5 @@ $router->group([
         'as'          => 'projects.delete',
         'description' => 'Delete project',
         'uses'        => 'ProjectsController@delete'
-    ]);
-    $router->get('/export', [
-        'as'          => 'projects.export',
-        'schema'      => '/v1/projects/project.json',
-        'description' => 'Import project events',
-        'uses'        => 'ProjectsController@export'
     ]);
 });
