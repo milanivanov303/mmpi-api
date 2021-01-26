@@ -55,7 +55,11 @@ class DeliveryChain extends Model
      */
     protected function status()
     {
-        return $this->belongsTo(EnumValue::class, 'status');
+        try {
+            return $this->belongsTo(EnumValue::class, 'status');
+        } catch (\Throwable $e) {
+            return $this->belongsTo(EnumValue::class);
+        }
     }
 
     /**
