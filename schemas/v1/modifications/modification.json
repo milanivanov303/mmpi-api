@@ -353,6 +353,10 @@
             "type": "integer",
             "description": "Id of the creator"
         },
+        "creator_department_id": {
+            "type": "integer",
+            "description": "Id of the creator's department"
+        },
         "updated_on": {
             "type": ["string", "null"],
             "format": "datetime",
@@ -392,7 +396,7 @@
             ],
             "default": "null"
         },
-        "copied_by_user_id": {
+        "copied_from_user_id": {
             "oneOf": [
                     {
                         "$ref": "/v1/user.json"

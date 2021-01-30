@@ -34,7 +34,7 @@ class Tnsnameora extends Command
     public function handle()
     {
         try {
-            $sftp = app('GetTnsnameora');
+            $sftp = app('SFTP', ['host' => config('app.ssh.tnsname_host')]);
             $sftp->get(
                 '/phpprod/services/src/opt/oracle/tns/tnsnames.ora',
                 storage_path("app/tns/tnsnames.ora")

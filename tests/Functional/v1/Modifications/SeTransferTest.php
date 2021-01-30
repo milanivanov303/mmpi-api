@@ -4,6 +4,7 @@ use App\Models\EnumValue;
 use Modules\DeliveryChains\Models\DeliveryChain;
 use Modules\Instances\Models\Instance;
 use Modules\Issues\Models\Issue;
+use App\Models\Department;
 
 class SeTransferTest extends RestTestCase
 {
@@ -26,16 +27,18 @@ class SeTransferTest extends RestTestCase
         $deliveryChain = DeliveryChain::inRandomOrder()->first();
         $instance = Instance::inRandomOrder()->first();
         $instanceStatus = EnumValue::where('type', 'instance_status')->inRandomOrder()->first();
-        
+        $creatorDepartment = Department::inRandomOrder()->first();
+
         return [
-            'issue_id'        => $issue->id,
-            'type_id'         => $this->typeId,
-            'subtype_id'      => $subtype->id,
-            'delivery_chain'  => $deliveryChain->toArray(),
-            'instance'        => $instance->toArray(),
-            'instance_status' => $instanceStatus->toArray(),
-            'active'          => $faker->numberBetween(0, 1),
-            'visible'         => $faker->numberBetween(0, 1)
+            'issue_id'           => $issue->id,
+            'type_id'            => $this->typeId,
+            'subtype_id'         => $subtype->id,
+            'delivery_chain'     => $deliveryChain->toArray(),
+            'instance'           => $instance->toArray(),
+            'instance_status'    => $instanceStatus->toArray(),
+            'active'             => $faker->numberBetween(0, 1),
+            'visible'            => $faker->numberBetween(0, 1),
+            'creator_department' => $creatorDepartment->toArray()
         ];
     }
 

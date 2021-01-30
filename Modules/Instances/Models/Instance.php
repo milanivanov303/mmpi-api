@@ -43,7 +43,11 @@ class Instance extends Model
      */
     protected function owner()
     {
-        return $this->belongsTo(EnumValue::class, 'owner');
+        try {
+            return $this->belongsTo(EnumValue::class, 'owner');
+        } catch (\Throwable $e) {
+            return $this->belongsTo(EnumValue::class);
+        }
     }
 
     /**
@@ -67,7 +71,11 @@ class Instance extends Model
      */
     protected function status()
     {
-        return $this->belongsTo(EnumValue::class, 'status');
+        try {
+            return $this->belongsTo(EnumValue::class, 'status');
+        } catch (\Throwable $e) {
+            return $this->belongsTo(EnumValue::class);
+        }
     }
 
     /**

@@ -3,6 +3,7 @@
 use App\Models\EnumValue;
 use Modules\DeliveryChains\Models\DeliveryChain;
 use Modules\Issues\Models\Issue;
+use App\Models\Department;
 
 class BinariesTest extends RestTestCase
 {
@@ -25,6 +26,7 @@ class BinariesTest extends RestTestCase
         $deploymentPrefix = EnumValue::where('key', 'source_path_imx_tmp')->inRandomOrder()->first();
         $deliveryChain = DeliveryChain::inRandomOrder()->first();
         $instanceStatus = EnumValue::where('type', 'instance_status')->inRandomOrder()->first();
+        $creatorDepartment = Department::inRandomOrder()->first();
         
         return [
             'issue'              => $issue->toArray(),
@@ -38,7 +40,8 @@ class BinariesTest extends RestTestCase
             'delivery_chain'     => $deliveryChain->toArray(),
             'instance_status'    => $instanceStatus->toArray(),
             'active'             => $faker->numberBetween(0, 1),
-            'visible'            => $faker->numberBetween(0, 1)
+            'visible'            => $faker->numberBetween(0, 1),
+            'creator_department' => $creatorDepartment->toArray()
         ];
     }
 

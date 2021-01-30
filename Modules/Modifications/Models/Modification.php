@@ -10,6 +10,7 @@ use Modules\DeliveryChains\Models\DeliveryChain;
 use App\Models\User;
 use App\Models\EnumValue;
 use App\Models\DbSchema;
+use App\Models\Department;
 
 class Modification extends Model
 {
@@ -81,13 +82,14 @@ class Modification extends Model
         'issue_id',
         'delivery_chain_id',
         'locked_by_id',
-        'copied_by_user_id',
+        'copied_from_user_id',
         'instance_id',
         'deployment_prefix_id',
         'path_id',
         'subtype_id',
         'tablespace_id',
         'created_by_id',
+        'creator_department_id',
         'updated_by_id',
         'type_id',
         'created_on',
@@ -159,9 +161,9 @@ class Modification extends Model
     /**
      * Get copied by user
      */
-    protected function copiedByUser()
+    protected function copiedFromUser()
     {
-        return $this->belongsTo(User::class, 'copied_by_user_id');
+        return $this->belongsTo(User::class, 'copied_from_user_id');
     }
 
     /**
@@ -267,5 +269,13 @@ class Modification extends Model
     protected function type()
     {
         return $this->belongsTo(ModificationType::class, 'type_id');
+    }
+
+    /**
+     * Get department of modification's creator
+     */
+    protected function creatorDepartment()
+    {
+        return $this->belongsTo(Department::class);
     }
 }

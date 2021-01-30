@@ -61,6 +61,22 @@
             "maxLength": 32,
             "default": "null"
         },
+        "db_password": {
+            "type": ["string", "null"],
+            "default": "null"
+        },
+        "db_host": {
+            "type": ["string", "null"],
+            "default": "null"
+        },
+        "db_port": {
+            "type": ["string", "null"],
+            "default": "null"
+        },
+        "db_SID": {
+            "type": ["string", "null"],
+            "default": "null"
+        },
         "tns_name": {
             "type": ["string", "null"],
             "maxLength": 64,

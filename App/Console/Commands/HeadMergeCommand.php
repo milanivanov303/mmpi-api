@@ -42,7 +42,7 @@ class HeadMergeCommand extends Command
      */
     public function handle()
     {
-        $patches = PatchesHeadMerge::where('processed', 0)->get();
+        $patches = PatchesHeadMerge::where('processed_headmerge', 0)->get();
 
         $this->info("Found {$patches->count()} not processed " . Str::plural('patch', $patches->count()));
 
@@ -69,7 +69,7 @@ class HeadMergeCommand extends Command
                         ::whereIn('rev_id', $sources->pluck('rev_id')->all())
                         ->update(['requested_head_merge' => 1]);
 
-                    $patch->tts_keys = trim("{$patch->tts_keys}, {$issue->key}", ', ');
+                    $patch->tts_keys_headmerge = trim("{$patch->tts_keys_headmerge}, {$issue->key}", ', ');
 
                     $this->info("New issue {$issue->key} was created and assigned to user {$username}");
                     $this->info("Issue {$issue->key} was linked to {$sources->first()['tts_id']}");
@@ -79,7 +79,7 @@ class HeadMergeCommand extends Command
                 }
             }
 
-            $patch->processed = 1;
+            $patch->processed_headmerge = 1;
             $patch->save();
         }
     }
@@ -102,38 +102,38 @@ class HeadMergeCommand extends Command
         return DB::select(
             "
             SELECT U.username,
-               SR.rev_id,
-               M.name AS source_file,
-               SR.revision,
-               P.id AS patch_id,
-               PRJ.id AS project_id,
-               I.tts_id,
-               PRJ.name AS project_name,
-               PRJ.tts_dev_project_key
-            FROM patches P
-            JOIN patch_requests PR ON P.patch_request_id=PR.id
-            JOIN issues I ON PR.issue_id=I.id
-            JOIN projects PRJ ON I.project_id=PRJ.id
-            JOIN modif_to_patch MP ON P.id=MP.patch_id
-            JOIN modifications M ON MP.modif_id=M.id
-            JOIN users U ON IFNULL(M.updated_by_id, M.created_by_id)=U.id
-            JOIN source S ON M.name=CONCAT(S.source_path, '/', S.source_name)
-            JOIN source_revision SR ON (S.source_id=SR.source_id AND M.version=SR.revision)
-            JOIN enum_values EVS ON (EVS.type='revision_log_type' AND EVS.`key`='cvs')
-            JOIN enum_values EVT ON (EVT.type='cvs_log_tags_stack' AND EVT.`key`='cvs_tag_merge')
-            LEFT JOIN commit_merge CM ON 
-            ((SR.rev_id=CM.commit_id OR SR.rev_id=CM.merge_commit) AND CM.commit_log_type_id=EVS.id)
-            LEFT JOIN source_revision BSR ON 
-            (CM.merge_commit<>SR.rev_id AND CM.merge_commit=BSR.rev_id AND BSR.revision NOT LIKE '%.%.%')
-            LEFT JOIN source_revision MSR ON (CM.commit_id=MSR.rev_id AND MSR.revision NOT LIKE '%.%.%')
-            WHERE P.id=?
-            AND M.type_id='source'
-            AND SR.rev_registration_date>=?
-            AND (SR.requested_head_merge IS NULL OR SR.requested_head_merge<>1)
-            AND M.version LIKE '%.%.%'
-            AND MSR.rev_id IS NULL
-            AND BSR.rev_id IS NULL
-            ORDER BY P.migr_sequence_N DESC;
+                   SR.rev_id,
+                   M.name AS source_file,
+                   SR.revision,
+                   P.id AS patch_id,
+                   PRJ.id AS project_id,
+                   I.tts_id,
+                   PRJ.name AS project_name,
+                   PRJ.tts_dev_project_key
+              FROM patches P
+              JOIN patch_requests PR ON P.patch_request_id=PR.id
+              JOIN issues I ON PR.issue_id=I.id
+              JOIN projects PRJ ON I.project_id=PRJ.id
+              JOIN modif_to_patch MP ON P.id=MP.patch_id
+              JOIN modifications M ON MP.modif_id=M.id
+              JOIN users U ON IFNULL(M.updated_by_id, M.created_by_id)=U.id
+              JOIN source S ON M.name=CONCAT(S.source_path, '/', S.source_name)
+              JOIN source_revision SR ON (S.source_id=SR.source_id AND M.version=SR.revision)
+              JOIN enum_values EVS ON (EVS.type='revision_log_type' AND EVS.`key`='cvs')
+              JOIN enum_values EVT ON (EVT.type='cvs_log_tags_stack' AND EVT.`key`='cvs_tag_merge') 
+              LEFT JOIN commit_merge CM ON
+              ((SR.rev_id=CM.commit_id OR SR.rev_id=CM.merge_commit) AND CM.commit_log_type_id=EVS.id)
+              LEFT JOIN source_revision BSR ON
+              (CM.merge_commit<>SR.rev_id AND CM.merge_commit=BSR.rev_id AND BSR.revision NOT LIKE '%.%.%') 
+              LEFT JOIN source_revision MSR ON (CM.commit_id=MSR.rev_id AND MSR.revision NOT LIKE '%.%.%')
+              WHERE P.id=?
+              AND M.type_id='source'
+              AND SR.rev_registration_date>=?
+              AND (SR.requested_head_merge IS NULL OR SR.requested_head_merge<>1)
+              AND M.version LIKE '%.%.%'
+              AND MSR.rev_id IS NULL
+              AND BSR.rev_id IS NULL
+              ORDER BY P.migr_sequence_N DESC;
             ",
             [$patchId, $minDate]
         );

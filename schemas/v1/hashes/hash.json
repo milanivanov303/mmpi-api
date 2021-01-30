@@ -77,6 +77,10 @@
         "merge": {
             "type": "object",
             "description": "Merge commit hash for this revision"
+        },
+        "requested_head_merge": {
+            "type": ["integer", "null"],
+            "description": "Value 1 - if already processed for merge in head revision"
         }
     }
 }

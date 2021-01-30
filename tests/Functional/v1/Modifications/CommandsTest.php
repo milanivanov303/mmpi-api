@@ -4,6 +4,7 @@ use App\Models\EnumValue;
 use Modules\DeliveryChains\Models\DeliveryChain;
 use Modules\Instances\Models\Instance;
 use Modules\Issues\Models\Issue;
+use App\Models\Department;
 
 class CommandsTest extends RestTestCase
 {
@@ -26,6 +27,7 @@ class CommandsTest extends RestTestCase
         $deliveryChain = DeliveryChain::inRandomOrder()->first();
         $instanceStatus = EnumValue::where('type', 'instance_status')->inRandomOrder()->first();
         $instance = Instance::inRandomOrder()->first();
+        $creatorDepartment = Department::inRandomOrder()->first();
 
         return [
             'type_id'            => $this->typeId,
@@ -38,7 +40,8 @@ class CommandsTest extends RestTestCase
             'instance'           => $instance->toArray(),
             'instance_status'    => $instanceStatus->toArray(),
             'est_run_time'       => $faker->time('H:i:s'),
-            'visible'            => $faker->numberBetween(0, 1)
+            'visible'            => $faker->numberBetween(0, 1),
+            'creator_department' => $creatorDepartment->toArray()
         ];
     }
 
