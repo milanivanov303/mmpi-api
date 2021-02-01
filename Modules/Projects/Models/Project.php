@@ -7,8 +7,6 @@ use App\Models\User;
 use App\Models\EnumValue;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Modules\DeliveryChains\Models\DeliveryChain;
-use App\Models\UserProjectRole;
-use App\Models\UserProjectRoleTmp;
 use Modules\ProjectSpecifics\Models\ProjectSpecific;
 
 class Project extends Model
@@ -175,7 +173,12 @@ class Project extends Model
      */
     protected function roles()
     {
-        return $this->hasMany(UserProjectRole::class);
+        return $this->belongsToMany(
+            UserRole::class,
+            'users_prjs_roles',
+            'project_id',
+            'role_id'
+        )->withPivot(['priority']);
     }
 
     /**
@@ -183,7 +186,12 @@ class Project extends Model
      */
     protected function rolesTmp()
     {
-        return $this->hasMany(UserProjectRoleTmp::class);
+        return $this->belongsToMany(
+            UserRole::class,
+            'users_prjs_roles_tmp',
+            'project_id',
+            'role_id'
+        )->withPivot(['priority']);
     }
 
     /**
