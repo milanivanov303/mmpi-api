@@ -4,6 +4,7 @@ namespace Modules\Projects\Models;
 
 use Core\Models\Model;
 use App\Models\User;
+use App\Models\UserRole;
 use App\Models\EnumValue;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Modules\DeliveryChains\Models\DeliveryChain;
