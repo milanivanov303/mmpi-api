@@ -182,7 +182,15 @@ class ProjectRepository extends AbstractRepository implements RepositoryInterfac
                 }
             }
 
-            $this->model->languages()->sync($languages);
+            if ($this->model->languages->count() > 0) {
+                $oldLanguages = array_map(function ($a) {
+                    return $a['id'];
+                }, $this->model->languages->toArray());
+
+                $this->model->languages()->detach($oldLanguages);
+            }
+
+            $this->model->languages()->sync($languages, false);
         }
 
         if (array_key_exists('type_business', $data)) {
@@ -205,7 +213,15 @@ class ProjectRepository extends AbstractRepository implements RepositoryInterfac
                 }
             }
 
-            $this->model->typeBusiness()->sync($businesses);
+            if ($this->model->typeBusiness->count() > 0) {
+                $oldBusinesses = array_map(function ($a) {
+                    return $a['id'];
+                }, $this->model->typeBusiness->toArray());
+
+                $this->model->languages()->detach($oldBusinesses);
+            }
+
+            $this->model->typeBusiness()->sync($businesses, false);
         }
 
         $this->loadModelRelations($data);
