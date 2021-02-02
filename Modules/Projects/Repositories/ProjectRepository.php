@@ -60,13 +60,6 @@ class ProjectRepository extends AbstractRepository implements RepositoryInterfac
 
         $this->model->modifiedBy()->associate(Auth::user());
 
-        if (array_key_exists('type_business', $data)) {
-            $this->model->typeBusiness()->associate(
-                app(EnumValue::class)
-                    ->getModelId($data['type_business'], 'key', ['type' => 'type_business'])
-            );
-        }
-
         if (array_key_exists('group', $data)) {
             $this->model->group()->associate(
                 app(EnumValue::class)
@@ -190,6 +183,29 @@ class ProjectRepository extends AbstractRepository implements RepositoryInterfac
             }
 
             $this->model->languages()->sync($languages);
+        }
+
+        if (array_key_exists('type_business', $data)) {
+            $businesses = [];
+            foreach ($data['type_business'] as $business) {
+                $enumValue = app(EnumValue::class)->findModel(
+                    $business,
+                    'key',
+                    [
+                        'type'    => 'project_specific_feature',
+                        'subtype' => 'imx_activity'
+                    ]
+                );
+
+                if ($enumValue) {
+                    $businesses[$enumValue->id] = [
+                        'made_by' => Auth::user()->id,
+                        'comment' => $enumValue->description
+                    ];
+                }
+            }
+
+            $this->model->typeBusiness()->sync($businesses);
         }
 
         $this->loadModelRelations($data);
