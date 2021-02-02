@@ -218,7 +218,7 @@ class ProjectRepository extends AbstractRepository implements RepositoryInterfac
                     return $a['id'];
                 }, $this->model->typeBusiness->toArray());
 
-                $this->model->languages()->detach($oldBusinesses);
+                $this->model->typeBusiness()->detach($oldBusinesses);
             }
 
             $this->model->typeBusiness()->sync($businesses, false);
