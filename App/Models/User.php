@@ -131,7 +131,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      */
     protected function roles()
     {
-        return $this->hasMany(UserProjectRole::class);
+        return $this->hasMany(UserProjectRole::class)->select('user_id');
     }
 
     /**

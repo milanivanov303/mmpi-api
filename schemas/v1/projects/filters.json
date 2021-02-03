@@ -89,6 +89,34 @@
                     }
                 }
             }
+        },
+        "type_business": {
+            "items": {
+                "properties": {
+                    "id": {
+                        "$filters": {
+                            "$func": "checkInDb",
+                            "$vars": {
+                                "rule": "exists:enum_values,id,type,project_specific_feature,subtype,imx_activity"
+                            }
+                        },
+                        "$messages": {
+                            "$filters": "IMX activity does not exist"
+                        }
+                    },
+                    "key": {
+                        "$filters": {
+                            "$func": "checkInDb",
+                            "$vars": {
+                                "rule": "exists:enum_values,key,type,project_specific_feature,subtype,imx_activity"
+                            }
+                        },
+                        "$messages": {
+                            "$filters": "IMX activity does not exist"
+                        }
+                    }
+                }
+            }
         }
     }
 }
