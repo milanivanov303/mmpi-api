@@ -13,8 +13,7 @@ class UpdateEnumValuesTypeBusinessSortindex extends Migration
      */
     public function up()
     {
-        $sortindexCollection = DB::table('enum_values')->select('id','sortindex')->orderBy('sortindex','desc')->limit(1)->get();
-        $sortindex = $sortindexCollection[0]->sortindex;
+        $sortindex = DB::table('enum_values')->max('sortindex');
 
         $enums = DB::table('enum_values')->where('type','type_business')->select('id','type','key','sortindex')->orderBy('sortindex','asc')->get();
 
@@ -33,6 +32,15 @@ class UpdateEnumValuesTypeBusinessSortindex extends Migration
      */
     public function down()
     {
-        //???
+        $sortindex = 1;
+
+        $enums = DB::table('enum_values')->where('type','type_business')->select('id','type','key','sortindex')->orderBy('sortindex','asc')->get();
+
+        foreach ($enums as $enum) {
+            DB::table('enum_values')->where('id',$enum->id)->where('type','type_business')->update([
+                        "sortindex" => $sortindex
+                    ]);
+            $sortindex++;
+        }
     }
 }
