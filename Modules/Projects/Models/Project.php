@@ -2,13 +2,13 @@
 
 namespace Modules\Projects\Models;
 
+use App\Models\UserProjectRole;
+use App\Models\UserProjectRoleTmp;
 use Core\Models\Model;
 use App\Models\User;
 use App\Models\EnumValue;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Modules\DeliveryChains\Models\DeliveryChain;
-use App\Models\UserProjectRole;
-use App\Models\UserProjectRoleTmp;
 use Modules\ProjectSpecifics\Models\ProjectSpecific;
 
 class Project extends Model
@@ -62,7 +62,8 @@ class Project extends Model
         'trans_mntd_by_clnt_id',
         'intranet_version',
         'extranet_version',
-        'tts_dev_project_key'
+        'tts_dev_project_key',
+        'e_reggest_mntd_by_clnt_id'
     ];
 
     /**
@@ -178,7 +179,7 @@ class Project extends Model
      */
     protected function roles()
     {
-        return $this->hasMany(UserProjectRole::class);
+        return $this->hasMany(UserProjectRole::class)->select('project_id');
     }
 
     /**
@@ -186,7 +187,7 @@ class Project extends Model
      */
     protected function rolesTmp()
     {
-        return $this->hasMany(UserProjectRoleTmp::class);
+        return $this->hasMany(UserProjectRoleTmp::class)->select('project_id');
     }
 
     /**
@@ -243,5 +244,13 @@ class Project extends Model
     public function getTypeBusinessAttribute($value)
     {
         return (int)$value;
+    }
+
+    /**
+     * Get e_reggest_mntd_by_clnt_id
+     */
+    protected function eReggestMntdByClntId()
+    {
+        return $this->belongsTo(EnumValue::class, 'e_reggest_mntd_by_clnt_id');
     }
 }

@@ -115,6 +115,8 @@ class ModificationRepository extends AbstractRepository implements RepositoryInt
             $this->model->createdBy()->associate(Auth::user());
             $this->model->created_on = Carbon::now()->format('Y-m-d H:i:s');
         }
+
+        $this->model->creator_department_id = Auth::user()->department->id;
     }
 
     /**

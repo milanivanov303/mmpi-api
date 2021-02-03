@@ -9,6 +9,9 @@ use Modules\Projects\Models\Project;
 
 class UserProjectRole extends Model
 {
+    protected $primaryKey = '';
+    public $incrementing = false;
+
     /**
      * The table associated with the model.
      *
