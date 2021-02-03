@@ -2,9 +2,10 @@
 
 namespace Modules\Projects\Models;
 
+use App\Models\UserProjectRole;
+use App\Models\UserProjectRoleTmp;
 use Core\Models\Model;
 use App\Models\User;
-use App\Models\UserRole;
 use App\Models\EnumValue;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Modules\DeliveryChains\Models\DeliveryChain;
@@ -174,12 +175,7 @@ class Project extends Model
      */
     protected function roles()
     {
-        return $this->belongsToMany(
-            UserRole::class,
-            'users_prjs_roles',
-            'project_id',
-            'role_id'
-        )->withPivot(['priority']);
+        return $this->hasMany(UserProjectRole::class)->select('project_id');
     }
 
     /**
@@ -187,12 +183,7 @@ class Project extends Model
      */
     protected function rolesTmp()
     {
-        return $this->belongsToMany(
-            UserRole::class,
-            'users_prjs_roles_tmp',
-            'project_id',
-            'role_id'
-        )->withPivot(['priority']);
+        return $this->hasMany(UserProjectRoleTmp::class)->select('project_id');
     }
 
     /**
