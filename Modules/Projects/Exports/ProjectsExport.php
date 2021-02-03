@@ -2,7 +2,6 @@
 
 namespace Modules\Projects\Exports;
 
-use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
@@ -10,6 +9,7 @@ use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Events\AfterSheet;
+use Modules\Projects\Models\Project;
 
 class ProjectsExport implements
     FromCollection,
@@ -38,47 +38,46 @@ class ProjectsExport implements
      */
     public function projectModelCollection(): \Illuminate\Support\Collection
     {
-        return DB::table('projects as p')
-            ->join('enum_values as eva', 'eva.id', '=', 'p.activity')
-            ->join('enum_values as evc', 'evc.id', '=', 'p.country_id')
-            ->select(
-                'p.id',
-                'p.name',
-                'eva.value as activity',
-                'evc.value as country'
-            )
-            ->where('p.inactive', 0)
-            ->orderBy('p.name', 'asc')
+        return Project::with([
+                //'activity',
+                'country',
+                'roles.user'])
+            ->where('inactive', 0)
             ->get();
-
-        // $projects = Project::with([
-        //     'activityRel',
-        //     'country'])
-        //     ->where('inactive', 0)
-        //     ->get();
-
-        // return collect($projects);
     }
 
     public function map($projectInfo) : array
     {
-        // $country  = $projectInfo->country->value ?? '';
-        // $activity = $projectInfo->activity->value ?? '';
+        $country  = $projectInfo->country->value ?? '';
+
+        // Bad way but relation does not work, probably same name of relation/column
+        $activity = $projectInfo->activity()->value ?? '';
+        
+        $roles = [];
+        foreach ($projectInfo->roles as $role) {
+            $roles[$role['role_id']] = $role['user']['name'];
+        }
+        
+        $pc = $roles['pc'] ?? '';
+        $pm = $roles['pm'] ?? '';
+
         return [
-            $projectInfo->id,
             $projectInfo->name,
-            $projectInfo->activity,
-            $projectInfo->country,
+            $activity,
+            $country,
+            $pc,
+            $pm
         ];
     }
 
     public function headings() : array
     {
         return [
-           '#',
            'Project',
            'Activity',
            'Country',
+           'Project Cordinator',
+           'Project Manager'
         ] ;
     }
 
