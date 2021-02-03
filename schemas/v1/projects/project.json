@@ -257,11 +257,10 @@
             ]
         },
         "type_business": {
-            "oneOf": [
-                {"$ref": "/v1/enum-values/enum-value.json"},
-                {"type": "null"},
-                {"type": "integer"}
-            ]
+            "type": "array",
+            "items": {
+                "$ref": "/v1/enum-values/enum-value.json"
+            }
         },
         "delivery_chains": {
             "type": "array",
