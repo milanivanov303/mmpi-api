@@ -50,7 +50,6 @@ class Project extends Model
         'display_name',
         'sla_from',
         'sla_to',
-        'type_business',
         'modified_by_id',
         'group_id',
         'country_id',
@@ -77,9 +76,17 @@ class Project extends Model
     /**
      * Get type_business
      */
-    protected function typeBusiness()
+    protected function typeBusiness() : BelongsToMany
     {
-        return $this->belongsTo(EnumValue::class, 'type_business');
+        return $this->belongsToMany(
+            EnumValue::class,
+            'project_specifics',
+            'project_id',
+            'prj_specific_feature_id'
+        )
+        ->select('enum_values.*')
+        ->where('type', 'project_specific_feature')
+        ->where('subtype', 'imx_activity');
     }
 
     /**
@@ -239,11 +246,6 @@ class Project extends Model
         ->selectRaw('project_specifics.value as priority')
         ->where('type', 'project_specific_feature')
         ->where('subtype', 'project_appl_language');
-    }
-    
-    public function getTypeBusinessAttribute($value)
-    {
-        return (int)$value;
     }
 
     /**

@@ -17,7 +17,6 @@ class ProjectsTest extends RestTestCase
      */
     protected function getData()
     {
-        $typeBusiness     = EnumValue::where('type', 'type_business')->inRandomOrder()->first();
         $group            = EnumValue::where('type', 'project_groups')->inRandomOrder()->first();
         $country          = EnumValue::where('type', 'country')->inRandomOrder()->first();
         $communicationLng = EnumValue::where('type', 'communication_language')->inRandomOrder()->first();
@@ -50,7 +49,6 @@ class ProjectsTest extends RestTestCase
             'display_name'       => $this->faker()->text(128),
             'sla_from'           => $this->faker()->time(),
             'sla_to'             => $this->faker()->time(),
-            'type_business'      => $typeBusiness->toArray(),
             'group'              => $group->toArray(),
             'country'            => $country->toArray(),
             'communication_lng'  => $communicationLng->toArray(),
