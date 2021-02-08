@@ -41,6 +41,7 @@ class ProjectsExport implements
         return Project::with([
                 //'activity',
                 'country',
+                'intranetVersion',
                 'roles.user'])
             ->where('inactive', 0)
             ->get();
@@ -49,10 +50,10 @@ class ProjectsExport implements
     public function map($projectInfo) : array
     {
         $country  = $projectInfo->country->value ?? '';
-
+        $intranetVersion  = $projectInfo->intranetVersion->value ?? '';
         // Bad way but relation does not work, probably same name of relation/column
-        $activity = $projectInfo->activity()->value ?? '';
-        
+        $activity = $projectInfo->activity()->value('value') ?? '';
+       
         $roles = [];
         foreach ($projectInfo->roles as $role) {
             $roles[$role['role_id']] = $role['user']['name'];
@@ -60,13 +61,18 @@ class ProjectsExport implements
         
         $pc = $roles['pc'] ?? '';
         $pm = $roles['pm'] ?? '';
+        $dpc = $roles['dpc'] ?? '';
+        $dpm = $roles['dpm'] ?? '';
 
         return [
             $projectInfo->name,
             $activity,
             $country,
+            $intranetVersion,
+            $pm,
+            $dpm,
             $pc,
-            $pm
+            $dpc
         ];
     }
 
@@ -76,8 +82,11 @@ class ProjectsExport implements
            'Project',
            'Activity',
            'Country',
+           'IMX PROD Version',
+           'Project Manager',
+           'Deputy Project Manager',
            'Project Cordinator',
-           'Project Manager'
+           'Deputy Project Cordinator'
         ] ;
     }
 
