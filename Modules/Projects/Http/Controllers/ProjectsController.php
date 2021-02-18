@@ -15,6 +15,7 @@ use Modules\Projects\Models\Project;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Modules\Projects\Mail\ProjectRolesChangeMail;
+use Modules\Projects\Exports\ProjectsExport;
 
 class ProjectsController extends Controller
 {
@@ -99,6 +100,18 @@ class ProjectsController extends Controller
             return response()->json(['data'=> $project]);
         } catch (\Exception $e) {
             return response()->json(['error' => $e], 400);
+        }
+    }
+
+    /**
+     * Export and return file
+     *
+     * @return void
+     */
+    public function export(string $type)
+    {
+        if ($type === 'wiki') {
+            return (new ProjectsExport)->download('projects.xlsx');
         }
     }
 }

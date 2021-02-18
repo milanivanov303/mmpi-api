@@ -94,7 +94,11 @@ class Project extends Model
      */
     protected function activity()
     {
-        return $this->belongsTo(EnumValue::class, 'activity');
+        try {
+            return $this->belongsTo(EnumValue::class, 'activity');
+        } catch (\Throwable $e) {
+            return $this->belongsTo(EnumValue::class);
+        }
     }
 
     /**
@@ -206,7 +210,11 @@ class Project extends Model
      */
     protected function intranetVersion()
     {
-        return $this->belongsTo(EnumValue::class, 'intranet_version');
+        try {
+            return $this->belongsTo(EnumValue::class, 'intranet_version');
+        } catch (\Throwable $e) {
+            return $this->belongsTo(EnumValue::class);
+        }
     }
 
     /**
@@ -214,7 +222,11 @@ class Project extends Model
      */
     protected function extranetVersion()
     {
-        return $this->belongsTo(EnumValue::class, 'extranet_version');
+        try {
+            return $this->belongsTo(EnumValue::class, 'extranet_version');
+        } catch (\Throwable $e) {
+            return $this->belongsTo(EnumValue::class);
+        }
     }
 
     /**
