@@ -16,9 +16,13 @@ class GitlabController extends Controller
      */
     public function __construct()
     {
-        $this->client = new \Gitlab\Client();
-        $this->client->setUrl(config('app.gitlab.url'));
-        $this->client->authenticate(config('app.gitlab.token'), \Gitlab\Client::AUTH_HTTP_TOKEN);
+        $httpClient = new \GuzzleHttp\Client([
+            'verify' => false
+        ]);
+
+        $this->client = \Gitlab\Client::createWithHttpClient($httpClient);
+        $this->client->setUrl(env('GITLAB_HOST'));
+        $this->client->authenticate(env('GITLAB_TOKEN'), \Gitlab\Client::AUTH_HTTP_TOKEN);
     }
     
     public function projects($visibility)
