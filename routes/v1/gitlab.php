@@ -13,11 +13,11 @@ $router->group([
         'uses'        => 'GitlabController@showProject'
     ]);
     $router->get('/projects/branches/{projectId}', [
-        'description' => 'Show project',
+        'description' => 'Get branches of project',
         'uses'        => 'GitlabController@branches'
     ]);
     $router->get('/projects/{projectId}/branch/{name}', [
-        'description' => 'Show project',
+        'description' => 'Get branch of project',
         'uses'        => 'GitlabController@branch'
     ]);
     $router->get('/repotags/{repoId}', [
@@ -29,7 +29,7 @@ $router->group([
         'uses'        => 'GitlabController@commits'
     ]);
     $router->get('/repo/{projectId}/commitrefs/{sha}', [
-        'description' => 'Get commits from repository',
+        'description' => 'Get commitrefs',
         'uses'        => 'GitlabController@commitRefs'
     ]);
 });

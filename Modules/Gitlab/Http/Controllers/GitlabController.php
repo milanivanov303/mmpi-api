@@ -17,8 +17,8 @@ class GitlabController extends Controller
     public function __construct()
     {
         $this->client = new \Gitlab\Client();
-        $this->client->setUrl(env('GITLAB_HOST'));
-        $this->client->authenticate(env('GITLAB_TOKEN'), \Gitlab\Client::AUTH_HTTP_TOKEN);
+        $this->client->setUrl(config('app.gitlab.url'));
+        $this->client->authenticate(config('app.gitlab.token'), \Gitlab\Client::AUTH_HTTP_TOKEN);
     }
     
     public function projects($visibility)
@@ -52,7 +52,7 @@ class GitlabController extends Controller
     }
     
     /**
-     * Get commits based on repository id and branch. If no branch is supplied gets commits from master (not sure).
+     * Get commits based on repository id and branch. If no branch is supplied gets commits from default branch.
      * @param int|string $projectId
      * @param Request $request
      * @return array

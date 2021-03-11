@@ -88,7 +88,7 @@ return array_merge(
         'admin-mails' => explode(',', env('ADMIN_MAILS', 'phpid@codixfr.private')),
 
          // send notification mails to PMO management group
-         'pmo-management-mails' => explode(',', env('PMO_MANAGEMENT_MAIL', 'TEST_MAILS')),
+        'pmo-management-mails' => explode(',', env('PMO_MANAGEMENT_MAIL', 'TEST_MAILS')),
 
 
         // if not production all mails will be send to this addresses
@@ -178,6 +178,11 @@ return array_merge(
         'hr' => [
             'url'      => env('HR_URL', 'https://api-hrc-dev.codixfr.private'),
             'code'     => env('HR_CODE', 'lE9t3C8ttSP')
+        ],
+
+        'gitlab' => [
+            'url'   => env('GITLAB_HOST'),
+            'token' => env('GITLAB_TOKEN')
         ]
     ]
 );
