@@ -24,6 +24,9 @@ $router->group([
 $router->group(['prefix' => 'v1'], function () use ($router) {
 
     $router->group(['middleware' => ['audit', 'auth', 'json-validator']], function () use ($router) {
+        
+        // Gitlab
+        require 'v1/gitlab.php';
 
         // Users
         require 'v1/users.php';
