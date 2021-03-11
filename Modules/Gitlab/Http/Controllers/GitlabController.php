@@ -31,27 +31,27 @@ class GitlabController extends Controller
         return $projects;
     }
     
-    public function showProject($projectId)
+    public function showProject(Request $request)
     {
-        $project = $this->client->projects()->show($projectId);
+        $project = $this->client->projects()->show($request->repo);
         return $project;
     }
     
-    public function branches($projectId)
+    public function branches(Request $request)
     {
-        $branches = $this->client->repositories()->branches($projectId);
+        $branches = $this->client->repositories()->branches($request->repo);
         return $branches;
     }
     
-    public function branch($projectId, $name)
+    public function branch(Request $request, $name)
     {
-        $branch = $this->client->repositories()->branch($projectId, $name);
+        $branch = $this->client->repositories()->branch($request->repo, $name);
         return $branch;
     }
 
-    public function getRepoTags($repoId)
+    public function getRepoTags(Request $request)
     {
-        $repoTags = $this->client->repositories()->tags($repoId);
+        $repoTags = $this->client->repositories()->tags($request->repo);
         return $repoTags;
     }
     
@@ -61,24 +61,24 @@ class GitlabController extends Controller
      * @param Request $request
      * @return array
      */
-    public function commits($projectId, Request $request) : array
+    public function commits(Request $request) : array
     {
         $params = [];
-        if ($request->ref_name) {
-            $params['ref_name'] = $request->ref_name;
+        if ($request->branch) {
+            $params['ref_name'] = $request->branch;
         }
         
         if ($request->since) {
             $params['since'] = new \DateTime($request->since);
         }
         
-        $commits = $this->client->repositories()->commits($projectId, $params);
+        $commits = $this->client->repositories()->commits($request->repo, $params);
         return $commits;
     }
     
-    public function commitRefs($projectId, $sha)
+    public function commitRefs(Request $request, $sha)
     {
-        $refs = $this->client->repositories()->commitRefs($projectId, $sha);
+        $refs = $this->client->repositories()->commitRefs($request->repo, $sha);
         return $refs;
     }
 }

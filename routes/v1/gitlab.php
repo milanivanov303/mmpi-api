@@ -8,27 +8,27 @@ $router->group([
         'description' => 'Get projects from gitlab server',
         'uses'        => 'GitlabController@projects'
     ]);
-    $router->get('/projects/show/{projectId}', [
+    $router->get('/project/show', [
         'description' => 'Show project',
         'uses'        => 'GitlabController@showProject'
     ]);
-    $router->get('/projects/branches/{projectId}', [
+    $router->get('/project/branches', [
         'description' => 'Get branches of project',
         'uses'        => 'GitlabController@branches'
     ]);
-    $router->get('/projects/{projectId}/branch/{name}', [
+    $router->get('/projects/branch/{name}', [
         'description' => 'Get branch of project',
         'uses'        => 'GitlabController@branch'
     ]);
-    $router->get('/repotags/{repoId}', [
+    $router->get('/repotags', [
         'description' => 'Get repository tags',
         'uses'        => 'GitlabController@getRepoTags'
     ]);
-    $router->get('/repo/{projectId}/commits', [
+    $router->get('/repo/commits', [
         'description' => 'Get commits from repository',
         'uses'        => 'GitlabController@commits'
     ]);
-    $router->get('/repo/{projectId}/commitrefs/{sha}', [
+    $router->get('/repo/commitrefs/{sha}', [
         'description' => 'Get commitrefs',
         'uses'        => 'GitlabController@commitRefs'
     ]);
