@@ -31,7 +31,10 @@
         "fguillot/json-rpc": "^1.2",
         "phpoffice/phpspreadsheet": "^1.13",
         "maatwebsite/excel": "^3.1",
-        "codix/api-core": "^2.3"
+        "codix/api-core": "^2.3",
+        "graham-campbell/gitlab": "^5.2",
+        "guzzlehttp/guzzle": "^7.2",
+        "http-interop/http-factory-guzzle": "^1.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
