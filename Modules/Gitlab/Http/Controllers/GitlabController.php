@@ -7,51 +7,33 @@ use Illuminate\Http\Request;
 
 class GitlabController extends Controller
 {
-    protected $client;
-    /**
-     * Create a new controller instance.
-     *
-     * @param BranchRepository $repository
-     * @return void
-     */
-    public function __construct()
-    {
-        $httpClient = new \GuzzleHttp\Client([
-            'verify' => false
-        ]);
-
-        $this->client = \Gitlab\Client::createWithHttpClient($httpClient);
-        $this->client->setUrl(env('GITLAB_HOST'));
-        $this->client->authenticate(env('GITLAB_TOKEN'), \Gitlab\Client::AUTH_HTTP_TOKEN);
-    }
-    
     public function projects($visibility)
     {
-        $projects = $this->client->projects()->all(['visibility' => $visibility]);
+        $projects = app('GitlabApi')->projects()->all(['visibility' => $visibility]);
         return $projects;
     }
     
     public function showProject(Request $request)
     {
-        $project = $this->client->projects()->show($request->repo);
+        $project = app('GitlabApi')->projects()->show($request->repo);
         return $project;
     }
     
     public function branches(Request $request)
     {
-        $branches = $this->client->repositories()->branches($request->repo);
+        $branches = app('GitlabApi')->repositories()->branches($request->repo);
         return $branches;
     }
     
     public function branch(Request $request, $name)
     {
-        $branch = $this->client->repositories()->branch($request->repo, $name);
+        $branch = app('GitlabApi')->repositories()->branch($request->repo, $name);
         return $branch;
     }
 
     public function getRepoTags(Request $request)
     {
-        $repoTags = $this->client->repositories()->tags($request->repo);
+        $repoTags = app('GitlabApi')->repositories()->tags($request->repo);
         return $repoTags;
     }
     
@@ -72,13 +54,13 @@ class GitlabController extends Controller
             $params['since'] = new \DateTime($request->since);
         }
         
-        $commits = $this->client->repositories()->commits($request->repo, $params);
+        $commits = app('GitlabApi')->repositories()->commits($request->repo, $params);
         return $commits;
     }
     
     public function commitRefs(Request $request, $sha)
     {
-        $refs = $this->client->repositories()->commitRefs($request->repo, $sha);
+        $refs = app('GitlabApi')->repositories()->commitRefs($request->repo, $sha);
         return $refs;
     }
 }
