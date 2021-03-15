@@ -70,7 +70,7 @@
             "default": "null"
         },
         "db_port": {
-            "type": ["string", "null"],
+            "type": ["string", "null", "integer"],
             "default": "null"
         },
         "db_SID": {
