@@ -28,7 +28,7 @@ class DeliveryChainsTest extends RestTestCase
 
         return [
             'title'                => $this->faker()->word().$this->faker()->word(),
-            'patch_directory_name' => $this->faker()->text(32),
+            'patch_directory_name' => $this->faker()->realText(32),
             'dlvry_type'           => $dlvryType->toArray(),
             'status'               => $status->toArray(),
             'dc_version'           => $dcVersion->toArray(),
