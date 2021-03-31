@@ -31,6 +31,7 @@ class Project extends Model
     protected $fillable = [
         'id',
         'name',
+        'project_type',
         'clnt_cvs_dir',
         'pnp_type',
         'clnt_code',
