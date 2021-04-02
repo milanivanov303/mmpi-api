@@ -19,13 +19,13 @@ class EventsPerMonthSheet implements
 {
     private $month;
     private $monthName;
-    private $year;
+    private $request;
     private $collection;
 
-    public function __construct(int $year, int $month)
+    public function __construct(Array $request, int $month)
     {
-        $this->month      = $month;
-        $this->year       = $year;
+        $this->month = $month;
+        $this->request = $request;
         $this->collection = $this->constructCal();
     }
 
@@ -39,8 +39,8 @@ class EventsPerMonthSheet implements
 
     private function constructCal() : \Illuminate\Support\Collection
     {
-        $start = Carbon::parse("{$this->year}-{$this->month}")->startOfMonth();
-        $end = Carbon::parse("{$this->year}-{$this->month}")->endOfMonth();
+        $start = Carbon::parse("{$this->request['year']}-{$this->month}")->startOfMonth();
+        $end = Carbon::parse("{$this->request['year']}-{$this->month}")->endOfMonth();
        
         $dates = [];
         while ($start->lte($end)) {
@@ -60,6 +60,7 @@ class EventsPerMonthSheet implements
         ];
 
         $monthEvents = $this->eventModelCollection();
+
 
         foreach ($dates as $week => $date) {
             $dates[$week] = array_merge($headings, $date);
@@ -153,13 +154,22 @@ class EventsPerMonthSheet implements
             'projectEventType',
             'projectEventSubtype',
             'projectEventEstimations'])
-            ->whereYear('event_end_date', $this->year)
-            ->whereMonth('event_end_date', $this->month)
-            ->get();
+            ->whereYear('event_end_date', $this->request['year'])
+            ->whereMonth('event_end_date', $this->month);
+
+        if ($this->request['project']['id'] !== 0) {
+            $monthEvents->where('project_id', $this->request['project']['id']);
+        }
+
+        if (isset($this->request['status']['id'])) {
+            $monthEvents->where('project_event_status', $this->request['status']['id']);
+        }
+        
+        $monthEvents = $monthEvents->get();
         
         $dayEvents = [];
         foreach ($monthEvents as $event) {
-            $day = Carbon::parse($event->event_end_date)->format('d');
+            $day = ltrim(Carbon::parse($event->event_end_date)->format('d'), 0);
             $dayEvents[$day][] = "{$event->project->name} - {$event->projectEventType->value}";
         }
 

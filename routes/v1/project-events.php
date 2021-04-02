@@ -21,7 +21,7 @@ $router->group([
         'description' => 'Import project events',
         'uses'        => 'ProjectEventsController@import'
     ]);
-    $router->get('/export/{year}', [
+    $router->post('/export', [
         'as'          => 'project-events.export',
         'schema'      => '/v1/project-events/project-event.json',
         'description' => 'Export project event',
