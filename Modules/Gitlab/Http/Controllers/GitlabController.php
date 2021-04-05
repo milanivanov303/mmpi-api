@@ -9,10 +9,10 @@ class GitlabController extends Controller
 {
     public function projects($visibility)
     {
-        $projects = app('GitlabApi')->projects()->all(['visibility' => $visibility]);
+        $projects = app('GitlabApi')->projects()->all(['visibility' => $visibility, 'per_page' => 100]);
         return $projects;
     }
-    
+
     public function showProject(Request $request)
     {
         $project = app('GitlabApi')->projects()->show($request->repo);
@@ -62,5 +62,30 @@ class GitlabController extends Controller
     {
         $refs = app('GitlabApi')->repositories()->commitRefs($request->repo, $sha);
         return $refs;
+    }
+
+    public function namespaces()
+    {
+        $namespaces = app('GitlabApi')->namespaces()->all(['per_page' => 100]);
+        return $namespaces;
+    }
+
+    public function groups()
+    {
+        $groups = app('GitlabApi')->groups()->all(['per_page' => 100]);
+        return $groups;
+    }
+
+    public function groupProjects(Request $request)
+    {
+        $params = [];
+        if ($request->include_subgroups) {
+            $params['include_subgroups'] = $request->include_subgroups === 'true' ? true : false;
+        }
+
+        $params['per_page'] = 100;
+
+        $groups = app('GitlabApi')->groups()->projects($request->groupId, $params);
+        return $groups;
     }
 }
