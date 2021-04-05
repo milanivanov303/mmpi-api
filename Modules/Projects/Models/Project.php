@@ -111,6 +111,14 @@ class Project extends Model
     }
 
     /**
+     * Get project type
+     */
+    protected function projectType()
+    {
+        return $this->belongsTo(EnumValue::class, 'project_type');
+    }
+
+    /**
      * Get group
      */
     protected function country()
