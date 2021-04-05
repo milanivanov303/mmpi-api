@@ -16,7 +16,7 @@
         "project_type": {
             "oneOf": [
                 {"$ref": "/v1/enum-values/enum-value.json"},
-                {"type": ["string", "null"],
+                {"type": ["string", "null"]},
                 {"type": "integer"}           
             ],
             "description": "Show the project for what purpose is used - codix(internal) or client."

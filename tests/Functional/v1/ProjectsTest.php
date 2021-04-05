@@ -26,10 +26,12 @@ class ProjectsTest extends RestTestCase
         $deliveryChains   = DeliveryChain::active()->inRandomOrder()->limit(3)->get();
         $extranetVersion  = EnumValue::where('type', 'delivery_chain_version')->where('subtype', 'EXTRANET')->inRandomOrder()->first();
         $intranetVersion  = EnumValue::where('type', 'delivery_chain_version')->where('subtype', 'IMX')->inRandomOrder()->first();
+        $projectType      = EnumValue::where('type', 'project_type')->inRandomOrder()->first();
 
 
         return [
             'name'               => $this->faker()->text(128),
+            'project_type'       => $projectType->toArray(),
             'clnt_cvs_dir'       => $this->faker()->text(32),
             'pnp_type'           => $this->faker()->text(32),
             'clnt_code'          => $this->faker()->text(16),

@@ -117,6 +117,34 @@
                     }
                 }
             }
+        },
+        "project_type": {
+            "items": {
+                "properties": {
+                    "id": {
+                        "$filters": {
+                            "$func": "checkInDb",
+                            "$vars": {
+                                "rule": "exists:enum_values,id,type,project_type"
+                            }
+                        },
+                        "$messages": {
+                            "$filters": "Project type does not exist"
+                        }
+                    },
+                    "key": {
+                        "$filters": {
+                            "$func": "checkInDb",
+                            "$vars": {
+                                "rule": "exists:enum_values,key,type,project_type"
+                            }
+                        },
+                        "$messages": {
+                            "$filters": "Project type does not exist"
+                        }
+                    }
+                }
+            }
         }
     }
 }
