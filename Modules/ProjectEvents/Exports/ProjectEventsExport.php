@@ -12,7 +12,9 @@ class ProjectEventsExport implements WithMultipleSheets, Responsable
 {
     use Exportable;
 
-    private $request;
+    //filter for excel export file
+    private $filter;
+    //name of the exported file
     private $fileName;
 
     /*
@@ -20,8 +22,8 @@ class ProjectEventsExport implements WithMultipleSheets, Responsable
     */
     public function __construct(Request $request)
     {
-        $this->request = $request->all();
-        $this->fileName = "project_events_{$this->request['year']}.xlsx";
+        $this->filter = $request->all();
+        $this->fileName = "project_events_{$this->filter['year']}.xlsx";
     }
 
     /**
@@ -32,7 +34,7 @@ class ProjectEventsExport implements WithMultipleSheets, Responsable
         $sheets = [];
 
         for ($month = 1; $month <= 12; $month++) {
-            $sheets[] = new EventsPerMonthSheet($this->request, $month);
+            $sheets[] = new EventsPerMonthSheet($this->filter, $month);
         }
         return $sheets;
     }

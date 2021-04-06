@@ -19,13 +19,14 @@ class EventsPerMonthSheet implements
 {
     private $month;
     private $monthName;
-    private $request;
     private $collection;
+    //filter for requested excel export file
+    private $filter;
 
-    public function __construct(Array $request, int $month)
+    public function __construct(Array $filter, int $month)
     {
         $this->month = $month;
-        $this->request = $request;
+        $this->filter = $filter;
         $this->collection = $this->constructCal();
     }
 
@@ -39,8 +40,8 @@ class EventsPerMonthSheet implements
 
     private function constructCal() : \Illuminate\Support\Collection
     {
-        $start = Carbon::parse("{$this->request['year']}-{$this->month}")->startOfMonth();
-        $end = Carbon::parse("{$this->request['year']}-{$this->month}")->endOfMonth();
+        $start = Carbon::parse("{$this->filter['year']}-{$this->month}")->startOfMonth();
+        $end = Carbon::parse("{$this->filter['year']}-{$this->month}")->endOfMonth();
        
         $dates = [];
         while ($start->lte($end)) {
@@ -154,15 +155,15 @@ class EventsPerMonthSheet implements
             'projectEventType',
             'projectEventSubtype',
             'projectEventEstimations'])
-            ->whereYear('event_end_date', $this->request['year'])
+            ->whereYear('event_end_date', $this->filter['year'])
             ->whereMonth('event_end_date', $this->month);
 
-        if ($this->request['project']['id'] !== 0) {
-            $monthEvents->where('project_id', $this->request['project']['id']);
+        if ($this->filter['project']['id'] !== 0) {
+            $monthEvents->where('project_id', $this->filter['project']['id']);
         }
 
-        if (isset($this->request['status']['id'])) {
-            $monthEvents->where('project_event_status', $this->request['status']['id']);
+        if (isset($this->filter['status']['id'])) {
+            $monthEvents->where('project_event_status', $this->filter['status']['id']);
         }
         
         $monthEvents = $monthEvents->get();
