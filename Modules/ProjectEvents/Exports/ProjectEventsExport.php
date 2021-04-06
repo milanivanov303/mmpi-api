@@ -12,13 +12,22 @@ class ProjectEventsExport implements WithMultipleSheets, Responsable
 {
     use Exportable;
 
-    //filter for excel export file
+    /**
+    * filter for excel export file
+    * @var array
+    */
     private $filter;
-    //name of the exported file
+
+    /**
+     * name of the exported file
+     * @var string
+     */
     private $fileName;
 
-    /*
+    /**
     * Export event constructor
+    * @param Request $request
+    * @return void
     */
     public function __construct(Request $request)
     {

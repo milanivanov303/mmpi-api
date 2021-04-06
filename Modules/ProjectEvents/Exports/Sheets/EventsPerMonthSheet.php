@@ -17,12 +17,36 @@ class EventsPerMonthSheet implements
     WithHeadings,
     WithEvents
 {
+    /**
+    * Number of the month
+    * @var int
+    */
     private $month;
+
+    /**
+    * Name of the month
+    * @var string
+    */
     private $monthName;
+
+    /**
+    * Collection of data of exact month for every day
+    * @var \Illuminate\Support\Collection
+    */
     private $collection;
-    //filter for requested excel export file
+    
+    /**
+    * Array data with filter for export file
+    * @var array
+    */
     private $filter;
 
+    /**
+    * Event per month constructor
+    * @param Array $filter
+    * @param int $month
+    * @return void
+    */
     public function __construct(Array $filter, int $month)
     {
         $this->month = $month;
@@ -30,7 +54,7 @@ class EventsPerMonthSheet implements
         $this->collection = $this->constructCal();
     }
 
-   /*
+   /**
     * @return \Illuminate\Support\Collection
     */
     public function collection()
@@ -38,6 +62,9 @@ class EventsPerMonthSheet implements
         return $this->collection;
     }
 
+    /**
+     * @return \Illuminate\Support\Collection
+     */
     private function constructCal() : \Illuminate\Support\Collection
     {
         $start = Carbon::parse("{$this->filter['year']}-{$this->month}")->startOfMonth();
@@ -75,6 +102,9 @@ class EventsPerMonthSheet implements
         return collect($dates);
     }
 
+    /**
+     * @return array
+     */
     public function headings() : array
     {
         return [
