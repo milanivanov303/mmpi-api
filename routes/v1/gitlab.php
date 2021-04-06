@@ -32,4 +32,16 @@ $router->group([
         'description' => 'Get commitrefs',
         'uses'        => 'GitlabController@commitRefs'
     ]);
+    $router->get('/namespaces', [
+        'description' => 'Get namespaces',
+        'uses'        => 'GitlabController@namespaces'
+    ]);
+    $router->get('/groups', [
+        'description' => 'Get gitlab groups',
+        'uses'        => 'GitlabController@groups'
+    ]);
+    $router->get('/group-projects', [
+        'description' => 'Get gitlab groups',
+        'uses'        => 'GitlabController@groupProjects'
+    ]);
 });

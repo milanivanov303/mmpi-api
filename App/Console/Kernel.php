@@ -41,8 +41,7 @@ class Kernel extends ConsoleKernel
     {
         foreach (['8:55', '10:55', '13:55', '18:55'] as $time) {
             $schedule->command('users:synchronize')
-                ->dailyAt($time)
-                ->environments(['prod']);
+                ->dailyAt($time);
         }
 
         $schedule->command('certificates:check-expiry')

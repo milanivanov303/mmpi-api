@@ -31,6 +31,7 @@ class Project extends Model
     protected $fillable = [
         'id',
         'name',
+        'project_type',
         'clnt_cvs_dir',
         'pnp_type',
         'clnt_code',
@@ -107,6 +108,14 @@ class Project extends Model
     protected function group()
     {
         return $this->belongsTo(EnumValue::class, 'group_id');
+    }
+
+    /**
+     * Get project type
+     */
+    protected function projectType()
+    {
+        return $this->belongsTo(EnumValue::class, 'project_type');
     }
 
     /**
