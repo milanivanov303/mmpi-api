@@ -27,12 +27,12 @@ class ProjectEventsController extends Controller
     /**
      * Export and return file
      *
-     * @param int $year
+     * @param Request $request
      * @return void
      */
-    public function export(int $year)
+    public function export(Request $request)
     {
-        return new ProjectEventsExport($year);
+        return new ProjectEventsExport($request);
     }
 
     /**
