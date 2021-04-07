@@ -359,6 +359,12 @@ class DescriptionParserService
             return true;
         }
 
+        //CUP-38218 FUP - CODIX - add exception for tag hash messages
+        //(Added tag CHRONO OPTII for changeset 4a31f20e08f1)
+        if (preg_match('/Added tag .*for changeset/', $this->description)) {
+            return true;
+        }
+
         return false;
     }
 
