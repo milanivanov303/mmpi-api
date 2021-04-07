@@ -73,8 +73,8 @@ class GitlabController extends Controller
     public function groups(Request $request)
     {
         $headers = [];
-        if ($request->as_user) {
-            $headers['sudo'] = $request->as_user;
+        if ($request->has('as_user')) {
+            $headers['sudo'] = $request->get('as_user');
         }
 
         $groups = app('GitlabApi', $headers)->groups()->all(['per_page' => 100]);
