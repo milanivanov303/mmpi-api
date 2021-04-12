@@ -70,9 +70,14 @@ class GitlabController extends Controller
         return $namespaces;
     }
 
-    public function groups()
+    public function groups(Request $request)
     {
-        $groups = app('GitlabApi')->groups()->all(['per_page' => 100]);
+        $headers = [];
+        if ($request->has('as_user')) {
+            $headers['sudo'] = $request->get('as_user');
+        }
+
+        $groups = app('GitlabApi', $headers)->groups()->all(['per_page' => 100]);
         return $groups;
     }
 

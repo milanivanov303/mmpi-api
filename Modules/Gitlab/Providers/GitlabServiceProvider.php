@@ -10,9 +10,10 @@ class GitlabServiceProvider extends ServiceProvider
 {
     public function register()
     {
-        $this->app->bind('GitlabApi', function () {
+        $this->app->bind('GitlabApi', function ($app, $headers) {
             $httpClient = new GuzzleHttpClient([
-                'verify' => false
+                'verify' => false,
+                'headers' => $headers
             ]);
             
             $client = GitlabClient::createWithHttpClient($httpClient);
