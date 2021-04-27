@@ -1,34 +1,81 @@
-# This file is a template, and might need editing before it works on your project.
-# see https://docs.gitlab.com/ce/ci/yaml/README.html for all available options
-
-# you can delete this line if you're not using Docker
-#image: composer:latest
+image: gitlab.codixfr.private:5005/enterpriseapps/images/docker:1.1
 
 before_script:
-  - echo "Before script section"
-  - pwd
-  - composer install
-   
-after_script:
-  - echo "After script section"
-  - echo "For example you might do some cleanup here"
-   
-build:
-  stage: build
-  script:
-    - echo "Build your project here"
+  - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+  - export IMAGE=$CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
+  - export IMAGE_TAG=$CI_REGISTRY_IMAGE:$CI_COMMIT_TAG
+  - cp .env.$CI_ENVIRONMENT_NAME .env
 
-code_sniffer:
-  stage: test
-  script: 
-    - export files=$(git diff origin/master... --name-only); [[ -f $files ]] && ./vendor/bin/phpcs $files || exit 0
-    
+.build-script: &build-script
+  - cp .env .env.test
+  - sed -i -e "s/^\(DB_HOST=\).*/\1${TEST_DB_HOST}/" .env.test
+  - sed -i -e "s/^\(DB_PORT=\).*/\1${TEST_DB_PORT}/" .env.test
+  - sed -i -e "s/^\(DB_DATABASE=\).*/\1${TEST_DB_DATABASE}/" .env.test
+  - docker build --pull --tag $IMAGE-$CI_ENVIRONMENT_NAME .
+  - docker push $IMAGE-$CI_ENVIRONMENT_NAME
+
+.deploy-script: &deploy-script
+  - export WEB_CONTAINER_IMAGE=$IMAGE-$CI_ENVIRONMENT_NAME
+  - docker-compose --host $DEPLOY_HOST pull
+  - docker-compose --host $DEPLOY_HOST up --no-build --detach
+  - docker-compose --host $DEPLOY_HOST exec -T --user www-data web php artisan migrate
+  - export SERVER=$(echo $DEPLOY_HOST | sed "s/http:\/\///g" | sed "s/:[0-9]*//g")
+  - export PORT=$(docker-compose --host $DEPLOY_HOST port web 80 | sed "s/.*://g")
+  - |
+    curl \
+    --request POST $WEB_PROXY_URL \
+    --header "Content-Type: application/json" \
+    --header "Authorization: Bearer $WEB_PROXY_TOKEN" \
+    --insecure \
+    --data-raw '{"path": "mmpi-api/", "servers": [ "'$SERVER:$PORT'" ] }'
+
+stages:
+  - build
+  - deploy
+
 test:
-  stage: test
-  script: 
-    - ./vendor/bin/phpunit --coverage-text --colors=never ./tests/Unit/.
-   
-deploy:
-  stage: deploy
+  stage: build
+  environment: dev
   script:
-    - echo "Do your deploy here"
+    - *build-script
+  only:
+    - merge_requests
+
+build for dev:
+  stage: build
+  environment: dev
+  script:
+    - *build-script
+  only:
+    - develop
+
+deploy on dev:
+  stage: deploy
+  environment: dev
+  script:
+    - *deploy-script
+  dependencies:
+    - build for dev
+  only:
+    - develop
+
+build for prod:
+  stage: build
+  environment: prod
+  script:
+    - export IMAGE=$IMAGE_TAG
+    - *build-script
+  only:
+    - tags
+
+deploy on prod:
+  stage: deploy
+  environment: prod
+  script:
+    - export IMAGE=$IMAGE_TAG
+    - *deploy-script
+  only:
+    - tags
+  dependencies:
+    - build for prod
+  when: manual

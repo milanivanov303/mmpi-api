@@ -1,0 +1,24 @@
+version: '3.4'
+
+services:
+
+    web:
+        build:
+            context: .
+            target: base
+        environment:
+            XDEBUG_CONFIG: remote_host=${XDEBUG_REMOTE_HOST:-host.docker.internal}
+            PHP_IDE_CONFIG: serverName=${XDEBUG_SERVER_NAME:-mmpi-api}
+        volumes:
+            - .:/app
+
+    mysql:
+        image: gitlab.codixfr.private:5005/enterpriseapps/images/mysql:1.2
+        environment:
+            MYSQL_DATABASE: mmpi
+            MYSQL_USER: mmpi
+            MYSQL_PASSWORD: ipmm
+            MYSQL_ALLOW_EMPTY_PASSWORD: "true"
+            MYSQL_ROOT_HOST: "%"
+        volumes:
+            - ${MYSQL_CONTAINER_VOLUME:-./storage/volumes/mysql}:/var/lib/mysql
