@@ -119,11 +119,17 @@ class HashRepository extends AbstractRepository implements RepositoryInterface
         $this->fillModel($data);
 
         DB::transaction(function () use ($data) {
+            $modelExists = $this->model->exists;
+
             $this->model->saveOrFail();
 
             // save hash files
             if (array_key_exists('files', $data)) {
-                $this->saveFiles($data['files']);
+                if ($modelExists) {
+                    $this->model->files()->delete();
+                }
+
+                $this->model->files()->createMany($data['files']);
             }
 
             // save tags from description
@@ -141,21 +147,7 @@ class HashRepository extends AbstractRepository implements RepositoryInterface
     protected function saveTags()
     {
         dispatch(
-            (new ProcessTags($this->model))
-                ->onQueue('hashes')
+            (new ProcessTags($this->model))->onQueue('hashes')
         );
-    }
-
-    /**
-     * Save hash files
-     *
-     * @param array $files
-     */
-    protected function saveFiles($files)
-    {
-        // delete old files before setting new ones
-        $this->model->files()->delete();
-
-        $this->model->files()->createMany($files);
     }
 }
