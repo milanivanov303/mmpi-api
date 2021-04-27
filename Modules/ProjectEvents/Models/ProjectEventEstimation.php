@@ -6,6 +6,7 @@ use App\Models\Department;
 use App\Models\User;
 use Carbon\Carbon;
 use Core\Models\Model;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Modules\ProjectEvents\Models\ProjectEvent;
 use Illuminate\Support\Facades\Mail;
@@ -93,7 +94,7 @@ class ProjectEventEstimation extends Model
             ->projectEvent
             ->projectEventNotifications
             ->where('project_event_id', '=', $model->project_event_id);
-        
+
         $departmentsEmails = [];
         foreach ($notifyDepartments as $notification) {
             $departmentsEmails[] = $model->getMailRecipients($notification->department);

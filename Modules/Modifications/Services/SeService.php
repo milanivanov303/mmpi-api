@@ -2,7 +2,7 @@
 
 namespace Modules\Modifications\Services;
 
-use \Core\Helpers\SSH2;
+use Core\Helpers\SSH2;
 use App\Models\EnumValue;
 use Modules\DeliveryChains\Models\DeliveryChain;
 
@@ -110,7 +110,7 @@ class SeService
     /**
      * ExportSeService constructor.
      *
-     * @param SSH $ssh2
+     * @param SSH2 $ssh2
      * @param string $type
      * @param int $chain
      * @param callable $callback
@@ -151,7 +151,7 @@ class SeService
             $this->user,
             $cmd
         );
-        
+
         $this->pid = str_replace("\n", "", $pid);
 
         if ($this->ssh2->getExitStatus()) {
@@ -181,7 +181,7 @@ class SeService
     protected function check() : string
     {
         $export = $this->ssh2->exec("ps {$this->pid} | wc -l");
-        
+
         $logStartLine = count(explode(PHP_EOL, $this->log));
 
         $log = $this->ssh2->exec("sed -n '{$logStartLine},\$p' < {$this->getLogFile()}");
@@ -191,7 +191,7 @@ class SeService
         $sanitized = preg_replace('/(?!\n)[\x00-\x1F\x7F\xA0]/u', ' ', $log);
         $sanitized = str_replace("[1m", "<b>", $sanitized);
         $sanitized = str_replace("[0m", "</b>", $sanitized);
-        
+
         $status = $this->getStatus((int) $export);
 
         $message = [
@@ -275,7 +275,6 @@ class SeService
      */
     protected function getCommandType() : string
     {
-        $command = "";
         switch ($this->operation) {
             case self::VDNAM:
                 $command = "sh_cliexpbr vdnam";
@@ -346,7 +345,7 @@ class SeService
             $cmd
         );
     }
-    
+
     /**
      * Get log file
      *
@@ -426,7 +425,7 @@ class SeService
         if ($finished) {
             return 'exported';
         }
-        
+
         return 'failed';
     }
 
