@@ -5,6 +5,7 @@ namespace Modules\ProjectEvents\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
+use Maatwebsite\Excel\Facades\Excel;
 use Modules\ProjectEvents\Exports\ProjectEventsExport;
 use Modules\ProjectEvents\Imports\ProjectEventsImport;
 use Modules\ProjectEvents\Repositories\ProjectEventRepository;
@@ -28,7 +29,7 @@ class ProjectEventsController extends Controller
      * Export and return file
      *
      * @param Request $request
-     * @return void
+     * @return ProjectEventsExport
      */
     public function export(Request $request)
     {
@@ -62,7 +63,7 @@ class ProjectEventsController extends Controller
         $file   = $file->store('imports');
         $import = new ProjectEventsImport($project);
 
-        $import->import($file);
+        Excel::import($import, $file);
 
         if ($import->getErrors()) {
             Mail::queue((new ImportEventsMail($import->getErrors()))->onQueue('mails'));

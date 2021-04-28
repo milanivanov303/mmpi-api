@@ -34,7 +34,8 @@
         "codix/api-core": "^2.3",
         "graham-campbell/gitlab": "^5.2",
         "guzzlehttp/guzzle": "^7.2",
-        "http-interop/http-factory-guzzle": "^1.0"
+        "http-interop/http-factory-guzzle": "^1.0",
+        "vimeo/psalm": "^4.7"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

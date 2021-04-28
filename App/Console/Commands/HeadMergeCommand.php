@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use JiraRestApi\Issue\IssueField;
 use JiraRestApi\Issue\IssueService;
+use JiraRestApi\JiraException;
 use Modules\SourceRevisions\Models\SourceRevision;
 use JiraRestApi\IssueLink\IssueLink;
 use JiraRestApi\IssueLink\IssueLinkService;
@@ -213,7 +214,7 @@ class HeadMergeCommand extends Command
 
         // Set Milestone
         $issueField->addCustomField('customfield_10530', ['value' => 'Installation']);
-        
+
         // Set Codix status
         $issueField->addCustomField('customfield_10601', ['value' => 'Under Investigation']);
 
@@ -254,40 +255,40 @@ class HeadMergeCommand extends Command
 
         return $newIssue;
     }
-    
+
     /**
      * Get link data
      *
-     * @param type $inwardIssue
-     * @param type $outwardIssue
+     * @param string|int $inwardIssue
+     * @param string|int $outwardIssue
      * @return IssueLink
      */
-    protected function getLink($inwardIssue, $outwardIssue)
+    protected function getLink($inwardIssue, $outwardIssue) : IssueLink
     {
         $issueLink = new IssueLink();
-        
+
         $issueLink->setInwardIssue($inwardIssue)
                 ->setOutwardIssue($outwardIssue)
                 ->setLinkTypeName("Relate")
                 ->setComment("Automatically linked to task {$outwardIssue}");
-        
+
         return $issueLink;
     }
-    
+
     /**
      * Link issues
      *
-     * @param type $inwardIssue
-     * @param type $outwardIssue
+     * @param string|int $inwardIssue
+     * @param string|int $outwardIssue
      *
+     * @throws JiraException
      */
     protected function linkIssue($inwardIssue, $outwardIssue)
     {
         $issueLink = $this->getLink($inwardIssue, $outwardIssue);
-        
+
         $issueLinkService = new IssueLinkService();
-        $linkedIssue = $issueLinkService->addIssueLink($issueLink);
-        
-        return $linkedIssue;
+
+        $issueLinkService->addIssueLink($issueLink);
     }
 }

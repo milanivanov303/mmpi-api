@@ -1,0 +1,5 @@
+.git
+vendor
+storage/volumes/*
+storage/logs/*
+storage/framework/cache/*
