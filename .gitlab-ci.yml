@@ -60,6 +60,26 @@ deploy on dev:
   only:
     - develop
 
+build for int:
+  stage: build
+  environment: int
+  script:
+    - export IMAGE=$IMAGE_TAG
+    - *build-script
+  only:
+    - tags
+
+deploy on int:
+  stage: deploy
+  environment: int
+  script:
+    - export IMAGE=$IMAGE_TAG
+    - *deploy-script
+  dependencies:
+    - build for int
+  only:
+    - tags
+
 build for prod:
   stage: build
   environment: prod
