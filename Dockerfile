@@ -61,6 +61,14 @@ RUN composer dump-autoload
 
 # Generate documentation
 RUN php artisan openapi:generate
+
+# Install api-console and build documentation
+RUN apk add --update --no-cache npm && npm i -g api-console-cli
+RUN api-console build \
+    --api-type "OAS 3.0" \
+    --api-media-type "application/json" \
+    --output public/docs \
+    --api public/openapi.json
 # --- END BUILD ----------------------------------------------------------------- #
 
 
