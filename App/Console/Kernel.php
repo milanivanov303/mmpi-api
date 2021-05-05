@@ -3,6 +3,7 @@
 namespace App\Console;
 
 use App\Console\Commands\HeadMergeCommand;
+use Core\Console\Commands\AuditCommand;
 use Core\Console\Commands\Openapi\Generate as OpenapiGenerate;
 use Illuminate\Console\Scheduling\Schedule;
 use Laravel\Lumen\Console\Kernel as ConsoleKernel;
@@ -28,7 +29,8 @@ class Kernel extends ConsoleKernel
         Tnsnameora::class,
         HashesSynchronizeCommand::class,
         ProjectEventsArchive::class,
-        MissingDeliverychainSourcesCommand::class
+        MissingDeliverychainSourcesCommand::class,
+        AuditCommand::class
     ];
 
     /**
