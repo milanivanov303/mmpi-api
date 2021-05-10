@@ -41,7 +41,11 @@ class ProjectEventsExport implements WithMultipleSheets, Responsable
     public function sheets(): array
     {
         $sheets = [];
-
+        if ($this->filter['month'] != null) {
+            $sheets[] = new EventsPerMonthSheet($this->filter, $this->filter['month']);
+            return $sheets;
+        }
+        
         for ($month = 1; $month <= 12; $month++) {
             $sheets[] = new EventsPerMonthSheet($this->filter, $month);
         }
