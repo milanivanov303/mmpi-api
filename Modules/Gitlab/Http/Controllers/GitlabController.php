@@ -21,7 +21,7 @@ class GitlabController extends Controller
     
     public function branches(Request $request)
     {
-        $branches = app('GitlabApi')->repositories()->branches($request->repo);
+        $branches = app('GitlabApi')->repositories()->branches($request->repo, ['per_page' => 100]);
         return $branches;
     }
     
@@ -53,7 +53,11 @@ class GitlabController extends Controller
         if ($request->since) {
             $params['since'] = new \DateTime($request->since);
         }
-        
+
+        if ($request->until) {
+            $params['until'] = new \DateTime($request->until);
+        }
+
         $commits = app('GitlabApi')->repositories()->commits($request->repo, $params);
         return $commits;
     }
