@@ -97,4 +97,10 @@ class GitlabController extends Controller
         $groups = app('GitlabApi')->groups()->projects($request->groupId, $params);
         return $groups;
     }
+    
+    public function commitFiles(Request $request, $sha) : array
+    {
+        $commitFiles = app('GitlabApi')->repositories()->diff($request->repo, $sha);
+        return $commitFiles;
+    }
 }
