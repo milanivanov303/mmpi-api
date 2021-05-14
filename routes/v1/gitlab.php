@@ -32,4 +32,8 @@ $router->group([
         'description' => 'Get commitrefs',
         'uses'        => 'GitlabController@commitRefs'
     ]);
+    $router->get('/repo/commit/files/{sha}', [
+        'description' => 'Get changed files of a commit',
+        'uses'        => 'GitlabController@commitFiles'
+    ]);
 });
