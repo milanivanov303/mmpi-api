@@ -3,10 +3,10 @@
 namespace Modules\InstanceDowntimes\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Response;
 use Modules\InstanceDowntimes\Repositories\InstanceDowntimeRepository;
 use Illuminate\Http\Request;
 use Modules\InstanceDowntimes\Models\InstanceDowntime;
-use Modules\InstanceDowntimes\Services\NotificationService;
 
 class InstanceDowntimesController extends Controller
 {
@@ -22,25 +22,16 @@ class InstanceDowntimesController extends Controller
     }
 
    /**
-     * Update unix access request
-     *
-     * @param Request $request
-     * @param mixed ...$id
-     * @return Response
+     * @inheritDoc
      */
     public function update(Request $request, ...$id)
     {
-        $data  = $request->all();
-        $model = InstanceDowntime::with(['instance.deliveryChains.projects'])
-            ->findOrFail((int)$id[0]);
-
-        if ($model->count() === 0) {
-            return;
-        }
+        //$model = InstanceDowntime::with(['instance.deliveryChains.projects'])
+        //    ->findOrFail((int)$id[0]);
 
         // app(NotificationService::class, [
         //     "model" => $model,
-        //     "data" => $data
+        //     "data" => $request->all()
         // ])->sendNotification();
 
         return parent::update($request, ...$id);

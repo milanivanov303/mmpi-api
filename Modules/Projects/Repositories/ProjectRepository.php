@@ -67,6 +67,13 @@ class ProjectRepository extends AbstractRepository implements RepositoryInterfac
             );
         }
 
+        if (array_key_exists('project_type', $data)) {
+            $this->model->projectType()->associate(
+                app(EnumValue::class)
+                    ->getModelId($data['project_type'], 'key', ['type' => 'project_type'])
+            );
+        }
+
         if (array_key_exists('country', $data)) {
             $this->model->country()->associate(
                 app(EnumValue::class)

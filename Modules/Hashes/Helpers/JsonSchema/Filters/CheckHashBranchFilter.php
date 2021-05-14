@@ -13,13 +13,13 @@ class CheckHashBranchFilter implements IFilter
     /**
      * Validate
      *
-     * @param mixed $value
+     * @param mixed $data
      * @param array $args
      * @return bool
      */
-    public function validate($value, array $args) : bool
+    public function validate($data, array $args) : bool
     {
-        $branchId = app(Branch::class)->getModelId((array) $value, 'name', [
+        $branchId = app(Branch::class)->getModelId((array) $data, 'name', [
             'repo_type_id' => $this->getRepoTypeId($args),
             'status' => 1
         ]);

@@ -2,6 +2,7 @@
 
 namespace Modules\ProjectEvents\Repositories;
 
+use App\Models\Model;
 use Carbon\Carbon;
 use Core\Repositories\AbstractRepository;
 use Core\Repositories\RepositoryInterface;
@@ -111,7 +112,7 @@ class ProjectEventRepository extends AbstractRepository implements RepositoryInt
      * Save record
      *
      * @param array $data
-     * @return Model
+     * @return ProjectEvent
      *
      * @throws \Throwable
      */

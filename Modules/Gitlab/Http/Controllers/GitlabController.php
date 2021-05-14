@@ -9,10 +9,10 @@ class GitlabController extends Controller
 {
     public function projects($visibility)
     {
-        $projects = app('GitlabApi')->projects()->all(['visibility' => $visibility]);
+        $projects = app('GitlabApi')->projects()->all(['visibility' => $visibility, 'per_page' => 100]);
         return $projects;
     }
-    
+
     public function showProject(Request $request)
     {
         $project = app('GitlabApi')->projects()->show($request->repo);
@@ -68,6 +68,36 @@ class GitlabController extends Controller
         return $refs;
     }
 
+    public function namespaces()
+    {
+        $namespaces = app('GitlabApi')->namespaces()->all(['per_page' => 100]);
+        return $namespaces;
+    }
+
+    public function groups(Request $request)
+    {
+        $headers = [];
+        if ($request->has('as_user')) {
+            $headers['sudo'] = $request->get('as_user');
+        }
+
+        $groups = app('GitlabApi', $headers)->groups()->all(['per_page' => 100]);
+        return $groups;
+    }
+
+    public function groupProjects(Request $request)
+    {
+        $params = [];
+        if ($request->include_subgroups) {
+            $params['include_subgroups'] = $request->include_subgroups === 'true' ? true : false;
+        }
+
+        $params['per_page'] = 100;
+
+        $groups = app('GitlabApi')->groups()->projects($request->groupId, $params);
+        return $groups;
+    }
+    
     public function commitFiles(Request $request, $sha) : array
     {
         $commitFiles = app('GitlabApi')->repositories()->diff($request->repo, $sha);

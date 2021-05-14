@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Modules\ProjectEvents\Models\ProjectEvent;
-use Maatwebsite\Excel\Concerns\Importable;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Illuminate\Support\Facades\Validator;
@@ -19,10 +18,7 @@ class ProjectEventsImport implements
     ToCollection,
     WithHeadingRow
 {
-    use Importable;
-    
     private $project;
-    private $skippedEvents = [];
     private $errors = [];
 
     /**
@@ -112,7 +108,7 @@ class ProjectEventsImport implements
             }
 
             $event = ProjectEvent::create($insertData);
-           
+
             $this->addDepartmentNotifications($row['notification_e_mail_for_tl'], $event);
         }
     }
@@ -154,7 +150,7 @@ class ProjectEventsImport implements
             ]);
         }
     }
-    
+
     public function getErrors()
     {
         return $this->errors;

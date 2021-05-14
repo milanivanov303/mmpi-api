@@ -15,6 +15,7 @@ use App\Mail\MissingProjectDevKeyMail;
 use JiraRestApi\IssueLink\IssueLink;
 use JiraRestApi\IssueLink\IssueLinkService;
 use App\Models\EnumValue;
+use JiraRestApi\JiraException;
 
 /**
  * Add missing sources to delivery chain
@@ -36,7 +37,7 @@ class MissingDeliverychainSourcesCommand extends Command
      * @var string
      */
     protected $description = "Create TTS tasks for sources not installed on DC";
-    
+
     /**
      * Execute the console command.
      */
@@ -56,7 +57,7 @@ class MissingDeliverychainSourcesCommand extends Command
                 ->get();
 
         $this->info("Found {$patches->count()} not processed " . Str::plural('patch', $patches->count()));
-        
+
         foreach ($patches as $patch) {
             if ($patch->dc_role !== 'dc_rel') {
                 $this->info("Getting sources data for patch {$patch->patch_id} ...");
@@ -98,7 +99,7 @@ class MissingDeliverychainSourcesCommand extends Command
             $patch->save();
         }
     }
-    
+
     /**
      * Get data
      *
@@ -111,22 +112,22 @@ class MissingDeliverychainSourcesCommand extends Command
                 ::where('type', 'active_inactive')
                 ->where('key', 'active')
                 ->value('id');
-        
+
         $dcTypeId = app(DB::class)
                 ::table('delivery_chain_types')
                 ->where('type', 'IMX')
                 ->value('id');
-        
+
         $hotfix = app(EnumValue::class)
                 ::where('type', 'delivery_chain_role')
                 ->where('key', 'dc_hf')
                 ->value('id');
-        
+
         $validation = app(EnumValue::class)
                 ::where('type', 'delivery_chain_role')
                 ->where('key', 'dc_val')
                 ->value('id');
-        
+
         return DB::select(
             "SELECT PO.id as patch_id,
                U.username as added_by,
@@ -173,7 +174,7 @@ class MissingDeliverychainSourcesCommand extends Command
             [$patchId, $dcStatus, $dcTypeId, $hotfix, $validation, $validation, $hotfix]
         );
     }
-    
+
     /**
      * Get issue data
      *
@@ -222,7 +223,7 @@ class MissingDeliverychainSourcesCommand extends Command
 
         // Set Milestone
         $issueField->addCustomField('customfield_10530', ['value' => 'Installation']);
-        
+
         // Set Codix status
         $issueField->addCustomField('customfield_10601', ['value' => 'Under Investigation']);
 
@@ -263,7 +264,7 @@ class MissingDeliverychainSourcesCommand extends Command
 
         return $newIssue;
     }
-    
+
     /**
      * Get TTS project dev key
      *
@@ -291,40 +292,40 @@ class MissingDeliverychainSourcesCommand extends Command
 
         return $ttsDevProjectKey;
     }
-    
+
     /**
      * Get link data
      *
-     * @param type $inwardIssue
-     * @param type $outwardIssue
+     * @param string|int $inwardIssue
+     * @param string|int $outwardIssue
      * @return IssueLink
      */
     protected function getLink($inwardIssue, $outwardIssue)
     {
         $issueLink = new IssueLink();
-        
+
         $issueLink->setInwardIssue($inwardIssue)
                 ->setOutwardIssue($outwardIssue)
                 ->setLinkTypeName("Relate")
                 ->setComment("Automatically linked to task {$outwardIssue}");
-        
+
         return $issueLink;
     }
-    
+
     /**
      * Link issues
      *
-     * @param type $inwardIssue
-     * @param type $outwardIssue
+     * @param string|int $inwardIssue
+     * @param string|int $outwardIssue
      *
+     * @throws JiraException
      */
     protected function linkIssue($inwardIssue, $outwardIssue)
     {
         $issueLink = $this->getLink($inwardIssue, $outwardIssue);
-        
+
         $issueLinkService = new IssueLinkService();
-        $linkedIssue = $issueLinkService->addIssueLink($issueLink);
-        
-        return $linkedIssue;
+
+        $issueLinkService->addIssueLink($issueLink);
     }
 }

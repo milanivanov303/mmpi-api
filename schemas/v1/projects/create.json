@@ -8,7 +8,8 @@
         {"$ref": "/v1/projects/filters.json"},
         {
             "required": [
-                "name"
+                "name",
+                "project_type"
             ]
         }
     ]
