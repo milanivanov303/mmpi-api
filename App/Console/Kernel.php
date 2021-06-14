@@ -66,8 +66,6 @@ class Kernel extends ConsoleKernel
             ->environments(['prod'])
             ->appendOutputTo(storage_path('logs/project_events.log'));
 
-        $schedule->command('hashes:synchronize');
-
         /* Not to be scheduled until PMO decision is made.
         $schedule->command('sources:missing-deliverychain')
             ->dailyAt('03:00')
