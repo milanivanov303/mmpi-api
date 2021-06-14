@@ -1,25 +1,35 @@
-
-<!DOCTYPE html>
 <html>
-<head>
-    <title>MMPI API Documentation</title>
-    <!-- needed for adaptive design -->
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- ReDoc doesn't change outer page styles -->
+    <head>
+        <link rel="stylesheet" type="text/css" href="https://unpkg.com/swagger-ui-dist@3/swagger-ui.css">
+        <script src="https://unpkg.com/swagger-ui-dist@3/swagger-ui-bundle.js" charset="UTF-8"></script>
+        <script src="https://unpkg.com/swagger-ui-dist@3/swagger-ui-standalone-preset.js" charset="UTF-8"></script>
+    </head>
+<body>
+    <div id="swagger-ui"></div>
 
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
+    <script>
+        window.onload = function() {
+            const ui = SwaggerUIBundle({
+                url: "./openapi.json",
+                dom_id: '#swagger-ui',
+                deepLinking: true,
+                defaultModelsExpandDepth: 1,
+                defaultModelExpandDepth: 1,
+                defaultModelRendering: 'model',
+                tryItOutEnabled: false,
+                presets: [
+                    SwaggerUIBundle.presets.apis,
+                    SwaggerUIStandalonePreset
+                ],
+                plugins: [
+                    SwaggerUIBundle.plugins.DownloadUrl
+                ],
+                layout: "StandaloneLayout"
+            });
+
+            window.ui = ui;
         }
-        [sticky-sidebar][_ngcontent-c0] {
-            background-color:  #e8f9ff !important;
-        }
-    </style>
-</head>
-    <body>
-        <redoc spec-url="./swagger.json" ></redoc>
-        <script src="https://cdn.jsdelivr.net/npm/redoc@2.0.0-rc.22/bundles/redoc.standalone.js"> </script>
-    </body>
+    </script>
+</body>
 </html>
+
