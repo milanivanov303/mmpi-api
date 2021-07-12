@@ -190,6 +190,12 @@
                     {"type": "null"}
                 ]
             }
+        },
+        "modifications": {
+            "type": "array",
+            "items": {
+                "$ref": "/v1/modifications/modification.json"
+            }
         }
     }
 }
