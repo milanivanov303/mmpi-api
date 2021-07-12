@@ -4,6 +4,7 @@ namespace Modules\Patches\Models;
 
 use Core\Models\Model;
 use App\Models\User;
+use Modules\Modifications\Models\Modification;
 use Modules\Projects\Models\Project;
 use Modules\DeliveryChains\Models\DeliveryChain;
 use Modules\Installations\Models\Installation;
@@ -87,5 +88,14 @@ class Patch extends Model
     protected function currentPatchStatus()
     {
         return $this->hasOne(CurrentPatchStatus::class);
+    }
+
+    /**
+     * Get attached modifications
+     */
+    protected function modifications()
+    {
+        return $this->belongsToMany(Modification::class, 'modif_to_patch', 'patch_id', 'modif_id')
+            ->orderBy('order');
     }
 }
