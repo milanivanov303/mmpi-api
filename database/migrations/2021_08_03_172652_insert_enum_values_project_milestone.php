@@ -14,6 +14,8 @@ class InsertEnumValuesProjectMilestone extends Migration
     public function up()
     {
         DB::table('enum_values')->insert(
+
+        [
             [
                 'type'        => 'project_milestone',
                 'key'         => 'proposal_del',
@@ -163,6 +165,7 @@ class InsertEnumValuesProjectMilestone extends Migration
                 'sortindex'   => 19, 
                 'changed_by'  => 728
             ]
+    ]
          );
 
 // mysql> select * from enum_values where type='project_milestone';
