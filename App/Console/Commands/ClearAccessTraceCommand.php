@@ -34,15 +34,11 @@ class ClearAccessTraceCommand extends Command
     {
         $time = Carbon::now()->subMonths(6)->format('Y-m-d H:i:s');
 
-        $records = app(DB::class)
+        $deleted = app(DB::class)
             ::table('access_trace')
-            ->where('access_time', '<', $time);
+            ->where('access_time', '<', $time)
+            ->delete();
 
-        $this->info("Found {$records->count()} records to delete");
-
-        if ($records->count()) {
-            DB::delete("DELETE FROM access_trace WHERE access_time < ?;", [$time]);
-            $this->info("Deleted");
-        }
+        $this->info("{$deleted} records deleted");
     }
 }
