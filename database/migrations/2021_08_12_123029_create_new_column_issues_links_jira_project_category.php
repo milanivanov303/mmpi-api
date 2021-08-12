@@ -15,7 +15,7 @@ class CreateNewColumnIssuesLinksJiraProjectCategory extends Migration
     {
         //add column jira_project_category in issues_links
         Schema::table('issues_links', function (Blueprint $table) {
-            $table->char('jira_project_category', 50)
+            $table->string('jira_project_category', 50)
                   ->nullable()
                   ->comment('Project category taken from TTS.')
                   ->after('issue_link_type_id');
