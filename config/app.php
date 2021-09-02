@@ -183,6 +183,12 @@ return array_merge(
         'gitlab' => [
             'url'   => env('GITLAB_HOST'),
             'token' => env('GITLAB_TOKEN')
+        ],
+
+        'isabs' => [
+            'url' => env('ISABS_URL'),
+            'username' => env('ISABS_USER'),
+            'password' => env('ISABS_PASSWORD')
         ]
     ]
 );
