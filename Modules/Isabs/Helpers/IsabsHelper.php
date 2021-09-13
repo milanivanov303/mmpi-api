@@ -33,6 +33,7 @@ class IsabsHelper
             $client = new \GuzzleHttp\Client();
 
             $options = [
+                'verify' => false,
                 'headers' => [
                     'Content-Type' => 'application/json'
                 ],
@@ -72,9 +73,10 @@ class IsabsHelper
             $client = new \GuzzleHttp\Client();
 
             $options = [
+                'verify' => false,
                 'headers' => [
                     'Content-Type' => 'application/json',
-                    'Authorization' => 'Bearer '. $token
+                    'Authorization' => 'Bearer '. $token,
                 ]
             ];
 
