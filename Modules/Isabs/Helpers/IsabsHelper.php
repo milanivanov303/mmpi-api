@@ -59,9 +59,6 @@ class IsabsHelper
      */
     protected function send(string $method, string $url, array $options) : Response
     {
-        $options['verify'] = false;
-        $options['headers'] = array_merge(['Content-Type' => 'application/json'], $options['headers'] ?? []);
-
         try {
             $client = new Client();
             $response = $client->request($method, $url, $options);
@@ -96,6 +93,10 @@ class IsabsHelper
     public function login() : Response
     {
         $response = $this->send('POST', $this->getUrl('login'), [
+            'verify'  => false,
+            'headers' => [
+                'Content-Type' => 'application/json'
+            ],
             'body'    => json_encode([
                 "login"    => $this->username,
                 "password" => $this->password
@@ -114,7 +115,9 @@ class IsabsHelper
     public function specifications($token)
     {
         return $this->send('GET', $this->getUrl('list-tech-names'), [
+            'verify'  => false,
             'headers' => [
+                'Content-Type' => 'application/json',
                 'Authorization' => 'Bearer '. $token
             ]
         ]);
