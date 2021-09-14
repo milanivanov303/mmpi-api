@@ -8,6 +8,7 @@ use Modules\Modifications\Models\Modification;
 use Modules\DeliveryChains\Models\DeliveryChain;
 use Modules\Patches\Models\Patch;
 use App\Models\User;
+use Modules\PatchRequestSpecifications\Models\PatchRequestsSpecification;
 
 class PatchRequest extends Model
 {
