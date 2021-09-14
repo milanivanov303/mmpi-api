@@ -8,7 +8,6 @@ use Modules\Modifications\Models\Modification;
 use Modules\DeliveryChains\Models\DeliveryChain;
 use Modules\Patches\Models\Patch;
 use App\Models\User;
-use Modules\PatchRequestSpecifications\Models\PatchRequestsSpecification;
 
 class PatchRequest extends Model
 {
@@ -51,7 +50,7 @@ class PatchRequest extends Model
      */
     protected function modifications()
     {
-        return $this->belongsTo(Modification::class, 'modif_to_pr', 'pr_id', 'modif_id')
+        return $this->belongsToMany(Modification::class, 'modif_to_pr', 'pr_id', 'modif_id')
                     ->wherePivot('removed', null)
                     ->orderBy('order');
     }
