@@ -30,10 +30,7 @@ class PatchRequestSpecificationsController extends Controller
     {
         DB::transaction(function () use ($request, $patch_request_id, $user_id) {
             // Delete specifications for a given user and patch request
-            DB::table('patch_requests_specifications')
-                ->where('patch_request_id', '=', $patch_request_id)
-                ->where('user_id', '=', $user_id)
-                ->delete();
+            $this->deletePatchRequestSpecifications($patch_request_id, $user_id);
 
             $specifications = $request->all();
 
@@ -64,11 +61,9 @@ class PatchRequestSpecificationsController extends Controller
      */
     public function deletePatchRequestSpecifications($patch_request_id, $user_id)
     {
-        DB::transaction(function () use ($patch_request_id, $user_id) {
-            DB::table('patch_requests_specifications')
-                ->where('patch_request_id', '=', $patch_request_id)
-                ->where('user_id', '=', $user_id)
-                ->delete();
-        });
+        DB::table('patch_requests_specifications')
+            ->where('patch_request_id', '=', $patch_request_id)
+            ->where('user_id', '=', $user_id)
+            ->delete();
     }
 }
