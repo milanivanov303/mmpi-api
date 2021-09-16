@@ -31,12 +31,15 @@ class PatchRequestRepository extends AbstractRepository implements RepositoryInt
         $this->model->fill($data);
 
         DB::transaction(function () use ($data) {
+
             $this->model->issue()->associate($data['issue']['id']);
             $this->model->deliveryChain()->associate($data['delivery_chain']['id']);
 
             $this->model->saveOrFail();
 
             $this->syncModifications($data['modifications'] ?? []);
+
+            $this->syncSpecifications($data['specifications']);
         });
 
         $this->loadModelRelations($data);
@@ -102,5 +105,36 @@ class PatchRequestRepository extends AbstractRepository implements RepositoryInt
                 ];
             }, $added)
         );
+    }
+
+    /**
+     * Sync specifications
+     *
+     * @param array $specifications
+     */
+    protected function syncSpecifications($specifications)
+    {
+
+        if (array_key_exists('patch_request_id', $specifications)) {
+            // delete specifications before insert new one
+            $this->model->specifications()->delete();
+
+            $specificationsArr = [];
+            // Get all modifications for given patch request
+            foreach ($specifications['specification'] as $specification) {
+                $specificationsArr[] = [
+                    'patch_request_id' => $specifications['patch_request_id'],
+                    'user_id'          => $specifications['user_id'],
+                    'made_by'          => $specifications['made_by'],
+                    'made_on'          => $specifications['made_on'],
+                    'specification'    => $specification
+                ];
+            }
+
+            // Insert every modification as new record
+            DB::table('patch_requests_specifications')->insert(
+                $specificationsArr
+            );
+        }
     }
 }
