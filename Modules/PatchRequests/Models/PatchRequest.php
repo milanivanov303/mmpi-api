@@ -79,12 +79,4 @@ class PatchRequest extends Model
     {
         return $this->belongsTo(User::class, 'greenlighted_by');
     }
-
-    /**
-     * Get attached specifications
-     */
-    protected function specifications()
-    {
-        return $this->hasMany(PatchRequestsSpecification::class);
-    }
 }
