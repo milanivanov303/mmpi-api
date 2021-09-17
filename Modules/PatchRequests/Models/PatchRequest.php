@@ -8,6 +8,7 @@ use Modules\Modifications\Models\Modification;
 use Modules\DeliveryChains\Models\DeliveryChain;
 use Modules\Patches\Models\Patch;
 use App\Models\User;
+use Modules\PatchRequests\Models\PatchRequestsSpecification;
 
 class PatchRequest extends Model
 {
@@ -77,5 +78,13 @@ class PatchRequest extends Model
     protected function greenlightedBy()
     {
         return $this->belongsTo(User::class, 'greenlighted_by');
+    }
+
+    /**
+     * Get attached specifications
+     */
+    protected function specifications()
+    {
+        return $this->hasMany(PatchRequestsSpecification::class);
     }
 }

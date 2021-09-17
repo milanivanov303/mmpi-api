@@ -33,4 +33,14 @@ $router->group([
         'description' => 'Delete patch request',
         'uses'        => 'PatchRequestsController@delete'
     ]);
+    $router->put('/{patch_request_id}/specifications/user/{user_id}', [
+        'as'          => 'patch-requests.update',
+        'description' => 'Insert/Update patch request',
+        'uses'        => 'PatchRequestsController@storePatchRequestSpecifications'
+    ]);
+    $router->delete('/{patch_request_id}/specifications/user/{user_id}', [
+        'as'          => 'patch-requests.delete',
+        'description' => 'Delete patch request specifications',
+        'uses'        => 'PatchRequestsController@deletePatchRequestSpecifications'
+    ]);
 });

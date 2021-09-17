@@ -31,6 +31,7 @@ class PatchRequestRepository extends AbstractRepository implements RepositoryInt
         $this->model->fill($data);
 
         DB::transaction(function () use ($data) {
+
             $this->model->issue()->associate($data['issue']['id']);
             $this->model->deliveryChain()->associate($data['delivery_chain']['id']);
 
