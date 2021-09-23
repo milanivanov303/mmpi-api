@@ -2,6 +2,7 @@
 
 namespace Modules\PatchRequests\Http\Controllers;
 
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -38,12 +39,15 @@ class PatchRequestsController extends Controller
 
             $made_on = Carbon::now()->format('Y-m-d H:i:s');
 
+            $username = User::find($request->user_id)->username;
+
             $specificationsArr = [];
             // Get all modifications for given patch request
             foreach ($specifications as $specification) {
                 $specificationsArr[] = [
                     'patch_request_id' => $request->patch_request_id,
                     'user_id'          => $request->user_id,
+                    'username'         => $username,
                     'made_by'          => Auth::user()->id,
                     'made_on'          => $made_on,
                     'specification'    => $specification
