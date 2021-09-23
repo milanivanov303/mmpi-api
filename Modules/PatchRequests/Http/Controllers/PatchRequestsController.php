@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Modules\PatchRequests\Repositories\PatchRequestRepository;
+use Modules\PatchRequests\Models\PatchRequestsSpecification;
 
 class PatchRequestsController extends Controller
 {
@@ -50,9 +51,7 @@ class PatchRequestsController extends Controller
             }
 
             // Insert every modification as new record
-            DB::table('patch_requests_specifications')->insert(
-                $specificationsArr
-            );
+            PatchRequestsSpecification::insert($specificationsArr);
         });
     }
 
@@ -64,9 +63,7 @@ class PatchRequestsController extends Controller
      */
     public function deletePatchRequestSpecifications($patch_request_id, $user_id)
     {
-        DB::table('patch_requests_specifications')
-            ->where('patch_request_id', '=', $patch_request_id)
-            ->where('user_id', '=', $user_id)
-            ->delete();
+        PatchRequestsSpecification::where('patch_request_id', '=', $patch_request_id)
+            ->where('user_id', '=', $user_id)->delete();
     }
 }
