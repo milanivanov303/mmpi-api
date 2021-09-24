@@ -16,7 +16,6 @@ class PatchRequestsSpecification extends Model
     protected $fillable = [
         'patch_request_id',
         'user_id',
-        'username',
         'specification',
         'made_on',
         'made_by'

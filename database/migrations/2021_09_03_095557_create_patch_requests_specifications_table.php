@@ -18,7 +18,6 @@ class CreatePatchRequestsSpecificationsTable extends Migration
             $table->collation = 'utf8_general_ci';
             $table->integer('patch_request_id')->default(null);
             $table->integer('user_id')->default(null);
-            $table->string('username',50)->default(null);
             $table->string('specification',80)->default(null);
             $table->integer('made_by')->default(null);
             $table->timestamp('made_on')->useCurrent();
