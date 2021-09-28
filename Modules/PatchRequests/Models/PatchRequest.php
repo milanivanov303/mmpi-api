@@ -9,6 +9,7 @@ use Modules\DeliveryChains\Models\DeliveryChain;
 use Modules\Patches\Models\Patch;
 use App\Models\User;
 use Modules\PatchRequests\Models\PatchRequestsSpecification;
+use Modules\PatchRequests\Models\CurrentPrStatus;
 
 class PatchRequest extends Model
 {
@@ -86,5 +87,13 @@ class PatchRequest extends Model
     protected function specifications()
     {
         return $this->hasMany(PatchRequestsSpecification::class);
+    }
+
+    /**
+     * Get current status
+     */
+    protected function currentStatus()
+    {
+        return $this->hasOne(CurrentPrStatus::class, 'pr_id', 'id');
     }
 }
