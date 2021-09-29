@@ -13,6 +13,7 @@ use Modules\Oci\Console\Commands\Tnsnameora;
 use Modules\Hashes\Console\Commands\HashesSynchronizeCommand;
 use Modules\ProjectEvents\Console\Commands\ProjectEventsArchive;
 use App\Console\Commands\MissingDeliverychainSourcesCommand;
+use App\Console\Commands\ClearAccessTraceCommand;
 
 class Kernel extends ConsoleKernel
 {
@@ -30,7 +31,8 @@ class Kernel extends ConsoleKernel
         HashesSynchronizeCommand::class,
         ProjectEventsArchive::class,
         MissingDeliverychainSourcesCommand::class,
-        AuditCommand::class
+        AuditCommand::class,
+        ClearAccessTraceCommand::class
     ];
 
     /**
@@ -71,5 +73,7 @@ class Kernel extends ConsoleKernel
             ->dailyAt('03:00')
             ->environments(['prod'])
             ->appendOutputTo(storage_path("logs/missing-deliverychain-command.log"));*/
+
+        $schedule->command('clear:access-trace')->lastDayOfMonth('05:00');
     }
 }

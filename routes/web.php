@@ -28,6 +28,9 @@ $router->group(['prefix' => 'v1'], function () use ($router) {
         // Gitlab
         require 'v1/gitlab.php';
 
+        // Isabs
+        require 'v1/isabs.php';
+
         // Users
         require 'v1/users.php';
 

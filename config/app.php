@@ -69,9 +69,10 @@ return array_merge(
         'elastic' => [
             'hosts' => [
                 [
-                    'host'   => env('ELASTIC_HOST'),
-                    'port'   => env('ELASTIC_PORT', '9200'),
-                    'scheme' => env('ELASTIC_SCHEME', 'http'),
+                    'host'   => parse_url(env('ELASTIC_HOST'), PHP_URL_HOST),
+                    'port'   => parse_url(env('ELASTIC_HOST'), PHP_URL_PORT) ?? 443,
+                    'scheme' => parse_url(env('ELASTIC_HOST'), PHP_URL_SCHEME) ?? 'https',
+                    'path'   => parse_url(env('ELASTIC_HOST'), PHP_URL_PATH),
                     'user'   => env('ELASTIC_USERNAME'),
                     'pass'   => env('ELASTIC_PASSWORD')
                 ]
@@ -183,6 +184,12 @@ return array_merge(
         'gitlab' => [
             'url'   => env('GITLAB_HOST'),
             'token' => env('GITLAB_TOKEN')
+        ],
+
+        'isabs' => [
+            'url' => env('ISABS_URL'),
+            'username' => env('ISABS_USER'),
+            'password' => env('ISABS_PASSWORD')
         ]
     ]
 );
