@@ -199,8 +199,8 @@ class HeadMergeCommand extends Command
             ->setIssueType('Short Task')
             ->setPriorityName('Normal')
             ->setDescription("
-                The test of task {$ttsId} is completed OK. Please commit your changes in the HEAD revision.
-                
+                The test of task {$ttsId} is completed OK. Please merge your changes in the HEAD. 
+                If not already done in another task, please do the merge on ALPHA/ALPHADC instances.
                 *Sources:* 
                 {$sources}
             ")
