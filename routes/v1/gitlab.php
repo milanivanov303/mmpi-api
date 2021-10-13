@@ -48,4 +48,8 @@ $router->group([
         'description' => 'Get changed files of a commit',
         'uses'        => 'GitlabController@commitFiles'
     ]);
+    $router->get('/get-commit/{sha}', [
+        'description' => 'Search for specific commit',
+        'uses'        => 'GitlabController@getCommit'
+    ]);
 });
