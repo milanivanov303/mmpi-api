@@ -103,4 +103,9 @@ class GitlabController extends Controller
         $commitFiles = app('GitlabApi')->repositories()->diff($request->repo, $sha);
         return $commitFiles;
     }
+
+    public function getCommit(Request $request, $sha)
+    {
+        return app('GitlabApi')->repositories()->commit($request->repo, $sha);
+    }
 }
