@@ -258,6 +258,26 @@ class Project extends Model
     }
 
     /**
+     * Get numeric client code
+     *
+     */
+    protected function getClientCode()
+    {
+        return $this->belongsToMany(
+            EnumValue::class,
+            'project_specifics',
+            'project_id',
+            'prj_specific_feature_id'
+        )
+        ->selectRaw('project_specifics.value as client_code')
+        ->whereIn('prj_specific_feature_id',
+                EnumValue::where('type', 'project_specific_feature')
+                ->where('subtype', 'numeric_clnt_code')
+                ->pluck('id')
+        );
+    }
+
+    /**
      * Get e_reggest_mntd_by_clnt_id
      */
     protected function eReggestMntdByClntId()
