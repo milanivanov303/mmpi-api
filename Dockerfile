@@ -7,6 +7,27 @@ RUN apk update \
     && apk add mercurial cppcheck freetype-dev libjpeg-turbo-dev libpng-dev \
     && docker-php-ext-configure gd --with-webp --with-jpeg --with-xpm --with-freetype \
     && docker-php-ext-install -j$(nproc) gd
+
+# Install oci8
+
+COPY --chown=www-data:www-data docker/oracle/ /tmp/
+
+RUN unzip /tmp/instantclient-basic-linux.x64-12.2.0.1.0.zip -d /usr/local/ \
+    && unzip /tmp/instantclient-sdk-linux.x64-12.2.0.1.0.zip -d /usr/local/ \
+    && ln -s /usr/local/instantclient_12_2 /usr/local/instantclient \
+    && ln -s /usr/local/instantclient/libclntsh.so.12.1 /usr/local/instantclient/libclntsh.so \
+    && ln -s /usr/local/instantclient/libocci.so.12.1 /usr/local/instantclient/libocci.so
+
+ENV LD_LIBRARY_PATH /usr/local/instantclient/
+ENV ORACLE_HOME /usr/local/instantclient/
+
+RUN echo 'instantclient,/usr/local/instantclient' | pecl install oci8-2.2.0
+RUN docker-php-ext-configure oci8 --with-oci8=instantclient,/usr/local/instantclient \
+    && docker-php-ext-install oci8 \
+    && docker-php-ext-enable oci8
+
+ENV TNS_ADMIN /app/storage/app/tns
+
 # --- END BASE ------------------------------------------------------------------ #
 
 
