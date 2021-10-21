@@ -165,11 +165,22 @@ abstract class RestTestCase extends TestCase
     {
         $data        = $this->getData();
         $invalidData = $this->getInvalidData($data);
+        $changedProperties = $this->getChangedProperties($data, $invalidData);
 
-        $this
-            ->json('POST', $this->uri, $invalidData)
-            ->seeJsonStructure($this->getChangedProperties($data, $invalidData))
-            ->assertResponseStatus(422);
+        foreach ($changedProperties as $changedProperty) {
+            $createData = $data;
+
+            if (array_key_exists($changedProperty, $invalidData)) {
+                $createData[$changedProperty] = $invalidData[$changedProperty];
+            } else {
+                unset($createData[$changedProperty]);
+            }
+
+            $this
+                ->json('POST', $this->uri, $createData)
+                ->seeJsonStructure([$changedProperty])
+                ->assertResponseStatus(422);
+        }
 
         $this->missingFromDatabase($this->table, [
             $this->primaryKey => $this->getPrimaryKeyValue($data)

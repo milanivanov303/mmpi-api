@@ -53,7 +53,7 @@ class ProjectEventsTest extends RestTestCase
             'project_event_subtype'     => $projectEventSubtype->toArray(),
             'event_start_date'          => $this->faker()->date('Y-m-d'),
             'event_end_date'            => $this->faker()->date('Y-m-d'),
-            'description'               => $this->faker()->text(59),
+            'description'               => $this->faker()->realText(59),
             'project_event_status'      => $projectEventStatus->toArray(),
             // 'project_event_estimations' => $estimations
         ];

@@ -20,8 +20,6 @@ class CommandsTest extends RestTestCase
      */
     protected function getData()
     {
-        $faker = Faker\Factory::create();
-
         $issue = Issue::inRandomOrder()->first();
         $subtype = EnumValue::where('key', 'maven')->inRandomOrder()->first();
         $deliveryChain = DeliveryChain::inRandomOrder()->first();
@@ -33,14 +31,14 @@ class CommandsTest extends RestTestCase
             'type_id'            => $this->typeId,
             'issue'              => $issue->toArray(),
             'delivery_chain'     => $deliveryChain->toArray(),
-            'name'               => $faker->text(2500),
-            'comments'           => $faker->text(250),
-            'check_exit_status'  => $faker->numberBetween(0, 1),
+            'name'               => $this->faker->realText(2500),
+            'comments'           => $this->faker->realText(250),
+            'check_exit_status'  => $this->faker->numberBetween(0, 1),
             'subtype'            => $subtype->toArray(),
             'instance'           => $instance->toArray(),
             'instance_status'    => $instanceStatus->toArray(),
-            'est_run_time'       => $faker->time('H:i:s'),
-            'visible'            => $faker->numberBetween(0, 1),
+            'est_run_time'       => $this->faker->time('H:i:s'),
+            'visible'            => $this->faker->numberBetween(0, 1),
             'creator_department' => $creatorDepartment->toArray()
         ];
     }
@@ -53,10 +51,8 @@ class CommandsTest extends RestTestCase
      */
     protected function getInvalidData(array $data)
     {
-        $faker = Faker\Factory::create();
-
         // Set invalid parameters
-        $data['est_run_time'] = $faker->text(59);
+        $data['est_run_time'] = $this->faker->realText(59);
 
         return $data;
     }

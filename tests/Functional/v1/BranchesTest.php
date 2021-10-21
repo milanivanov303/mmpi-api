@@ -15,15 +15,13 @@ class BranchesTest extends RestTestCase
      */
     protected function getData()
     {
-        $faker = Faker\Factory::create();
-
         $repoType = EnumValue::where('type', 'repository_type')->inRandomOrder()->first();
-        
+
         return [
-            'name'               => $faker->text(200),
+            'name'               => $this->faker->realText(200),
             'repo_type'          => $repoType->toArray(),
-            'description'        => $faker->text(60),
-            'repo_master_branch' => $faker->numberBetween(0, 1)
+            'description'        => $this->faker->realText(60),
+            'repo_master_branch' => $this->faker->numberBetween(0, 1)
         ];
     }
 
@@ -35,10 +33,8 @@ class BranchesTest extends RestTestCase
      */
     protected function getInvalidData(array $data)
     {
-        $faker = Faker\Factory::create();
-
         // Set invalid parameters
-        $data['repo_type'] = $faker->text(59);
+        $data['repo_type'] = $this->faker->realText(59);
 
         // remove required parameters
         unset($data['name']);
@@ -54,13 +50,11 @@ class BranchesTest extends RestTestCase
      */
     protected function getUpdateData(array $data)
     {
-        $faker = Faker\Factory::create();
-        
         //Remove date as it is overwritten on each request
         unset($data['created_at']);
 
         // Change parameters
-        $data['name'] = $faker->text(60);
+        $data['name'] = $this->faker->realText(60);
 
         return $data;
     }
