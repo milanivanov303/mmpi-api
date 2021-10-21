@@ -9,19 +9,19 @@ RUN apk update \
     && docker-php-ext-install -j$(nproc) gd
 
 # Install oci8
-
-COPY --chown=www-data:www-data docker/oracle/ /tmp/
-
-RUN unzip /tmp/instantclient-basic-linux.x64-12.2.0.1.0.zip -d /usr/local/ \
-    && unzip /tmp/instantclient-sdk-linux.x64-12.2.0.1.0.zip -d /usr/local/ \
-    && ln -s /usr/local/instantclient_12_2 /usr/local/instantclient \
-    && ln -s /usr/local/instantclient/libclntsh.so.12.1 /usr/local/instantclient/libclntsh.so \
-    && ln -s /usr/local/instantclient/libocci.so.12.1 /usr/local/instantclient/libocci.so
+RUN apk --no-cache add libaio libc6-compat \
+    && curl -o /tmp/instantclient-basic-linux.x64-21.3.0.0.0.zip https://download.oracle.com/otn_software/linux/instantclient/213000/instantclient-basic-linux.x64-21.3.0.0.0.zip -SL \
+    && curl -o /tmp/instantclient-sdk-linux.x64-21.3.0.0.0.zip https://download.oracle.com/otn_software/linux/instantclient/213000/instantclient-sdk-linux.x64-21.3.0.0.0.zip -SL \
+    && unzip /tmp/instantclient-basic-linux.x64-21.3.0.0.0.zip -d /usr/local/ \
+    && unzip /tmp/instantclient-sdk-linux.x64-21.3.0.0.0.zip -d /usr/local/ \
+    && ln -s /usr/local/instantclient_21_3 /usr/local/instantclient \
+    && ln -s /lib/libc.so.6 /usr/lib/libresolv.so.2 \
+    && ln -s /lib64/ld-linux-x86-64.so.2 /usr/lib/ld-linux-x86-64.so.2
 
 ENV LD_LIBRARY_PATH /usr/local/instantclient/
 ENV ORACLE_HOME /usr/local/instantclient/
 
-RUN echo 'instantclient,/usr/local/instantclient' | pecl install oci8-2.2.0
+#RUN echo 'instantclient,/usr/local/instantclient' | pecl install oci8-2.2.0
 RUN docker-php-ext-configure oci8 --with-oci8=instantclient,/usr/local/instantclient \
     && docker-php-ext-install oci8 \
     && docker-php-ext-enable oci8
@@ -93,7 +93,24 @@ RUN apk update \
     && docker-php-ext-configure gd --with-webp --with-jpeg --with-xpm --with-freetype \
     && docker-php-ext-install -j$(nproc) gd
 
-ENV TNS_ADMIN /var/www/html/storage/app/tns
+# Install oci8
+RUN apk --no-cache add libaio libc6-compat \
+    && curl -o /tmp/instantclient-basic-linux.x64-21.3.0.0.0.zip https://download.oracle.com/otn_software/linux/instantclient/213000/instantclient-basic-linux.x64-21.3.0.0.0.zip -SL \
+    && curl -o /tmp/instantclient-sdk-linux.x64-21.3.0.0.0.zip https://download.oracle.com/otn_software/linux/instantclient/213000/instantclient-sdk-linux.x64-21.3.0.0.0.zip -SL \
+    && unzip /tmp/instantclient-basic-linux.x64-21.3.0.0.0.zip -d /usr/local/ \
+    && unzip /tmp/instantclient-sdk-linux.x64-21.3.0.0.0.zip -d /usr/local/ \
+    && ln -s /usr/local/instantclient_21_3 /usr/local/instantclient \
+    && ln -s /lib/libc.so.6 /usr/lib/libresolv.so.2 \
+    && ln -s /lib64/ld-linux-x86-64.so.2 /usr/lib/ld-linux-x86-64.so.2
+
+ENV LD_LIBRARY_PATH /usr/local/instantclient/
+ENV ORACLE_HOME /usr/local/instantclient/
+
+RUN docker-php-ext-configure oci8 --with-oci8=instantclient,/usr/local/instantclient \
+    && docker-php-ext-install oci8 \
+    && docker-php-ext-enable oci8
+
+ENV TNS_ADMIN /app/storage/app/tns
 
 COPY docker/php/php.ini "$PHP_INI_DIR/conf.d/"
 
