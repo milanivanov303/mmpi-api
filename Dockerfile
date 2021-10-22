@@ -1,4 +1,4 @@
-ARG IMAGE=gitlab.codixfr.private:5005/enterpriseapps/images/web:1.5
+ARG IMAGE=gitlab.codixfr.private:5005/enterpriseapps/images/web:2.1.8-php8
 
 # --- START BASE (needed for local development) --------------------------------- #
 FROM $IMAGE-dev as base
@@ -14,7 +14,7 @@ RUN apk update \
 FROM base as dependencies
 
 # Copy only composer files so we can use docker cache
-COPY --chown=www-data:www-data composer.json composer.lock auth.json ./
+COPY --chown=www-data:www-data composer.json composer.lock ./
 
 # Install non dev dependencies
 RUN composer install --no-progress --no-dev --no-autoloader

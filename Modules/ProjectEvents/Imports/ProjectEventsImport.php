@@ -41,13 +41,13 @@ class ProjectEventsImport implements
     }
 
     /**
-     * @param Collection $rows
+     * @param Collection $collection
      *
      * @return void
      */
-    public function collection(Collection $rows)
+    public function collection(Collection $collection)
     {
-        foreach ($rows as $row) {
+        foreach ($collection as $row) {
             $eventType = EnumValue::where([
                 ['type', '=', 'project_event_type'],
                 ['value', '=', $row['type']],

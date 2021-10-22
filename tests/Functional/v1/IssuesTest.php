@@ -24,7 +24,7 @@ class IssuesTest extends RestTestCase
             'tts_id'            => "TEST-1",
             'jiraissue_id'      => $this->faker()->numberBetween(),
             'created_on'        => $this->faker()->date('Y-m-d H:i:s'),
-            'priority'          => $this->faker()->text(10),
+            'priority'          => $this->faker()->realText(10),
             'jira_admin_status' => $this->faker()->randomElement(["ok", "migr", "herrors", "moved", "deleted"]),
             'project'           => $project->toArray(),
             'dev_instance'      => $instance->toArray(),

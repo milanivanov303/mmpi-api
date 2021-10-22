@@ -16,17 +16,15 @@ class ProjectSpecificsTest extends RestTestCase
      */
     protected function getData()
     {
-        $faker = Faker\Factory::create();
-
         $project                = Project::inRandomOrder()->first();
         $projectSpecificFeature = EnumValue::where('type', 'project_specific_feature')->inRandomOrder()->first();
 
         return [
             'project'                  => $project->toArray(),
             'project_specific_feature' => $projectSpecificFeature->toArray(),
-            'value'                    => $faker->randomNumber(),
-            'date_characteristic'      => $faker->date('Y-m-d'),
-            'comment'                  => $faker->text(59)
+            'value'                    => $this->faker->randomNumber(),
+            'date_characteristic'      => $this->faker->date('Y-m-d'),
+            'comment'                  => $this->faker->realText(59)
         ];
     }
 
@@ -38,10 +36,8 @@ class ProjectSpecificsTest extends RestTestCase
      */
     protected function getInvalidData(array $data)
     {
-        $faker = Faker\Factory::create();
-
         // Set invalid parameters
-        $data['value'] = $faker->text(59);
+        $data['value'] = $this->faker->realText(59);
 
         // remove required parameters
         unset($data['project']);

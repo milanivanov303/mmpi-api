@@ -25,7 +25,7 @@ class InstanceDowntimesTest extends RestTestCase
             'start_datetime' => $this->faker()->date('Y-m-d H:i:s'),
             'end_datetime'   => $this->faker()->date('Y-m-d H:i:s'),
             'status'         => $this->faker()->numberBetween(0, 1),
-            'description'    => $this->faker()->text(60)
+            'description'    => $this->faker()->realText(60)
         ];
     }
 

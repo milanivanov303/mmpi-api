@@ -20,7 +20,7 @@ class CheckHashBranchFilter implements IFilter
     public function validate($data, array $args) : bool
     {
         $branchId = app(Branch::class)->getModelId((array) $data, 'name', [
-            'repo_type_id' => $this->getRepoTypeId($args),
+            'repo_type_id' => $this->getRepoTypeId($data, $args),
             'status' => 1
         ]);
 
@@ -35,9 +35,10 @@ class CheckHashBranchFilter implements IFilter
      * Get repo type id
      *
      * @param array $args
+     * @param mixed $data
      * @return int|null
      */
-    protected function getRepoTypeId(array $args) : ?int
+    protected function getRepoTypeId($data, array $args) : ?int
     {
         if (array_key_exists('repo_type', $args)) {
             return app(EnumValue::class)->getModelId((array) $args['repo_type'], 'key', [
@@ -45,9 +46,6 @@ class CheckHashBranchFilter implements IFilter
             ]);
         }
 
-        $primaryKey      = "hash_rev";
-        $primaryKeyValue = Utils::getPropertyValueFromUrl($primaryKey);
-
-        return app(HashCommit::class)->where($primaryKey, $primaryKeyValue)->value('repo_type_id');
+        return $data->repo_type_id;
     }
 }
