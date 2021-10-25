@@ -261,7 +261,7 @@ class Project extends Model
      * Get numeric client code
      *
      */
-    protected function getClientCode()
+    protected function numericClientCode()
     {
         return $this->belongsToMany(
             EnumValue::class,
