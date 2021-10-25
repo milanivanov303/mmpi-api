@@ -13,8 +13,8 @@ class Project extends Model
      */
     public function projectsByTopic(string $topic, array $projects) : array
     {
-        return array_filter($projects, function ($project) use ($topic) {
+        return array_values(array_filter($projects, function ($project) use ($topic) {
             return in_array($topic, $project['tag_list']);
-        });
+        }));
     }
 }
