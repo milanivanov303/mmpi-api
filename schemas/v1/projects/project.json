@@ -346,6 +346,13 @@
                 ]
             }
         },
+        "client_numeric_code": {
+            "type": "array",
+            "items": {
+                "$ref": "/v1/enum-values/enum-value.json"
+            },
+            "description": "Numeric client code"
+        },
         "e_reggest_mntd_by_clnt_id": {
             "type": ["integer", "null"]
         }
