@@ -67,9 +67,9 @@ class DistributionGroupTest extends RestTestCase
     {
 
         return [
-            'samaccountname'     => $this->faker()->text(10),
-            'displayname'        => $this->faker()->text(15),
-            'distinguished_name' => $this->faker()->text(15),
+            'samaccountname'     => $this->faker()->realText(10),
+            'displayname'        => $this->faker()->realText(15),
+            'distinguished_name' => $this->faker()->realText(15),
             'created_date'       => \Carbon\Carbon::now(),
             'email'              => $this->faker()->email,
         ];

@@ -20,8 +20,6 @@ class SeTransferTest extends RestTestCase
      */
     protected function getData()
     {
-        $faker = Faker\Factory::create();
-
         $issue = Issue::inRandomOrder()->first();
         $subtype = EnumValue::where('subtype', 'SE')->inRandomOrder()->first();
         $deliveryChain = DeliveryChain::inRandomOrder()->first();
@@ -36,8 +34,8 @@ class SeTransferTest extends RestTestCase
             'delivery_chain'     => $deliveryChain->toArray(),
             'instance'           => $instance->toArray(),
             'instance_status'    => $instanceStatus->toArray(),
-            'active'             => $faker->numberBetween(0, 1),
-            'visible'            => $faker->numberBetween(0, 1),
+            'active'             => $this->faker->numberBetween(0, 1),
+            'visible'            => $this->faker->numberBetween(0, 1),
             'creator_department' => $creatorDepartment->toArray()
         ];
     }
@@ -50,10 +48,8 @@ class SeTransferTest extends RestTestCase
      */
     protected function getInvalidData(array $data)
     {
-        $faker = Faker\Factory::create();
-
         // Set invalid parameters
-        $data['active'] = $faker->text(59);
+        $data['active'] = $this->faker->realText(59);
 
         return $data;
     }

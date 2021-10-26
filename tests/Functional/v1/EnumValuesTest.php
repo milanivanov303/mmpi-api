@@ -16,10 +16,10 @@ class EnumValuesTest extends RestTestCase
     protected function getData()
     {
         return [
-            'type'        => $this->faker()->text(5),
-            'key'         => $this->faker()->text(5),
-            'value'       => $this->faker()->text(5),
-            'description' => $this->faker()->text(15),           
+            'type'        => $this->faker()->realText(10),
+            'key'         => $this->faker()->realText(10),
+            'value'       => $this->faker()->realText(10),
+            'description' => $this->faker()->realText(15),
             'sortindex'   => $this->faker()->numberBetween(900, 950),
             'active'      => 1,       
         ];
@@ -51,7 +51,7 @@ class EnumValuesTest extends RestTestCase
     protected function getUpdateData(array $data)
     {
         // Change parameters
-        $data['value'] = $this->faker()->text(5);
+        $data['value'] = $this->faker()->realText(10);
 
         //Remove date as it is overwritten on each request
         unset($data['changed_on']);

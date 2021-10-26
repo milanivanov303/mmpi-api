@@ -47,15 +47,15 @@ class ProjectsExport implements
             ->get();
     }
 
-    public function map($projectInfo) : array
+    public function map($row) : array
     {
-        $country  = $projectInfo->country->value ?? '';
-        $intranetVersion  = $projectInfo->intranetVersion->value ?? '';
+        $country  = $row->country->value ?? '';
+        $intranetVersion  = $row->intranetVersion->value ?? '';
         // Bad way but relation does not work, probably same name of relation/column
-        $activity = $projectInfo->activity()->value('value') ?? '';
+        $activity = $row->activity()->value('value') ?? '';
        
         $roles = [];
-        foreach ($projectInfo->roles as $role) {
+        foreach ($row->roles as $role) {
             $roles[$role['role_id']] = $role['user']['name'];
         }
         
@@ -65,7 +65,7 @@ class ProjectsExport implements
         $dpm = $roles['dpm'] ?? '';
 
         return [
-            $projectInfo->name,
+            $row->name,
             $activity,
             $country,
             $intranetVersion,

@@ -15,7 +15,7 @@ return [
 
     'paths' => [
         resource_path('views'),
-        base_path('vendor/codix/api-core/resources/views'),
+        base_path('vendor/enterpriseapps/api-core/resources/views'),
     ],
 
     /*

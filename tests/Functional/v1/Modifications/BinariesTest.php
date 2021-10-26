@@ -19,8 +19,6 @@ class BinariesTest extends RestTestCase
      */
     protected function getData()
     {
-        $faker = Faker\Factory::create();
-
         $issue = Issue::inRandomOrder()->first();
         $subtype = EnumValue::where('key', 'maven')->inRandomOrder()->first();
         $deploymentPrefix = EnumValue::where('key', 'source_path_imx_tmp')->inRandomOrder()->first();
@@ -32,15 +30,15 @@ class BinariesTest extends RestTestCase
             'issue'              => $issue->toArray(),
             'type_id'            => $this->typeId,
             'subtype'            => $subtype->toArray(),
-            'version'            => $faker->text(32),
-            'revision_converted' => $faker->text(100),
-            'name'               => $faker->text(250),
-            'maven_repository'   => $faker->text(256),
+            'version'            => $this->faker->realText(32),
+            'revision_converted' => $this->faker->realText(100),
+            'name'               => $this->faker->realText(250),
+            'maven_repository'   => $this->faker->realText(256),
             'deployment_prefix'  => $deploymentPrefix->toArray(),
             'delivery_chain'     => $deliveryChain->toArray(),
             'instance_status'    => $instanceStatus->toArray(),
-            'active'             => $faker->numberBetween(0, 1),
-            'visible'            => $faker->numberBetween(0, 1),
+            'active'             => $this->faker->numberBetween(0, 1),
+            'visible'            => $this->faker->numberBetween(0, 1),
             'creator_department' => $creatorDepartment->toArray()
         ];
     }
@@ -53,10 +51,8 @@ class BinariesTest extends RestTestCase
      */
     protected function getInvalidData(array $data)
     {
-        $faker = Faker\Factory::create();
-
         // Set invalid parameters
-        $data['active'] = $faker->text(59);
+        $data['active'] = $this->faker->realText(59);
 
         return $data;
     }

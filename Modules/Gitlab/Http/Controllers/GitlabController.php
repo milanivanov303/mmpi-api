@@ -4,6 +4,7 @@ namespace Modules\Gitlab\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Modules\Gitlab\Models\Project;
 
 class GitlabController extends Controller
 {
@@ -94,8 +95,13 @@ class GitlabController extends Controller
 
         $params['per_page'] = 100;
 
-        $groups = app('GitlabApi')->groups()->projects($request->groupId, $params);
-        return $groups;
+        $projects = app('GitlabApi')->groups()->projects($request->groupId, $params);
+
+        if ($request->has('topic')) {
+            return app(Project::class)->projectsByTopic($request->get('topic'), $projects);
+        }
+
+        return $projects;
     }
     
     public function commitFiles(Request $request, $sha) : array
