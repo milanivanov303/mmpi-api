@@ -346,12 +346,21 @@
                 ]
             }
         },
-        "client_numeric_code": {
+        "numeric_client_code": {
             "type": "array",
             "items": {
-                "$ref": "/v1/enum-values/enum-value.json"
-            },
-            "description": "Numeric client code"
+                "allOf": [
+                    {"$ref": "/v1/enum-values/enum-value.json"},
+                    {
+                        "properties": {
+                            "client_code": {
+                                "type": ["integer"],
+                                "description": "For each clnt_code from table projects have the corresponding numeric client code. Could be a number from 1 - 999."
+                            }
+                        }
+                    }
+                ]
+            }
         },
         "e_reggest_mntd_by_clnt_id": {
             "type": ["integer", "null"]
