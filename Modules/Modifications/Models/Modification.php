@@ -11,6 +11,7 @@ use App\Models\User;
 use App\Models\EnumValue;
 use App\Models\DbSchema;
 use App\Models\Department;
+use Modules\PatchRequests\Models\PatchRequest;
 
 class Modification extends Model
 {
@@ -277,5 +278,14 @@ class Modification extends Model
     protected function creatorDepartment()
     {
         return $this->belongsTo(Department::class);
+    }
+
+    /**
+     * Get patch request if modification is included in one
+     */
+    protected function patchRequest()
+    {
+        return $this->belongsToMany(PatchRequest::class, 'modif_to_pr', 'modif_id', 'pr_id')
+            ->wherePivot('removed', null);
     }
 }
