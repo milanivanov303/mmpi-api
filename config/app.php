@@ -181,9 +181,9 @@ return array_merge(
             'code'     => env('HR_CODE', 'lE9t3C8ttSP')
         ],
 
-        'gitlab' => [
-            'url'   => env('GITLAB_HOST'),
-            'token' => env('GITLAB_TOKEN')
+        'repo-tokens' => [
+            'gitlab.codixfr.private' => env('GITLAB_TOKEN'),
+            'idw.codixfr.private'    => env('IDW_TOKEN')
         ],
 
         'isabs' => [
