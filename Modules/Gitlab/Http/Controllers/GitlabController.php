@@ -5,37 +5,63 @@ namespace Modules\Gitlab\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Modules\Gitlab\Models\Project;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class GitlabController extends Controller
 {
-    public function projects($visibility)
+    public function projects(Request $request, $visibility)
     {
-        $projects = app('GitlabApi')->projects()->all(['visibility' => $visibility, 'per_page' => 100]);
-        return $projects;
+        if (!$request->has('repoUrl')) {
+            throw new HttpException(400, 'Missing gitlab server url');
+        }
+
+        $config['repoUrl'] = $request->get('repoUrl');
+
+        return app('GitlabApi', $config)->projects()->all(['visibility' => $visibility, 'per_page' => 100]);
     }
 
     public function showProject(Request $request)
     {
-        $project = app('GitlabApi')->projects()->show($request->repo);
-        return $project;
+        if (!$request->has('repoUrl')) {
+            throw new HttpException(400, 'Missing gitlab server url');
+        }
+
+        $config['repoUrl'] = $request->get('repoUrl');
+
+        return app('GitlabApi', $config)->projects()->show($request->repo);
     }
     
     public function branches(Request $request)
     {
-        $branches = app('GitlabApi')->repositories()->branches($request->repo, ['per_page' => 100]);
-        return $branches;
+        if (!$request->has('repoUrl')) {
+            throw new HttpException(400, 'Missing gitlab server url');
+        }
+
+        $config['repoUrl'] = $request->get('repoUrl');
+
+        return app('GitlabApi', $config)->repositories()->branches($request->repo, ['per_page' => 100]);
     }
     
     public function branch(Request $request, $name)
     {
-        $branch = app('GitlabApi')->repositories()->branch($request->repo, $name);
-        return $branch;
+        if (!$request->has('repoUrl')) {
+            throw new HttpException(400, 'Missing gitlab server url');
+        }
+
+        $config['repoUrl'] = $request->get('repoUrl');
+
+        return app('GitlabApi', $config)->repositories()->branch($request->repo, $name);
     }
 
     public function getRepoTags(Request $request)
     {
-        $repoTags = app('GitlabApi')->repositories()->tags($request->repo);
-        return $repoTags;
+        if (!$request->has('repoUrl')) {
+            throw new HttpException(400, 'Missing gitlab server url');
+        }
+
+        $config['repoUrl'] = $request->get('repoUrl');
+
+        return app('GitlabApi', $config)->repositories()->tags($request->repo);
     }
     
     /**
@@ -46,7 +72,13 @@ class GitlabController extends Controller
      */
     public function commits(Request $request) : array
     {
+        if (!$request->has('repoUrl')) {
+            throw new HttpException(400, 'Missing gitlab server url');
+        }
+
+        $config['repoUrl'] = $request->get('repoUrl');
         $params = [];
+
         if ($request->branch) {
             $params['ref_name'] = $request->branch;
         }
@@ -59,43 +91,63 @@ class GitlabController extends Controller
             $params['until'] = new \DateTime($request->until);
         }
 
-        $commits = app('GitlabApi')->repositories()->commits($request->repo, $params);
-        return $commits;
+        return app('GitlabApi', $config)->repositories()->commits($request->repo, $params);
     }
     
     public function commitRefs(Request $request, $sha)
     {
-        $refs = app('GitlabApi')->repositories()->commitRefs($request->repo, $sha);
-        return $refs;
+        if (!$request->has('repoUrl')) {
+            throw new HttpException(400, 'Missing gitlab server url');
+        }
+
+        $config['repoUrl'] = $request->get('repoUrl');
+
+        return app('GitlabApi', $config)->repositories()->commitRefs($request->repo, $sha);
     }
 
-    public function namespaces()
+    public function namespaces(Request $request)
     {
-        $namespaces = app('GitlabApi')->namespaces()->all(['per_page' => 100]);
-        return $namespaces;
+        if (!$request->has('repoUrl')) {
+            throw new HttpException(400, 'Missing gitlab server url');
+        }
+
+        $config['repoUrl'] = $request->get('repoUrl');
+
+        return app('GitlabApi', $config)->namespaces()->all(['per_page' => 100]);
     }
 
     public function groups(Request $request)
     {
-        $headers = [];
-        if ($request->has('as_user')) {
-            $headers['sudo'] = $request->get('as_user');
+        $config = [];
+        if (!$request->has('repoUrl')) {
+            throw new HttpException(400, 'Missing gitlab server url');
         }
 
-        $groups = app('GitlabApi', $headers)->groups()->all(['per_page' => 100]);
-        return $groups;
+        $config['repoUrl'] = $request->get('repoUrl');
+
+        if ($request->has('as_user')) {
+            $config['headers']['sudo'] = $request->get('as_user');
+        }
+
+        return app('GitlabApi', $config)->groups()->all(['per_page' => 100]);
     }
 
     public function groupProjects(Request $request)
     {
+        if (!$request->has('repoUrl')) {
+            throw new HttpException(400, 'Missing gitlab server url');
+        }
+
+        $config['repoUrl'] = $request->get('repoUrl');
         $params = [];
+
         if ($request->include_subgroups) {
             $params['include_subgroups'] = $request->include_subgroups === 'true' ? true : false;
         }
 
         $params['per_page'] = 100;
 
-        $projects = app('GitlabApi')->groups()->projects($request->groupId, $params);
+        $projects = app('GitlabApi', $config)->groups()->projects($request->groupId, $params);
 
         if ($request->has('topic')) {
             return app(Project::class)->projectsByTopic($request->get('topic'), $projects);
@@ -106,12 +158,23 @@ class GitlabController extends Controller
     
     public function commitFiles(Request $request, $sha) : array
     {
-        $commitFiles = app('GitlabApi')->repositories()->diff($request->repo, $sha);
-        return $commitFiles;
+        if (!$request->has('repoUrl')) {
+            throw new HttpException(400, 'Missing gitlab server url');
+        }
+
+        $config['repoUrl'] = $request->get('repoUrl');
+
+        return app('GitlabApi', $config)->repositories()->diff($request->repo, $sha);
     }
 
     public function getCommit(Request $request, $sha)
     {
-        return app('GitlabApi')->repositories()->commit($request->repo, $sha);
+        if (!$request->has('repoUrl')) {
+            throw new HttpException(400, 'Missing gitlab server url');
+        }
+
+        $config['repoUrl'] = $request->get('repoUrl');
+
+        return app('GitlabApi', $config)->repositories()->commit($request->repo, $sha);
     }
 }
