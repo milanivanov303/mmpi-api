@@ -71,9 +71,14 @@ $app->alias('mailer', Illuminate\Contracts\Mail\MailQueue::class);
 |
 */
 
+if (config('app.debug') === true) {
+    $app->middleware([
+        Core\Http\Middleware\HttpLogger::class,
+        Core\Http\Middleware\DbLogger::class,
+    ]);
+}
+
 $app->middleware([
-    Core\Http\Middleware\HttpLogger::class,
-    Core\Http\Middleware\DbLogger::class,
     Core\Http\Middleware\Cors::class
 ]);
 
