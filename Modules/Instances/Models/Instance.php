@@ -2,8 +2,11 @@
 
 namespace Modules\Instances\Models;
 
+use App\Models\User;
 use Core\Models\Model;
 use App\Models\EnumValue;
+use Illuminate\Contracts\Encryption\DecryptException;
+use Illuminate\Support\Facades\Crypt;
 use Modules\DeliveryChains\Models\DeliveryChainType;
 use Modules\DeliveryChains\Models\DeliveryChain;
 
@@ -35,7 +38,8 @@ class Instance extends Model
         'owner',
         'status',
         'instance_type_id',
-        'environment_type_id'
+        'environment_type_id',
+        'password'
     ];
 
     /**
@@ -94,5 +98,33 @@ class Instance extends Model
         return $query->whereHas('status', function ($q) {
                     $q->where('key', 'active');
         });
+    }
+
+    /**
+     * @param string|null $value
+     * @return string|null
+     */
+    public function getPasswordAttribute(?string $value) : ?string
+    {
+        try {
+            return Crypt::decrypt($value);
+        } catch (DecryptException $e) {
+            return null;
+        }
+    }
+
+    /**
+     * @param string|null $value
+     * @return $this
+     */
+    public function setPassword(?string $value) : self
+    {
+        if (is_null($value)) {
+            $this->attributes['password'] = null;
+            return $this;
+        }
+
+        $this->attributes['password'] = Crypt::encrypt($value);
+        return $this;
     }
 }
