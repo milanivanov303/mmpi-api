@@ -38,7 +38,8 @@ class InstancesTest extends RestTestCase
             'has_patch_install_in_init' => 0,
             'instance_type'             => $instanceType->toArray(),
             'environment_type'          => $environmentType->toArray(),
-            'delivery_chains'           => $deliveryChains->toArray()
+            'delivery_chains'           => $deliveryChains->toArray(),
+            'password'                  => 'Sofphia'
         ];
     }
 
