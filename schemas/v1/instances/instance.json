@@ -102,7 +102,7 @@
             }
         },
         "password": {
-            "type": "string"
+            "type": ["string", "null"]
         }
     }
 }
