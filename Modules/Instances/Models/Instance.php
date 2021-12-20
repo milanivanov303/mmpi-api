@@ -124,7 +124,7 @@ class Instance extends Model
             return $this;
         }
 
-        $this->attributes['password'] = Crypt::encrypt($value);
+        $this->attributes['password'] = Crypt::encryptString($value);
         return $this;
     }
 }
