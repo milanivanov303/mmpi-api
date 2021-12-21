@@ -107,7 +107,7 @@ class Instance extends Model
     public function getPasswordAttribute(?string $value) : ?string
     {
         try {
-            return Crypt::decrypt($value);
+            return Crypt::decryptString($value);
         } catch (DecryptException $e) {
             return null;
         }
@@ -117,7 +117,7 @@ class Instance extends Model
      * @param string|null $value
      * @return $this
      */
-    public function setPassword(?string $value) : self
+    public function setPasswordAttribute(?string $value) : self
     {
         if (is_null($value)) {
             $this->attributes['password'] = null;
