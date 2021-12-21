@@ -12,7 +12,8 @@
                 "status",
                 "timezone",
                 "host",
-                "environment_type"
+                "environment_type",
+                "password"
             ]
         }
     ]
