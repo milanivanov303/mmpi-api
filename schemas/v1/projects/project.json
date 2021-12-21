@@ -364,6 +364,9 @@
         },
         "e_reggest_mntd_by_clnt_id": {
             "type": ["integer", "null"]
+        },
+        "v_menu_mntd_by_clnt_id": {
+            "type": ["integer", "null"]
         }
     }
 }
