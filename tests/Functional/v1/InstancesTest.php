@@ -39,7 +39,7 @@ class InstancesTest extends RestTestCase
             'instance_type'             => $instanceType->toArray(),
             'environment_type'          => $environmentType->toArray(),
             'delivery_chains'           => $deliveryChains->toArray(),
-            'password'                  => 'Sofphia'
+            'password'                  => 'test'
         ];
     }
 
