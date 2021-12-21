@@ -993,16 +993,16 @@
         },
         {
             "name": "enterpriseapps/api-core",
-            "version": "3.2.1",
+            "version": "3.2.3",
             "source": {
                 "type": "git",
                 "url": "https://gitlab.codixfr.private/enterpriseapps/api-core.git",
-                "reference": "006cb937b848e7909d0e25fc5c34a998ea64b94f"
+                "reference": "e90ab339aa88a96e6fc3bbbe1b28553bd4b85517"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://gitlab.codixfr.private/api/v4/projects/366/packages/composer/archives/enterpriseapps/api-core.zip?sha=006cb937b848e7909d0e25fc5c34a998ea64b94f",
-                "reference": "006cb937b848e7909d0e25fc5c34a998ea64b94f",
+                "url": "https://gitlab.codixfr.private/api/v4/projects/366/packages/composer/archives/enterpriseapps/api-core.zip?sha=e90ab339aa88a96e6fc3bbbe1b28553bd4b85517",
+                "reference": "e90ab339aa88a96e6fc3bbbe1b28553bd4b85517",
                 "shasum": ""
             },
             "require": {
