@@ -26,15 +26,17 @@ class PatchRequestsController extends Controller
 
     /**
      * Insert/Update specifications
-     *
+     * @param Request $request
+     * @param int $patch_request_id
+     * @param int $user_id
      */
-    public function storePatchRequestSpecifications(Request $request)
+    public function storePatchRequestSpecifications(Request $request, int $patch_request_id, int $user_id)
     {
-        DB::transaction(function () use ($request) {
+        DB::transaction(function () use ($request, $patch_request_id, $user_id) {
             // Delete specifications for a given user and patch request
-            $this->deletePatchRequestSpecifications($request->patch_request_id, $request->user_id);
+            $this->deletePatchRequestSpecifications($patch_request_id, $user_id);
 
-            $specifications = $request->specifications;
+            $specifications = $request->get('specifications');
 
             $made_on = Carbon::now()->format('Y-m-d H:i:s');
 
@@ -42,8 +44,8 @@ class PatchRequestsController extends Controller
             // Get all modifications for given patch request
             foreach ($specifications as $specification) {
                 $specificationsArr[] = [
-                    'patch_request_id' => $request->patch_request_id,
-                    'user_id'          => $request->user_id,
+                    'patch_request_id' => $patch_request_id,
+                    'user_id'          => $user_id,
                     'made_by'          => Auth::user()->id,
                     'made_on'          => $made_on,
                     'specification'    => $specification
@@ -61,7 +63,7 @@ class PatchRequestsController extends Controller
      * @param int $patch_request_id
      * @param int $user_id
      */
-    public function deletePatchRequestSpecifications($patch_request_id, $user_id)
+    public function deletePatchRequestSpecifications(int $patch_request_id, int $user_id)
     {
         PatchRequestsSpecification::where('patch_request_id', '=', $patch_request_id)
             ->where('user_id', '=', $user_id)->delete();
