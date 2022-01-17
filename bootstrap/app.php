@@ -71,9 +71,14 @@ $app->alias('mailer', Illuminate\Contracts\Mail\MailQueue::class);
 |
 */
 
+if (config('app.debug') === true) {
+    $app->middleware([
+        Core\Http\Middleware\HttpLogger::class,
+        Core\Http\Middleware\DbLogger::class,
+    ]);
+}
+
 $app->middleware([
-    Core\Http\Middleware\HttpLogger::class,
-    Core\Http\Middleware\DbLogger::class,
     Core\Http\Middleware\Cors::class
 ]);
 
@@ -109,6 +114,7 @@ $app->register(Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider::cla
 $app->register(Maatwebsite\Excel\ExcelServiceProvider::class);
 $app->register(App\Providers\ExcelMacroServiceProvider::class);
 $app->register(Modules\Gitlab\Providers\GitlabServiceProvider::class);
+$app->register(SwooleTW\Http\LumenServiceProvider::class);
 
 /*
 |--------------------------------------------------------------------------

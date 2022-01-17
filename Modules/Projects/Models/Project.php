@@ -63,7 +63,8 @@ class Project extends Model
         'intranet_version',
         'extranet_version',
         'tts_dev_project_key',
-        'e_reggest_mntd_by_clnt_id'
+        'e_reggest_mntd_by_clnt_id',
+        'v_menu_mntd_by_clnt_id'
     ];
 
     /**
@@ -284,5 +285,13 @@ class Project extends Model
     protected function eReggestMntdByClntId()
     {
         return $this->belongsTo(EnumValue::class, 'e_reggest_mntd_by_clnt_id');
+    }
+
+    /**
+     * Get v_menu_mntd_by_clnt_id
+     */
+    protected function vMenuMntdByClntId()
+    {
+        return $this->belongsTo(EnumValue::class, 'v_menu_mntd_by_clnt_id');
     }
 }

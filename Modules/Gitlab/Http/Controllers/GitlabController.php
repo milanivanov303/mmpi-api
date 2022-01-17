@@ -28,7 +28,7 @@ class GitlabController extends Controller
 
         $config['repoUrl'] = $request->get('repoUrl');
 
-        return app('GitlabApi', $config)->projects()->show($request->repo);
+        return app('GitlabApi', $config)->projects()->show($request->get('repo'));
     }
     
     public function branches(Request $request)
@@ -39,7 +39,7 @@ class GitlabController extends Controller
 
         $config['repoUrl'] = $request->get('repoUrl');
 
-        return app('GitlabApi', $config)->repositories()->branches($request->repo, ['per_page' => 100]);
+        return app('GitlabApi', $config)->repositories()->branches($request->get('repo'), ['per_page' => 100]);
     }
     
     public function branch(Request $request, $name)
@@ -50,7 +50,7 @@ class GitlabController extends Controller
 
         $config['repoUrl'] = $request->get('repoUrl');
 
-        return app('GitlabApi', $config)->repositories()->branch($request->repo, $name);
+        return app('GitlabApi', $config)->repositories()->branch($request->get('repo'), $name);
     }
 
     public function getRepoTags(Request $request)
@@ -61,7 +61,7 @@ class GitlabController extends Controller
 
         $config['repoUrl'] = $request->get('repoUrl');
 
-        return app('GitlabApi', $config)->repositories()->tags($request->repo);
+        return app('GitlabApi', $config)->repositories()->tags($request->get('repo'));
     }
     
     /**
@@ -79,19 +79,19 @@ class GitlabController extends Controller
         $config['repoUrl'] = $request->get('repoUrl');
         $params = [];
 
-        if ($request->branch) {
-            $params['ref_name'] = $request->branch;
+        if ($request->has('branch')) {
+            $params['ref_name'] = $request->get('branch');
         }
         
-        if ($request->since) {
-            $params['since'] = new \DateTime($request->since);
+        if ($request->has('since')) {
+            $params['since'] = new \DateTime($request->get('since'));
         }
 
-        if ($request->until) {
-            $params['until'] = new \DateTime($request->until);
+        if ($request->has('until')) {
+            $params['until'] = new \DateTime($request->get('until'));
         }
 
-        return app('GitlabApi', $config)->repositories()->commits($request->repo, $params);
+        return app('GitlabApi', $config)->repositories()->commits($request->get('repo'), $params);
     }
     
     public function commitRefs(Request $request, $sha)
@@ -102,7 +102,7 @@ class GitlabController extends Controller
 
         $config['repoUrl'] = $request->get('repoUrl');
 
-        return app('GitlabApi', $config)->repositories()->commitRefs($request->repo, $sha);
+        return app('GitlabApi', $config)->repositories()->commitRefs($request->get('repo'), $sha);
     }
 
     public function namespaces(Request $request)
@@ -141,13 +141,13 @@ class GitlabController extends Controller
         $config['repoUrl'] = $request->get('repoUrl');
         $params = [];
 
-        if ($request->include_subgroups) {
-            $params['include_subgroups'] = $request->include_subgroups === 'true' ? true : false;
+        if ($request->has('include_subgroups')) {
+            $params['include_subgroups'] = $request->get('include_subgroups') === 'true' ? true : false;
         }
 
         $params['per_page'] = 100;
 
-        $projects = app('GitlabApi', $config)->groups()->projects($request->groupId, $params);
+        $projects = app('GitlabApi', $config)->groups()->projects($request->get('groupId'), $params);
 
         if ($request->has('topic')) {
             return app(Project::class)->projectsByTopic($request->get('topic'), $projects);
@@ -164,7 +164,7 @@ class GitlabController extends Controller
 
         $config['repoUrl'] = $request->get('repoUrl');
 
-        return app('GitlabApi', $config)->repositories()->diff($request->repo, $sha);
+        return app('GitlabApi', $config)->repositories()->diff($request->get('repo'), $sha);
     }
 
     public function getCommit(Request $request, $sha)
@@ -175,6 +175,6 @@ class GitlabController extends Controller
 
         $config['repoUrl'] = $request->get('repoUrl');
 
-        return app('GitlabApi', $config)->repositories()->commit($request->repo, $sha);
+        return app('GitlabApi', $config)->repositories()->commit($request->get('repo'), $sha);
     }
 }

@@ -53,20 +53,6 @@
                     "oneOf": [
                         {
                             "required": [
-                                "deployment_prefix"
-                            ]
-                        },
-                        {
-                            "required": [
-                                "deployment_prefix_id"
-                            ]
-                        }
-                    ]
-                },
-                {
-                    "oneOf": [
-                        {
-                            "required": [
                                 "delivery_chain"
                             ]
                         },

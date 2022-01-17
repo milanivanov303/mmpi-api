@@ -10,6 +10,7 @@ use Modules\Patches\Models\Patch;
 use App\Models\User;
 use Modules\PatchRequests\Models\PatchRequestsSpecification;
 use Modules\PatchRequests\Models\CurrentPrStatus;
+use Modules\PatchRequests\Models\PatchRequestsStatusHistory;
 
 class PatchRequest extends Model
 {
@@ -95,5 +96,14 @@ class PatchRequest extends Model
     protected function currentStatus()
     {
         return $this->hasOne(CurrentPrStatus::class, 'pr_id', 'id');
+    }
+
+    /**
+     * Get records from table patch_requests_status_history
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    protected function statusHistory()
+    {
+        return $this->hasMany(PatchRequestsStatusHistory::class);
     }
 }

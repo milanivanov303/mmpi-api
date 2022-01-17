@@ -27,7 +27,6 @@ RUN docker-php-ext-configure oci8 --with-oci8=instantclient,/usr/local/instantcl
     && docker-php-ext-enable oci8
 
 ENV TNS_ADMIN /app/storage/app/tns
-
 # --- END BASE ------------------------------------------------------------------ #
 
 
@@ -112,7 +111,11 @@ RUN docker-php-ext-configure oci8 --with-oci8=instantclient,/usr/local/instantcl
 
 ENV TNS_ADMIN /app/storage/app/tns
 
-COPY docker/php/php.ini "$PHP_INI_DIR/conf.d/"
+COPY docker/php/php.ini "$PHP_INI_DIR/conf.d/mmpi.ini"
+
+# Copy nginx and supervisor configs
+COPY docker/swoole/nginx.conf /etc/nginx/conf.d/default.conf
+COPY docker/swoole/services.ini /etc/supervisor.d/services.ini
 
 # Copy dependencies
 COPY --from=build /app .
