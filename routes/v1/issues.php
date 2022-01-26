@@ -33,4 +33,10 @@ $router->group([
         'description' => 'Delete issue',
         'uses'        => 'IssuesController@delete'
     ]);
+    $router->get('/import-tts-issue/{tts_id}', [
+        'as'          => 'issues.one',
+        'schema'      => '/v1/issues/issue.json',
+        'description' => 'Get single issue',
+        'uses'        => 'IssuesController@importTtsIssue'
+    ]);
 });
