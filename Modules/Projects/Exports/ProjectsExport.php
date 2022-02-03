@@ -56,13 +56,28 @@ class ProjectsExport implements
        
         $roles = [];
         foreach ($row->roles as $role) {
-            $roles[$role['role_id']] = $role['user']['name'];
+            $roles[$role['role_id']][] = $role['user']['name'];
         }
         
         $pc = $roles['pc'] ?? '';
+        if (is_array($pc)) {
+            $pc=implode(', ', $pc);
+        }
+
         $pm = $roles['pm'] ?? '';
+        if (is_array($pm)) {
+            $pm=implode(', ', $pm);
+        }
+
         $dpc = $roles['dpc'] ?? '';
+        if (is_array($dpc)) {
+            $dpc=implode(', ', $dpc);
+        }
+
         $dpm = $roles['dpm'] ?? '';
+        if (is_array($dpm)) {
+            $dpm=implode(', ', $dpm);
+        }
 
         return [
             $row->name,
