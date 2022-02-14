@@ -49,12 +49,12 @@ class IssuesController extends Controller
      * @param $tts_id
      * @return Issue
      */
-    public function importTtsIssue($tts_id)
+    public function importTtsIssue(array $tts_id)
     {
         try {
             // if issue doesn't exist in mmpi get it from TTS
             $issueService = new IssueService();
-            $issue        = $issueService->get($tts_id);
+            $issue        = $issueService->get($tts_id[0]);
 
             $projectName  = trim($issue->fields->project->name, '_');
             $project      = Project::where('name', '=', $projectName)->first();
@@ -84,12 +84,10 @@ class IssuesController extends Controller
                         'dev_instance_id'   => null,
                         'priority'          => $parentPriority
                     ];
-
                     //Insert parent issue into mmpi db
                     $parentMmpiIssue = Issue::create($parentIssueArr);
                 }
             }
-
             //If sub issue get parent id
             $parentIssueId = $parentMmpiIssue->id ?? null;
             $issueArr = [
@@ -104,7 +102,7 @@ class IssuesController extends Controller
             ];
 
             //Insert sub issue into mmpi db
-             $ttsIssue = Issue::create($issueArr);
+            $ttsIssue = Issue::create($issueArr);
         } catch (\Exception $e) {
             Log::error($e->getMessage());
             return $e->getMessage();
