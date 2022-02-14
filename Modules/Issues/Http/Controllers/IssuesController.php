@@ -109,6 +109,6 @@ class IssuesController extends Controller
             throw new ModelNotFoundException;
         }
 
-        return response()->json($ttsIssue->toArray());
+        return response()->json($ttsIssue);
     }
 }
