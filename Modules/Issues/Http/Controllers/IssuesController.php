@@ -33,7 +33,7 @@ class IssuesController extends Controller
      *
      * @param Request $request
      * @param mixed ...$parameters
-     * @return Issue|void
+     * @return \Illuminate\Http\JsonResponse
      */
     public function getOne(Request $request, ...$parameters)
     {
@@ -48,7 +48,7 @@ class IssuesController extends Controller
      * Import new Issue from TTS.
      *
      * @param $tts_id
-     * @return Issue
+     * @return \Illuminate\Http\JsonResponse
      */
     public function importTtsIssue(array $tts_id)
     {
@@ -109,6 +109,6 @@ class IssuesController extends Controller
             throw new ModelNotFoundException;
         }
 
-        return $ttsIssue->toArray();
+        return response()->json($ttsIssue->toArray());
     }
 }
