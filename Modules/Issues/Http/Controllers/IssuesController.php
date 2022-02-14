@@ -31,15 +31,15 @@ class IssuesController extends Controller
      * If issue not found overwrite route.
      *
      * @param Request $request
-     * @param mixed ...$tts_id
+     * @param mixed ...$parameters
      * @return Issue|void
      */
-    public function getOne(Request $request, ...$tts_id)
+    public function getOne(Request $request, ...$parameters)
     {
         try {
-            parent::getOne($request, ...$tts_id);
+            parent::getOne($request, ...$parameters);
         } catch (ModelNotFoundException $e) {
-            return self::importTtsIssue($tts_id);
+            return self::importTtsIssue($parameters);
         }
     }
 
@@ -51,13 +51,6 @@ class IssuesController extends Controller
      */
     public function importTtsIssue($tts_id)
     {
-        //Get issue from mmpi if exist
-        $mmpiIssue = Issue::where('tts_id', '=', $tts_id)->get();
-
-        if (!$mmpiIssue->isEmpty()) {
-            return $mmpiIssue;
-        }
-
         try {
             // if issue doesn't exist in mmpi get it from TTS
             $issueService = new IssueService();
@@ -93,13 +86,12 @@ class IssuesController extends Controller
                     ];
 
                     //Insert parent issue into mmpi db
-                    $newParentMmpiIssue = Issue::create($parentIssueArr);
+                    $parentMmpiIssue = Issue::create($parentIssueArr);
                 }
-                $parentMmpiIssueId = isset($newParentMmpiIssue->id) ? $newParentMmpiIssue->id : $parentMmpiIssue->id;
             }
 
             //If sub issue get parent id
-            $parentIssueId = isset($parentMmpiIssueId) ? $parentMmpiIssueId : null;
+            $parentIssueId = $parentMmpiIssue->id ?? null;
             $issueArr = [
                 'project_id'        => $project->id,
                 'subject'           => $subject,
