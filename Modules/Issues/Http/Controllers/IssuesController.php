@@ -3,6 +3,7 @@
 namespace Modules\Issues\Http\Controllers;
 
 use Carbon\Carbon;
+use http\Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -55,6 +56,10 @@ class IssuesController extends Controller
             // if issue doesn't exist in mmpi get it from TTS
             $issueService = new IssueService();
             $issue        = $issueService->get($tts_id[0]);
+            //If issue doesn't exist in tts too throw exception
+            if (!$issue) {
+                throw new ModelNotFoundException;
+            }
 
             $projectName  = trim($issue->fields->project->name, '_');
             $project      = Project::where('name', '=', $projectName)->first();
