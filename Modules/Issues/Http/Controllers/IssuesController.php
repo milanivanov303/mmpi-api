@@ -56,10 +56,6 @@ class IssuesController extends Controller
             // if issue doesn't exist in mmpi get it from TTS
             $issueService = new IssueService();
             $issue        = $issueService->get($tts_id[0]);
-            //If issue doesn't exist in tts too throw exception
-            if (!$issue) {
-                throw new ModelNotFoundException;
-            }
 
             $projectName  = trim($issue->fields->project->name, '_');
             $project      = Project::where('name', '=', $projectName)->first();
@@ -110,7 +106,7 @@ class IssuesController extends Controller
             $ttsIssue = Issue::create($issueArr);
         } catch (\Exception $e) {
             Log::error($e->getMessage());
-            return $e->getMessage();
+            throw new ModelNotFoundException;
         }
 
         return $ttsIssue;
