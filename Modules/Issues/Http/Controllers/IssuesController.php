@@ -3,6 +3,7 @@
 namespace Modules\Issues\Http\Controllers;
 
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -38,7 +39,7 @@ class IssuesController extends Controller
     {
         try {
             parent::getOne($request, ...$parameters);
-        } catch (ModelNotFoundException $e) {
+        } catch (Exception $e) {
             return self::importTtsIssue($parameters);
         }
     }
