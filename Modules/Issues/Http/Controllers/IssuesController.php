@@ -38,7 +38,10 @@ class IssuesController extends Controller
     public function getOne(Request $request, ...$parameters)
     {
         try {
-            parent::getOne($request, ...$parameters);
+            $mmpiResult = parent::getOne($request, ...$parameters);
+            if ($mmpiResult) {
+                return $mmpiResult;
+            }
         } catch (ModelNotFoundException $e) {
             return self::importTtsIssue($parameters);
         }
