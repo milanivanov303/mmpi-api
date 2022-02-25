@@ -18,52 +18,59 @@ class HrService
             ->with(['roles.user' => function ($query) {
                 $query->where('status', '=', 1);
             }])->first();
-        
+
         $pmo = [];
         foreach ($projectRoles->roles as $role) {
-            $role['user']['role'] = $role['role_id'];
-            $pmo[] = $role['user'];
+            $pmo[] = $role->user;
         }
-        $pmos = array_column($pmo, 'username');
 
+        $pmos = array_column($pmo, 'username');
         $leaves = $this->getHRCurrentLeaves($pmos);
 
-        $parsedLeaves = [];
-        foreach ($leaves as $key => $leave) {
-            if (!array_key_exists($leave['user']['samaccountname'], $leave)) {
-                $parsedLeaves[$leave['user']['samaccountname']] = [];
+        foreach ($projectRoles->roles as $key => $dbMember) {
+            if (!empty($dbMember->user->username)) {
+                $projectRoles->roles[$key]['availability'] =
+                    self::checkPMOAvailability($leaves[$dbMember->user->username]);
             }
-            array_push($parsedLeaves[$leave['user']['samaccountname']], $leave);
         }
-        
-        foreach ($pmos as $key => $user) {
-            if (!array_key_exists($user, $parsedLeaves)) {
-                $parsedLeaves[$user] = [];
+        $pmosA = $projectRoles->roles;
+        $pmosA = $pmosA->toArray();
+        foreach ($pmosA as $key => $member) {
+            if (isset($member['availability']) && $member['availability'] === 'absent') {
+                unset($pmosA[$key]);
+                // array_push($pmosA, $member);
             }
-            $pmo[$key]['availability'] = self::checkPMOAvailability($parsedLeaves[$pmo[$key]['username']]);
         }
 
-        foreach ($pmo as $key => $member) {
-            if ($member['availability'] === 'absent') {
-                unset($pmo[$key]);
-            }
-        }
-        usort($pmo, function ($roleA, $roleB) {
-            $a = $this->pmoRolesOrder($roleA['role']);
-            $b = $this->pmoRolesOrder($roleB['role']);
+        // order by project role
+        usort($pmosA, function ($roleA, $roleB) {
+            $a = $this->pmoRolesOrder($roleA['role_id']);
+            $b = $this->pmoRolesOrder($roleB['role_id']);
             if ($a == $b) {
                 return 0;
             }
             return $a <=> $b;
         });
-        return $pmo;
+
+        // order by pririty tag
+        usort($pmosA, function ($priorityA, $priorityB) {
+            $a = (int)$priorityA['priority'];
+            $b = (int)$priorityB['priority'];
+            if ($a == $b) {
+                return 0;
+            }
+            return $b <=> $a;
+        });
+
+        return $pmosA;
     }
+
 
     /**
      * Get leaves from HR api
      * @param array $usernames
      */
-    public function getHRCurrentLeaves(array $usernames = []) :Collection
+    public function getHRCurrentLeaves(array $usernames = []) //:Collection
     {
         $date = Carbon::now()->format('Y-m-d');
 
@@ -76,14 +83,18 @@ class HrService
             'filters' => json_encode([
                 "allOf" => [
                     [
+                        "guarantee_lv_id" => [
+                            "value" => "null",
+                            "operator" => "null"
+                        ],
                         "dt_from" => [
-                                    "value" => $date,
-                                    "operator" => "<="
-                                ],
+                            "value" => $date,
+                            "operator" => "<="
+                        ],
                         "dt_to" => [
-                                    "value" => $date,
-                                    "operator" => ">="
-                                ],
+                            "value" => $date,
+                            "operator" => ">="
+                        ],
                         "user" => [
                             "allOf" => [
                                 [
@@ -99,9 +110,9 @@ class HrService
                                 [
                                     "name" => [
                                         "value" => [
-                                        "rejected",
-                                        "deleted",
-                                        "wfh_adjusted"
+                                            "rejected",
+                                            "deleted",
+                                            "wfh_adjusted"
                                         ],
                                         "operator" => "not in"
                                     ]
@@ -113,8 +124,8 @@ class HrService
                                 [
                                     "class_name" => [
                                         "value" => [
-                                        "pay_leave",
-                                        "leave_work_from_home"
+                                            "pay_leave",
+                                            "leave_work_from_home"
                                         ],
                                         "operator" => "not in"
                                     ]
@@ -125,13 +136,39 @@ class HrService
                 ]
             ])
         ];
-        $result = app('HRApi')->get('leaves', $filters);
 
-        if ($result->isSuccessful()) {
-            return collect($result->json()['data']);
+        for ($i = 0; $i < 3; $i++) {
+            $leaves = app('HRApi')->get('leaves', $filters);
+            if ($leaves->isSuccessful()) {
+                break;
+            }
+            if (($i > 1) && $leaves->isUnsuccessful()) {
+                echo "<div class='alert alert-danger' role='alert'>
+                        ERROR during getting Leave Records For Current Date!
+                      </div>";
+                exit;
+            }
+            sleep(7);
         }
 
-        return collect([]);
+        $leavesResult = $leaves->json()['data'];
+        $indexedLeaves = [];
+        foreach ($leavesResult as $key => $leavesRecord) {
+            if (!array_key_exists($leavesRecord['user']['samaccountname'], $indexedLeaves)) {
+                $indexedLeaves[$leavesRecord['user']['samaccountname']] = [];
+            }
+
+            array_push($indexedLeaves[$leavesRecord['user']['samaccountname']], $leavesRecord);
+        }
+
+        //fill $indexedLeaves with empty array if user has no leave records
+        foreach ($usernames as $username) {
+            if (!array_key_exists($username, $indexedLeaves)) {
+                $indexedLeaves[$username] = [];
+            }
+        }
+
+        return $indexedLeaves;
     }
 
     /**
@@ -142,7 +179,7 @@ class HrService
     public function checkPMOAvailability($leaves) : string
     {
         $availability = 'available';
-        
+
         foreach ($leaves as $key => $leave) {
             $halfday = $leave['halfday'];
         
@@ -176,22 +213,16 @@ class HrService
         switch ($role) {
             case 'pc':
                 return 1;
-                break;
             case 'dpc':
                 return 2;
-                break;
             case 'pm':
                 return 3;
-                break;
             case 'dpm':
                 return 4;
-                break;
             case 'pa':
                 return 5;
-                 break;
             case 'watcher':
                 return 6;
-                break;
         }
         return 0;
     }
