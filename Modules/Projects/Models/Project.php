@@ -64,7 +64,8 @@ class Project extends Model
         'extranet_version',
         'tts_dev_project_key',
         'e_reggest_mntd_by_clnt_id',
-        'v_menu_mntd_by_clnt_id'
+        'v_menu_mntd_by_clnt_id',
+        'std_release_organization'
     ];
 
     /**
@@ -293,5 +294,12 @@ class Project extends Model
     protected function vMenuMntdByClntId()
     {
         return $this->belongsTo(EnumValue::class, 'v_menu_mntd_by_clnt_id');
+    }
+    /**
+     * Get std_release_organization
+     */
+    protected function stdReleaseOrganization()
+    {
+        return $this->belongsTo(EnumValue::class, 'std_release_organization');
     }
 }
