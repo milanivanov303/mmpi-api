@@ -124,13 +124,13 @@ class HashRepository extends AbstractRepository implements RepositoryInterface
             $this->model->saveOrFail();
 
             // save hash files
-            if (array_key_exists('files', $data)) {
-                if ($modelExists) {
-                    $this->model->files()->delete();
-                }
-
-                $this->model->files()->createMany($data['files']);
-            }
+//            if (array_key_exists('files', $data)) {
+//                if ($modelExists) {
+//                    $this->model->files()->delete();
+//                }
+//
+//                $this->model->files()->createMany($data['files']);
+//            }
 
             // save tags from description
             $this->saveTags();

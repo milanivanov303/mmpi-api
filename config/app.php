@@ -177,7 +177,7 @@ return array_merge(
         |
         */
         'hr' => [
-            'url'      => env('HR_URL', 'https://api-hrc-dev.codixfr.private'),
+            'url'      => env('HR_URL', 'https://ea-dev.codixfr.private/hrc-api'),
             'code'     => env('HR_CODE', 'lE9t3C8ttSP')
         ],
 

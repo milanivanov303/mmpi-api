@@ -367,6 +367,9 @@
         },
         "v_menu_mntd_by_clnt_id": {
             "type": ["integer", "null"]
+        },
+        "std_release_organization": {
+            "type": ["integer", "null"]
         }
     }
 }

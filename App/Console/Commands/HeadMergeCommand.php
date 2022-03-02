@@ -13,9 +13,11 @@ use Illuminate\Support\Str;
 use JiraRestApi\Issue\IssueField;
 use JiraRestApi\Issue\IssueService;
 use JiraRestApi\JiraException;
+use Modules\Hr\Services\HrService;
 use Modules\SourceRevisions\Models\SourceRevision;
 use JiraRestApi\IssueLink\IssueLink;
 use JiraRestApi\IssueLink\IssueLinkService;
+use App\Models\EnumValue;
 
 /**
  * Head merge sources to head
@@ -44,7 +46,6 @@ class HeadMergeCommand extends Command
     public function handle()
     {
         $patches = PatchesHeadMerge::where('processed_headmerge', 0)->get();
-
         $this->info("Found {$patches->count()} not processed " . Str::plural('patch', $patches->count()));
 
         foreach ($patches as $patch) {
@@ -58,12 +59,25 @@ class HeadMergeCommand extends Command
             $this->info(
                 "Found {$data->count()} not merged " . Str::plural('revision', $data->count()) . " - {$revisions}"
             );
-
             $data = $data->groupBy('username');
-
+            
+            // Use PC of the project as assignee of CVSHEAD tasks.
+            $std_release_organization_enums = app(EnumValue::class)::where('type', 'project_specific_feature')
+                                              ->where('key', 'r_org_no')->value('id');
+            
             foreach ($data as $username => $sources) {
                 try {
-                    $issue = $this->createIssue($username, $sources);
+                    if ($sources[0]['std_release_organization'] === $std_release_organization_enums) {
+                        $projectName = $sources[0]['project_name'];
+                        $pmos = app(HrService::class)->getProjectAvailablePmo($projectName);
+                        $pmoAvailable = $pmos[0]['user']['username'];
+                        // Use PC of the project as assignee of CVSHEAD tasks.
+                        $issue = $this->createIssue($pmoAvailable, $sources);
+                    } else {
+                        // Keep developer as assignee of CVSHEAD tasks.
+                        $issue = $this->createIssue($username, $sources);
+                    }
+
                     $this->linkIssue($issue->key, $sources->first()['tts_id']);
 
                     SourceRevision
@@ -110,7 +124,8 @@ class HeadMergeCommand extends Command
                    PRJ.id AS project_id,
                    I.tts_id,
                    PRJ.name AS project_name,
-                   PRJ.tts_dev_project_key
+                   PRJ.tts_dev_project_key,
+                   PRJ.std_release_organization
               FROM patches P
               JOIN patch_requests PR ON P.patch_request_id=PR.id
               JOIN issues I ON PR.issue_id=I.id
