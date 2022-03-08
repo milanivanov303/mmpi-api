@@ -122,7 +122,7 @@ class HeadMergeCommand extends Command
                    SR.revision,
                    P.id AS patch_id,
                    PRJ.id AS project_id,
-                   I.tts_id,
+                   IM.tts_id,
                    PRJ.name AS project_name,
                    PRJ.tts_dev_project_key,
                    PRJ.std_release_organization
@@ -136,7 +136,8 @@ class HeadMergeCommand extends Command
               JOIN source S ON M.name=CONCAT(S.source_path, '/', S.source_name)
               JOIN source_revision SR ON (S.source_id=SR.source_id AND M.version=SR.revision)
               JOIN enum_values EVS ON (EVS.type='revision_log_type' AND EVS.`key`='cvs')
-              JOIN enum_values EVT ON (EVT.type='cvs_log_tags_stack' AND EVT.`key`='cvs_tag_merge') 
+              JOIN enum_values EVT ON (EVT.type='cvs_log_tags_stack' AND EVT.`key`='cvs_tag_merge')
+              JOIN issues IM ON M.issue_id=IM.id 
               LEFT JOIN commit_merge CM ON
               ((SR.rev_id=CM.commit_id OR SR.rev_id=CM.merge_commit) AND CM.commit_log_type_id=EVS.id)
               LEFT JOIN source_revision BSR ON
