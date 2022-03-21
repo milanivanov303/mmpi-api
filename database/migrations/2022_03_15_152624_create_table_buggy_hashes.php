@@ -17,9 +17,9 @@ class CreateTableBuggyHashes extends Migration
             $table->charset ='utf8';
             $table->collation = 'utf8_general_ci';
             $table->string('buggy_hash',100)->nullable(false)->comment('Hash of the commit which is marked as buggy');
-            $table->string('repo_path',256)->default(null)->comment('Hash repository.');
-            $table->string('linked_branch',256)->default(null)->comment('Linked branch to delivery chain.');
-            $table->string('fix_hash',100)->default(null)->comment('Hash of the commit where the buggy one is fixed');
+            $table->string('repo_path',256)->nullable()->comment('Hash repository.');
+            $table->string('linked_branch',256)->nullable()->comment('Linked branch to delivery chain.');
+            $table->string('fix_hash',100)->nullable()->comment('Hash of the commit where the buggy one is fixed');
             $table->integer('marked_buggy_by')->nullable(false)->comment('Id of the owner of the commit');
             $table->timestamp('marked_buggy_on')->useCurrent()->comment('Timestamp of the record');
 
