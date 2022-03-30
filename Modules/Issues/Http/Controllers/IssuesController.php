@@ -66,7 +66,7 @@ class IssuesController extends Controller
 
             $project = Project::where('name', '=', $projectName)->first();
             if (is_null($project)) {
-                throw new Exception("Project {$projectName} not exists in MMPI");
+                throw new \Exception("Project {$projectName} not exists in MMPI");
             }
 
             $isSubTask = $issue->fields->issuetype->subtask;
