@@ -58,14 +58,21 @@ class IssuesController extends Controller
         try {
             // if issue doesn't exist in mmpi get it from TTS
             $issueService = new IssueService();
-            $issue        = $issueService->get($tts_id[0]);
+            $issue = $issueService->get($tts_id[0]);
 
-            $projectName  = trim($issue->fields->project->name, '_');
-            $project      = Project::where('name', '=', $projectName)->first();
-            $isSubTask    = $issue->fields->issuetype->subtask;
-            $subject      = $issue->fields->summary;
-            $priority     = $issue->fields->priority->name;
-            $createdOn    = Carbon::now()->format('Y-m-d H:i:s');
+            $projectName = trim($issue->fields->project->name);
+            $projectName = ltrim($projectName, '_');
+            $projectName = trim(preg_replace('/[-–][ \s]?([ \s]?[A-Z]{2,3}){1,2}$/', '', $projectName));
+
+            $project = Project::where('name', '=', $projectName)->first();
+            if (is_null($project)) {
+                throw new Exception("Project {$projectName} not exists in MMPI");
+            }
+
+            $isSubTask = $issue->fields->issuetype->subtask;
+            $subject   = $issue->fields->summary;
+            $priority  = $issue->fields->priority->name;
+            $createdOn = Carbon::now()->format('Y-m-d H:i:s');
 
             // Check if parent issue exist
             if ($isSubTask === true) {
