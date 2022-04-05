@@ -23,13 +23,15 @@ class CreateTableBuggyHashes extends Migration
             $table->integer('marked_buggy_by')->nullable(false)->comment('Id of the owner of the commit');
             $table->timestamp('marked_buggy_on')->useCurrent()->comment('Timestamp of the record');
 
-            $table->unique(["buggy_hash", "linked_branch"], 'idx_buggy_hash_unq');
+            //$table->unique(["buggy_hash", "linked_branch"], 'idx_buggy_hash_unq');
 
             $table->foreign('marked_buggy_by')
                 ->references('id')
                 ->on('users')
                 ->onUpdate('cascade');
         });
+
+        DB::statement( 'ALTER table hash_buggies ADD CONSTRAINT idx_buggy_hash_unq UNIQUE (`buggy_hash`(8),`linked_branch`)' );
     }
 
     /**
