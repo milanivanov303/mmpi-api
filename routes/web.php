@@ -58,6 +58,9 @@ $router->group(['prefix' => 'v1'], function () use ($router) {
         // Instances
         require 'v1/instances.php';
 
+        // Instance Types
+        require 'v1/instance-types.php';
+
         // Installations
         require 'v1/installations.php';
 
