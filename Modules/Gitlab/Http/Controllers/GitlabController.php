@@ -101,8 +101,12 @@ class GitlabController extends Controller
         }
 
         $config['repoUrl'] = $request->get('repoUrl');
+        $params = [];
+        if ($request->has('per_page')) {
+            $params['per_page'] = (int)$request->get('per_page');
+        }
 
-        return app('GitlabApi', $config)->repositories()->commitRefs($request->get('repo'), $sha);
+        return app('GitlabApi', $config)->repositories()->commitRefs($request->get('repo'), $sha, $params);
     }
 
     public function namespaces(Request $request)

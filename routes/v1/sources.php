@@ -10,6 +10,11 @@ $router->group([
         'description' => 'Get source list',
         'uses'        => 'SourcesController@getMany'
     ]);
+    $router->post('/search', [
+        'as'          => 'sources.search',
+        'description' => 'Search sorces by file',
+        'uses'        => 'SourcesController@search'
+    ]);
     $router->get('/{id}', [
         'as'          => 'sources.one',
         'schema'      => '/v1/sources/source.json',
