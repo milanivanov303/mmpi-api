@@ -167,8 +167,13 @@ class GitlabController extends Controller
         }
 
         $config['repoUrl'] = $request->get('repoUrl');
+        $response = app('GitlabApi', $config)->repositories()->diff($request->get('repo'), $sha);
 
-        return app('GitlabApi', $config)->repositories()->diff($request->get('repo'), $sha);
+        if (is_array($response) && array_key_exists('diff', $response[0])) {
+            unset($response[0]['diff']);
+        }
+
+        return $response;
     }
 
     public function getCommit(Request $request, $sha)
