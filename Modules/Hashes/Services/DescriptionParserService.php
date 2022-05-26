@@ -316,6 +316,7 @@ class DescriptionParserService
                     if ($e->getCode() === 401) {
                         $this->errors[] = "We were unable to validate ticket {$ttsKey} exists in TTS";
                     }
+                    Log::channel('tags')->error($e->getMessage());
                 } catch (\Exception $e) {
                     Log::error($e->getMessage());
                 }
