@@ -11,9 +11,11 @@ use App\Models\UserProjectRoleTmp;
 use Modules\Projects\Repositories\ProjectRepository;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use Illuminate\Http\JsonResponse;
 use Modules\Projects\Models\Project;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
+use Modules\Hr\Services\HrService;
 use Modules\Projects\Mail\ProjectRolesChangeMail;
 use Modules\Projects\Exports\ProjectsExport;
 
@@ -112,6 +114,16 @@ class ProjectsController extends Controller
     {
         if ($type === 'wiki') {
             return (new ProjectsExport)->download('projects.xlsx');
+        }
+    }
+
+    public function availablePmoStaff(string $project, HrService $hrService) :JsonResponse
+    {
+        try {
+            $availablePmoStaff = $hrService->getProjectAvailablePmo($project);
+            return response()->json(['data'=> $availablePmoStaff]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e], 400);
         }
     }
 }
