@@ -22,6 +22,12 @@ $router->group([
         'description' => 'Create new project',
         'uses'        => 'ProjectsController@create'
     ]);
+    $router->get('/available-pmo/{project}', [
+        'as'          => 'projects.export',
+        'schema'      => '/v1/projects/pmo.json',
+        'description' => 'Get available pmo staff',
+        'uses'        => 'ProjectsController@availablePmoStaff'
+    ]);
     $router->get('/export/{type}', [
         'as'          => 'projects.export',
         'schema'      => '/v1/projects/project.json',
