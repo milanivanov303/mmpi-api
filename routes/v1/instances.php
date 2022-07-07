@@ -22,6 +22,12 @@ $router->group([
         'description' => 'Create new instance',
         'uses'        => 'InstancesController@create'
     ]);
+    $router->get('/available-pmo/{instance}', [
+        'as'          => 'instances.list',
+        'schema'      => '/v1/instances/pmo.json',
+        'description' => 'Get available pmo staff',
+        'uses'        => 'InstancesController@availablePmoStaff'
+    ]);
     $router->put('/{id}', [
         'as'          => 'instances.update',
         'description' => 'Update instance',
