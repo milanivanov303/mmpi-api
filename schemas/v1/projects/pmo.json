@@ -1,0 +1,14 @@
+{
+    "$id": "Project pmo",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "description": "Project pmo object",
+    "properties": {
+        "name": {
+            "type": "string",
+            "description": "Project name",
+            "maxLength": 128,
+            "example": "ABSA"
+        }
+    }
+}

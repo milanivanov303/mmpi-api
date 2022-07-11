@@ -253,4 +253,15 @@ class ProjectRepository extends AbstractRepository implements RepositoryInterfac
             $model->delete();
         });
     }
+
+    public function findByInstanceName(string $instanceName): array
+    {
+        $project = $this->model
+            ->with(['deliveryChains', 'deliveryChains.instances'])
+            ->whereHas('deliveryChains.instances', function ($q) use ($instanceName) {
+                $q->where('name', '=', $instanceName);
+            })->get();
+
+        return $project->first()->toArray();
+    }
 }
