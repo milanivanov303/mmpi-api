@@ -302,23 +302,26 @@ class DescriptionParserService
                 $this->errors[] = "{$cvsTagValue} is mandatory";
             }
         }
-
-        // check tts tickets
         try {
             $issueService = new IssueService();
+
             foreach ($this->getTtsKeys() as $ttsKey) {
-                try {
-                    $issueService->get($ttsKey);
-                } catch (JiraException $e) {
-                    if ($e->getCode() === 404) {
-                        $this->errors[] = "Ticket {$ttsKey} does not exists in TTS";
+                for ($connTries = 0; $connTries < 3; $connTries++) {
+                    try {
+                        $issueService->get($ttsKey);
+                        break;
+                    } catch (JiraException $e) {
+                        if ($e->getCode() === 404) {
+                            $this->errors[] = "Ticket {$ttsKey} does not exists in TTS";
+                        }
+                        if ($e->getCode() === 401) {
+                            $this->errors[] = "We were unable to validate ticket {$ttsKey} exists in TTS";
+                        }
+                        Log::channel('tags')->error($e->getMessage());
+                    } catch (\Exception $e) {
+                        Log::error($e->getMessage());
                     }
-                    if ($e->getCode() === 401) {
-                        $this->errors[] = "We were unable to validate ticket {$ttsKey} exists in TTS";
-                    }
-                    Log::channel('tags')->error($e->getMessage());
-                } catch (\Exception $e) {
-                    Log::error($e->getMessage());
+                    sleep(5);
                 }
             }
         } catch (\Exception $e) {
