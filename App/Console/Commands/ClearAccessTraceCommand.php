@@ -32,7 +32,7 @@ class ClearAccessTraceCommand extends Command
      */
     public function handle()
     {
-        $time = Carbon::now()->subMonths(6)->format('Y-m-d H:i:s');
+        $time = Carbon::now()->subMonths(3)->format('Y-m-d H:i:s');
 
         $deleted = app(DB::class)
             ::table('access_trace')
