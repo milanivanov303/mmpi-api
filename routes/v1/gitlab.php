@@ -4,6 +4,10 @@ $router->group([
     'prefix' => 'gitlab',
     'namespace' => '\Modules\Gitlab\Http\Controllers'
 ], function () use ($router) {
+    $router->get('/projects/{project_id}/pipelines', [
+        'description' => 'Get GitLab pipelines',
+        'uses'        => 'GitlabController@getPipelines'
+    ]);
     $router->get('/projects/{visibility}', [
         'description' => 'Get projects from gitlab server',
         'uses'        => 'GitlabController@projects'
