@@ -36,9 +36,11 @@ class GitlabHelper
 
         try {
             $client = new Client();
+            $options = ['verify' => false];
             $response = $client->request(
                 'GET',
-                "{$config['repoUrl']}/api/v4/projects/{$repo}/repository/commits/{$sha}/diff?private_token={$token}"
+                "{$config['repoUrl']}/api/v4/projects/{$repo}/repository/commits/{$sha}/diff?private_token={$token}",
+                $options
             );
 
             return Response::create(
