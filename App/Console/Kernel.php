@@ -68,11 +68,12 @@ class Kernel extends ConsoleKernel
             ->environments(['prod'])
             ->appendOutputTo(storage_path('logs/project_events.log'));
 
-        /* Not to be scheduled until PMO decision is made.
+        /* GL to start the procedure for project Eurofactor EUR (id=152) under subject */
+        /*RE: INTERNE//Patch content comparison */
         $schedule->command('sources:missing-deliverychain')
             ->dailyAt('03:00')
             ->environments(['prod'])
-            ->appendOutputTo(storage_path("logs/missing-deliverychain-command.log"));*/
+            ->appendOutputTo(storage_path("logs/missing-deliverychain-command.log"));
 
         $schedule->command('clear:access-trace')->lastDayOfMonth('05:00');
     }
