@@ -44,14 +44,14 @@ class MissingDeliverychainSourcesCommand extends Command
     public function handle()
     {
         //$patches = PatchesHeadMerge::where('processed_dcsync', 0)->get();  For final version
-        // Test behaviour - project SUDF, 3 months back
+        // Test behaviour - project Eurofactor EUR
         $patches = PatchesHeadMerge
                 ::select(['patches_head_merge.*', 'DC.title as dc_title', 'EV.key as dc_role'])
                 ->join('patches as P', 'patches_head_merge.patch_id', '=', 'P.id')
                 ->join('projects as PR', 'PR.id', '=', 'P.project_id')
                 ->join('delivery_chains as DC', 'DC.id', '=', 'P.delivery_chain_id')
                 ->join('enum_values as EV', 'DC.dc_role', '=', 'EV.id')
-                ->where('PR.name', 'SUDF')
+                ->where('PR.name', 'Eurofactor EUR')
                 ->where('patches_head_merge.processed_dcsync', 0)
                 ->where('patches_head_merge.modified_on', '>=', '2020-07-01 00:00:00')
                 ->get();
@@ -81,9 +81,9 @@ class MissingDeliverychainSourcesCommand extends Command
 
                 foreach ($data as $patchId => $sources) {
                     try {
-                        $issue = $this->createIssue($sources->first()['send_to_pc'], $sources);
+                        $issue = $this->createIssue($sources->first()['send_to_dpc'], $sources);
                         $this->info("New issue {$issue->key} was created and assigned to user "
-                        . "{$sources->first()['send_to_pc']}");
+                        . "{$sources->first()['send_to_dpc']}");
 
                         $this->linkIssue($issue->key, $sources->first()['link_to_tts']);
                         $this->info("Issue {$issue->key} was linked to {$sources->first()['link_to_tts']}");
@@ -139,7 +139,7 @@ class MissingDeliverychainSourcesCommand extends Command
                PR.tts_dev_project_key,
                I.tts_id as link_to_tts,
                DCN.title as dc_needed,
-               UO.username as send_to_pc
+               UO.username as send_to_dpc
             FROM patches PO
             JOIN modif_to_patch MPO ON PO.id=MPO.patch_id
             JOIN modifications MO ON MPO.modif_id=MO.id AND MO.version IS NOT NULL
@@ -147,7 +147,7 @@ class MissingDeliverychainSourcesCommand extends Command
             JOIN users U ON IFNULL(MO.updated_by_id, MO.created_by_id)=U.id
             JOIN delivery_chains DC_P ON PO.delivery_chain_id=DC_P.id
             JOIN project_to_delivery_chain PRJO ON DC_P.id=PRJO.delivery_chain_id
-            JOIN users_prjs_roles UPRO ON (PRJO.project_id=UPRO.project_id AND UPRO.role_id='pc')
+            JOIN users_prjs_roles UPRO ON (PRJO.project_id=UPRO.project_id AND UPRO.role_id='dpc')
             JOIN users UO ON UPRO.user_id=UO.id
             JOIN project_to_delivery_chain PRJ ON (PRJO.project_id = PRJ.project_id AND PRJ.delivery_chain_id NOT IN 
                                             (SELECT DC.id
@@ -167,6 +167,7 @@ class MissingDeliverychainSourcesCommand extends Command
             JOIN delivery_chains DCN ON PRJ.delivery_chain_id=DCN.id
             JOIN projects PR ON PO.project_id=PR.id
             WHERE PO.id=?
+            AND MO.type_id<>'hash'
             AND DCN.status=?
             AND DCN.type_id=?
             AND IF(DC_P.dc_role=?, DCN.dc_role<>?, DCN.dc_role NOT IN (?, ?));
