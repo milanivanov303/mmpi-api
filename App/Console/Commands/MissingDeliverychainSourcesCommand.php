@@ -147,7 +147,7 @@ class MissingDeliverychainSourcesCommand extends Command
             JOIN users U ON IFNULL(MO.updated_by_id, MO.created_by_id)=U.id
             JOIN delivery_chains DC_P ON PO.delivery_chain_id=DC_P.id
             JOIN project_to_delivery_chain PRJO ON DC_P.id=PRJO.delivery_chain_id
-            JOIN users_prjs_roles UPRO ON (PRJO.project_id=UPRO.project_id AND UPRO.role_id='dpc')
+            JOIN users_prjs_roles UPRO ON (PRJO.project_id=UPRO.project_id AND UPRO.role_id='dpc' AND UPRO.priority=1)
             JOIN users UO ON UPRO.user_id=UO.id
             JOIN project_to_delivery_chain PRJ ON (PRJO.project_id = PRJ.project_id AND PRJ.delivery_chain_id NOT IN 
                                             (SELECT DC.id
