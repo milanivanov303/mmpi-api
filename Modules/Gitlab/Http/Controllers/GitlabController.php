@@ -197,4 +197,21 @@ class GitlabController extends Controller
 
         return app('GitlabApi', $config)->repositories()->commit($request->get('repo'), $sha);
     }
+
+    /**
+     * Get project pipelines
+     * @param int|string $projectId
+     * @param Request $request
+     * @return array
+     */
+    public function getPipeline(Request $request, $project_id, $pipeline_id)
+    {
+        if (!$request->has('repoUrl')) {
+            throw new HttpException(400, 'Missing gitlab server url');
+        }
+
+        $config['repoUrl'] = $request->get('repoUrl');
+
+        return  app('GitlabApi', $config)->projects()->pipeline($project_id, $pipeline_id);
+    }
 }
