@@ -42,6 +42,9 @@
         },
         "delivery_chain": {
             "$ref": "/v1/modifications/modification.json#/properties/delivery_chain"
+        },
+        "created_by": {
+            "$ref": "/v1/user.json"
         }
     }
 }
