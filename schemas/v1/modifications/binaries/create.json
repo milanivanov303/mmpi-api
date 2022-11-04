@@ -39,6 +39,20 @@
                     "oneOf": [
                         {
                             "required": [
+                                "created_by"
+                            ]
+                        },
+                        {
+                            "required": [
+                                "created_by_id"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "oneOf": [
+                        {
+                            "required": [
                                 "subtype"
                             ]
                         },
