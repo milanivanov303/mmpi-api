@@ -50,7 +50,7 @@ class ModificationRepository extends AbstractRepository implements RepositoryInt
 
         if (array_key_exists('delivery_chain', $data)) {
             $this->model->deliveryChain()->associate(
-                app(DeliveryChain::class)->getModelId($data['delivery_chain'], 'id')
+                app(DeliveryChain::class)->getModelId($data['delivery_chain'], ['id', 'title'])
             );
         }
 

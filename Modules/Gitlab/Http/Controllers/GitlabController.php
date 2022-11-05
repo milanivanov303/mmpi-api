@@ -4,6 +4,7 @@ namespace Modules\Gitlab\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Modules\Gitlab\Helpers\GitlabHelper;
 use Modules\Gitlab\Models\Project;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
@@ -167,13 +168,23 @@ class GitlabController extends Controller
         }
 
         $config['repoUrl'] = $request->get('repoUrl');
-        $response = app('GitlabApi', $config)->repositories()->diff($request->get('repo'), $sha);
 
-        if (is_array($response) && array_key_exists('diff', $response[0])) {
-            unset($response[0]['diff']);
+        try {
+            $response = app('GitlabApi', $config)->repositories()->diff($request->get('repo'), $sha);
+        } catch (\Exception $e) {
         }
 
-        return $response;
+        if (isset($response) && is_array($response)) {
+            return array_map(function ($n) {
+                if (array_key_exists('diff', $n)) {
+                    unset($n['diff']);
+                }
+                return $n;
+            }, $response);
+        }
+
+        $gitlabHelper = new GitlabHelper();
+        return $gitlabHelper->getCommitFilesWithCurl($config, $request->get('repo'), $sha);
     }
 
     public function getCommit(Request $request, $sha)
@@ -185,5 +196,22 @@ class GitlabController extends Controller
         $config['repoUrl'] = $request->get('repoUrl');
 
         return app('GitlabApi', $config)->repositories()->commit($request->get('repo'), $sha);
+    }
+
+    /**
+     * Get project pipelines
+     * @param int|string $projectId
+     * @param Request $request
+     * @return array
+     */
+    public function getPipeline(Request $request, $project_id, $pipeline_id)
+    {
+        if (!$request->has('repoUrl')) {
+            throw new HttpException(400, 'Missing gitlab server url');
+        }
+
+        $config['repoUrl'] = $request->get('repoUrl');
+
+        return  app('GitlabApi', $config)->projects()->pipeline($project_id, $pipeline_id);
     }
 }
