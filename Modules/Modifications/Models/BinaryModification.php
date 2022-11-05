@@ -24,8 +24,6 @@ class BinaryModification extends Modification
         'deliveryChain',
         'instanceStatus',
         'active',
-        'visible',
-        'created_by_id',
-        'createdBy'
+        'visible'
     ];
 }

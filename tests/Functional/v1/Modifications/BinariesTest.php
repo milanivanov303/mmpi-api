@@ -4,7 +4,6 @@ use App\Models\EnumValue;
 use Modules\DeliveryChains\Models\DeliveryChain;
 use Modules\Issues\Models\Issue;
 use App\Models\Department;
-use App\Models\User;
 
 class BinariesTest extends RestTestCase
 {
@@ -26,7 +25,6 @@ class BinariesTest extends RestTestCase
         $deliveryChain = DeliveryChain::inRandomOrder()->first();
         $instanceStatus = EnumValue::where('type', 'instance_status')->inRandomOrder()->first();
         $creatorDepartment = Department::inRandomOrder()->first();
-        $createdBy = User::inRandomOrder()->first();
         
         return [
             'issue'              => $issue->toArray(),
@@ -41,8 +39,7 @@ class BinariesTest extends RestTestCase
             'instance_status'    => $instanceStatus->toArray(),
             'active'             => $this->faker->numberBetween(0, 1),
             'visible'            => $this->faker->numberBetween(0, 1),
-            'creator_department' => $creatorDepartment->toArray(),
-            'created_by_id'      => $createdBy->toArray()
+            'creator_department' => $creatorDepartment->toArray()
         ];
     }
 
