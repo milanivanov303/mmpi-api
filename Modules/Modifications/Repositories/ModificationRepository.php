@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Modules\Instances\Models\Instance;
 use App\Models\Department;
+use App\Models\User;
 
 class ModificationRepository extends AbstractRepository implements RepositoryInterface
 {
@@ -112,7 +113,14 @@ class ModificationRepository extends AbstractRepository implements RepositoryInt
             $this->model->updatedBy()->associate(Auth::user());
             $this->model->updated_on = Carbon::now()->format('Y-m-d H:i:s');
         } else {
-            $this->model->createdBy()->associate(Auth::user());
+            //fix to register modifications from apis as created by logged user
+            array_key_exists('create_as_user', $data)
+            && Auth::user()->username === config('app.user-management.username')
+                ? $this->model->createdBy()->associate(
+                    app(User::class)->getModelId($data['create_as_user'], ['id', 'username'])
+                )
+                : $this->model->createdBy()->associate(Auth::user());
+
             $this->model->created_on = Carbon::now()->format('Y-m-d H:i:s');
         }
 
