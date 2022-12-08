@@ -81,9 +81,9 @@ class MissingDeliverychainSourcesCommand extends Command
 
                 foreach ($data as $patchId => $sources) {
                     try {
-                        $issue = $this->createIssue($sources->first()['send_to_dpc'], $sources);
+                        $issue = $this->createIssue($sources->first()['send_to_pc'], $sources);
                         $this->info("New issue {$issue->key} was created and assigned to user "
-                        . "{$sources->first()['send_to_dpc']}");
+                        . "{$sources->first()['send_to_pc']}");
 
                         $this->linkIssue($issue->key, $sources->first()['link_to_tts']);
                         $this->info("Issue {$issue->key} was linked to {$sources->first()['link_to_tts']}");
