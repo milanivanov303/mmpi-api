@@ -302,4 +302,12 @@ class Project extends Model
     {
         return $this->belongsTo(EnumValue::class, 'std_release_organization');
     }
+
+    /**
+     * Get project_stage
+     */
+    protected function projectStage()
+    {
+        return $this->belongsTo(EnumValue::class, 'project_stage');
+    }
 }
