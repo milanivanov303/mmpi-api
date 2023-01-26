@@ -1,4 +1,4 @@
-image: gitlab.codixfr.private:5005/enterpriseapps/images/docker:1.1
+image: gitlab.codixfr.private:5005/enterpriseapps/images/docker:1.4
 
 before_script:
   - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
