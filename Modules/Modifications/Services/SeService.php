@@ -229,6 +229,8 @@ class SeService
         $artifact   = substr($this->seDump, strrpos($this->seDump, '/')+1)."\n";
         $artifactId = substr($artifact, 0, strpos($artifact, "."));
 
+        //to check
+
         $cmd = ". \${IMX_HOME}/extlib/profiles/.extlibprofile; cd {$this->logFileDir}" . PHP_EOL
             . "cp {$this->seDump} ./{$artifact}" . PHP_EOL
             // . "rm -rf {$clientRepo}" . PHP_EOL // risky got to find another way !
@@ -308,13 +310,13 @@ class SeService
     {
         switch ($this->operation) {
             case self::VDNAM:
-                $dump = "/{$this->user}/intra/imx/base/client_vdnam.dmp";
-                $this->seDump = "/{$this->user}/intra/imx/base/client_vdnam.dmp.Z";
+                $dump = "/{$this->user}/intra/imx/tmp/se_exports/client_vdnam.dmp";
+                $this->seDump = "/{$this->user}/intra/imx/tmp/se_exports/client_vdnam.dmp.Z";
                 $this->cleanExec($dump);
                 break;
             case self::TXTLIB:
-                $dump = "/{$this->user}/intra/imx/base/textsbase.dmp";
-                $this->seDump = "/{$this->user}/intra/imx/base/textsbase.dmp.Z";
+                $dump = "/{$this->user}/intra/imx/tmp/se_exports/textsbase.dmp";
+                $this->seDump = "/{$this->user}/intra/imx/tmp/se_exports/textsbase.dmp.Z";
                 $this->cleanExec($dump);
                 break;
             case self::BTPROC:
