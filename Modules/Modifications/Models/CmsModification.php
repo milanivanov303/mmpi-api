@@ -22,6 +22,7 @@ class CmsModification extends Modification
         'instanceStatus',
         'active',
         'visible',
-        'contents'
+        'contents',
+        'path_id'
     ];
 }
