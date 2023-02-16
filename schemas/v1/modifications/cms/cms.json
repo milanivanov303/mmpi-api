@@ -39,6 +39,9 @@
         },
         "contents": {
             "$ref": "/v1/modifications/modification.json#/properties/contents"
+        },
+        "path_id": {
+            "$ref": "/v1/modifications/modification.json#/properties/path_id"
         }
     }
 }
