@@ -92,6 +92,12 @@ return [
             'driver' => 'errorlog',
             'level' => 'debug',
         ],
+
+        'headmerege' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/internal_projects_headmerge.log'),
+            'level' => 'debug',
+        ],
     ],
 
 ];
