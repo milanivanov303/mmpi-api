@@ -95,14 +95,15 @@ class ProjectEventsExport implements WithMultipleSheets, Responsable
         }
         $startDate['month']++;
 
+        $currentMonth = $startDate['month'];
         //loop the rest of the months until we reach the end month
-        for ($i = $startDate['month']; $i <= 12; $i++) {
+        for (; $currentMonth <= 12; $currentMonth++) {
             //if we have reached the end month in the end year make the final sheet until the given day
-            if ($i === $endDate['month'] && $currentYear === $endDate['year']) {
+            if ($currentMonth === $endDate['month'] && $currentYear === $endDate['year']) {
                 $sheets[] = new EventsPerMonthSheet(
                     $this->filter,
                     $currentYear,
-                    $i,
+                    $currentMonth,
                     (int)null,
                     $endDate['day']
                 );
@@ -113,18 +114,18 @@ class ProjectEventsExport implements WithMultipleSheets, Responsable
             $sheets[] = new EventsPerMonthSheet(
                 $this->filter,
                 $currentYear,
-                $i,
+                $currentMonth,
                 (int)null,
                 (int)null
             );
 
             //check if we have reached december
-            if ($i === 12) {
+            if ($currentMonth === 12) {
                 //if it's december, and it is the end year - break, if not, set month and increment the year
                 if ($currentYear === $endDate['year']) {
                     break;
                 }
-                $i = 0;
+                $currentMonth = 0;
                 $currentYear++;
             }
         }
