@@ -88,8 +88,15 @@ class ProjectEventsExport implements WithMultipleSheets, Responsable
             (int)null
         );
 
+        // if it is december, and it is not the end year, increment year and set month
+        if ($startDate['month'] === 12 && $currentYear !== $endDate['year']) {
+            $currentYear++;
+            $startDate['month'] = 0;
+        }
+        $startDate['month']++;
+
         //loop the rest of the months until we reach the end month
-        for ($i = $startDate['month'] + 1; $i <= 12; $i++) {
+        for ($i = $startDate['month']; $i <= 12; $i++) {
             //if we have reached the end month in the end year make the final sheet until the given day
             if ($i === $endDate['month'] && $currentYear === $endDate['year']) {
                 $sheets[] = new EventsPerMonthSheet(
