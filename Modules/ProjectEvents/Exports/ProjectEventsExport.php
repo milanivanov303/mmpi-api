@@ -13,9 +13,9 @@ class ProjectEventsExport implements WithMultipleSheets, Responsable
     use Exportable;
 
     /**
-    * filter for excel export file
-    * @var array
-    */
+     * filter for excel export file
+     * @var array
+     */
     private $filter;
 
     /**
@@ -25,10 +25,10 @@ class ProjectEventsExport implements WithMultipleSheets, Responsable
     private $fileName;
 
     /**
-    * Export event constructor
-    * @param Request $request
-    * @return void
-    */
+     * Export event constructor
+     * @param Request $request
+     * @return void
+     */
     public function __construct(Request $request)
     {
         $this->filter = $request->all();
@@ -55,9 +55,9 @@ class ProjectEventsExport implements WithMultipleSheets, Responsable
         //set startDate and endDate from dd.MM.yyyy format to object
         $startDate = explode('.', $this->filter['start_date']);
         $startDate = [
-          "day" => (int)$startDate[0],
-          "month" => (int)$startDate[1],
-          "year" => (int)$startDate[2],
+            "day" => (int)$startDate[0],
+            "month" => (int)$startDate[1],
+            "year" => (int)$startDate[2],
         ];
         $endDate = explode('.', $this->filter['end_date']);
         $endDate = [
@@ -90,7 +90,6 @@ class ProjectEventsExport implements WithMultipleSheets, Responsable
 
         //loop the rest of the months until we reach the end month
         for ($i = $startDate['month'] + 1; $i <= 12; $i++) {
-
             //if we have reached the end month in the end year make the final sheet until the given day
             if ($i === $endDate['month'] && $currentYear === $endDate['year']) {
                 $sheets[] = new EventsPerMonthSheet(
@@ -115,11 +114,11 @@ class ProjectEventsExport implements WithMultipleSheets, Responsable
             //check if we have reached december
             if ($i === 12) {
                 //if it's december, and it is the end year - break, if not, set month and increment the year
-               if ($currentYear === $endDate['year']) {
-                   break;
-               }
-               $i = 0;
-               $currentYear++;
+                if ($currentYear === $endDate['year']) {
+                    break;
+                }
+                $i = 0;
+                $currentYear++;
             }
         }
 

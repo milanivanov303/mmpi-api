@@ -67,7 +67,7 @@ class EventsPerMonthSheet implements
      * @param int $startDate
      * @param int $endDate
      */
-    public function __construct(Array $filter,int $year, int $month, int $startDate, int $endDate)
+    public function __construct(Array $filter, int $year, int $month, int $startDate, int $endDate)
     {
         $this->month = $month;
         $this->year = $year;
@@ -97,7 +97,7 @@ class EventsPerMonthSheet implements
             $start = $start->addDays($this->startDate - 1);
         }
         if ($this->endDate) {
-            $end = $end->setDate($this->year, $this->month,$this->endDate);
+            $end = $end->setDate($this->year, $this->month, $this->endDate);
         }
 
         $dates = [];
