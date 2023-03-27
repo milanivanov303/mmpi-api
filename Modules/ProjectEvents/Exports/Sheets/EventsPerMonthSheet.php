@@ -18,6 +18,24 @@ class EventsPerMonthSheet implements
     WithEvents
 {
     /**
+     * Start date
+     * @var int
+     */
+    private $startDate;
+
+    /**
+     * End date
+     * @var int
+     */
+    private $endDate;
+
+    /**
+     * Number of the year
+     * @var int
+     */
+    private $year;
+
+    /**
     * Number of the month
     * @var int
     */
@@ -34,7 +52,7 @@ class EventsPerMonthSheet implements
     * @var \Illuminate\Support\Collection
     */
     private $collection;
-    
+
     /**
     * Array data with filter for export file
     * @var array
@@ -42,14 +60,19 @@ class EventsPerMonthSheet implements
     private $filter;
 
     /**
-    * Event per month constructor
-    * @param Array $filter
-    * @param int $month
-    * @return void
-    */
-    public function __construct(Array $filter, int $month)
+     * Event per month constructor
+     * @param array $filter
+     * @param int $year
+     * @param int $month
+     * @param int $startDate
+     * @param int $endDate
+     */
+    public function __construct(Array $filter, int $year, int $month, int $startDate, int $endDate)
     {
         $this->month = $month;
+        $this->year = $year;
+        $this->startDate = $startDate;
+        $this->endDate = $endDate;
         $this->filter = $filter;
         $this->collection = $this->constructCal();
     }
@@ -67,9 +90,16 @@ class EventsPerMonthSheet implements
      */
     private function constructCal() : \Illuminate\Support\Collection
     {
-        $start = Carbon::parse("{$this->filter['year']}-{$this->month}")->startOfMonth();
-        $end = Carbon::parse("{$this->filter['year']}-{$this->month}")->endOfMonth();
-       
+        $start = Carbon::parse("{$this->year}-{$this->month}")->startOfMonth();
+        $end = Carbon::parse("{$this->year}-{$this->month}")->endOfMonth();
+
+        if ($this->startDate) {
+            $start = $start->addDays($this->startDate - 1);
+        }
+        if ($this->endDate) {
+            $end = $end->setDate($this->year, $this->month, $this->endDate);
+        }
+
         $dates = [];
         while ($start->lte($end)) {
             $carbon = Carbon::parse($start);
@@ -170,7 +200,7 @@ class EventsPerMonthSheet implements
     {
         $date  = \DateTime::createFromFormat('!m', $this->month);
         $this->monthName = $date->format('F');
-        return $this->monthName;
+        return $this->monthName . '(' . $this->year . ')';
     }
 
     /**
@@ -185,7 +215,7 @@ class EventsPerMonthSheet implements
             'projectEventType',
             'projectEventSubtype',
             'projectEventEstimations'])
-            ->whereYear('event_end_date', $this->filter['year'])
+            ->whereYear('event_end_date', $this->year)
             ->whereMonth('event_end_date', $this->month);
 
         if ($this->filter['project']['id'] !== 0) {
@@ -195,9 +225,9 @@ class EventsPerMonthSheet implements
         if (isset($this->filter['status']['id'])) {
             $monthEvents->where('project_event_status', $this->filter['status']['id']);
         }
-        
+
         $monthEvents = $monthEvents->get();
-        
+
         $dayEvents = [];
         foreach ($monthEvents as $event) {
             $day = ltrim(Carbon::parse($event->event_end_date)->format('d'), 0);

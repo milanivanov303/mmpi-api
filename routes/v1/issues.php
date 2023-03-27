@@ -33,4 +33,8 @@ $router->group([
         'description' => 'Delete issue',
         'uses'        => 'IssuesController@delete'
     ]);
+    $router->post('/headmerge/{tts_id:[A-Z-0-9]+}', [
+        'description' => 'Create headmerge task',
+        'uses'        => 'IssuesController@headmerge'
+    ]);
 });

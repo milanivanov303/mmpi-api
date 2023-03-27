@@ -13,9 +13,9 @@ class ProjectEventsExport implements WithMultipleSheets, Responsable
     use Exportable;
 
     /**
-    * filter for excel export file
-    * @var array
-    */
+     * filter for excel export file
+     * @var array
+     */
     private $filter;
 
     /**
@@ -25,14 +25,25 @@ class ProjectEventsExport implements WithMultipleSheets, Responsable
     private $fileName;
 
     /**
-    * Export event constructor
-    * @param Request $request
-    * @return void
-    */
+     * Export event constructor
+     * @param Request $request
+     * @return void
+     */
     public function __construct(Request $request)
     {
         $this->filter = $request->all();
-        $this->fileName = "project_events_{$this->filter['year']}.xlsx";
+        $this->fileName = $this->constructFileName($this->filter);
+    }
+
+    /**
+     * @param array $filter
+     * @return string
+     */
+    public function constructFileName(Array $filter): string
+    {
+        $startDate = str_replace($filter['start_date'], '.', '-');
+        $endDate = str_replace($filter['end_date'], '.', '-');
+        return "project_events_{$startDate}-{$endDate}.xlsx";
     }
 
     /**
@@ -41,14 +52,84 @@ class ProjectEventsExport implements WithMultipleSheets, Responsable
     public function sheets(): array
     {
         $sheets = [];
-        if ($this->filter['month'] != null) {
-            $sheets[] = new EventsPerMonthSheet($this->filter, $this->filter['month']);
+        //set startDate and endDate from dd.MM.yyyy format to object
+        $startDate = explode('.', $this->filter['start_date']);
+        $startDate = [
+            "day" => (int)$startDate[0],
+            "month" => (int)$startDate[1],
+            "year" => (int)$startDate[2],
+        ];
+        $endDate = explode('.', $this->filter['end_date']);
+        $endDate = [
+            "day" => (int)$endDate[0],
+            "month" => (int)$endDate[1],
+            "year" => (int)$endDate[2],
+        ];
+        $currentYear = $startDate['year'];
+
+        //if the whole period is in the same month and year make only one sheet
+        if ($startDate['month'] === $endDate['month'] && $startDate['year'] === $endDate['year']) {
+            $sheets[] = new EventsPerMonthSheet(
+                $this->filter,
+                $startDate['year'],
+                $startDate['month'],
+                $startDate['day'],
+                $endDate['day']
+            );
             return $sheets;
         }
-        
-        for ($month = 1; $month <= 12; $month++) {
-            $sheets[] = new EventsPerMonthSheet($this->filter, $month);
+
+        //make the first sheet only with start day
+        $sheets[] = new EventsPerMonthSheet(
+            $this->filter,
+            $currentYear,
+            $startDate['month'],
+            $startDate['day'],
+            (int)null
+        );
+
+        // if it is december, and it is not the end year, increment year and set month
+        if ($startDate['month'] === 12 && $currentYear !== $endDate['year']) {
+            $currentYear++;
+            $startDate['month'] = 0;
         }
+        $startDate['month']++;
+
+        $currentMonth = $startDate['month'];
+        //loop the rest of the months until we reach the end month
+        for (; $currentMonth <= 12; $currentMonth++) {
+            //if we have reached the end month in the end year make the final sheet until the given day
+            if ($currentMonth === $endDate['month'] && $currentYear === $endDate['year']) {
+                $sheets[] = new EventsPerMonthSheet(
+                    $this->filter,
+                    $currentYear,
+                    $currentMonth,
+                    (int)null,
+                    $endDate['day']
+                );
+                break;
+            }
+
+            //make a sheet for a whole month
+            $sheets[] = new EventsPerMonthSheet(
+                $this->filter,
+                $currentYear,
+                $currentMonth,
+                (int)null,
+                (int)null
+            );
+
+            //check if we have reached december
+            if ($currentMonth === 12) {
+                //if it's december, and it is the end year - break, if not, set month and increment the year
+                if ($currentYear === $endDate['year']) {
+                    break;
+                }
+                $currentMonth = 0;
+                $currentYear++;
+            }
+        }
+
         return $sheets;
     }
 }
