@@ -20,6 +20,7 @@ use Modules\Projects\Models\Project;
 use App\Traits\Ctts;
 use Modules\SourceRevisions\Models\SourceRevision;
 use Modules\Sources\Models\Source;
+use Modules\Modifications\Models\Modification;
 
 class IssuesController extends Controller
 {
@@ -178,6 +179,7 @@ class IssuesController extends Controller
 
         try {
             DB::table('modifications_status_history')->insert($insertData);
+            Log::channel('headmerege')->debug("Modifications are marked as delivered");
         } catch (\Exception $e) {
             Log::channel('headmerege')->debug($e->getMessage());
         }
@@ -192,8 +194,12 @@ class IssuesController extends Controller
     protected function checkSourceModifications(Collection $sources, string $tts_id)
     {
         $branchModifications = collect();
-        $sources->each(function ($item) use ($branchModifications) {
-            if (substr_count($item->version, '.') > 1) {
+        $sourceRevisionsToUpdate = [];
+
+        $sources->each(function ($item) use ($branchModifications, &$sourceRevisionsToUpdate) {
+            $headmergeStatus = $this->checkHeadmergeStatus($item);
+            if (substr_count($item->version, '.') > 1 && $headmergeStatus) {
+                $sourceRevisionsToUpdate[] = $headmergeStatus;
                 $branchModifications->add($item);
             }
         });
@@ -209,54 +215,53 @@ class IssuesController extends Controller
                     Log::channel('headmerege')->debug(
                         "Issue {$newIssue->key} was linked to {$tts_id}"
                     );
-
-                    $this->markSourceRevision($item);
                 } catch (\Exception $e) {
                     Log::channel('headmerege')->debug($e->getMessage());
                 }
             });
+
+            $this->markSourceRevision($sourceRevisionsToUpdate);
         }
+    }
+
+    /**
+     * @param Modification $source
+     * @return integer
+     */
+    protected function checkHeadmergeStatus(Modification $source) : ?int
+    {
+        $result = [];
+        $pathInfo = pathinfo($source->name);
+        $sourceFile = Source::where('source_name', $pathInfo['basename'])
+            ->where('source_path', $pathInfo['dirname'])->first();
+
+        if ($sourceFile) {
+            $result['source_id'] = $sourceFile->source_id;
+            $result['revision'] = $source->version;
+        }
+
+        if (!empty($result)) {
+            $sourceRev = SourceRevision::where('source_id', $result['source_id'])
+                ->where('revision', $result['revision'])
+                ->first();
+
+            return $sourceRev && $sourceRev->requested_head_merge !== 1 ? $sourceRev->rev_id : null;
+        }
+
+        return null;
     }
 
     /**
      * Mark corresponding records in table source_revision as requested_head_merge
      *
-     * @param \Illuminate\Support\Collection $sourceRevisions
+     * @param array $sourceRevisionsToUpdate
      */
-    protected function markSourceRevision(\Illuminate\Support\Collection $sourceRevisions)
+    protected function markSourceRevision(array $sourceRevisionsToUpdate)
     {
-        $revIds = [];
-        $sourcesInfo = [];
-        foreach ($sourceRevisions as $sourceRevision) {
-            $pathInfo = pathinfo($sourceRevision->name);
-
-            $sourceFile = Source::where('source_name', $pathInfo['basename'])
-                ->where('source_path', $pathInfo['dirname'])->first();
-
-            if ($sourceFile) {
-                $sourcesInfo[] = [
-                    'source_id' => $sourceFile->source_id,
-                    'revision' => $sourceRevision->version
-                ];
-            }
-        }
-
-        if (!empty($sourcesInfo)) {
-            foreach ($sourcesInfo as $sourceInfo) {
-                $sourceRev = SourceRevision::where('source_id', $sourceInfo['source_id'])
-                    ->where('revision', $sourceInfo['revision'])
-                    ->first();
-
-                if ($sourceRev) {
-                    $revIds[] = $sourceRev->rev_id;
-                }
-            }
-        }
-
-        if (!empty($revIds)) {
+        if (!empty($sourceRevisionsToUpdate)) {
             try {
-                SourceRevision::whereIn('rev_id', $revIds)->update(['requested_head_merge' => 1]);
-                $ids = implode(',', $revIds);
+                SourceRevision::whereIn('rev_id', $sourceRevisionsToUpdate)->update(['requested_head_merge' => 1]);
+                $ids = implode(',', $sourceRevisionsToUpdate);
                 Log::channel('headmerege')->debug("Table source_revision updated for {$ids}");
             } catch (\Exception $e) {
                 Log::channel('headmerege')->debug($e->getMessage());
