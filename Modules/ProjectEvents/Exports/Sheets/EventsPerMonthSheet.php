@@ -218,8 +218,16 @@ class EventsPerMonthSheet implements
             ->whereYear('event_end_date', $this->year)
             ->whereMonth('event_end_date', $this->month);
 
-        if ($this->filter['project']['id'] !== 0) {
-            $monthEvents->where('project_id', $this->filter['project']['id']);
+        if (count($this->filter['projects'])) {
+            $projectIds = array_column($this->filter['projects'], 'id');
+            $monthEvents->whereIn('project_id', $projectIds);
+        }
+
+        if (count($this->filter['departments'])) {
+            $departmentIds = array_column($this->filter['departments'], 'id');
+            $monthEvents->whereHas('projectEventEstimations', function ($query) use ($departmentIds) {
+                $query->whereIn('department_id', $departmentIds);
+            });
         }
 
         if (isset($this->filter['status']['id'])) {
