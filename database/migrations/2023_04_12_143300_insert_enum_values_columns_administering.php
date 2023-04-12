@@ -96,6 +96,7 @@ class InsertEnumValuesColumnsAdministering extends Migration
      */
     public function down()
     {
+        Schema::disableForeignKeyConstraints();
         Schema::table('projects', function($table){
             $table->dropForeign('db_administering');
             $table->dropForeign('ti_administering');
@@ -109,5 +110,6 @@ class InsertEnumValuesColumnsAdministering extends Migration
         });
 
         DB::table('enum_values')->where('subtype', 'db_ti_administering')->delete();
+        Schema::enableForeignKeyConstraints();
     }
 }
