@@ -18,7 +18,7 @@ class InsertEnumValuesColumnsAdministering extends Migration
             ->where('type','project_specific_feature')
             ->orderBy('sortindex', 'desc')
             ->first('sortindex');
-
+        Schema::disableForeignKeyConstraints();
         DB::table('enum_values')->insert(
             [
                 [
@@ -54,7 +54,7 @@ class InsertEnumValuesColumnsAdministering extends Migration
             ]
         );
 
-        Schema::disableForeignKeyConstraints();
+
         //add columns in projects
         Schema::table('projects', function (Blueprint $table) {
             $table->integer('db_administering')
