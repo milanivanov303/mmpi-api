@@ -98,9 +98,12 @@ class InsertEnumValuesColumnsAdministering extends Migration
     {
         Schema::disableForeignKeyConstraints();
         Schema::table('projects', function($table){
-            $table->dropForeign('db_administering');
-            $table->dropForeign('ti_administering');
+            $table->dropForeign('fk_db_administering');
             $table->dropColumn('db_administering');
+        });
+
+        Schema::table('projects', function($table){
+            $table->dropForeign('fk_ti_administering');
             $table->dropColumn('ti_administering');
         });
 
