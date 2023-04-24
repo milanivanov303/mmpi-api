@@ -18,7 +18,7 @@ class InsertEnumValuesColumnsAdministering extends Migration
             ->where('type','project_specific_feature')
             ->orderBy('sortindex', 'desc')
             ->first('sortindex');
-        Schema::disableForeignKeyConstraints();
+
         DB::table('enum_values')->insert(
             [
                 [
@@ -54,15 +54,15 @@ class InsertEnumValuesColumnsAdministering extends Migration
             ]
         );
 
-
+        Schema::disableForeignKeyConstraints();
         //add columns in projects
         Schema::table('projects', function (Blueprint $table) {
             $table->integer('db_administering')
-                ->default(745)
+                ->nullable()
                 ->comment('DB administering for project.')
                 ->after('project_stage');
             $table->integer('ti_administering')
-                ->default(745)
+                ->nullable()
                 ->comment('TI administering for project.')
                 ->after('db_administering');
             $table->foreign('db_administering','fk_db_administering')
@@ -74,15 +74,16 @@ class InsertEnumValuesColumnsAdministering extends Migration
                 ->on('enum_values')
                 ->onUpdate('cascade');
         });
+
         //add columns in project_history
         Schema::table('projects_history', function (Blueprint $table) {
             $table->integer('db_administering')
-                ->default(745)
+                ->nullable()
                 ->comment('DB administering for project.')
                 ->after('project_stage');
 
             $table->integer('ti_administering')
-                ->default(745)
+                ->nullable()
                 ->comment('TI administering for project.')
                 ->after('db_administering');
         });
