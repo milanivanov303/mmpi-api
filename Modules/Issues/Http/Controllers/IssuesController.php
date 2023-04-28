@@ -151,7 +151,10 @@ class IssuesController extends Controller
         $modifications = $issue->modifications->groupBy('type_id');
 
         if (isset($modifications['source'])) {
-            $this->checkSourceModifications($modifications['source'], $tts_id);
+            if (!$this->checkSourceModifications($modifications['source'], $tts_id)) {
+                Log::channel('headmerege')->debug('end');
+                return response()->json(['error' => 'error in method checkSourceModifications()']);
+            }
         }
 
         $this->markAsDelivered($issue->modifications);
@@ -191,8 +194,9 @@ class IssuesController extends Controller
      * @param Collection $sources
      * @param string $tts_id
      */
-    protected function checkSourceModifications(Collection $sources, string $tts_id)
+    protected function checkSourceModifications(Collection $sources, string $tts_id) : bool
     {
+        $result = true;
         $branchModifications = collect();
         $sourceRevisionsToUpdate = [];
 
@@ -205,23 +209,29 @@ class IssuesController extends Controller
         });
 
         if ($branchModifications->count() > 0) {
-            $branchModifications->groupBy('created_by_id')->each(function ($item, $userId) use ($tts_id) {
+            $branchModifications->groupBy('created_by_id')->each(function ($item) use ($tts_id, &$result) {
                 try {
                     $newIssue = $this->createIssue($item[0]->createdBy->username, $item, $tts_id);
-                    $this->linkIssue($newIssue->key, $tts_id);
                     Log::channel('headmerege')->debug("
                             New issue {$newIssue->key} was created and assigned to user {$item[0]->createdBy->username}
                         ");
+
+                    $this->linkIssue($newIssue->key, $tts_id);
                     Log::channel('headmerege')->debug(
                         "Issue {$newIssue->key} was linked to {$tts_id}"
                     );
                 } catch (\Exception $e) {
                     Log::channel('headmerege')->debug($e->getMessage());
+                    $result =  false;
                 }
             });
 
-            $this->markSourceRevision($sourceRevisionsToUpdate);
+            if ($result) {
+                $this->markSourceRevisions($sourceRevisionsToUpdate);
+            }
         }
+
+        return $result;
     }
 
     /**
@@ -256,7 +266,7 @@ class IssuesController extends Controller
      *
      * @param array $sourceRevisionsToUpdate
      */
-    protected function markSourceRevision(array $sourceRevisionsToUpdate)
+    protected function markSourceRevisions(array $sourceRevisionsToUpdate)
     {
         if (!empty($sourceRevisionsToUpdate)) {
             try {
