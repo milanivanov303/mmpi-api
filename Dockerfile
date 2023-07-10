@@ -1,4 +1,4 @@
-ARG IMAGE=gitlab.codixfr.private:5005/enterpriseapps/images/web:2.1.8-php8
+ARG IMAGE=gitlab.codixfr.private:5005/enterpriseapps/images/web:2.1.9-php8
 
 # --- START BASE (needed for local development) --------------------------------- #
 FROM $IMAGE-dev as base
