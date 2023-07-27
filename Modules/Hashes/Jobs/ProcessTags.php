@@ -70,6 +70,8 @@ class ProcessTags implements ShouldQueue
                         ])
                     )
                         // I know it is stupid, but it's temporary and should remove it in future - DEVOPS-124
+                        // Hotline requested in "RE: FUP -TST - missing merge task"
+                        ->cc('hotline@codix.eu')
                         ->cc('imarinov@codix.bg')
                         ->onQueue('mails')
                 );
