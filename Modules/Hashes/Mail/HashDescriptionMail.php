@@ -52,9 +52,6 @@ class HashDescriptionMail extends Mailable
                                 }
 
                                 return '#!';
-                            },
-                            'getEditUrl' => function () use ($hashCommit) {
-                                return config('app.dev-management-url') . '/hashes/' . $hashCommit->hash_rev;
                             }
                         ],
                         $this->data
