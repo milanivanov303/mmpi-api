@@ -211,9 +211,17 @@ class IssuesController extends Controller
         if ($branchModifications->count() > 0) {
             $branchModifications->groupBy('created_by_id')->each(function ($item) use ($tts_id, &$result) {
                 try {
-                    $newIssue = $this->createIssue($item[0]->createdBy->username, $item, $tts_id);
+                    $username = $item[0]->createdBy->username;
+                    $manager = User::where('id', $item[0]->createdBy->manager_id)->get()->toArray();
+                    if ($item[0]->createdBy->status != 1) { //check User if is not active
+                        $username = $manager[0]['username'];
+                        if ($manager[0]['status'] != 1) { //check TL if is not active
+                            $username = 'cams_support';
+                        }
+                    }
+                    $newIssue = $this->createIssue($username, $item, $tts_id);
                     Log::channel('headmerege')->debug("
-                            New issue {$newIssue->key} was created and assigned to user {$item[0]->createdBy->username}
+                            New issue {$newIssue->key} was created and assigned to user {$username}
                         ");
 
                     $this->linkIssue($newIssue->key, $tts_id);
