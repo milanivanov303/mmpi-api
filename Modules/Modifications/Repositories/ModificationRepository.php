@@ -114,8 +114,12 @@ class ModificationRepository extends AbstractRepository implements RepositoryInt
             $this->model->updated_on = Carbon::now()->format('Y-m-d H:i:s');
         } else {
             //fix to register modifications from apis as created by logged user
-            array_key_exists('create_as_user', $data)
+            $createAsUser = array_key_exists('create_as_user', $data)
             && Auth::user()->username === config('app.user-management.username')
+                ? true
+                : false;
+
+            $createAsUser
                 ? $this->model->createdBy()->associate(
                     app(User::class)->getModelId($data['create_as_user'], ['id', 'username'])
                 )
@@ -124,7 +128,10 @@ class ModificationRepository extends AbstractRepository implements RepositoryInt
             $this->model->created_on = Carbon::now()->format('Y-m-d H:i:s');
         }
 
-        $this->model->creator_department_id = Auth::user()->department->id;
+        $this->model->creator_department_id =
+            isset($createAsUser) && $createAsUser
+                ? app(User::class)->findModel($data['create_as_user'], ['id', 'username'])->department_id
+                : Auth::user()->department->id;
     }
 
     /**
