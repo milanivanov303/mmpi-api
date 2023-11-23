@@ -139,26 +139,21 @@ class GitlabController extends Controller
 
     public function groupProjects(Request $request)
     {
-        if (!$request->has('repoUrl')) {
-            throw new HttpException(400, 'Missing gitlab server url');
+        if (!$request->has('groupId')) {
+            throw new HttpException(400, 'Missing group id');
         }
 
-        $config['repoUrl'] = $request->get('repoUrl');
-        $params = [];
+        $projects = app('NewGitlabApi')->get("groups/{$request->get('groupId')}/projects", ['per_page' => 100]);
 
-        if ($request->has('include_subgroups')) {
-            $params['include_subgroups'] = $request->get('include_subgroups') === 'true' ? true : false;
+        if ($projects->isUnsuccessful()) {
+            throw new HttpException(400, 'Unsuccessful request');
         }
-
-        $params['per_page'] = 100;
-
-        $projects = app('GitlabApi', $config)->groups()->projects($request->get('groupId'), $params);
 
         if ($request->has('topic')) {
-            return app(Project::class)->projectsByTopic($request->get('topic'), $projects);
+            return app(Project::class)->projectsByTopic($request->get('topic'), $projects->getData());
         }
 
-        return $projects;
+        return $projects->getData();
     }
     
     public function commitFiles(Request $request, $sha) : array
