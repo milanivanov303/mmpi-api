@@ -6,11 +6,19 @@ use Illuminate\Support\ServiceProvider;
 use GuzzleHttp\Client as GuzzleHttpClient;
 use Gitlab\Client as GitlabClient;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use App\Helpers\Gitlab\Api as GitlabApi;
 
 class GitlabServiceProvider extends ServiceProvider
 {
     public function register()
     {
+        $this->app->singleton('NewGitlabApi', function () {
+            return new GitlabApi(
+                config("app.gitlab.url"),
+                config("app.gitlab.token")
+            );
+        });
+
         $this->app->bind('GitlabApi', function ($app, $config) {
 
             $config['headers'] = isset($config['headers']) ? $config['headers'] : [];
