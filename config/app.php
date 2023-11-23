@@ -186,6 +186,11 @@ return array_merge(
             'idw.codixfr.private'    => env('IDW_TOKEN')
         ],
 
+        'gitlab' => [
+            'url'   => env('GITLAB_URL'),
+            'token' => env('GITLAB_TOKEN'),
+        ],
+
         'isabs' => [
             'url' => env('ISABS_URL'),
             'username' => env('ISABS_USER'),
