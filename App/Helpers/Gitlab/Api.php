@@ -35,7 +35,7 @@ class Api
         $options['headers'] = array_merge($this->getHeaders(), $options['headers'] ?? []);
 
         try {
-            $client = new GuzzleClient();
+            $client = new GuzzleClient(['verify'  => false]);
             $response = $client->request($method, $url, $options);
         } catch (GuzzleException $e) {
             return new Response($e->getMessage(), 400);
@@ -52,7 +52,8 @@ class Api
     {
         return [
             'PRIVATE-TOKEN' => $this->token,
-            'Content-Type' => 'application/json'
+            'Content-Type' => 'application/json',
+            'Accept-Encoding' => 'gzip, deflate, br'
         ];
     }
 
