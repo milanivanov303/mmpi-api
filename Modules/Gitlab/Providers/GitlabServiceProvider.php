@@ -12,10 +12,16 @@ class GitlabServiceProvider extends ServiceProvider
 {
     public function register()
     {
-        $this->app->singleton('NewGitlabApi', function () {
+        $this->app->bind('NativeGitlabApi', function ($app, $config) {
+            $token = $this->getToken($config['url']);
+
+            if (is_null($token)) {
+                throw new HttpException(401, 'Could not get token from server url');
+            }
+
             return new GitlabApi(
-                config("app.gitlab.url"),
-                config("app.gitlab.token")
+                $config['url'],
+                $token
             );
         });
 
