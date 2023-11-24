@@ -139,11 +139,15 @@ class GitlabController extends Controller
 
     public function groupProjects(Request $request)
     {
-        if (!$request->has('groupId')) {
-            throw new HttpException(400, 'Missing group id');
+        if (!$request->has('repoUrl') || !$request->has('groupId')) {
+            throw new HttpException(400, 'Missing gitlab server url or group id');
         }
 
-        $projects = app('NewGitlabApi')->get("groups/{$request->get('groupId')}/projects", ['per_page' => 100]);
+        $config['url'] = $request->get('repoUrl');
+        $projects = app('NativeGitlabApi', $config)->get(
+            "groups/{$request->get('groupId')}/projects",
+            ['per_page' => 100]
+        );
 
         if ($projects->isUnsuccessful()) {
             throw new HttpException(400, 'Unsuccessful request');
@@ -162,24 +166,27 @@ class GitlabController extends Controller
             throw new HttpException(400, 'Missing gitlab server url');
         }
 
-        $config['repoUrl'] = $request->get('repoUrl');
+        $config['url'] = $request->get('repoUrl');
+        $project = urlencode($request->get('repo'));
 
-        try {
-            $response = app('GitlabApi', $config)->repositories()->diff($request->get('repo'), $sha);
-        } catch (\Exception $e) {
+        $diff = app('NativeGitlabApi', $config)->get("projects/{$project}/repository/commits/{$sha}/diff");
+
+        if ($diff->isUnsuccessful()) {
+            throw new HttpException(400, 'Unsuccessful request');
         }
 
-        if (isset($response) && is_array($response)) {
+        $commitDiff = $diff->getData();
+
+        if (isset($commitDiff) && is_array($commitDiff)) {
             return array_map(function ($n) {
                 if (array_key_exists('diff', $n)) {
                     unset($n['diff']);
                 }
                 return $n;
-            }, $response);
+            }, $commitDiff);
         }
 
-        $gitlabHelper = new GitlabHelper();
-        return $gitlabHelper->getCommitFilesWithCurl($config, $request->get('repo'), $sha);
+        return [];
     }
 
     public function getCommit(Request $request, $sha)
