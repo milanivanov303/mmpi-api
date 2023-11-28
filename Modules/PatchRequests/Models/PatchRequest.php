@@ -59,6 +59,16 @@ class PatchRequest extends Model
     }
 
     /**
+     * Get removed modifications
+     */
+    protected function removedModifications()
+    {
+        return $this->belongsToMany(Modification::class, 'modif_to_pr', 'pr_id', 'modif_id')
+            ->wherePivot('removed', "=", 1)
+            ->orderBy('order');
+    }
+
+    /**
      * Get patch
      */
     protected function patches()
